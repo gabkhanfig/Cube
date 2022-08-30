@@ -37,6 +37,8 @@ public:
 
 	void SetUniform4float(const std::string& uniformName, const glm::vec4& value);
 
+	void SetUniform3float(const std::string& uniformName, const glm::vec3& value);
+
 	void SetUniform1float(const std::string& uniformName, float value);
 
 	void SetUniform1int(const std::string& uniformName, int value);

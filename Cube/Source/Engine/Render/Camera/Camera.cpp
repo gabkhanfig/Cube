@@ -10,7 +10,7 @@ Camera::Camera()
 	sensitivity = cameraSensitivity;
 	fov = 45.f;
 
-	proj = glm::perspective(glm::radians(fov), 16.f / 9.f, 0.1f, 150.f);
+	proj = glm::perspective(glm::radians(fov), 16.f / 9.f, 0.1f, 1000.f);
 
 	pitch = 0.f;
 	yaw = 0.f;

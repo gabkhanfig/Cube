@@ -7,10 +7,9 @@
 #include <Engine/Render/Buffers/VertexArray.h>
 #include <Engine/Render/Buffers/VertexBufferLayout.h>
 
-#define CHUNK_WIDTH 16
-#define CHUNK_HEIGHT 16
+//#define CHUNK_WIDTH 16
 
-#define CHUNK_SIZE CHUNK_WIDTH * CHUNK_WIDTH * CHUNK_HEIGHT
+#define CHUNK_SIZE CHUNK_WIDTH * CHUNK_WIDTH * CHUNK_WIDTH
 
 class Block;
 struct Vertex;
@@ -37,7 +36,11 @@ public:
 
 	void DrawChunk();
 
+	void Init();
+
 	Block* GetBlockAtLocalPosition(BlockPosition position);
+
+	BlockPosition BlockIndexToRelativeLocation(uint32 index);
 
 	void RegenerateChunkMeshData();
 };

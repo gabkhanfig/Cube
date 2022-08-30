@@ -1,35 +1,42 @@
 #include "Chunk.h"
 #include <Game/World/Block/Block.h>
 #include <Engine/Render/Renderer.h>
+#include <Engine/Render/Shader/Shader.h>
+#include <Util/Benchmark/Benchmark.h>
+#include <Game/World/Block/Factory/BlockFactory.h>
 
 Chunk::Chunk(ChunkPosition _position)
 {
+	//Benchmark* chunkLoad = Benchmark::StartBenchmark("Construct chunk");
+
 	indexBuffer = nullptr;
 	vertexBuffer = nullptr;
+	vertexArray = nullptr;
 
 	canRender = false;
 
 	position = _position;
 
-	uint8 xcoord = 0;
-	uint8 ycoord = 0;
-	uint8 zcoord = 0;
+	Print("chunk spawned at chunk position: " + ToString({ position.x, position.y, position.z }));
+	//chunkLoad->EndBenchmark();
 
 	int blockIndex = 0;
-	for (uint8 y = 0; y < CHUNK_HEIGHT; y++) {
+	Block* block = BlockFactory::GetBlock(BlockId_StonyGrass);
+	Block* block2 = BlockFactory::GetBlock(BlockId_Air);
+	for (uint8 y = 0; y < CHUNK_WIDTH; y++) {
 		for (uint8 z = 0; z < CHUNK_WIDTH; z++) {
 			for (uint8 x = 0; x < CHUNK_WIDTH; x++) {
-				Block* stone = new Block();
-				stone->chunk = this;
-				stone->localPosition = { x, y, z };
-				blocks[blockIndex] = stone;
-				//std::cout << "block at index " << blockIndex << ": " << int(x) << " " << int(y) << " " << int(z) << '\n';
+				//Print("Block index: " + ToString(blockIndex));
+				if (y >= 8) {
+					blocks[blockIndex] = block2;
+				}
+				else {
+					blocks[blockIndex] = block;
+				}
 				blockIndex++;
 			}
 		}
 	}
-
-	RegenerateChunkMeshData();
 }
 
 Chunk::~Chunk()
@@ -44,16 +51,40 @@ Chunk::~Chunk()
 
 void Chunk::DrawChunk()
 {
+	if (canRender == false) return;
+
+#ifdef DEVELOPMENT
+	if (!vertexArray) return;
+	if (!vertexBuffer) return;
+	if (!indexBuffer) return;
+#endif
+
 	vertexArray->Bind();
 	vertexBuffer->Bind();
 	indexBuffer->Bind();
 
+	Shader::GetBoundShader()->SetUniform3float("u_ChunkPosition", glm::vec3(position.x * CHUNK_WIDTH, position.y * CHUNK_WIDTH, position.z * CHUNK_WIDTH));
 	Renderer::DrawQuads(quadsToDraw);
+}
+
+void Chunk::Init()
+{
+	//int blockIndex = 0;
+	//for (uint8 y = 0; y < CHUNK_WIDTH; y++) {
+	//	for (uint8 z = 0; z < CHUNK_WIDTH; z++) {
+	//		for (uint8 x = 0; x < CHUNK_WIDTH; x++) {
+	//			blocks[blockIndex] = Block::GetSingletonTest();
+	//			blockIndex++;
+	//		}
+	//	}
+	//}
+
+	RegenerateChunkMeshData();
 }
 
 Block* Chunk::GetBlockAtLocalPosition(BlockPosition position)
 {
-	if (position.x >= CHUNK_WIDTH || position.y >= CHUNK_HEIGHT || position.z >= CHUNK_WIDTH) {
+	if (position.x >= CHUNK_WIDTH || position.y >= CHUNK_WIDTH || position.z >= CHUNK_WIDTH) {
 		//std::cout << "position data is out of chunk range ... is null" << '\n';
 		return nullptr;
 	}
@@ -63,14 +94,28 @@ Block* Chunk::GetBlockAtLocalPosition(BlockPosition position)
 	index += position.z * CHUNK_WIDTH;
 	index += position.y * CHUNK_WIDTH * CHUNK_WIDTH;
 
-	
-
 	if (index >= CHUNK_SIZE) {
 		//std::cout << "getting block at index " << index << "... is null" << '\n';
 		return nullptr;
 	}
 	//std::cout << "getting block at index " << index << "... is valid!" << '\n';
 	return blocks[index];
+}
+
+BlockPosition Chunk::BlockIndexToRelativeLocation(uint32 index)
+{
+#ifdef DEVELOPMENT
+	if (index >= CHUNK_SIZE) {
+		Print("Chunk indexing for block relative location of " + ToString(index) + " exceeds the maximum index of " + ToString(CHUNK_SIZE));
+		return { 0, 0, 0 };
+	}
+#endif
+
+	BlockPosition pos;
+	pos.x = index % CHUNK_WIDTH;
+	pos.y = index / (CHUNK_WIDTH * CHUNK_WIDTH); // integer flooring
+	pos.z = (index % (CHUNK_WIDTH * CHUNK_WIDTH)) / CHUNK_WIDTH; // compress index into range 0-255, then integer division
+	return pos;
 }
 
 void Chunk::RegenerateChunkMeshData()
@@ -85,58 +130,63 @@ void Chunk::RegenerateChunkMeshData()
 		delete vertexArray;
 	}
 
-	std::vector<Quad> quads;
+	std::vector<BlockQuad> quads;
 
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		Block* block = blocks[i];
-		Quad quad;
 
-		if (block->IsBlockAdjacentTransparent(BlockFace::Bottom)) {
-			Quad quad;
-			block->GenerateQuadDataForFace(BlockFace::Bottom, quad);
+		BlockQuad quad;
+
+		BlockPosition relativeLocation = BlockIndexToRelativeLocation(i);
+		WorldPosition worldPos = {
+			position.x * 16 + relativeLocation.x,
+			position.y * 16 + relativeLocation.y,
+			position.z * 16 + relativeLocation.z
+		};
+
+		if (block->IsBlockAdjacentTransparent(this, worldPos, Facing::Bottom)) {
+			block->GenerateQuadDataForFace(this, relativeLocation, Facing::Bottom, quad);
 			quads.push_back(quad);
 		}
-		if (block->IsBlockAdjacentTransparent(BlockFace::North)) {
-			block->GenerateQuadDataForFace(BlockFace::North, quad);
+		if (block->IsBlockAdjacentTransparent(this, worldPos, Facing::North)) {
+			block->GenerateQuadDataForFace(this, relativeLocation, Facing::North, quad);
 			quads.push_back(quad);
 		}
-		if (block->IsBlockAdjacentTransparent(BlockFace::East)) {
-			block->GenerateQuadDataForFace(BlockFace::East, quad);
+		if (block->IsBlockAdjacentTransparent(this, worldPos, Facing::East)) {
+			block->GenerateQuadDataForFace(this, relativeLocation, Facing::East, quad);
 			quads.push_back(quad);
 		}
-		if (block->IsBlockAdjacentTransparent(BlockFace::South)) {
-			block->GenerateQuadDataForFace(BlockFace::South, quad);
+		if (block->IsBlockAdjacentTransparent(this, worldPos, Facing::South)) {
+			block->GenerateQuadDataForFace(this, relativeLocation, Facing::South, quad);
 			quads.push_back(quad);
 		}
-		if (block->IsBlockAdjacentTransparent(BlockFace::West)) {
-			block->GenerateQuadDataForFace(BlockFace::West, quad);
+		if (block->IsBlockAdjacentTransparent(this, worldPos, Facing::West)) {
+			block->GenerateQuadDataForFace(this, relativeLocation, Facing::West, quad);
 			quads.push_back(quad);
 		}
-		if (block->IsBlockAdjacentTransparent(BlockFace::Top)) {
-			block->GenerateQuadDataForFace(BlockFace::Top, quad);
+		if (block->IsBlockAdjacentTransparent(this, worldPos, Facing::Top)) {
+			block->GenerateQuadDataForFace(this, relativeLocation, Facing::Top, quad);
 			quads.push_back(quad);
 		}
+	}
+
+	if (quads.size() == 0) {
+		canRender = false;
+		return;
 	}
 
 	vertexArray = new VertexArray();
-	vertexBuffer = new VertexBuffer(&quads[0], sizeof(Quad) * quads.size());  
+	vertexBuffer = new VertexBuffer(&quads[0], sizeof(BlockQuad) * quads.size());  
+
+#ifdef COMPRESSED_RENDER
+	VertexBufferLayout layout = VertexBufferLayout::MakeVertexBufferLayoutForBlock();
+#else
 	VertexBufferLayout layout = VertexBufferLayout::MakeVertexBufferLayoutForVertex();
+#endif
 	vertexArray->AddBuffer(vertexBuffer, layout);
 
-	const uint32 indicesSize = quads.size() * 6;
-	uint32* indices = new uint32[indicesSize];
-
-	uint32 index = 0;
-	for (uint32 i = 0; i < quads.size(); i++) {
-		indices[index++] = ((i * 4));
-		indices[index++] = (1 + (i * 4));
-		indices[index++] = (2 + (i * 4));
-		indices[index++] = (2 + (i * 4));
-		indices[index++] = (3 + (i * 4));
-		indices[index++] = (0 + (i * 4));
-	}
-
-	indexBuffer = new IndexBuffer(&indices[0], indicesSize);
+	indexBuffer = IndexBuffer::MakeQuadsIndexBuffer(quads.size());
 
 	quadsToDraw = quads.size();
+	canRender = true;
 }

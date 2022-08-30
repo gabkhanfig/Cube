@@ -1,40 +1,26 @@
-#version 460 core
+#version 330 core
 
-// inputs from vertex shader
-in vec4 vertexColor;
-in vec2 textureCoord;
-in float textureLayer;
-
-// uniforms
-uniform sampler2DArray textureArray;
-uniform sampler2D texture2d;
-
-// outputs
 out vec4 FragColor;
 
-//#define TEST_TEXTURE_ARRAY
-#define TEST_TEXTURE_2D
+in vec4 attrib_fragment_color;
+in vec2 v_TexCoord;
+in float v_TexId;
 
-void SetFragColorTextureArray() 
-{
-    vec4 texColor = vec4(texture(textureArray, vec3(textureCoord, textureLayer)));
-    FragColor = vertexColor * texColor;
-}
-
-void SetFragColorTexture2d()
-{
-    FragColor = vertexColor * vec4(texture(texture2d, textureCoord));
-}
+uniform sampler2D u_Texture;
+uniform sampler2DArray textureArray;
 
 void main()
 {
-#ifdef TEST_TEXTURE_ARRAY
-    SetFragColorTextureArray();
-#elifdef TEST_TEXTURE_2D
-    SetFragColorTexture2d();
-#else
-    //FragColor = vertexColor;
-    SetFragColorTexture2d();
-#endif
+	//vec4 texColor = vec4(texture(textureArray, vec3(v_TexCoord.xy, v_TexId)));
+	//FragColor = vec4(texColor.x * attrib_fragment_color.x, texColor.y * attrib_fragment_color.y, texColor.z * attrib_fragment_color.z,texColor.w * attrib_fragment_color.w);
+	
+	FragColor = vec4(texture(u_Texture, v_TexCoord)) * attrib_fragment_color;
+	
+
+	
+
+	// texture coords
+	//FragColor = vec4(v_TexCoord.x, v_TexCoord.y, 1, 1);
 }
+
 

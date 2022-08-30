@@ -15,21 +15,28 @@ void Renderer::LoadGraphicsAPI()
   glClearColor(0.2, 0.4, 0.74, 0);
   glEnable(GL_DEPTH_TEST);
 
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
+  glFrontFace(GL_CCW);
+
   std::string versionString = std::string((const char*)glGetString(GL_VERSION));
   Print("OpenGL Version: " + versionString);
 
   glEnable(GL_DEBUG_OUTPUT);
   glDebugMessageCallback(OpenGLDebugMessageCallback, 0);
 
-  Shader* shader1 = Shader::LoadShader("Basic.vert", "Basic.frag");
+  Shader* shader1 = Shader::LoadShader("Compressed.vert", "Compressed.frag");
+  //shader1->SetUniform1int("u_UseTextureArray", true);
 
-  //Texture* tex = Texture::MakeTexture2d();
-  //tex->SetTexture2dImage("Source/Resources/Textures/Blocks/stonetexture.png");
-  //tex->Bind();
+  Texture* tex = Texture::MakeTexture2d();
+  tex->SetTexture2dImage("Source/Resources/Textures/Blocks/texture_atlas.png");
+  float texRun = tex->GetWidth();
+  shader1->SetUniform1float("u_AtlasSize", texRun);
+  shader1->SetUniform1float("u_TextureSize", 16.f);
 
-  Texture* texArray = Texture::MakeTexture2dArray(2048, 16, 16);
-  texArray->AddTextureToArray("Source/Resources/Textures/Blocks/stonetexture.png");
-  texArray->Bind();
+  //Texture* texArray = Texture::MakeTexture2dArray(2048, 16, 16);
+  //texArray->AddTextureToArray("Source/Resources/Textures/Blocks/stonetexture.png");
+  //texArray->Bind();
 
   Camera* camera = new Camera();
   Camera::SetActiveCamera(camera);
@@ -159,88 +166,9 @@ void Renderer::OpenGLDebugMessageCallback(GLenum source, GLenum type, GLuint id,
 
 void Renderer::Frame(double deltaTime)
 {
-
-  //Shader* shader2 = Shader::LoadShader("Compressed.vert", "Basic.frag");
   Shader::GetBoundShader()->SetUniformMat4float("u_MVP", Camera::activeCamera->GetMVPMatrix());
 
-  //shader1->Bind();
-
-  glm::vec3 pos[] = {
-    {-0.5, -0.5, 0},
-    {0.5, -0.5, 0},
-    {0.5, 0.5, 0},
-    {-0.5, 0.5, 0}
-  };
-
-  glm::vec4 col[] = {
-    {1.0, 1.0, 0.2, 1},
-    {1.0, 0.5, 0.2, 1},
-    {0.7, 0.1, 0.5, 1},
-    {0, 0, 1, 1}
-  };
-
-  Quad quad;
-  Quad::GenerateQuad1x1(quad, pos, col, 0);
-
-  VertexBuffer* vbo = new VertexBuffer(&quad, sizeof(quad));
-
-  VertexArray* vao = new VertexArray();
-  vao->AddBuffer(vbo, VertexBufferLayout::MakeVertexBufferLayoutForVertex());
-
-  IndexBuffer* ibo = IndexBuffer::MakeQuadsIndexBuffer(1);
-
-  
-  //DrawQuads(1);
-
-  delete vbo;
-  delete vao;
-  delete ibo;
-
-  /*
-  shader2->Bind();
-
-  BlockVertexPosition pos2[] = {
-    {0, 0, 0, BlockVertexPosition::bottomLeftUV},
-    {1, 0, 0, BlockVertexPosition::bottomRightUV},
-    {1, 1, 0, BlockVertexPosition::topRightUV},
-    {0, 1, 0, BlockVertexPosition::topLeftUV}
-  };
-
-  Color col2[] = {
-    {255, 205, 55, 255},
-    {10, 170, 190, 255},
-    {120, 110, 60, 255},
-    {255, 78, 255, 255}
-  };
-
-  BlockVertex a = { pos2[0], col2[0]};
-  BlockVertex b = { pos2[1], col2[1] };
-  BlockVertex c = { pos2[2], col2[2] };
-  BlockVertex d = { pos2[3], col2[3] };
-
-  BlockQuad quad2 = {
-    a, b, c, d
-  };
-  //BlockQuad::GenerateQuad1x1(quad2, pos2, col2, 0);
-
-  VertexBuffer* vbo2 = new VertexBuffer(&quad2, sizeof(quad2));
-
-  VertexArray* vao2 = new VertexArray();
-  vao2->AddBuffer(vbo2, VertexBufferLayout::MakeVertexBufferLayoutForBlock());
-
-  IndexBuffer* ibo2 = IndexBuffer::MakeQuadsIndexBuffer(1);
-
-  DrawQuads(1);
-
-  delete vbo2;
-  delete vao2;
-  delete ibo2;
-
-  //
-  delete shader2;
-  */
-
-  Chunk* testDrawTime = new Chunk({ 1, 0, 0 });
-  testDrawTime->DrawChunk();
-  delete testDrawTime;
+  //Chunk* chunk = new Chunk({ 0, 0, 0 });
+  //chunk->DrawChunk();
+  //delete chunk;
 }

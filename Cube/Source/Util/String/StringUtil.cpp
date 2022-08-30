@@ -10,6 +10,11 @@ inline std::string ToString(T value)
 	return std::string();
 }
 
+std::string ToString(bool value)
+{
+	return value ? "true" : "false";
+}
+
 std::string ToString(int8 value)
 {
 	return ToString(int(value));

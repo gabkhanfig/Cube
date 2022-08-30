@@ -21,5 +21,7 @@ public:
 
 	void Tick();
 
+	void TestImGuiFrame();
+
 };
 

@@ -25,11 +25,17 @@ struct BlockQuad
 {
 	BlockVertex vertices[4];
 
-	static void GenerateQuad1x1(BlockQuad& outQuad, BlockVertexPosition* positions, Color* colors, uint32 textureId) 
+	/* Counter clockwise quad, using 1x1 texture uvs, starting at bottom left relative. */
+	static void GenerateQuad1x1(BlockQuad& outQuad, BlockVertexPosition* positions, Color* colors, uint32 textureId)
 	{
-		//outQuad.vertices[0] = { positions[0], colors[0], textureId, {0, 0} };
-		//outQuad.vertices[1] = { positions[1], colors[1], textureId, {1, 0} };
-		//outQuad.vertices[2] = { positions[2], colors[2], textureId, {1, 1} };
-		//outQuad.vertices[3] = { positions[3], colors[3], textureId, {0, 1} };
+		constexpr uint32 bottomLeftUV = (0U << 30) + (0U << 31);
+		constexpr uint32 bottomRightUV = (1U << 30) + (0U << 31);
+		constexpr uint32 topRightUV = (1U << 30) + (1U << 31);
+		constexpr uint32 topLeftUV = (0U << 30) + (1U << 31);
+
+		outQuad.vertices[0] = { positions[0], colors[0], bottomLeftUV + textureId };
+		outQuad.vertices[1] = { positions[1], colors[1], bottomRightUV + textureId };
+		outQuad.vertices[2] = { positions[2], colors[2], topRightUV + textureId };
+		outQuad.vertices[3] = { positions[3], colors[3], topLeftUV + textureId };
 	}
 };

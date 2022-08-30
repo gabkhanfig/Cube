@@ -1,60 +1,60 @@
-#version 460 core
+#version 330 core
 
-// Layout comes from VertexBufferLayout::MakeVertexBufferLayoutForVertex(). Formatting from vertex specification in Vertex.h
-layout (location = 0) in uint vPos;
-layout (location = 1) in uint vColor;
-layout (location = 2) in uint vTexId;
+layout (location = 0) in uint aPos;
+layout (location = 1) in uint colorData;
+layout (location = 2) in uint texId; // First 30 bits are id value to index atlas. Second last bit is X coordinate. Last bit is the Y coordinate. X and Y are (0 - 1).
 
-// uniforms
-uniform mat4 uMVP;
-  
-// Output to fragment shader
-out vec4 vertexColor;
-out vec2 textureCoord;
-out float textureLayer;
+out vec4 attrib_fragment_color;
+out vec2 v_TexCoord;
+out float v_TexId;
 
-//#define USE_MVP
+uniform mat4 u_MVP; // model view projection matrix
+uniform vec3 u_ChunkPosition;
+uniform float u_AtlasSize; //= 16.f;
+uniform float u_TextureSize; //= 16.f;
 
-void SetPosition() 
+vec2 MapUVFromTextureId(vec2 uv, uint textureId) 
 {
-#ifdef USE_MVP
-    //gl_Position = vec4(vPos, 1.0) * uMVP;
-#else 
-    //gl_Position = vec4(ExtractPosition(), 1.0);
-#endif
+	float stepSize = u_TextureSize / u_AtlasSize;
+	uint texRun = uint(u_AtlasSize / u_TextureSize);
+	float texCount = texRun * texRun;
+
+	//if(textureId >= texCount) {
+	//	textureId = 0U;
+	//}
+
+	float x = stepSize * float(textureId % texRun);
+	float y = stepSize * float(textureId / texRun);
+
+	return vec2(x + (uv.x * stepSize), y + (uv.y * stepSize));
 }
 
-vec4 ExtractColor() 
+vec4 ExtractColorChannels(uint color) 
 {
-#define extractColorOffset(offset) float((vColor >> offset) & 255) / 255.f
-    float r = extractColorOffset(0);
-    float g = extractColorOffset(8);
-    float b = extractColorOffset(16);
-    float a = extractColorOffset(24);
-    return vec4(r, g, b, a);
+	float r = float(color & 255U) / 255.f;
+	float g = float((color >> 8) & 255U) / 255.f;
+	float b = float((color >> 16) & 255U) / 255.f;
+	float a = float((color >> 24) & 255U) / 255.f;
+	return vec4(r, g, b, a);
 }
 
-vec3 ExtractPosition() 
+vec3 ExtractVertexWorldPosition(uint position) 
 {
-    vec3 chunkPos = vec3(1.f);
-    float x = float(vPos & 255);
-    float y = float((vPos >> 8) & 255);
-    float z = float((vPos >> 16) & 255);
-    return vec3(x * chunkPos.x, y * chunkPos.y, z * chunkPos.z);
-}
-
-vec2 ExtractUV()
-{
-    uint uvShift = vPos >> 24;
-    float x = float(uvShift & 15) / 15.f;
-    float y = float((uvShift >> 4) & 15) / 15.f;
-    return vec2(x, y);
+	float x = u_ChunkPosition.x + float(position & 255U);
+	float y = u_ChunkPosition.y + float((position >> 8) & 255U);
+	float z = u_ChunkPosition.z + float((position >> 16) & 255U);
+	return vec3(x, y, z);
 }
 
 void main()
 {
-    gl_Position = vec4(ExtractPosition(), 1.0) * uMVP;
-    vertexColor = ExtractColor();
-    textureCoord = ExtractUV();
-    textureLayer = float(vTexId);
+	attrib_fragment_color = ExtractColorChannels(colorData);
+	vec4 asvec = vec4(ExtractVertexWorldPosition(aPos), 1.0);
+	gl_Position = u_MVP * asvec;
+	uint textureId = texId & 1073741823U; // Get last 30 bits.
+	float x = (texId >> 30) & 1U;
+	float y = (texId >> 31) & 1U;
+	vec2 textureUVs = vec2(x, y);
+	v_TexCoord = MapUVFromTextureId(textureUVs, textureId);
+	v_TexId = texId;
 }

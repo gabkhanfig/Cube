@@ -10,8 +10,6 @@ private:
 
 private:
 
-	
-
 public:
 
 	static void LoadGraphicsAPI();

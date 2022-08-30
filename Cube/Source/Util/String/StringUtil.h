@@ -7,6 +7,8 @@ void RemoveUnnecessaryChars(std::string& number);
 template<typename T>
 std::string ToString(T value);
 
+std::string ToString(bool value);
+
 std::string ToString(int8 value);
 
 std::string ToString(int16 value);

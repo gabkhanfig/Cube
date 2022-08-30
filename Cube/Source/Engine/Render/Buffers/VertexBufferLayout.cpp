@@ -31,8 +31,16 @@ VertexBufferLayout VertexBufferLayout::MakeVertexBufferLayoutForVertex()
 VertexBufferLayout VertexBufferLayout::MakeVertexBufferLayoutForBlock()
 {
 	VertexBufferLayout layout;
-	layout.Push<uint32>(1); // pos
-	layout.Push<uint32>(1); // col
-	layout.Push<uint32>(1); // texID
+	layout.Push<uint32>(1);
+	layout.Push<uint32>(1);
+	layout.Push<uint32>(1);
+	//layout.Push<uint32>(1);
 	return layout;
+
+
+	//VertexBufferLayout layout;
+	//layout.Push<uint32>(1); // pos
+	//layout.Push<uint32>(1); // col
+	//layout.Push<uint32>(1); // texID
+	//return layout;
 }
