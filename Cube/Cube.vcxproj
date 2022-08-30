@@ -239,6 +239,7 @@
     <ClInclude Include="Source\Vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="imgui.ini" />
     <None Include="Source\Resources\Shaders\Basic.frag" />
     <None Include="Source\Resources\Shaders\Basic.vert" />
     <None Include="Source\Resources\Shaders\Compressed.frag" />

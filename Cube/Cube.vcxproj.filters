@@ -293,5 +293,6 @@
     <None Include="Source\Resources\Shaders\Basic.vert" />
     <None Include="Source\Resources\Shaders\Compressed.vert" />
     <None Include="Source\Resources\Shaders\Compressed.frag" />
+    <None Include="imgui.ini" />
   </ItemGroup>
 </Project>
