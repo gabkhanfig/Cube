@@ -46,12 +46,12 @@ public:
 		constexpr float EastWestFaceBrightness = 0.8f;
 		constexpr float BottomFaceBrightness = 0.76f;
 		switch (face) {
-		case Facing::Bottom: return BottomFaceBrightness;
+		case Facing::Down: return BottomFaceBrightness;
 		case Facing::North:	return NorthSouthFaceBrightness;
 		case Facing::East:		return EastWestFaceBrightness;
 		case Facing::South:	return NorthSouthFaceBrightness;
 		case Facing::West:		return EastWestFaceBrightness;
-		case Facing::Top:		return TopFaceBrightness;
+		case Facing::Up:		return TopFaceBrightness;
 		}
 	}
 
@@ -70,5 +70,7 @@ public:
 	virtual bool IsBlockAdjacentTransparent(Chunk* owningChunk, WorldPosition position, Facing face);
 
 	void GenerateQuadDataForFace(Chunk* owningChunk, BlockPosition position, Facing face, BlockQuad& outQuad);
+
+	virtual bool GenerateBlockQuads(Chunk* chunk, const WorldPosition& worldPos, BlockTransform transform, BlockQuad* quadBuffer, uint32& outQuadsGenerated);
 
 };

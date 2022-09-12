@@ -1,71 +1,47 @@
 #include "Camera.h"
 #include <Engine/Input/UserInput.h>
 #include <iostream>
+#include <glm/gtx/rotate_vector.hpp>
+#include <Game/Player/Player.h>
+//#include <glm/gtx/vector_angle.hpp>
 
 Camera* Camera::activeCamera;
 
 Camera::Camera()
 {
-	movementSpeed = cameraMoveSpeed;
 	sensitivity = cameraSensitivity;
-	fov = 45.f;
+	fov = cameraFOV;
 
 	proj = glm::perspective(glm::radians(fov), 16.f / 9.f, 0.1f, 1000.f);
 
 	pitch = 0.f;
 	yaw = 0.f;
-
-	position = glm::vec3(0.f, 0.f, 0.f);
-	rotation = glm::vec3(pitch, yaw, -1.0f);
-	up = glm::vec3(0.0f, 1.0f, 0.0f);
 }
 
 void Camera::SetActiveCamera(Camera* newActiveCamera)
 {
 	Camera::activeCamera = newActiveCamera;
-	UserInput::setHoldCallback(GLFW_KEY_W, Camera::MoveActiveCameraForwards);
-	UserInput::setHoldCallback(GLFW_KEY_S, Camera::MoveActiveCameraBackwards);
-	UserInput::setHoldCallback(GLFW_KEY_D, Camera::MoveActiveCameraRight);
-	UserInput::setHoldCallback(GLFW_KEY_A, Camera::MoveActiveCameraLeft);
-	UserInput::setHoldCallback(GLFW_KEY_SPACE, Camera::MoveActiveCameraUp);
-	UserInput::setHoldCallback(GLFW_KEY_LEFT_CONTROL, Camera::MoveActiveCameraDown);
 }
 
-void Camera::MoveActiveCameraForwards(float deltaTime)
+void Camera::SetRotation(const glm::vec3& newRotation)
 {
-	Camera::activeCamera->position += deltaTime * Camera::activeCamera->movementSpeed * Camera::activeCamera->rotation;
+	if (followEntity) {
+		followEntity->rotation = newRotation;
+	}
 }
 
-void Camera::MoveActiveCameraBackwards(float deltaTime)
+void Camera::SetFollowingEntity(Entity* entity)
 {
-	Camera::activeCamera->position -= deltaTime * Camera::activeCamera->movementSpeed * Camera::activeCamera->rotation;
-}
-
-void Camera::MoveActiveCameraRight(float deltaTime)
-{
-	Camera::activeCamera->position += float(deltaTime * Camera::activeCamera->movementSpeed) * glm::normalize(glm::cross(Camera::activeCamera->rotation, Camera::activeCamera->up));
-}
-
-void Camera::MoveActiveCameraLeft(float deltaTime)
-{
-	Camera::activeCamera->position -= float(deltaTime * Camera::activeCamera->movementSpeed) * glm::normalize(glm::cross(Camera::activeCamera->rotation, Camera::activeCamera->up));
-}
-
-void Camera::MoveActiveCameraUp(float deltaTime)
-{
-	Camera::activeCamera->position.y += deltaTime * Camera::activeCamera->movementSpeed;
-}
-
-void Camera::MoveActiveCameraDown(float deltaTime)
-{
-	Camera::activeCamera->position.y -= deltaTime * Camera::activeCamera->movementSpeed;
+	followEntity = entity;
 }
 
 glm::mat4 Camera::GetMVPMatrix()
 {
+	const glm::vec3 position = followEntity->position;
+	const glm::vec3 rotation = followEntity->rotation;
+
 	glm::mat4 view;
-	view = glm::lookAt(position, position + rotation, up);
+	view = glm::lookAt(position, position + rotation, GetUpVector());
 
 	return proj * view;
-	//return proj;
 }

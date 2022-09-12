@@ -4,11 +4,10 @@
 #include <Engine/Render/Shader/Shader.h>
 #include <Util/Benchmark/Benchmark.h>
 #include <Game/World/Block/Factory/BlockFactory.h>
+#include <Game/Player/Player.h>
 
 Chunk::Chunk(ChunkPosition _position)
 {
-	//Benchmark* chunkLoad = Benchmark::StartBenchmark("Construct chunk");
-
 	indexBuffer = nullptr;
 	vertexBuffer = nullptr;
 	vertexArray = nullptr;
@@ -17,17 +16,15 @@ Chunk::Chunk(ChunkPosition _position)
 
 	position = _position;
 
-	Print("chunk spawned at chunk position: " + ToString({ position.x, position.y, position.z }));
-	//chunkLoad->EndBenchmark();
+	quadsToDraw = 0;
 
 	int blockIndex = 0;
-	Block* block = BlockFactory::GetBlock(BlockId_StonyGrass);
-	Block* block2 = BlockFactory::GetBlock(BlockId_Air);
+	Block* block = BlockFactory::GetBlock(BlockId_Stone);
+	Block* block2 = BlockFactory::GetBlock(BlockId_StonyGrass);
 	for (uint8 y = 0; y < CHUNK_WIDTH; y++) {
 		for (uint8 z = 0; z < CHUNK_WIDTH; z++) {
 			for (uint8 x = 0; x < CHUNK_WIDTH; x++) {
-				//Print("Block index: " + ToString(blockIndex));
-				if (y >= 8) {
+				if (y >= 15) {
 					blocks[blockIndex] = block2;
 				}
 				else {
@@ -63,21 +60,16 @@ void Chunk::DrawChunk()
 	vertexBuffer->Bind();
 	indexBuffer->Bind();
 
-	Shader::GetBoundShader()->SetUniform3float("u_ChunkPosition", glm::vec3(position.x * CHUNK_WIDTH, position.y * CHUNK_WIDTH, position.z * CHUNK_WIDTH));
+	//Shader::GetBoundShader()->SetUniform3float("u_ChunkPosition", glm::vec3(position.x * CHUNK_WIDTH, position.y * CHUNK_WIDTH, position.z * CHUNK_WIDTH));
+	//Print(ToString(ShiftToRenderOrigin()) + " current chu");
+	Shader::GetBoundShader()->SetUniform3float("u_ChunkPosition", ShiftToRenderOrigin());
 	Renderer::DrawQuads(quadsToDraw);
 }
 
 void Chunk::Init()
 {
-	//int blockIndex = 0;
-	//for (uint8 y = 0; y < CHUNK_WIDTH; y++) {
-	//	for (uint8 z = 0; z < CHUNK_WIDTH; z++) {
-	//		for (uint8 x = 0; x < CHUNK_WIDTH; x++) {
-	//			blocks[blockIndex] = Block::GetSingletonTest();
-	//			blockIndex++;
-	//		}
-	//	}
-	//}
+	//std::thread testChunkRegenMesh(&Chunk::RegenerateChunkMeshData, this);
+	//testChunkRegenMesh.join();
 
 	RegenerateChunkMeshData();
 }
@@ -132,10 +124,11 @@ void Chunk::RegenerateChunkMeshData()
 
 	std::vector<BlockQuad> quads;
 
+	BlockQuad quadBuffer[6];
+	uint32 generatedQuads;
+
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		Block* block = blocks[i];
-
-		BlockQuad quad;
 
 		BlockPosition relativeLocation = BlockIndexToRelativeLocation(i);
 		WorldPosition worldPos = {
@@ -144,29 +137,8 @@ void Chunk::RegenerateChunkMeshData()
 			position.z * 16 + relativeLocation.z
 		};
 
-		if (block->IsBlockAdjacentTransparent(this, worldPos, Facing::Bottom)) {
-			block->GenerateQuadDataForFace(this, relativeLocation, Facing::Bottom, quad);
-			quads.push_back(quad);
-		}
-		if (block->IsBlockAdjacentTransparent(this, worldPos, Facing::North)) {
-			block->GenerateQuadDataForFace(this, relativeLocation, Facing::North, quad);
-			quads.push_back(quad);
-		}
-		if (block->IsBlockAdjacentTransparent(this, worldPos, Facing::East)) {
-			block->GenerateQuadDataForFace(this, relativeLocation, Facing::East, quad);
-			quads.push_back(quad);
-		}
-		if (block->IsBlockAdjacentTransparent(this, worldPos, Facing::South)) {
-			block->GenerateQuadDataForFace(this, relativeLocation, Facing::South, quad);
-			quads.push_back(quad);
-		}
-		if (block->IsBlockAdjacentTransparent(this, worldPos, Facing::West)) {
-			block->GenerateQuadDataForFace(this, relativeLocation, Facing::West, quad);
-			quads.push_back(quad);
-		}
-		if (block->IsBlockAdjacentTransparent(this, worldPos, Facing::Top)) {
-			block->GenerateQuadDataForFace(this, relativeLocation, Facing::Top, quad);
-			quads.push_back(quad);
+		if (block->GenerateBlockQuads(this, worldPos, { relativeLocation, 0, 0 }, quadBuffer, generatedQuads)) {
+			quads.insert(quads.end(), quadBuffer, quadBuffer + generatedQuads);
 		}
 	}
 
@@ -178,15 +150,24 @@ void Chunk::RegenerateChunkMeshData()
 	vertexArray = new VertexArray();
 	vertexBuffer = new VertexBuffer(&quads[0], sizeof(BlockQuad) * quads.size());  
 
-#ifdef COMPRESSED_RENDER
 	VertexBufferLayout layout = VertexBufferLayout::MakeVertexBufferLayoutForBlock();
-#else
-	VertexBufferLayout layout = VertexBufferLayout::MakeVertexBufferLayoutForVertex();
-#endif
 	vertexArray->AddBuffer(vertexBuffer, layout);
 
 	indexBuffer = IndexBuffer::MakeQuadsIndexBuffer(quads.size());
 
 	quadsToDraw = quads.size();
 	canRender = true;
+}
+
+glm::vec3 Chunk::ShiftToRenderOrigin()
+{
+	constexpr glm::dvec3 origin = { 0.0, 0.0, 0.0 };
+	const glm::dvec3 playerOffset = origin - Player::GetPlayer()->GetPosition();
+	glm::dvec3 chunkRenderPos{ 
+		position.x * CHUNK_WIDTH + playerOffset.x,
+		position.y * CHUNK_WIDTH + playerOffset.y,
+		position.z * CHUNK_WIDTH + playerOffset.z
+	};
+
+	return glm::vec3(chunkRenderPos);
 }

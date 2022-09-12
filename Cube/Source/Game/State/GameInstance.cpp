@@ -5,6 +5,7 @@
 #include <Game/World/Block/Block.h>
 #include <Game/World/Block/Factory/BlockFactory.h>
 #include <Engine/Render/Renderer.h>
+#include <Game/Player/Player.h>
 
 GameInstance* GameInstance::gameInstance;
 
@@ -26,6 +27,8 @@ GameInstance* GameInstance::StartGame()
 
 void GameInstance::Init()
 {
+	Player::StartPlayer();
+
 	World::Init();
 }
 

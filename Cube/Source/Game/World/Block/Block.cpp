@@ -33,11 +33,11 @@ bool Block::IsBlockAdjacentTransparent(Chunk* owningChunk, WorldPosition positio
 	+Y -> looking at bottom
 	-Y -> looking at top
 	*/
-	Facing opposite = Facing::Bottom;
+	Facing opposite = Facing::Down;
 	switch (face) {
-	case Facing::Bottom:
+	case Facing::Down:
 		position.y--;
-		opposite = Facing::Top;
+		opposite = Facing::Up;
 		break;
 	case Facing::North:
 		position.z--;
@@ -55,9 +55,9 @@ bool Block::IsBlockAdjacentTransparent(Chunk* owningChunk, WorldPosition positio
 		position.x--;
 		opposite = Facing::East;
 		break;
-	case Facing::Top:
+	case Facing::Up:
 		position.y++;
-		opposite = Facing::Bottom;
+		opposite = Facing::Down;
 		break;
 	}
 
@@ -90,7 +90,7 @@ void Block::GenerateQuadDataForFace(Chunk* owningChunk, BlockPosition position, 
 	Color colors[4] = { faceColor, faceColor, faceColor, faceColor };
 
 	switch (face) {
-	case Facing::Bottom:
+	case Facing::Down:
 		positions[0] = a;
 		positions[1] = b;
 		positions[2] = c;
@@ -120,7 +120,7 @@ void Block::GenerateQuadDataForFace(Chunk* owningChunk, BlockPosition position, 
 		positions[2] = h;
 		positions[3] = e;
 		break;
-	case Facing::Top:
+	case Facing::Up:
 		positions[0] = e;
 		positions[1] = h;
 		positions[2] = g;
@@ -128,4 +128,37 @@ void Block::GenerateQuadDataForFace(Chunk* owningChunk, BlockPosition position, 
 		break;
 	}
 	BlockQuad::GenerateQuad1x1(outQuad, positions, colors, texId);
+}
+
+bool Block::GenerateBlockQuads(Chunk* chunk, const WorldPosition& worldPos, BlockTransform transform, BlockQuad* quadBuffer, uint32& outQuadsGenerated)
+{
+	const BlockPosition relativeLocation = transform.position;
+
+	outQuadsGenerated = 0;
+	if (IsBlockAdjacentTransparent(chunk, worldPos, Facing::Down)) {
+		GenerateQuadDataForFace(chunk, relativeLocation, Facing::Down, quadBuffer[outQuadsGenerated]);
+		outQuadsGenerated++;
+	}
+	if (IsBlockAdjacentTransparent(chunk, worldPos, Facing::North)) {
+		GenerateQuadDataForFace(chunk, relativeLocation, Facing::North, quadBuffer[outQuadsGenerated]);
+		outQuadsGenerated++;
+	}
+	if (IsBlockAdjacentTransparent(chunk, worldPos, Facing::East)) {
+		GenerateQuadDataForFace(chunk, relativeLocation, Facing::East, quadBuffer[outQuadsGenerated]);
+		outQuadsGenerated++;
+	}
+	if (IsBlockAdjacentTransparent(chunk, worldPos, Facing::South)) {
+		GenerateQuadDataForFace(chunk, relativeLocation, Facing::South, quadBuffer[outQuadsGenerated]);
+		outQuadsGenerated++;
+	}
+	if (IsBlockAdjacentTransparent(chunk, worldPos, Facing::West)) {
+		GenerateQuadDataForFace(chunk, relativeLocation, Facing::West, quadBuffer[outQuadsGenerated]);
+		outQuadsGenerated++;
+	}
+	if (IsBlockAdjacentTransparent(chunk, worldPos, Facing::Up)) {
+		GenerateQuadDataForFace(chunk, relativeLocation, Facing::Up, quadBuffer[outQuadsGenerated]);
+		outQuadsGenerated++;
+	}
+
+	return outQuadsGenerated;
 }

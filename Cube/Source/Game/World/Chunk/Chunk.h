@@ -6,6 +6,7 @@
 #include <Engine/Render/Buffers/VertexBuffer.h>
 #include <Engine/Render/Buffers/VertexArray.h>
 #include <Engine/Render/Buffers/VertexBufferLayout.h>
+#include <thread>
 
 //#define CHUNK_WIDTH 16
 
@@ -29,6 +30,8 @@ public:
 	IndexBuffer* indexBuffer;
 	VertexArray* vertexArray;
 
+	//std::thread RenderThread;
+
 public: 
 
 	Chunk(ChunkPosition _position = {0, 0, 0});
@@ -43,4 +46,6 @@ public:
 	BlockPosition BlockIndexToRelativeLocation(uint32 index);
 
 	void RegenerateChunkMeshData();
+
+	glm::vec3 ShiftToRenderOrigin();
 };

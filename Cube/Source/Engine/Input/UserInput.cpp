@@ -44,8 +44,6 @@ void UserInput::MouseButtonCallback(GLFWwindow* window, int button, int action, 
 
 void UserInput::MouseCursorPositionCallback(GLFWwindow* window, double xpos, double ypos)
 {
-	//Print("Mouse cursor position callback");
-
 	float xoffset = xpos - previousCursorPos.x;
 	float yoffset = previousCursorPos.y - ypos;
 	previousCursorPos.x = xpos;
@@ -73,7 +71,7 @@ void UserInput::MouseCursorPositionCallback(GLFWwindow* window, double xpos, dou
 	front.x = cos(glm::radians(cam->yaw)) * cos(glm::radians(cam->pitch));
 	front.y = sin(glm::radians(cam->pitch));
 	front.z = sin(glm::radians(cam->yaw)) * cos(glm::radians(cam->pitch));
-	cam->rotation = glm::normalize(front);
+	cam->SetRotation(glm::normalize(front));
 }
 
 void UserInput::setPressCallback(int input, button_callback inputFuncPtr)

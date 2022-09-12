@@ -5,6 +5,8 @@
 #include <Game/World/Block/Blocks/GrassBlock/Grass.h>
 #include <Game/World/Block/Blocks/Stone/Stone.h>
 #include <Game/World/Block/Blocks/StonyGrass/StonyGrass.h>
+#include <Game/World/Block/Blocks/MossyDirt/MossyDirt.h>
+#include <Game/World/Block/Blocks/MossyStone/MossyStone.h>
 
 std::unordered_map<uint32, BlockInjectorPure*> BlockFactory::block_map;
 
@@ -31,5 +33,7 @@ void BlockFactory::InjectAllBlocks()
 	InjectBlock<Grass>();
 	InjectBlock<Stone>();
 	InjectBlock<StonyGrass>();
+	InjectBlock<MossyDirt>();
+	InjectBlock<MossyStone>();
 }
 

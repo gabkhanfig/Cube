@@ -3,7 +3,7 @@
 uint32 Grass::GetTextureFaceId(Facing face)
 {
 	switch (face) {
-	case Facing::Bottom:
+	case Facing::Down:
 		return BlockTexture_Dirt;
 	case Facing::North:
 		return BlockTexture_GrassSide;
@@ -13,7 +13,7 @@ uint32 Grass::GetTextureFaceId(Facing face)
 		return BlockTexture_GrassSide;
 	case Facing::West:
 		return BlockTexture_GrassSide;
-	case Facing::Top:
+	case Facing::Up:
 		return BlockTexture_GrassTop;
 	}
 }

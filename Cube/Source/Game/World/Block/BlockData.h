@@ -1,15 +1,48 @@
 #pragma once
 
 #include <CubeCore.h>
+#include <Game/World/WorldPosition.h>
 
 enum class Facing : uint8 
 {
-	Bottom,
+	Down,
 	North,
 	East,
 	South,
 	West,
-	Top
+	Up
+};
+
+struct BlockTransform 
+{
+	BlockPosition position;
+	uint8 horizontalFacing : 2;
+	uint8 verticalFacing : 1;
+
+
+	Facing GetHorizontalDirection() 
+	{
+		switch (horizontalFacing) {
+		case 0:
+			return Facing::North;
+		case 1:
+			return Facing::East;
+		case 2:
+			return Facing::South;
+		case 3:
+			return Facing::West;
+		}
+	}
+
+	Facing GetVerticalDirection() 
+	{
+		switch (verticalFacing) {
+		case 0:
+			return Facing::Down;
+		case 1:
+			return Facing::Up;
+		}
+	}
 };
 
 struct BlockData 

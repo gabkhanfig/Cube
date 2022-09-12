@@ -1,7 +1,6 @@
 #include "Air.h"
 
-bool Air::IsBlockAdjacentTransparent(Chunk* owningChunk, WorldPosition position, Facing face)
+bool Air::GenerateBlockQuads(Chunk* chunk, const WorldPosition& worldPos, BlockTransform transform, BlockQuad* quadBuffer, uint32& outQuadsGenerated)
 {
-	// This forces this block to be invisible
 	return false;
 }
