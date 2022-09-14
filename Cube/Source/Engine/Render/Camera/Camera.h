@@ -24,7 +24,7 @@ public:
 	float yaw;
 
 
-	glm::mat4 proj;
+	//glm::mat4 proj;
 
 	Camera();
 
@@ -34,7 +34,9 @@ public:
 	void SetRotation(const glm::vec3& newRotation);
 	void SetFollowingEntity(Entity* entity);
 
-	constexpr glm::vec3 GetUpVector() { return glm::vec3(0.0f, 1.0f, 0.0f); }
+	constexpr glm::vec3 GetUpVector() const { return glm::vec3(0.0f, 1.0f, 0.0f); }
 
-	glm::mat4 GetMVPMatrix();
+	glm::mat4 GetMVPMatrix() const;
+	glm::mat4 GetProjectionMatrix() const;
+	glm::mat4 GetViewMatrix(const glm::dvec3& pos = {0.0, 0.0, 0.0}) const;
 };

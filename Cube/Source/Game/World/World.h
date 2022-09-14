@@ -3,6 +3,8 @@
 #include <CubeCore.h>
 #include <Game/World/WorldPosition.h>
 
+constexpr glm::dvec3 WORLD_ORIGIN = { 0.0, 0.0, 0.0 };
+
 class Dimension;
 class Chunk;
 class Block;

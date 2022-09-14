@@ -118,6 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,7 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\OpenGL\OpenGLTest1\Dependencies\glad.c" />
+    <ClCompile Include="..\Dependencies\glad.c" />
     <ClCompile Include="Source\Engine\Engine\Engine.cpp" />
     <ClCompile Include="Source\Engine\Input\InputButton.cpp" />
     <ClCompile Include="Source\Engine\Input\UserInput.cpp" />
@@ -168,9 +169,11 @@
     <ClCompile Include="Source\Game\World\Block\Blocks\MossyStone\MossyStone.cpp" />
     <ClCompile Include="Source\Game\World\Block\Blocks\Stone\Stone.cpp" />
     <ClCompile Include="Source\Game\World\Block\Blocks\StonyGrass\StonyGrass.cpp" />
+    <ClCompile Include="Source\Game\World\Block\BlockTypes\ComplexBlock.cpp" />
     <ClCompile Include="Source\Game\World\Block\Factory\BlockFactory.cpp" />
     <ClCompile Include="Source\Game\World\Chunk\Chunk.cpp" />
     <ClCompile Include="Source\Game\World\Dimension\Dimension.cpp" />
+    <ClCompile Include="Source\Game\World\Terrain\Biome\Biome.cpp" />
     <ClCompile Include="Source\Game\World\World.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Util\Benchmark\Benchmark.cpp" />
@@ -232,6 +235,7 @@
     <ClInclude Include="Source\Game\World\Block\Texture\BlockTextures.h" />
     <ClInclude Include="Source\Game\World\Chunk\Chunk.h" />
     <ClInclude Include="Source\Game\World\Dimension\Dimension.h" />
+    <ClInclude Include="Source\Game\World\Terrain\Biome\Biome.h" />
     <ClInclude Include="Source\Game\World\World.h" />
     <ClInclude Include="Source\Game\World\WorldPosition.h" />
     <ClInclude Include="Source\Util\Benchmark\Benchmark.h" />

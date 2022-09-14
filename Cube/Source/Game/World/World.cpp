@@ -2,6 +2,7 @@
 #include <Game/World/Dimension/Dimension.h>
 #include <Game/World/Chunk/Chunk.h>
 #include <Game/World/Block/Block.h>
+#include <Game/Player/Player.h>
 
 std::vector<Dimension*> World::loadedDimensions;
 
@@ -18,6 +19,8 @@ void World::Tick(float deltaTime)
 	for (Dimension* dimension : loadedDimensions) {
 		dimension->Tick(deltaTime);
 	}
+
+	Player::GetPlayer()->Tick(deltaTime);
 }
 
 Block* World::GetBlockAtPosition(const WorldPosition& position, uint32 dimensionIndex)
@@ -29,9 +32,10 @@ Block* World::GetBlockAtPosition(const WorldPosition& position, uint32 dimension
 		return nullptr;
 	}
 	BlockPosition localPosition = {
-		localPosition.x = position.x % CHUNK_WIDTH,
-		localPosition.y = position.y % CHUNK_WIDTH,
-		localPosition.z = position.z % CHUNK_WIDTH
+		localPosition.x = std::abs(position.x) % CHUNK_WIDTH,
+		localPosition.y = std::abs(position.y) % CHUNK_WIDTH,
+		localPosition.z = std::abs(position.z) % CHUNK_WIDTH
 	};
+	//Block* block = chunk->GetBlockAtLocalPosition(localPosition);
 	return chunk->GetBlockAtLocalPosition(localPosition);
 }

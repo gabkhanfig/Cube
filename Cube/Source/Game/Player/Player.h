@@ -5,6 +5,7 @@
 
 class Camera;
 class PlayerInput;
+class Chunk;
 
 class Player : public Entity 
 {
@@ -15,9 +16,15 @@ private:
 
 	static Player* player;
 
+	/* The chunk the player is currently in. */
+	Chunk* chunkIn;
+
+
+
+	float movementSpeed;
+
 	PlayerMovementMode movementMode;
 	PlayerMovementState movementState;
-	double movementSpeed;
 
 public:
 
@@ -26,4 +33,6 @@ public:
 	inline static Player* GetPlayer() { return player; }
 
 	static Player* StartPlayer();
+
+	virtual void Tick(float deltaTime) override;
 };

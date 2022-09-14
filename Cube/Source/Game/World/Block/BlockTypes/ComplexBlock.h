@@ -4,5 +4,5 @@
 
 class ComplexBlock : public Block
 {
-
+	virtual void Destroy() override;
 };

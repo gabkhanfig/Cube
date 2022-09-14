@@ -73,4 +73,7 @@ public:
 
 	virtual bool GenerateBlockQuads(Chunk* chunk, const WorldPosition& worldPos, BlockTransform transform, BlockQuad* quadBuffer, uint32& outQuadsGenerated);
 
+	/* Destroy this block. If it's a simple block, does absolutely nothing. If it's a complex block, actually deletes it. */
+	virtual void Destroy();
+
 };

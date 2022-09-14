@@ -1,12 +1,16 @@
 #include "Chunk.h"
+#include <Game/World/World.h>
 #include <Game/World/Block/Block.h>
 #include <Engine/Render/Renderer.h>
 #include <Engine/Render/Shader/Shader.h>
 #include <Util/Benchmark/Benchmark.h>
 #include <Game/World/Block/Factory/BlockFactory.h>
 #include <Game/Player/Player.h>
+#include <Engine/Render/Camera/Camera.h>
+#include <Game/World/Dimension/Dimension.h>
+#include <iostream>
 
-Chunk::Chunk(ChunkPosition _position)
+Chunk::Chunk(Dimension* dim, ChunkPosition _position)
 {
 	indexBuffer = nullptr;
 	vertexBuffer = nullptr;
@@ -18,31 +22,47 @@ Chunk::Chunk(ChunkPosition _position)
 
 	quadsToDraw = 0;
 
-	int blockIndex = 0;
-	Block* block = BlockFactory::GetBlock(BlockId_Stone);
-	Block* block2 = BlockFactory::GetBlock(BlockId_StonyGrass);
-	for (uint8 y = 0; y < CHUNK_WIDTH; y++) {
-		for (uint8 z = 0; z < CHUNK_WIDTH; z++) {
-			for (uint8 x = 0; x < CHUNK_WIDTH; x++) {
-				if (y >= 15) {
-					blocks[blockIndex] = block2;
-				}
-				else {
-					blocks[blockIndex] = block;
-				}
-				blockIndex++;
-			}
-		}
-	}
+	dimension = dim;
 }
 
 Chunk::~Chunk()
 {
+	Print("chunk destructor called");
 	delete vertexArray;
 	delete vertexBuffer;
 	delete indexBuffer;
 	for (int i = 0; i < CHUNK_SIZE; i++) {
-		delete blocks[i];
+		blocks[i]->Destroy();
+	}
+}
+
+Chunk* Chunk::LoadChunk(Dimension* _dimension, ChunkPosition _position)
+{
+	Chunk* chunk = new Chunk(_dimension, _position);
+	if (true) { // TODO: check if the chunk data has been saved.
+		chunk->GenerateFreshChunkTerrain();
+	}
+
+	return chunk;
+}
+
+void Chunk::UnloadChunk()
+{
+	delete this;
+}
+
+void Chunk::GenerateFreshChunkTerrain()
+{
+	int blockIndex = 0;
+	for (uint8 y = 0; y < CHUNK_WIDTH; y++) {
+		for (uint8 z = 0; z < CHUNK_WIDTH; z++) {
+			for (uint8 x = 0; x < CHUNK_WIDTH; x++) {
+				const BlockPosition bpos = { x, y, z };
+				const WorldPosition wpos = WorldPosition::ToWorldPosition(position, bpos);
+				blocks[blockIndex] = dimension->GetBlockForWorldPosition(wpos);
+				blockIndex++;
+			}
+		}
 	}
 }
 
@@ -56,41 +76,40 @@ void Chunk::DrawChunk()
 	if (!indexBuffer) return;
 #endif
 
+	glm::vec3 shiftChunkPos;
+	const bool chunkVisible = IsChunkInCamera(shiftChunkPos);
+	if (!chunkVisible) return;
+
 	vertexArray->Bind();
 	vertexBuffer->Bind();
 	indexBuffer->Bind();
 
 	//Shader::GetBoundShader()->SetUniform3float("u_ChunkPosition", glm::vec3(position.x * CHUNK_WIDTH, position.y * CHUNK_WIDTH, position.z * CHUNK_WIDTH));
 	//Print(ToString(ShiftToRenderOrigin()) + " current chu");
-	Shader::GetBoundShader()->SetUniform3float("u_ChunkPosition", ShiftToRenderOrigin());
+	Shader::GetBoundShader()->SetUniform3float("u_ChunkPosition", shiftChunkPos);
 	Renderer::DrawQuads(quadsToDraw);
 }
 
 void Chunk::Init()
 {
-	//std::thread testChunkRegenMesh(&Chunk::RegenerateChunkMeshData, this);
-	//testChunkRegenMesh.join();
-
 	RegenerateChunkMeshData();
 }
 
-Block* Chunk::GetBlockAtLocalPosition(BlockPosition position)
+Block* Chunk::GetBlockAtLocalPosition(BlockPosition bpos)
 {
-	if (position.x >= CHUNK_WIDTH || position.y >= CHUNK_WIDTH || position.z >= CHUNK_WIDTH) {
-		//std::cout << "position data is out of chunk range ... is null" << '\n';
+	if (bpos.x >= CHUNK_WIDTH || bpos.y >= CHUNK_WIDTH || bpos.z >= CHUNK_WIDTH) {
 		return nullptr;
 	}
 
 	uint32 index = 0;
-	index += position.x;
-	index += position.z * CHUNK_WIDTH;
-	index += position.y * CHUNK_WIDTH * CHUNK_WIDTH;
+	index += bpos.x;
+	index += bpos.z * CHUNK_WIDTH;
+	index += bpos.y * CHUNK_WIDTH * CHUNK_WIDTH;
 
 	if (index >= CHUNK_SIZE) {
-		//std::cout << "getting block at index " << index << "... is null" << '\n';
 		return nullptr;
 	}
-	//std::cout << "getting block at index " << index << "... is valid!" << '\n';
+
 	return blocks[index];
 }
 
@@ -161,13 +180,49 @@ void Chunk::RegenerateChunkMeshData()
 
 glm::vec3 Chunk::ShiftToRenderOrigin()
 {
-	constexpr glm::dvec3 origin = { 0.0, 0.0, 0.0 };
-	const glm::dvec3 playerOffset = origin - Player::GetPlayer()->GetPosition();
+	const glm::dvec3 playerOffset = WORLD_ORIGIN - Player::GetPlayer()->GetPosition();
 	glm::dvec3 chunkRenderPos{ 
 		position.x * CHUNK_WIDTH + playerOffset.x,
 		position.y * CHUNK_WIDTH + playerOffset.y,
 		position.z * CHUNK_WIDTH + playerOffset.z
 	};
 
+	// Start with initial high precision then when chunk is shifted towards player, compress to floats for gpu.
 	return glm::vec3(chunkRenderPos);
+}
+
+bool Chunk::IsChunkInCamera(glm::vec3& outRenderPos)
+{
+	// Any chunk within this distance will not be culled
+	constexpr float CHUNK_CLOSE_CULL = 24.f;
+
+	const Camera* cam = Camera::GetActiveCamera();
+
+	const glm::vec3 renderPos = ShiftToRenderOrigin();
+
+	const float sqrOriginDist = renderPos.x * renderPos.x + renderPos.y * renderPos.y + renderPos.z * renderPos.z;
+	const float sqrNearDist = 0.1f * 0.1f;
+	const float sqrFarDist = (float(chunkRenderDistance) * 16.f) * (float(chunkRenderDistance) * 16.f);
+
+	if (sqrOriginDist < (CHUNK_CLOSE_CULL * CHUNK_CLOSE_CULL)) {
+		outRenderPos = renderPos;
+		return true;
+	}
+
+	if (sqrOriginDist < sqrNearDist || sqrOriginDist > sqrFarDist) {
+		return false;
+	}
+
+	const glm::mat4 mvp = cam->GetProjectionMatrix() * cam->GetViewMatrix();
+	const glm::vec4 clip = mvp * glm::vec4(renderPos, 1);
+
+	const bool chunkPointOut = abs(renderPos.x) > clip.w && abs(renderPos.y) > clip.w;
+	const bool chunkOppositePointOut = abs(renderPos.x + 16.f) > clip.w && abs(renderPos.y + 16.f) > clip.w;
+
+	if (chunkPointOut && chunkOppositePointOut) {
+		return false;
+	}
+
+	outRenderPos = renderPos;
+	return true;
 }

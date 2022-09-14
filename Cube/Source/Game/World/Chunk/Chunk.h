@@ -14,38 +14,51 @@
 
 class Block;
 struct Vertex;
+class Dimension;
 
 class Chunk 
 {
 
 public:
 
-	ChunkPosition position;
-
 	Block* blocks[CHUNK_SIZE];
 
-	uint32 quadsToDraw;
-	bool canRender;
+	ChunkPosition position;
+
 	VertexBuffer* vertexBuffer;
+
 	IndexBuffer* indexBuffer;
+
 	VertexArray* vertexArray;
 
-	//std::thread RenderThread;
+	Dimension* dimension;
+
+	uint32 quadsToDraw;
+
+	bool canRender;
 
 public: 
 
-	Chunk(ChunkPosition _position = {0, 0, 0});
+	Chunk(Dimension* dim, ChunkPosition _position = {0, 0, 0});
 	~Chunk();
+
+	static Chunk* LoadChunk(Dimension* _dimension, ChunkPosition _position);
+
+	void UnloadChunk();
+
+	void GenerateFreshChunkTerrain();
 
 	void DrawChunk();
 
 	void Init();
 
-	Block* GetBlockAtLocalPosition(BlockPosition position);
+	Block* GetBlockAtLocalPosition(BlockPosition bpos);
 
 	BlockPosition BlockIndexToRelativeLocation(uint32 index);
 
 	void RegenerateChunkMeshData();
 
 	glm::vec3 ShiftToRenderOrigin();
+
+	bool IsChunkInCamera(glm::vec3& outRenderPos);
 };

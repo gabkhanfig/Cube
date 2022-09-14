@@ -18,6 +18,10 @@ Block* Block::GetSingletonTest()
 	return singleton;
 }
 
+void Block::Destroy()
+{
+}
+
 uint32 Block::GetTextureFaceId(Facing face)
 {
 	return BlockTexture_Invalid;

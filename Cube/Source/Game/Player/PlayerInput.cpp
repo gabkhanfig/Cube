@@ -4,7 +4,9 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <Engine/Render/Camera/Camera.h>
 
-constexpr glm::dvec3 upVector = glm::dvec3(0.0, 1.0, 0.0);
+constexpr glm::vec3 upVector = glm::dvec3(0.0, 1.0, 0.0);
+
+
 
 static Player* GetPlayer() 
 {
@@ -29,7 +31,7 @@ void PlayerInput::MovePlayerForwards(float deltaTime)
 		GetPlayer()->position += deltaTime * GetPlayer()->movementSpeed * GetPlayer()->rotation;
 		break;
 	default:
-		glm::dvec3 rotation = glm::rotate(GetPlayer()->rotation, double(glm::radians(90.f)), glm::dvec3(0.0f, 1.0f, 0.0f));
+		glm::vec3 rotation = glm::rotate(GetPlayer()->rotation, glm::radians(90.f), upVector);
 		GetPlayer()->position += deltaTime * GetPlayer()->movementSpeed * glm::normalize(glm::cross(rotation, upVector));
 		break;
 	}
@@ -42,7 +44,7 @@ void PlayerInput::MovePlayerBackwards(float deltaTime)
 		GetPlayer()->position -= deltaTime * GetPlayer()->movementSpeed * GetPlayer()->rotation;
 		break;
 	default:
-		glm::dvec3 rotation = glm::rotate(GetPlayer()->rotation, double(glm::radians(90.f)), glm::dvec3(0.0f, 1.0f, 0.0f));
+		glm::vec3 rotation = glm::rotate(GetPlayer()->rotation, glm::radians(90.f), upVector);
 		GetPlayer()->position -= deltaTime * GetPlayer()->movementSpeed * glm::normalize(glm::cross(rotation, upVector));
 		break;
 	}

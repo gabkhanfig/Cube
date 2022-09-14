@@ -3,7 +3,6 @@
 #include <iostream>
 #include <glm/gtx/rotate_vector.hpp>
 #include <Game/Player/Player.h>
-//#include <glm/gtx/vector_angle.hpp>
 
 Camera* Camera::activeCamera;
 
@@ -12,7 +11,7 @@ Camera::Camera()
 	sensitivity = cameraSensitivity;
 	fov = cameraFOV;
 
-	proj = glm::perspective(glm::radians(fov), 16.f / 9.f, 0.1f, 1000.f);
+	//proj = glm::perspective(glm::radians(fov), 16.f / 9.f, 0.1f, 1000.f);
 
 	pitch = 0.f;
 	yaw = 0.f;
@@ -35,13 +34,20 @@ void Camera::SetFollowingEntity(Entity* entity)
 	followEntity = entity;
 }
 
-glm::mat4 Camera::GetMVPMatrix()
+glm::mat4 Camera::GetMVPMatrix() const
 {
-	const glm::vec3 position = followEntity->position;
-	const glm::vec3 rotation = followEntity->rotation;
+	return GetProjectionMatrix() * GetViewMatrix();
+}
 
-	glm::mat4 view;
-	view = glm::lookAt(position, position + rotation, GetUpVector());
+glm::mat4 Camera::GetProjectionMatrix() const
+{
+	return glm::perspective(glm::radians(fov), 16.f / 9.f, 0.1f, float(chunkRenderDistance + 1) * 16.f);
+}
 
-	return proj * view;
+glm::mat4 Camera::GetViewMatrix(const glm::dvec3& pos) const
+{
+	constexpr glm::vec3 origin = { 0.f, 0.f, 0.f };
+
+	const glm::vec3 rotation = followEntity->GetRotation();
+	return glm::lookAt(origin, origin + rotation, GetUpVector());
 }

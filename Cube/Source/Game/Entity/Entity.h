@@ -9,13 +9,16 @@ class Entity
 protected:
 
 	glm::dvec3 position;
-	glm::dvec3 rotation;
-	glm::dvec3 velocity;
+	glm::vec3 rotation;
+	glm::vec3 velocity;
 
 	uint8 tickEnabled : 1;
 
-public:
+public: 
 
 	inline glm::dvec3 GetPosition() { return position; }
+	inline glm::vec3 GetRotation() { return rotation; }
+
+	virtual void Tick(float deltaTime);
 
 };
