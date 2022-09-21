@@ -5,7 +5,7 @@
 #include <Util/String/StringUtil.h>
 #include <Util/Logging/Log.h>
 
-constexpr uint32 chunkRenderDistance = 16;
+constexpr uint32 chunkRenderDistance = 3;
 
 #define check(condition)
 #define checkLog(condition, message)

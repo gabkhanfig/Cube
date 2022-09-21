@@ -26,50 +26,30 @@ void PlayerInput::SetupPlayerInput(Player* player)
 
 void PlayerInput::MovePlayerForwards(float deltaTime)
 {
-	switch (GetPlayer()->movementMode) {
-	case PlayerMovementMode::Free:
-		GetPlayer()->position += deltaTime * GetPlayer()->movementSpeed * GetPlayer()->rotation;
-		break;
-	default:
-		glm::vec3 rotation = glm::rotate(GetPlayer()->rotation, glm::radians(90.f), upVector);
-		GetPlayer()->position += deltaTime * GetPlayer()->movementSpeed * glm::normalize(glm::cross(rotation, upVector));
-		break;
-	}
+	GetPlayer()->ForwardHold(deltaTime, 1.f);
 }
 
 void PlayerInput::MovePlayerBackwards(float deltaTime)
 {
-	switch (GetPlayer()->movementMode) {
-	case PlayerMovementMode::Free:
-		GetPlayer()->position -= deltaTime * GetPlayer()->movementSpeed * GetPlayer()->rotation;
-		break;
-	default:
-		glm::vec3 rotation = glm::rotate(GetPlayer()->rotation, glm::radians(90.f), upVector);
-		GetPlayer()->position -= deltaTime * GetPlayer()->movementSpeed * glm::normalize(glm::cross(rotation, upVector));
-		break;
-	}
+	GetPlayer()->ForwardHold(deltaTime, -1.f);
 }
 
 void PlayerInput::MovePlayerRight(float deltaTime)
 {
-	GetPlayer()->position += deltaTime * GetPlayer()->movementSpeed * glm::normalize(glm::cross(GetPlayer()->rotation, upVector));
+	GetPlayer()->RightHold(deltaTime, 1.f);
 }
 
 void PlayerInput::MovePlayerLeft(float deltaTime)
 {
-	GetPlayer()->position -= deltaTime * GetPlayer()->movementSpeed * glm::normalize(glm::cross(GetPlayer()->rotation, upVector));
+	GetPlayer()->RightHold(deltaTime, -1.f);
 }
 
 void PlayerInput::MovePlayerUp(float deltaTime)
 {
-	if (GetPlayer()->movementMode != PlayerMovementMode::Normal) {
-		GetPlayer()->position.y += deltaTime * GetPlayer()->movementSpeed;
-	}
+	GetPlayer()->UpHold(deltaTime, 1.f);
 }
 
 void PlayerInput::MovePlayerDown(float deltaTime)
 {
-	if (GetPlayer()->movementMode != PlayerMovementMode::Normal) {
-		GetPlayer()->position.y -= deltaTime * GetPlayer()->movementSpeed;
-	}
+	GetPlayer()->UpHold(deltaTime, -1.f);
 }

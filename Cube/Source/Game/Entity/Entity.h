@@ -9,6 +9,7 @@ class Entity
 protected:
 
 	glm::dvec3 position;
+	glm::dvec3 previousPosition;
 	glm::vec3 rotation;
 	glm::vec3 velocity;
 

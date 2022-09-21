@@ -41,7 +41,7 @@ glm::mat4 Camera::GetMVPMatrix() const
 
 glm::mat4 Camera::GetProjectionMatrix() const
 {
-	return glm::perspective(glm::radians(fov), 16.f / 9.f, 0.1f, float(chunkRenderDistance + 1) * 16.f);
+	return glm::perspective(glm::radians(fov), 16.f / 9.f, 0.1f, float(chunkRenderDistance + 1) * 16.f * 16.f);
 }
 
 glm::mat4 Camera::GetViewMatrix(const glm::dvec3& pos) const

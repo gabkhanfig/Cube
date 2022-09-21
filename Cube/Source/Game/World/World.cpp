@@ -3,6 +3,7 @@
 #include <Game/World/Chunk/Chunk.h>
 #include <Game/World/Block/Block.h>
 #include <Game/Player/Player.h>
+#include <Engine/Input/UserInput.h>
 
 std::vector<Dimension*> World::loadedDimensions;
 
@@ -12,6 +13,7 @@ void World::Init()
 	loadedDimensions.push_back(overworld);
 	Print("Loaded overworld");
 	overworld->InitChunks();
+	UserInput::MapInput(GLFW_KEY_F, World::TestGenNewChunksAroundPlayer);
 }
 
 void World::Tick(float deltaTime)
@@ -38,4 +40,9 @@ Block* World::GetBlockAtPosition(const WorldPosition& position, uint32 dimension
 	};
 	//Block* block = chunk->GetBlockAtLocalPosition(localPosition);
 	return chunk->GetBlockAtLocalPosition(localPosition);
+}
+
+void World::TestGenNewChunksAroundPlayer(int mods)
+{
+	loadedDimensions[0]->RemoveAndLoadChunksAroundPlayer();
 }

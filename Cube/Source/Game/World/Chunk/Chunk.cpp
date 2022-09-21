@@ -23,11 +23,13 @@ Chunk::Chunk(Dimension* dim, ChunkPosition _position)
 	quadsToDraw = 0;
 
 	dimension = dim;
+
+	//Print("constructing chunk at position " + ToString({ position.x, position.y, position.z }));
 }
 
 Chunk::~Chunk()
 {
-	Print("chunk destructor called");
+	//Print("chunk destructor called");
 	delete vertexArray;
 	delete vertexBuffer;
 	delete indexBuffer;
@@ -194,7 +196,7 @@ glm::vec3 Chunk::ShiftToRenderOrigin()
 bool Chunk::IsChunkInCamera(glm::vec3& outRenderPos)
 {
 	// Any chunk within this distance will not be culled
-	constexpr float CHUNK_CLOSE_CULL = 24.f;
+	constexpr float CHUNK_CLOSE_CULL = 32.f;
 
 	const Camera* cam = Camera::GetActiveCamera();
 
@@ -209,9 +211,9 @@ bool Chunk::IsChunkInCamera(glm::vec3& outRenderPos)
 		return true;
 	}
 
-	if (sqrOriginDist < sqrNearDist || sqrOriginDist > sqrFarDist) {
-		return false;
-	}
+	//if (sqrOriginDist < sqrNearDist || sqrOriginDist > sqrFarDist) {
+	//	return false;
+	//}
 
 	const glm::mat4 mvp = cam->GetProjectionMatrix() * cam->GetViewMatrix();
 	const glm::vec4 clip = mvp * glm::vec4(renderPos, 1);
@@ -219,9 +221,9 @@ bool Chunk::IsChunkInCamera(glm::vec3& outRenderPos)
 	const bool chunkPointOut = abs(renderPos.x) > clip.w && abs(renderPos.y) > clip.w;
 	const bool chunkOppositePointOut = abs(renderPos.x + 16.f) > clip.w && abs(renderPos.y + 16.f) > clip.w;
 
-	if (chunkPointOut && chunkOppositePointOut) {
-		return false;
-	}
+	//if (chunkPointOut && chunkOppositePointOut) {
+	//	return false;
+	//}
 
 	outRenderPos = renderPos;
 	return true;

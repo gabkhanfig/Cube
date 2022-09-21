@@ -20,4 +20,6 @@ public:
 	static void Tick(float deltaTime);
 
 	static Block* GetBlockAtPosition(const WorldPosition& position, uint32 dimensionIndex = 0);
+
+	static void TestGenNewChunksAroundPlayer(int mods);
 };

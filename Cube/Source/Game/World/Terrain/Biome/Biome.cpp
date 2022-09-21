@@ -5,8 +5,8 @@
 
 uint32 Biome::GetBlockIdForPos(const WorldPosition& worldPos)
 {
-	if (worldPos.y > 0) {
-		return BlockId_Air;
+	if (worldPos.y > -1) {
+		return BlockId_Dirt;
 	}
 
 	return BlockId_StonyGrass;

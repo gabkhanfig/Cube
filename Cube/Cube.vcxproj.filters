@@ -141,6 +141,9 @@
     <ClCompile Include="Source\Game\World\Block\BlockTypes\ComplexBlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Game\World\Terrain\Biome\Biomes\ForestBiome.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\EngineCore.h">
@@ -327,6 +330,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\World\Terrain\Biome\Biome.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\World\Terrain\Biome\Biomes\ForestBiome.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\World\Chunk\ChunkData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

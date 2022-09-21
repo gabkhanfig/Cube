@@ -19,8 +19,6 @@ private:
 	/* The chunk the player is currently in. */
 	Chunk* chunkIn;
 
-
-
 	float movementSpeed;
 
 	PlayerMovementMode movementMode;
@@ -35,4 +33,13 @@ public:
 	static Player* StartPlayer();
 
 	virtual void Tick(float deltaTime) override;
+
+	void CheckIfCrossedChunkBorder(const glm::dvec3& oldPos);
+	void CrossChunkBorder(Chunk* newChunk);
+
+	void ForwardHold(float deltaTime, float scale);
+	void RightHold(float deltaTime, float scale);
+	void UpHold(float deltaTime, float scale);
+
+
 };

@@ -30,4 +30,10 @@ public:
 	void RemoveDistantChunks();
 
 	void LoadChunksAroundPlayer();
+
+	void RemoveAndLoadChunksAroundPlayer();
+
+	std::vector<Chunk*> GetAdjacentChunks(const ChunkPosition& chunkPos);
+
+	void GenerateMap();
 };
