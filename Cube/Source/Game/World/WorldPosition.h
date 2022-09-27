@@ -38,6 +38,22 @@ struct BlockPosition
 	uint8 x;
 	uint8 y;
 	uint8 z;
+
+	static inline uint32 ToBlockIndex(const BlockPosition block) {
+		uint32 index = 0;
+		index += block.x;
+		index += block.z * CHUNK_WIDTH;
+		index += block.y * CHUNK_WIDTH * CHUNK_WIDTH;
+		return index;
+	}
+
+	static inline BlockPosition FromBlockIndex(const int index) {
+		BlockPosition pos;
+		pos.x = index % CHUNK_WIDTH;
+		pos.y = index / (CHUNK_WIDTH * CHUNK_WIDTH);
+		pos.z = (index % (CHUNK_WIDTH * CHUNK_WIDTH)) / CHUNK_WIDTH;
+		return pos;
+	}
 };
 
 struct WorldPosition 

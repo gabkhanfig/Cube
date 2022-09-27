@@ -172,6 +172,8 @@
     <ClCompile Include="Source\Game\World\Block\BlockTypes\ComplexBlock.cpp" />
     <ClCompile Include="Source\Game\World\Block\Factory\BlockFactory.cpp" />
     <ClCompile Include="Source\Game\World\Chunk\Chunk.cpp" />
+    <ClCompile Include="Source\Game\World\Chunk\ChunkBlocks.cpp" />
+    <ClCompile Include="Source\Game\World\Chunk\ChunkRender.cpp" />
     <ClCompile Include="Source\Game\World\Dimension\Dimension.cpp" />
     <ClCompile Include="Source\Game\World\Terrain\Biome\Biome.cpp" />
     <ClCompile Include="Source\Game\World\Terrain\Biome\Biomes\ForestBiome.cpp" />
@@ -235,7 +237,8 @@
     <ClInclude Include="Source\Game\World\Block\Ids\BlockIds.h" />
     <ClInclude Include="Source\Game\World\Block\Texture\BlockTextures.h" />
     <ClInclude Include="Source\Game\World\Chunk\Chunk.h" />
-    <ClInclude Include="Source\Game\World\Chunk\ChunkData.h" />
+    <ClInclude Include="Source\Game\World\Chunk\ChunkBlocks.h" />
+    <ClInclude Include="Source\Game\World\Chunk\ChunkRender.h" />
     <ClInclude Include="Source\Game\World\Dimension\Dimension.h" />
     <ClInclude Include="Source\Game\World\Terrain\Biome\Biome.h" />
     <ClInclude Include="Source\Game\World\Terrain\Biome\Biomes\ForestBiome.h" />

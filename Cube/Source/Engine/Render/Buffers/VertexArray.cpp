@@ -5,7 +5,7 @@
 void VertexArray::AddBuffer(VertexBuffer* vb, const VertexBufferLayout& layout)
 {
 	Bind();
-	vb->Bind();
+	//vb->Bind();
 	const std::vector<VertexBufferElement>& elements = layout.GetElements();
 	uint32 offset = 0;
 	for (uint32 i = 0; i < elements.size(); i++) {

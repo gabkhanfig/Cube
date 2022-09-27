@@ -69,7 +69,7 @@ public:
 
 	virtual bool IsBlockAdjacentTransparent(Chunk* owningChunk, WorldPosition position, Facing face);
 
-	void GenerateQuadDataForFace(Chunk* owningChunk, BlockPosition position, Facing face, BlockQuad& outQuad);
+	void GenerateQuadDataForFace(BlockPosition position, Facing face, BlockQuad& outQuad);
 
 	virtual bool GenerateBlockQuads(Chunk* chunk, const WorldPosition& worldPos, BlockTransform transform, BlockQuad* quadBuffer, uint32& outQuadsGenerated);
 

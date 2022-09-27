@@ -74,7 +74,7 @@ bool Block::IsBlockAdjacentTransparent(Chunk* owningChunk, WorldPosition positio
 	}
 }
 
-void Block::GenerateQuadDataForFace(Chunk* owningChunk, BlockPosition position, Facing face, BlockQuad& outQuad)
+void Block::GenerateQuadDataForFace(BlockPosition position, Facing face, BlockQuad& outQuad)
 {
 	const uint32 texId = GetTextureFaceId(face);
 
@@ -139,29 +139,24 @@ bool Block::GenerateBlockQuads(Chunk* chunk, const WorldPosition& worldPos, Bloc
 	const BlockPosition relativeLocation = transform.position;
 
 	outQuadsGenerated = 0;
+
 	if (IsBlockAdjacentTransparent(chunk, worldPos, Facing::Down)) {
-		GenerateQuadDataForFace(chunk, relativeLocation, Facing::Down, quadBuffer[outQuadsGenerated]);
-		outQuadsGenerated++;
+		GenerateQuadDataForFace(relativeLocation, Facing::Down, quadBuffer[outQuadsGenerated++]);
 	}
 	if (IsBlockAdjacentTransparent(chunk, worldPos, Facing::North)) {
-		GenerateQuadDataForFace(chunk, relativeLocation, Facing::North, quadBuffer[outQuadsGenerated]);
-		outQuadsGenerated++;
+		GenerateQuadDataForFace(relativeLocation, Facing::North, quadBuffer[outQuadsGenerated++]);
 	}
 	if (IsBlockAdjacentTransparent(chunk, worldPos, Facing::East)) {
-		GenerateQuadDataForFace(chunk, relativeLocation, Facing::East, quadBuffer[outQuadsGenerated]);
-		outQuadsGenerated++;
+		GenerateQuadDataForFace(relativeLocation, Facing::East, quadBuffer[outQuadsGenerated++]);
 	}
 	if (IsBlockAdjacentTransparent(chunk, worldPos, Facing::South)) {
-		GenerateQuadDataForFace(chunk, relativeLocation, Facing::South, quadBuffer[outQuadsGenerated]);
-		outQuadsGenerated++;
+		GenerateQuadDataForFace(relativeLocation, Facing::South, quadBuffer[outQuadsGenerated++]);
 	}
 	if (IsBlockAdjacentTransparent(chunk, worldPos, Facing::West)) {
-		GenerateQuadDataForFace(chunk, relativeLocation, Facing::West, quadBuffer[outQuadsGenerated]);
-		outQuadsGenerated++;
+		GenerateQuadDataForFace(relativeLocation, Facing::West, quadBuffer[outQuadsGenerated++]);
 	}
 	if (IsBlockAdjacentTransparent(chunk, worldPos, Facing::Up)) {
-		GenerateQuadDataForFace(chunk, relativeLocation, Facing::Up, quadBuffer[outQuadsGenerated]);
-		outQuadsGenerated++;
+		GenerateQuadDataForFace(relativeLocation, Facing::Up, quadBuffer[outQuadsGenerated++]);
 	}
 
 	return outQuadsGenerated;

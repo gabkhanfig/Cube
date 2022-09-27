@@ -2,11 +2,8 @@
 
 #include <CubeCore.h>
 #include <Game/World/WorldPosition.h>
-#include <Engine/Render/Buffers/IndexBuffer.h>
-#include <Engine/Render/Buffers/VertexBuffer.h>
-#include <Engine/Render/Buffers/VertexArray.h>
-#include <Engine/Render/Buffers/VertexBufferLayout.h>
-#include <thread>
+#include "ChunkBlocks.h"
+#include "ChunkRender.h"
 
 //#define CHUNK_WIDTH 16
 
@@ -21,21 +18,25 @@ class Chunk
 
 public:
 
-	Block* blocks[CHUNK_SIZE];
+	//Block* blocks[CHUNK_SIZE];
+
+	ChunkBlocks blocks;
+
+	ChunkRender render;
 
 	ChunkPosition position;
 
-	VertexBuffer* vertexBuffer;
+	//VertexBuffer* vertexBuffer;
 
-	IndexBuffer* indexBuffer;
+	//IndexBuffer* indexBuffer;
 
-	VertexArray* vertexArray;
+	//VertexArray* vertexArray;
 
 	Dimension* dimension;
 
-	uint32 quadsToDraw;
+	//uint32 quadsToDraw;
 
-	bool canRender;
+	//bool canRender;
 
 public: 
 
@@ -53,8 +54,6 @@ public:
 	void Init();
 
 	Block* GetBlockAtLocalPosition(BlockPosition bpos);
-
-	BlockPosition BlockIndexToRelativeLocation(uint32 index);
 
 	void RegenerateChunkMeshData();
 

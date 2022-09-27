@@ -1,8 +1,6 @@
 #include "Chunk.h"
 #include <Game/World/World.h>
 #include <Game/World/Block/Block.h>
-#include <Engine/Render/Renderer.h>
-#include <Engine/Render/Shader/Shader.h>
 #include <Util/Benchmark/Benchmark.h>
 #include <Game/World/Block/Factory/BlockFactory.h>
 #include <Game/Player/Player.h>
@@ -11,28 +9,15 @@
 #include <iostream>
 
 Chunk::Chunk(Dimension* dim, ChunkPosition _position)
+	: render(this)
 {
-	indexBuffer = nullptr;
-	vertexBuffer = nullptr;
-	vertexArray = nullptr;
-
-	canRender = false;
-
 	position = _position;
 
-	quadsToDraw = 0;
-
 	dimension = dim;
-
-	//Print("constructing chunk at position " + ToString({ position.x, position.y, position.z }));
 }
 
 Chunk::~Chunk()
 {
-	//Print("chunk destructor called");
-	delete vertexArray;
-	delete vertexBuffer;
-	delete indexBuffer;
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		blocks[i]->Destroy();
 	}
@@ -55,41 +40,12 @@ void Chunk::UnloadChunk()
 
 void Chunk::GenerateFreshChunkTerrain()
 {
-	int blockIndex = 0;
-	for (uint8 y = 0; y < CHUNK_WIDTH; y++) {
-		for (uint8 z = 0; z < CHUNK_WIDTH; z++) {
-			for (uint8 x = 0; x < CHUNK_WIDTH; x++) {
-				const BlockPosition bpos = { x, y, z };
-				const WorldPosition wpos = WorldPosition::ToWorldPosition(position, bpos);
-				blocks[blockIndex] = dimension->GetBlockForWorldPosition(wpos);
-				blockIndex++;
-			}
-		}
-	}
+	blocks.TestSetAllBlocks();
 }
 
 void Chunk::DrawChunk()
 {
-	if (canRender == false) return;
-
-#ifdef DEVELOPMENT
-	if (!vertexArray) return;
-	if (!vertexBuffer) return;
-	if (!indexBuffer) return;
-#endif
-
-	glm::vec3 shiftChunkPos;
-	const bool chunkVisible = IsChunkInCamera(shiftChunkPos);
-	if (!chunkVisible) return;
-
-	vertexArray->Bind();
-	vertexBuffer->Bind();
-	indexBuffer->Bind();
-
-	//Shader::GetBoundShader()->SetUniform3float("u_ChunkPosition", glm::vec3(position.x * CHUNK_WIDTH, position.y * CHUNK_WIDTH, position.z * CHUNK_WIDTH));
-	//Print(ToString(ShiftToRenderOrigin()) + " current chu");
-	Shader::GetBoundShader()->SetUniform3float("u_ChunkPosition", shiftChunkPos);
-	Renderer::DrawQuads(quadsToDraw);
+	render.Draw();
 }
 
 void Chunk::Init()
@@ -99,85 +55,18 @@ void Chunk::Init()
 
 Block* Chunk::GetBlockAtLocalPosition(BlockPosition bpos)
 {
+#ifdef DEVELOPMENT
 	if (bpos.x >= CHUNK_WIDTH || bpos.y >= CHUNK_WIDTH || bpos.z >= CHUNK_WIDTH) {
 		return nullptr;
 	}
-
-	uint32 index = 0;
-	index += bpos.x;
-	index += bpos.z * CHUNK_WIDTH;
-	index += bpos.y * CHUNK_WIDTH * CHUNK_WIDTH;
-
-	if (index >= CHUNK_SIZE) {
-		return nullptr;
-	}
-
-	return blocks[index];
-}
-
-BlockPosition Chunk::BlockIndexToRelativeLocation(uint32 index)
-{
-#ifdef DEVELOPMENT
-	if (index >= CHUNK_SIZE) {
-		Print("Chunk indexing for block relative location of " + ToString(index) + " exceeds the maximum index of " + ToString(CHUNK_SIZE));
-		return { 0, 0, 0 };
-	}
 #endif
 
-	BlockPosition pos;
-	pos.x = index % CHUNK_WIDTH;
-	pos.y = index / (CHUNK_WIDTH * CHUNK_WIDTH); // integer flooring
-	pos.z = (index % (CHUNK_WIDTH * CHUNK_WIDTH)) / CHUNK_WIDTH; // compress index into range 0-255, then integer division
-	return pos;
+	return blocks.GetBlock(bpos);
 }
 
 void Chunk::RegenerateChunkMeshData()
 {
-	if (indexBuffer) {
-		delete indexBuffer;
-	}
-	if (vertexBuffer) {
-		delete vertexBuffer;
-	}
-	if (vertexArray) {
-		delete vertexArray;
-	}
-
-	std::vector<BlockQuad> quads;
-
-	BlockQuad quadBuffer[6];
-	uint32 generatedQuads;
-
-	for (int i = 0; i < CHUNK_SIZE; i++) {
-		Block* block = blocks[i];
-
-		BlockPosition relativeLocation = BlockIndexToRelativeLocation(i);
-		WorldPosition worldPos = {
-			position.x * 16 + relativeLocation.x,
-			position.y * 16 + relativeLocation.y,
-			position.z * 16 + relativeLocation.z
-		};
-
-		if (block->GenerateBlockQuads(this, worldPos, { relativeLocation, 0, 0 }, quadBuffer, generatedQuads)) {
-			quads.insert(quads.end(), quadBuffer, quadBuffer + generatedQuads);
-		}
-	}
-
-	if (quads.size() == 0) {
-		canRender = false;
-		return;
-	}
-
-	vertexArray = new VertexArray();
-	vertexBuffer = new VertexBuffer(&quads[0], sizeof(BlockQuad) * quads.size());  
-
-	VertexBufferLayout layout = VertexBufferLayout::MakeVertexBufferLayoutForBlock();
-	vertexArray->AddBuffer(vertexBuffer, layout);
-
-	indexBuffer = IndexBuffer::MakeQuadsIndexBuffer(quads.size());
-
-	quadsToDraw = quads.size();
-	canRender = true;
+	render.AsyncConstructBlockMesh();
 }
 
 glm::vec3 Chunk::ShiftToRenderOrigin()
