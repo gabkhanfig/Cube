@@ -150,6 +150,7 @@
     <ClCompile Include="Source\Engine\Engine\Engine.cpp" />
     <ClCompile Include="Source\Engine\Input\InputButton.cpp" />
     <ClCompile Include="Source\Engine\Input\UserInput.cpp" />
+    <ClCompile Include="Source\Engine\Math\Math.cpp" />
     <ClCompile Include="Source\Engine\Render\Buffers\VertexArray.cpp" />
     <ClCompile Include="Source\Engine\Render\Buffers\VertexBufferLayout.cpp" />
     <ClCompile Include="Source\Engine\Render\Camera\Camera.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="Source\Engine\Engine\Engine.h" />
     <ClInclude Include="Source\Engine\Input\InputButton.h" />
     <ClInclude Include="Source\Engine\Input\UserInput.h" />
+    <ClInclude Include="Source\Engine\Math\Math.h" />
     <ClInclude Include="Source\Engine\Render\Camera\Camera.h" />
     <ClInclude Include="Source\Engine\Render\Geometry\Quad.h" />
     <ClInclude Include="Source\Engine\Render\Geometry\Vertex.h" />
