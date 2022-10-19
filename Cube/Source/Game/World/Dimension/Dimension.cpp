@@ -315,9 +315,9 @@ std::vector<Chunk*> Dimension::GetAdjacentChunks(const ChunkPosition& chunkPos)
 
 void Dimension::GenerateMap()
 {
-	const int xdim = 1;
-	const int ydim = 1;
-	const int zdim = 1;
+	const int xdim = 25;
+	const int ydim = 25;
+	const int zdim = 25;
 
 	Benchmark* chunkData = Benchmark::StartBenchmark("generating chunk data");
 	for (int x = 0; x < xdim; x++) {
