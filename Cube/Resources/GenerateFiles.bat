@@ -1,0 +1,1 @@
+python GenerateFile.py GeneratedFiles Files.txt
