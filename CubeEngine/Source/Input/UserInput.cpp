@@ -45,9 +45,9 @@ void UserInput::CursorInput(double xpos, double ypos)
 	const glm::dvec2 offset = glm::dvec2(xpos - previousCursorPos.x, previousCursorPos.y - ypos);
 	previousCursorPos = glm::dvec2(xpos, ypos);
 
-	//std::cout << "cursor" << std::endl;
 	Camera* cam = Camera::GetActiveCamera();
 	if (cam == nullptr) return;
+	cam->CursorChangePosition(offset);
 
 
 }

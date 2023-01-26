@@ -60,7 +60,7 @@ float BlockTextureAtlas::offsetPerBlock = atlasData.atlasData.offset;
 
 Texture* BlockTextureAtlas::texture = nullptr;
 
-void BlockTextureAtlas::LoadBlockAtlasTexture()
+void BlockTextureAtlas::CreateBlockTextureAtlasObject()
 {
 	texture = new Texture2d(textureBytes, width, height);
 	delete[] textureBytes;
@@ -69,10 +69,16 @@ void BlockTextureAtlas::LoadBlockAtlasTexture()
 
 glm::vec2 BlockTextureAtlas::GetTextureCoord(BlockTexture texture, const glm::vec2 uv)
 {
+	const glm::vec2 offset = uv * offsetPerBlock;
 	auto found = textureUVCoords.find(texture);
 	if (found == textureUVCoords.end()) {
-		return glm::vec2();
+		return glm::vec2() + offset;
 	}
 	const glm::vec2 zeroCoord = found->second;
-	return zeroCoord + (uv * offsetPerBlock);
+	return zeroCoord + offset;
+}
+
+void BlockTextureAtlas::Bind(uint32 slot)
+{
+	texture->Bind(slot);
 }

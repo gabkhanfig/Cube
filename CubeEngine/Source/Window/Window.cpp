@@ -37,6 +37,7 @@ Window::Window(int inWidth, int inHeight, string inTitle, GLFWmonitor* inMonitor
 
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval(0);
 }
 
 bool Window::ShouldWindowClose() const

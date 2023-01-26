@@ -163,6 +163,7 @@
     <ClCompile Include="Source\Graphics\Shader\Shader.cpp" />
     <ClCompile Include="Source\Graphics\Texture\Texture2d.cpp" />
     <ClCompile Include="Source\Input\InputMapping.cpp" />
+    <ClCompile Include="Source\Tick\TickEngine.cpp" />
     <ClCompile Include="Source\Vendor\stb_image\stb_image.cpp" />
     <ClCompile Include="Source\Window\Window.cpp" />
     <ClCompile Include="Source\Graphics\Buffers\VertexArrayObject.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="Source\Graphics\Shader\Shader.h" />
     <ClInclude Include="Source\Graphics\Texture\Texture2d.h" />
     <ClInclude Include="Source\Input\InputMapping.h" />
+    <ClInclude Include="Source\Tick\TickEngine.h" />
     <ClInclude Include="Source\Vendor\stb_image\stb_image.h" />
     <ClInclude Include="Source\Window\Window.h" />
     <ClInclude Include="Source\Graphics\Buffers\VertexArrayObject.h" />

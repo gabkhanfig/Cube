@@ -4,7 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 constexpr double cameraSensitivity = 0.2;
-constexpr float cameraFOV = 45.f;
+constexpr float cameraFOV = 90.f;
 constexpr int chunkRenderDistance = 15;
 
 class Camera
@@ -17,6 +17,10 @@ private:
 	glm::vec3 degreeRotation;
 
 	glm::vec3 forward;
+
+public:
+
+	forceinline glm::vec3 GetForward() const { return forward; }
 
 private:
 
@@ -36,14 +40,12 @@ public:
 
 	bool IsBound() const;
 
-	forceinline glm::vec3 GetForward() const { return forward; }
-
 	void CursorChangePosition(const glm::dvec2 offset);
 
 	glm::mat4 GetMvpMatrix() const;
 
 	static constexpr glm::vec3 GetUpVector() { return glm::vec3(0.0f, 1.0f, 0.0f); }
-
-
+	
+	void TestUpdate(glm::vec3 update);
 
 };

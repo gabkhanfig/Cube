@@ -31,7 +31,7 @@ def ImageToConstChar(filePath: str, variableName: str):
         nums = []
         while (byte := f.read(1)):
             nums.append(int.from_bytes(byte))
-        out = "// Generated from " + fileName + ". Use sizeof operator to get the amount of bytes.\nconstexpr const char " + variableName + "[" + str(len(nums)) + "] = { "
+        out = "// Generated from " + fileName + ". Use sizeof operator to get the amount of bytes.\nconstexpr const unsigned char " + variableName + "[" + str(len(nums)) + "] = { "
         out += ", ".join(str(n) for n in nums)
         out += " };"
         return out

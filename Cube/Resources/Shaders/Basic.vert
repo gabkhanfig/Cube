@@ -3,6 +3,9 @@
 layout (location = 0) in uint aPos;
 layout	(location = 1) in vec2 texCoord;
 
+//
+uniform mat4 u_cameraMVP;
+
 // Interpolated fragment shader coordinates it's position in the triangle
 out vec3 fragCoord;
 // Normalized coordinates of this vertex
@@ -30,9 +33,9 @@ vec3 PositionFromBitmask(uint mask)
 void main()
 {
 	const vec3 position = PositionFromBitmask(aPos) / 255.0 - 0.5;
-   gl_Position = vec4(position, 1.0);
+	gl_Position = u_cameraMVP * vec4(position, 1.0);
 
-   vertCoord = PositionFromBitmask(aPos) / 255.0;
-   fragCoord = PositionFromBitmask(aPos) / 255.0;
-   v_TexCoord = texCoord;
+	vertCoord = PositionFromBitmask(aPos) / 255.0;
+	fragCoord = PositionFromBitmask(aPos) / 255.0;
+	v_TexCoord = texCoord;
 }

@@ -4,7 +4,7 @@ Camera* Camera::activeCamera = nullptr;
 
 glm::mat4 Camera::GetProjectionMatrix() const
 {
-	return glm::perspective(glm::radians(cameraFOV), 16.f / 9.f, 0.1f, float(chunkRenderDistance + 1) * 16.f * 16.f);
+	return glm::perspective(glm::radians(cameraFOV), 1.f / 1.f, 0.1f, float(chunkRenderDistance + 1) * 16.f * 16.f);
 }
 
 glm::mat4 Camera::GetViewMatrix() const
@@ -15,7 +15,7 @@ glm::mat4 Camera::GetViewMatrix() const
 
 Camera::Camera()
 {
-	degreeRotation = { 0, 0, 0 };
+	degreeRotation = { 0, -80, -10 };
 	forward = { 0, 0, 0 };
 }
 
@@ -42,7 +42,7 @@ bool Camera::IsBound() const
 void Camera::CursorChangePosition(const glm::dvec2 offset)
 {
 	const glm::dvec2 offSens = offset * cameraSensitivity;
-	degreeRotation += glm::vec3(offSens.x, offSens.y, 0);
+	degreeRotation += glm::vec3(offSens.x, offSens.y, 1);
 
 	if (degreeRotation.y > 89.9) {
 		degreeRotation.y = 89.9f;
@@ -51,16 +51,20 @@ void Camera::CursorChangePosition(const glm::dvec2 offset)
 		degreeRotation.y = -89.9f;
 	}
 
-	forward =
+	forward = glm::normalize(glm::vec3
 	{
-		cos(glm::radians(degreeRotation.y)) * cos(glm::radians(degreeRotation.x)),
-		sin(glm::radians(degreeRotation.x)),
-		sin(glm::radians(degreeRotation.y)) * cos(glm::radians(degreeRotation.x))
-	};
-
+		cos(glm::radians(degreeRotation.x)) * cos(glm::radians(degreeRotation.y)),
+		sin(glm::radians(degreeRotation.y)),
+		sin(glm::radians(degreeRotation.x)) * cos(glm::radians(degreeRotation.y))
+	});
 }
 
 glm::mat4 Camera::GetMvpMatrix() const
 {
 	return GetProjectionMatrix() * GetViewMatrix();
+}
+
+void Camera::TestUpdate(glm::vec3 update)
+{
+	forward = update;
 }
