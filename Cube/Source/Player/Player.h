@@ -3,17 +3,22 @@
 #include "../Entity/Entity.h"
 
 class Camera;
+class PlayerInputComponent;
 
 class Player : public Entity 
 {
 private:
 
-	class Camera* camera;
+	Camera* camera;
+
+	PlayerInputComponent* inputComponent;
 
 public:
 
 	Player();
 
 	virtual void Tick(float DeltaTime) override;
+
+	Camera* GetCamera() const { return camera; }
 
 };

@@ -23,5 +23,5 @@ public:
 
 	Texture2d(const unsigned char* imageBytes, int _width, int _height);
 
-	static Texture2dAtlasData CreateTexture2dAtlas(const darray<const char*>& images, int bytesPerImageFile, int width, int height, int bitsPerPixel);
+	static Texture2dAtlasData CreateTexture2dAtlas(const darray<const uint8*>& images, int bytesPerImageFile, int width, int height, int bitsPerPixel);
 };

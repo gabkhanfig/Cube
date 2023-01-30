@@ -8,6 +8,8 @@
 UserInput::UserInput()
 {
 	previousCursorPos = { 0, 0 };
+	buttonInputCallback = nullptr;
+	cursorCallback = nullptr;
 }
 
 void UserInput::SetCallbacks()
@@ -16,6 +18,16 @@ void UserInput::SetCallbacks()
 	glfwSetKeyCallback(window, UserInput::KeyCallback);
 	glfwSetMouseButtonCallback(window, UserInput::MouseButtonCallback);
 	glfwSetCursorPosCallback(window, UserInput::MouseCursorPositionCallback);
+}
+
+EInputAction UserInput::ActionToInputAction(int action)
+{
+	if (action == GLFW_PRESS) {
+		return EInputAction::Press;
+	}
+	else {
+		return EInputAction::Release;
+	}
 }
 
 void UserInput::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -33,21 +45,30 @@ void UserInput::MouseCursorPositionCallback(GLFWwindow* window, double xpos, dou
 	engine->GetUserInput()->CursorInput(xpos, ypos);
 }
 
-void UserInput::ButtonInput(int key, int action, int mods)
+void UserInput::ButtonInput(int button, int action, int mods)
 {
-	if (key == GLFW_KEY_SPACE) {
-		std::cout << "spacebar :D !" << std::endl;
+	if (buttonInputCallback) {
+		GlobalString _button = InputMapping::GetInputString(button);
+		if (_button == "") return;
+		EInputAction _action = ActionToInputAction(action);
+		InputMods _mods{ mods };
+		buttonInputCallback(_button, _action, _mods);
 	}
 }
 
 void UserInput::CursorInput(double xpos, double ypos)
 {
-	const glm::dvec2 offset = glm::dvec2(xpos - previousCursorPos.x, previousCursorPos.y - ypos);
-	previousCursorPos = glm::dvec2(xpos, ypos);
+	if (cursorCallback) {
+		cursorCallback(xpos, ypos);
+	}
+}
 
-	Camera* cam = Camera::GetActiveCamera();
-	if (cam == nullptr) return;
-	cam->CursorChangePosition(offset);
+void UserInput::SetButtonInputCallback(ButtonInputCallback callback)
+{
+	buttonInputCallback = callback;
+}
 
-
+void UserInput::SetCursorPositionCallback(CursorCallback callback)
+{
+	cursorCallback = callback;
 }

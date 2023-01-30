@@ -171,10 +171,14 @@ GenerateFiles.bat</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Input\InputComponent.cpp" />
     <ClCompile Include="Source\Entity\Entity.cpp" />
     <ClCompile Include="Source\GameInstance.cpp" />
+    <ClCompile Include="Source\Input\CubeInput.cpp" />
+    <ClCompile Include="Source\Input\InputButton.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Player\Player.cpp" />
+    <ClCompile Include="Source\Player\PlayerInputComponent.cpp" />
     <ClCompile Include="Source\World\Block\Block.cpp" />
     <ClCompile Include="Source\World\Block\BlockFactory.cpp" />
     <ClCompile Include="Source\World\Block\BlockTextureAtlas.cpp" />
@@ -200,10 +204,14 @@ GenerateFiles.bat</Command>
     <Text Include="Resources\Files.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Input\InputComponent.h" />
     <ClInclude Include="Resources\GeneratedFiles.h" />
     <ClInclude Include="Source\Entity\Entity.h" />
     <ClInclude Include="Source\GameInstance.h" />
+    <ClInclude Include="Source\Input\CubeInput.h" />
+    <ClInclude Include="Source\Input\InputButton.h" />
     <ClInclude Include="Source\Player\Player.h" />
+    <ClInclude Include="Source\Player\PlayerInputComponent.h" />
     <ClInclude Include="Source\World\Block\Block.h" />
     <ClInclude Include="Source\World\Block\BlockFactory.h" />
     <ClInclude Include="Source\World\Block\BlockTextureAtlas.h" />

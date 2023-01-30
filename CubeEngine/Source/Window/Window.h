@@ -52,6 +52,8 @@ public:
 	/* Get if this window should close. */
 	bool ShouldWindowClose() const;
 
+	void Close();
+
 	/* Get the title of the window. */
 	forceinline string GetTitle() const { return title; }
 

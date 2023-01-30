@@ -6,9 +6,14 @@ class Entity
 {
 protected:
 
+	/**/
 	glm::dvec3 location;
 
-	glm::dvec3 rotation;
+	/**/
+	glm::vec3 rotation;
+
+	/* The unit vector of where this entity is looking. */
+	glm::vec3 lookAt;
 
 public:
 
@@ -16,7 +21,18 @@ public:
 
 	virtual void Tick(float DeltaTime);
 
+	forceinline glm::dvec3 GetLocation() const { return location; }
+
 	forceinline void SetLocation(const glm::dvec3 newLocation) { location = newLocation; }
 
-	forceinline void SetRotation(const glm::dvec3 newRotation) { rotation = newRotation; }
+	forceinline glm::vec3 GetRotation() const { return rotation; }
+
+	forceinline void SetRotation(const glm::vec3 newRotation) { rotation = newRotation; }
+
+	/* Get the unit vector of where this entity is looking. */
+	forceinline glm::vec3 GetLookAt() const { return lookAt; }
+
+	/* Set the unit vector of where this entity is looking. */
+	forceinline void SetLookAt(const glm::vec3 newLookAt) { lookAt = newLookAt; }
+
 };

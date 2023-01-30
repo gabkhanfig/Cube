@@ -3,7 +3,7 @@
 #include <Graphics/Texture/Texture2d.h>
 
 /* Generates pairs of const char* and BlockTexture ids. */
-static void GetTexturePairs(darray<const char*>& pngData, darray<BlockTexture>& ids)
+static void GetTexturePairs(darray<const uint8*>& pngData, darray<BlockTexture>& ids)
 {
 #define pair(png, id) \
 pngData.Add(png); \
@@ -29,7 +29,7 @@ static BlockAtlasData MapAtlasData()
 	constexpr int imageHeight = 16;
 	constexpr int bytesPerPixel = 4;
 
-	darray<const char*> images;
+	darray<const uint8*> images;
 	darray<BlockTexture> ids;
 	GetTexturePairs(images, ids);
 

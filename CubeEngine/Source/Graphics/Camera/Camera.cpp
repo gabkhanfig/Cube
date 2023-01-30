@@ -39,32 +39,12 @@ bool Camera::IsBound() const
 	return this == activeCamera;
 }
 
-void Camera::CursorChangePosition(const glm::dvec2 offset)
-{
-	const glm::dvec2 offSens = offset * cameraSensitivity;
-	degreeRotation += glm::vec3(offSens.x, offSens.y, 1);
-
-	if (degreeRotation.y > 89.9) {
-		degreeRotation.y = 89.9f;
-	}
-	else if (degreeRotation.y < -89.9) {
-		degreeRotation.y = -89.9f;
-	}
-
-	forward = glm::normalize(glm::vec3
-	{
-		cos(glm::radians(degreeRotation.x)) * cos(glm::radians(degreeRotation.y)),
-		sin(glm::radians(degreeRotation.y)),
-		sin(glm::radians(degreeRotation.x)) * cos(glm::radians(degreeRotation.y))
-	});
-}
-
 glm::mat4 Camera::GetMvpMatrix() const
 {
 	return GetProjectionMatrix() * GetViewMatrix();
 }
 
-void Camera::TestUpdate(glm::vec3 update)
+void Camera::SetForwardVector(glm::vec3 update)
 {
 	forward = update;
 }

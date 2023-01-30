@@ -2,7 +2,7 @@
 
 #include <EngineCore.h>
 
-void _CubeGameInstanceTickCallback(float DeltaTime);
+void _CubeGameInstanceTickCallback(float deltaTime);
 
 class World;
 
@@ -16,7 +16,7 @@ public:
 
 	void Init();
 
-	void Tick(float DeltaTime);
+	void Tick(float deltaTime);
 
 	forceinline World* GetWorld() const { return world; }
 };

@@ -17,5 +17,14 @@ private:
 
 public:
 
+	/**/
+	static GlobalString GetInputString(int id);
+
+	/**/
+	static int GetInputid(GlobalString str);
+
+	/**/
+	static darray<GlobalString> GetMappedInputs();
+
 	
 };

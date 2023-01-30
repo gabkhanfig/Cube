@@ -40,12 +40,10 @@ public:
 
 	bool IsBound() const;
 
-	void CursorChangePosition(const glm::dvec2 offset);
-
 	glm::mat4 GetMvpMatrix() const;
 
 	static constexpr glm::vec3 GetUpVector() { return glm::vec3(0.0f, 1.0f, 0.0f); }
 	
-	void TestUpdate(glm::vec3 update);
+	void SetForwardVector(glm::vec3 update);
 
 };
