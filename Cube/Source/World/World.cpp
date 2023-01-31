@@ -36,10 +36,10 @@ void World::DrawWorld()
   chunkShader->SetUniformMat4f("u_cameraMVP", cam->GetMvpMatrix());
 
   uint32 positions[4] = {
-    {255 + (255 << 8) + (255 << 16)},
-    {255 + (255 << 16)},
-    {0 + (255 << 16)}, //  + (255 << 16)
-    {(255 << 8) + (255 << 16)}
+    {255 + (255 << 8)},
+    {255},
+    {0}, //  + (255 << 16)
+    {(255 << 8)}
   };
 
   glm::vec2 texCoords[4] = {
@@ -64,4 +64,5 @@ void World::DrawWorld()
 
   delete vao;
   delete vbo;
+  delete ibo;
 }

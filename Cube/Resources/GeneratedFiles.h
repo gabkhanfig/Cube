@@ -75,10 +75,10 @@ struct CubicColors
 {
 	vec3 c000;
 	vec3 c100;
-	vec3 c001;
-	vec3 c101;
 	vec3 c010;
 	vec3 c110;
+	vec3 c001;
+	vec3 c101;
 	vec3 c011;
 	vec3 c111;
 };
@@ -138,11 +138,11 @@ void main()
 
 	CubicColors cols;
 	cols.c000 = vec3(1, 1, 1); // non-z
-	cols.c100 = vec3(0.1, 0.8, 0.5); // non-z
-	cols.c001 = vec3(1, 1, 0.1);
+	cols.c100 = vec3(0.5, 0.4, 0.7); // non-z
+	cols.c010 = vec3(0.2, 0.2, 0.9); // non-z
+	cols.c110 = vec3(0.1, 0.8, 0.1); // non-z
+	cols.c001 = vec3(1, 1, 1);
 	cols.c101 = vec3(0, 0, 0);
-	cols.c010 = vec3(1, 0.2, 0.5); // non-z
-	cols.c110 = vec3(1, 0.5, 0.2); // non-z
 	cols.c011 = vec3(1, 1, 1);
 	cols.c111 = vec3(1, 1, 1);
 

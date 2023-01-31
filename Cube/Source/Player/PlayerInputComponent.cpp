@@ -2,6 +2,8 @@
 #include "../Input/CubeInput.h"
 #include <Graphics/Camera/Camera.h>
 #include "Player.h"
+#include "../Input/InputButton.h"
+#include <functional>
 
 PlayerInputComponent::PlayerInputComponent()
 	: player(nullptr), sensitivity(0.2), pitch(0), yaw(0)
@@ -30,6 +32,33 @@ void PlayerInputComponent::Cursor(double xpos, double ypos)
 		sin(glm::radians(pitch)),
 		sin(glm::radians(yaw)) * cos(glm::radians(pitch))
 	};
-	//player->SetRotation(forward);
+	player->SetLookAt(forward);
+
+	// TODO make player automatically set the forward vector
 	player->GetCamera()->SetForwardVector(forward);
+}
+
+void PlayerInputComponent::Press(GlobalString button, InputMods mods)
+{
+	cubeLog("player input component press");
+	if (button == "W") {
+		AddPlayerForwardInput(1);
+	}
+	else if (button == "S") {
+		AddPlayerForwardInput(-1);
+	}
+}
+
+void PlayerInputComponent::AddPlayerForwardInput(float scale)
+{
+	glm::dvec3 location = player->GetLocation();
+	location += 0.5 * double(scale) * glm::dvec3(player->GetLookAt().x, player->GetLookAt().y, player->GetLookAt().z);
+	player->SetLocation(location);
+	player->GetCamera()->SetPosition({ location.x, location.y, location.z });
+}
+
+void PlayerInputComponent::AddPlayerRightInput(float scale)
+{
+	glm::vec3 location = player->GetLocation();
+
 }

@@ -1,12 +1,15 @@
 #pragma once
 
 #include <Input/UserInput.h>
+#include "InputButton.h"
 
 class InputComponent;
 
 class CubeInput
 {
 private:
+
+	static std::unordered_map<GlobalString, InputButtonState> buttonStates;
 
 	static darray<GlobalString> cubeUsedInputs;
 

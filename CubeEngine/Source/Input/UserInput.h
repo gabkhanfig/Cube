@@ -7,7 +7,8 @@ struct GLFWwindow;
 enum class EInputAction
 {
 	Press,
-	Release
+	Release,
+	Repeat
 };
 
 /* Wrapper for GLFW input mods such as shift and control.

@@ -13,10 +13,9 @@ private:
 
 	static Camera* activeCamera;
 
-	/* Pitch, Yaw, Roll. */
-	glm::vec3 degreeRotation;
-
 	glm::vec3 forward;
+
+	glm::vec3 position;
 
 public:
 
@@ -45,5 +44,7 @@ public:
 	static constexpr glm::vec3 GetUpVector() { return glm::vec3(0.0f, 1.0f, 0.0f); }
 	
 	void SetForwardVector(glm::vec3 update);
+
+	void SetPosition(glm::vec3 newPosition);
 
 };

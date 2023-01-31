@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Input/InputComponent.h"
+#include <functional>
 
 class Player;
 
@@ -23,5 +24,11 @@ public:
 	void SetPlayer(Player* newPlayer);
 
 	virtual void Cursor(double xpos, double ypos) override;
+
+	virtual void Press(GlobalString button, InputMods mods);
+
+	void AddPlayerForwardInput(float scale);
+
+	void AddPlayerRightInput(float scale);
 
 };

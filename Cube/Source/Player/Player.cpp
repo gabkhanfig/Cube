@@ -10,9 +10,21 @@ Player::Player()
 	inputComponent->SetPlayer(this);
 
 	camera->Bind();
-	inputComponent->Bind();
+	inputComponent->Enable();
+
+	//std::function<void(Player*, InputMods)> f = std::bind(&Player::TestEmpty, this, std::placeholders::_1);
+	//inputComponent->BindPlayerAction("Space", EInputAction::Press, );
 }
 
 void Player::Tick(float DeltaTime)
 {
+}
+
+void Player::TestInput(InputMods mods)
+{
+}
+
+void Player::TestEmpty()
+{
+	cubeLog("empty called");
 }

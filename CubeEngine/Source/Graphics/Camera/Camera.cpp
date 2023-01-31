@@ -10,13 +10,13 @@ glm::mat4 Camera::GetProjectionMatrix() const
 glm::mat4 Camera::GetViewMatrix() const
 {
 	constexpr glm::vec3 origin = { 0.f, 0.f, 0.f };
-	return glm::lookAt(origin, origin + forward, GetUpVector());
+	return glm::lookAt(position, position + forward, GetUpVector());
 }
 
 Camera::Camera()
 {
-	degreeRotation = { 0, -80, -10 };
 	forward = { 0, 0, 0 };
+	position = { 0, 0, 0 };
 }
 
 void Camera::Bind()
@@ -47,4 +47,8 @@ glm::mat4 Camera::GetMvpMatrix() const
 void Camera::SetForwardVector(glm::vec3 update)
 {
 	forward = update;
+}
+
+void Camera::SetPosition(glm::vec3 newPosition) {
+	position = newPosition;
 }

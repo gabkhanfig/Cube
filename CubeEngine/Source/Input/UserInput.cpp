@@ -25,8 +25,11 @@ EInputAction UserInput::ActionToInputAction(int action)
 	if (action == GLFW_PRESS) {
 		return EInputAction::Press;
 	}
-	else {
+	else if (action == GLFW_RELEASE) {
 		return EInputAction::Release;
+	}
+	else {
+		return EInputAction::Repeat;
 	}
 }
 
@@ -47,6 +50,8 @@ void UserInput::MouseCursorPositionCallback(GLFWwindow* window, double xpos, dou
 
 void UserInput::ButtonInput(int button, int action, int mods)
 {
+
+
 	if (buttonInputCallback) {
 		GlobalString _button = InputMapping::GetInputString(button);
 		if (_button == "") return;

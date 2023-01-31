@@ -2,7 +2,18 @@
 #include <Engine.h>
 #include <Window/Window.h>
 #include "InputComponent.h"
+#include <Input/InputMapping.h>
 
+static std::unordered_map<GlobalString, InputButtonState> MakeButtonStates() {
+	std::unordered_map<GlobalString, InputButtonState> buttonStates;
+	const darray<GlobalString> mappedInputs = InputMapping::GetMappedInputs();
+	for (ArrSizeT i = 0; i < mappedInputs.Size(); i++) {
+		buttonStates.insert({ mappedInputs[i], InputButtonState() });
+	}
+	return buttonStates;
+}
+
+std::unordered_map<GlobalString, InputButtonState> CubeInput::buttonStates = MakeButtonStates();
 darray<InputComponent*> CubeInput::activeInputComponents;
 glm::dvec2 CubeInput::previousCursorPos = glm::dvec2(0, 0);
 
@@ -13,12 +24,20 @@ void CubeInput::ButtonInputCallback(GlobalString button, EInputAction action, In
 		engine->GetWindow()->Close();
 	}
 
+	//auto pair = buttonStates.find(button);
+	//if (pair != buttonStates.end()) {
+	//	pair->second.isHeld = action == EInputAction::Press;
+	//}
+
 	for (ArrSizeT i = 0; i < activeInputComponents.Size(); i++) {
 		if (action == EInputAction::Press) {
 			activeInputComponents[i]->Press(button, mods);
 		}
-		else {
+		else if (action == EInputAction::Release) {
 			activeInputComponents[i]->Release(button, mods);
+		}
+		else {
+			
 		}
 	}
 }
@@ -41,6 +60,11 @@ void CubeInput::Tick(float deltaTime)
 {
 	for (ArrSizeT i = 0; i < activeInputComponents.Size(); i++) {
 		activeInputComponents[i]->Tick(deltaTime);
+	}
+	for (auto& pair : buttonStates) {
+		if (pair.second.isHeld) {
+			pair.second.holdTime += deltaTime;
+		}
 	}
 }
 

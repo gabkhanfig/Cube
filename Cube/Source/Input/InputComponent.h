@@ -27,11 +27,11 @@ public:
 
 	virtual void Cursor(double xpos, double ypos);
 
-	void Bind();
+	void Enable();
 
-	void Unbind();
+	void Disable();
 
-private:
+protected:
 
 	InputButton* GetInputButton(GlobalString button);
 

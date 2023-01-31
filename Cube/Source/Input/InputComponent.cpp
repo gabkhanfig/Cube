@@ -5,49 +5,49 @@
 
 InputComponent::InputComponent()
 {
-	static const darray<GlobalString> cubeUsedInputs = InputMapping::GetMappedInputs();
-	for (ArrSizeT i = 0; i < cubeUsedInputs.Size(); i++) {
-		GlobalString str = cubeUsedInputs[i];
-		buttons.insert({ str, new InputButton(str) });
-	}
+	//static const darray<GlobalString> cubeUsedInputs = InputMapping::GetMappedInputs();
+	//for (ArrSizeT i = 0; i < cubeUsedInputs.Size(); i++) {
+	//	GlobalString str = cubeUsedInputs[i];
+	//	buttons.insert({ str, new InputButton(str) });
+	//}
 }
 
 InputComponent::~InputComponent()
 {
-	Unbind();
+	Disable();
 }
 
 void InputComponent::Press(GlobalString button, InputMods mods)
 {
-	InputButton* inputButton = GetInputButton(button);
-	checkm(inputButton != nullptr, "Button on press was nullptr in input component");
-	inputButton->Press(mods);
+	//InputButton* inputButton = GetInputButton(button);
+	//checkm(inputButton != nullptr, "Button on press was nullptr in input component");
+	//inputButton->Press(mods);
 }
 
 void InputComponent::Release(GlobalString button, InputMods mods)
 {
-	InputButton* inputButton = GetInputButton(button);
-	checkm(button != nullptr, "Button on release was nullptr in input component");
-	inputButton->Release(mods);
+	//InputButton* inputButton = GetInputButton(button);
+	//checkm(inputButton != nullptr, "Button on release was nullptr in input component");
+	//inputButton->Release(mods);
 }
 
 void InputComponent::Tick(float deltaTime)
 {
-	for (auto& button : buttons) {
-		button.second->Tick(deltaTime);
-	}
+	//for (auto& button : buttons) {
+	//	button.second->Tick(deltaTime);
+	//}
 }
 
 void InputComponent::Cursor(double xpos, double ypos)
 {
 }
 
-void InputComponent::Bind()
+void InputComponent::Enable()
 {
 	CubeInput::BindInputComponent(this);
 }
 
-void InputComponent::Unbind()
+void InputComponent::Disable()
 {
 	CubeInput::UnbindInputComponent(this);
 }
