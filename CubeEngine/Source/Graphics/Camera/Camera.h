@@ -3,7 +3,6 @@
 #include "../../EngineCore.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-constexpr double cameraSensitivity = 0.2;
 constexpr float cameraFOV = 90.f;
 constexpr int chunkRenderDistance = 15;
 

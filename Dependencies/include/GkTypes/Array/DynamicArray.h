@@ -49,120 +49,22 @@ namespace gk
 
 			constexpr iterator(T* _data) : data(_data) {}
 
-			iterator operator++() { ++data; return *this; }
+			constexpr iterator operator++() { ++data; return *this; }
 
-			bool operator!=(const iterator& other) const { return data != other.data; }
+			constexpr bool operator!=(const iterator& other) const { return data != other.data; }
 
-			const T& operator*() const { return *data; }
+			constexpr const T& operator*() const { return *data; }
 
 		private:
 
 			T* data;
 		};
+		
+		/* Iterator begin. */
+		constexpr iterator begin() const { return iterator(data); }
 
-	private:
-
-		/* Reallocate and move the pre-existing data over. Increases capacity by 2x. */
-		constexpr void Reallocate() {
-			const ArrSizeT newCapacity = capacity * 2;
-
-			T* newData = new T[newCapacity];
-			for (ArrSizeT i = 0; i < Size(); i++) {
-				newData[i] = std::move(data[i]);
-			}
-			delete[] data;
-			data = newData;
-			capacity = newCapacity;
-		}
-
-		/* Copy num amount of data onto the end of the darray. */
-		constexpr void CopyData(const T* dataToCopy, const ArrSizeT num) {
-			if (capacity - size < num) {
-				Reserve(capacity + num);
-			}
-
-			for (ArrSizeT i = 0; i < num; i++) {
-				data[size] = dataToCopy[i];
-				size++;
-			}
-		}
-
-		/* Copy and cast num amount of data onto the end of the darray. U is required to be castable to T. */
-		template<typename U>
-			requires (std::convertible_to<U, T>)
-		constexpr void CopyDataCast(const U* dataToCopy, const ArrSizeT num) {
-			if (capacity - size < num) {
-				Reserve(capacity + num);
-			}
-
-			for (ArrSizeT i = 0; i < num; i++) {
-				data[size] = static_cast<T>(dataToCopy[i]);
-				size++;
-			}
-		}
-
-		/* Move num amount of data onto the end of the darray. */
-		constexpr void MoveData(T* dataToMove, const ArrSizeT num) {
-			if (capacity - size < num) {
-				Reserve(capacity + num);
-			}
-
-			for (ArrSizeT i = 0; i < num; i++) {
-				data[size] = std::move(dataToMove[i]);
-				size++;
-			}
-		}
-
-		/* Construct this darray given another darray by copy. */
-		constexpr void ConstructCopy(const darray<T>& other) {
-			const ArrSizeT num = other.Size();
-			data = nullptr;
-			capacity = 0;
-			Reserve(num);
-
-			for (ArrSizeT i = 0; i < num; i++) {
-				data[i] = other.data[i];
-			}
-			size = num;
-		}
-
-		/* Construct this darray given another darray by move. */
-		constexpr void ConstructMove(darray<T>&& other) noexcept {
-			data = other.data;
-			size = other.size;
-			capacity = other.capacity;
-			other.data = nullptr;
-		}
-
-		/* Construct this darray given an initializer list. */
-		constexpr void ConstructInitializerList(const std::initializer_list<T>& il) {
-			size = 0;
-			capacity = il.size();
-			data = new T[capacity];
-			for (const T& i : il) {
-				data[size] = i;
-				size++;
-			}
-		}
-
-		/* Construct this darray given a pointer to a bunch of data. */
-		constexpr void ConstructData(const T* dataToCopy, const ArrSizeT num) {
-			capacity = 0;
-			size = 0;
-			CopyData(dataToCopy, num);
-		}
-
-		/* Try to delete data. Also sets size and capacity to 0. */
-		constexpr void DeleteData() {
-			if (data != nullptr) {
-				delete[] data;
-				data = nullptr;
-			}
-			size = 0;
-			capacity = 0;
-		}
-
-	public:
+		/* Iterator end. */
+		constexpr iterator end() const { return iterator(data + size); }
 
 		/* Defualt constructor. See darray::INITIAL_CAPACITY. */
 		constexpr darray() {
@@ -307,7 +209,7 @@ namespace gk
 		}
 
 		/* Set this darray equal to another darray by move. The moved darray is not valid after this. Wipes the array of any previously held data. */
-		constexpr darray<T>& operator = (darray<T>&& other) {
+		constexpr darray<T>& operator = (darray<T>&& other) noexcept {
 			return Set(std::move(other));
 		}
 
@@ -371,6 +273,24 @@ namespace gk
 			return INDEX_NONE;
 		}
 
+		/* Find all indices of a provided element. */
+		[[nodiscard]] constexpr darray<ArrSizeT> FindAll(const T& element) const {
+			darray<ArrSizeT> elements;
+			for (int i = 0; i < Size(); i++) {
+				if (data[i] == element) elements.Add(i);
+			}
+			return elements;
+		}
+
+		/* Get the how many of the provided element exist in the darray. */
+		[[nodiscard]] constexpr ArrSizeT Count(const T& element) const {
+			ArrSizeT count = 0;
+			for (int i = 0; i < Size(); i++) {
+				if (data[i] == element) count++;
+			}
+			count;
+		}
+
 		/* Remove the first occurrence of a given element. */
 		constexpr void RemoveFirst(const T& element) {
 			const ArrSizeT index = Find(element);
@@ -378,6 +298,7 @@ namespace gk
 			Internal_RemoveAt(index);
 		}
 
+		/* Remove the last occurrence of a given element. */
 		constexpr void RemoveLast(const T& element) {
 			const ArrSizeT index = FindLast(element);
 			if (index == INDEX_NONE) return;
@@ -392,21 +313,128 @@ namespace gk
 			Internal_RemoveAt(index);
 		}
 
-		/* Remove all occurrences of a specified element. */
+		/* Remove all occurrences of a specified element. Also shrinks the array to where the capacity is the initial size. Does perform a reallocation so be mindful of performance. */
 		constexpr void RemoveAll(const T& element) {
-			T* elem = data;
-			T* move = start + 1;
-			for (ArrSizeT i = 0; i < Size() - 1; i++) {
-				if (*elem != element) continue;
-				
-				*elem = std::move(*move);
-				elem++;
-				move++;
+			const ArrSizeT initialSize = size;
+			T* newData = new T[initialSize];
+			ArrSizeT newIndex = 0;
+
+			for (ArrSizeT i = 0; i < initialSize; i++) {
+				if (data[i] == element) {
+					size--;
+					continue;
+				}
+				newData[newIndex] = std::move(data[i]);
+				newIndex++;
+			}
+
+			delete[] data;
+			data = newData;
+			capacity = initialSize;
+		}
+
+	private:
+
+		/* Reallocate and move the pre-existing data over. Increases capacity by 2x. */
+		constexpr void Reallocate() {
+			const ArrSizeT newCapacity = capacity * 2;
+
+			T* newData = new T[newCapacity];
+			for (ArrSizeT i = 0; i < Size(); i++) {
+				newData[i] = std::move(data[i]);
+			}
+			delete[] data;
+			data = newData;
+			capacity = newCapacity;
+		}
+
+		/* Copy num amount of data onto the end of the darray. */
+		constexpr void CopyData(const T* dataToCopy, const ArrSizeT num) {
+			if (capacity - size < num) {
+				Reserve(capacity + num);
+			}
+
+			for (ArrSizeT i = 0; i < num; i++) {
+				data[size] = dataToCopy[i];
+				size++;
 			}
 		}
 
+		/* Copy and cast num amount of data onto the end of the darray. U is required to be castable to T. */
+		template<typename U>
+			requires (std::convertible_to<U, T>)
+		constexpr void CopyDataCast(const U* dataToCopy, const ArrSizeT num) {
+			if (capacity - size < num) {
+				Reserve(capacity + num);
+			}
 
-	private:
+			for (ArrSizeT i = 0; i < num; i++) {
+				data[size] = static_cast<T>(dataToCopy[i]);
+				size++;
+			}
+		}
+
+		/* Move num amount of data onto the end of the darray. */
+		constexpr void MoveData(T* dataToMove, const ArrSizeT num) {
+			if (capacity - size < num) {
+				Reserve(capacity + num);
+			}
+
+			for (ArrSizeT i = 0; i < num; i++) {
+				data[size] = std::move(dataToMove[i]);
+				size++;
+			}
+		}
+
+		/* Construct this darray given another darray by copy. */
+		constexpr void ConstructCopy(const darray<T>& other) {
+			const ArrSizeT num = other.Size();
+			data = nullptr;
+			capacity = 0;
+			Reserve(num);
+
+			for (ArrSizeT i = 0; i < num; i++) {
+				data[i] = other.data[i];
+			}
+			size = num;
+		}
+
+		/* Construct this darray given another darray by move. */
+		constexpr void ConstructMove(darray<T>&& other) noexcept {
+			data = other.data;
+			size = other.size;
+			capacity = other.capacity;
+			other.data = nullptr;
+		}
+
+		/* Construct this darray given an initializer list. */
+		constexpr void ConstructInitializerList(const std::initializer_list<T>& il) {
+			size = 0;
+			capacity = il.size();
+			data = new T[capacity];
+			for (const T& i : il) {
+				data[size] = i;
+				size++;
+			}
+		}
+
+		/* Construct this darray given a pointer to a bunch of data. */
+		constexpr void ConstructData(const T* dataToCopy, const ArrSizeT num) {
+			capacity = 0;
+			size = 0;
+			CopyData(dataToCopy, num);
+		}
+
+		/* Try to delete data. Also sets size and capacity to 0. */
+		constexpr void DeleteData() {
+			if (data != nullptr) {
+				delete[] data;
+				data = nullptr;
+			}
+			size = 0;
+			capacity = 0;
+		}
+
 
 		constexpr void Internal_RemoveAt(ArrSizeT index) {
 			for (ArrSizeT i = index; i < Size() - 1; i++) {

@@ -60,6 +60,9 @@
     <ClCompile Include="Source\Player\PlayerInputComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\Geometry\BlockGeometry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.vert" />
@@ -124,6 +127,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Player\PlayerInputComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Geometry\BlockGeometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\World\Chunk\ChunkDataTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -159,7 +159,6 @@
     <ClCompile Include="Source\Engine.cpp" />
     <ClCompile Include="Source\Graphics\Buffers\VertexBufferLayout.cpp" />
     <ClCompile Include="Source\Graphics\Buffers\VertexBufferObject.cpp" />
-    <ClCompile Include="Source\Graphics\Geometry\BlockGeometry.cpp" />
     <ClCompile Include="Source\Graphics\Shader\Shader.cpp" />
     <ClCompile Include="Source\Graphics\Texture\Texture2d.cpp" />
     <ClCompile Include="Source\Input\InputMapping.cpp" />
@@ -182,7 +181,6 @@
     <ClInclude Include="Source\EngineCore.h" />
     <ClInclude Include="Source\Graphics\Buffers\VertexBufferLayout.h" />
     <ClInclude Include="Source\Graphics\Buffers\VertexBufferObject.h" />
-    <ClInclude Include="Source\Graphics\Geometry\BlockGeometry.h" />
     <ClInclude Include="Source\Graphics\Shader\Shader.h" />
     <ClInclude Include="Source\Graphics\Texture\Texture2d.h" />
     <ClInclude Include="Source\Input\InputMapping.h" />

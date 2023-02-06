@@ -40,25 +40,42 @@ void PlayerInputComponent::Cursor(double xpos, double ypos)
 
 void PlayerInputComponent::Press(GlobalString button, InputMods mods)
 {
-	cubeLog("player input component press");
-	if (button == "W") {
-		AddPlayerForwardInput(1);
+}
+
+void PlayerInputComponent::Tick(float deltaTime)
+{
+	static GlobalString WKey = "W";
+	static GlobalString AKey = "A";
+	static GlobalString SKey = "S";
+	static GlobalString DKey = "D";
+
+	const float WKeyScale = CubeInput::GetButtonState(WKey).isHeld ? 1 : 0;
+	const float SKeyScale = CubeInput::GetButtonState(SKey).isHeld ? -1 : 0;
+	const float ForwardScale = WKeyScale + SKeyScale;
+	if (ForwardScale != 0) {
+		AddPlayerForwardInput(ForwardScale * deltaTime);
 	}
-	else if (button == "S") {
-		AddPlayerForwardInput(-1);
+
+	const float AKeyScale = CubeInput::GetButtonState(AKey).isHeld ? -1 : 0;
+	const float DKeyScale = CubeInput::GetButtonState(DKey).isHeld ? 1 : 0;
+	const float RightScale = AKeyScale + DKeyScale;
+	if (RightScale != 0) {
+		AddPlayerRightInput(RightScale * deltaTime);
 	}
 }
 
 void PlayerInputComponent::AddPlayerForwardInput(float scale)
 {
 	glm::dvec3 location = player->GetLocation();
-	location += 0.5 * double(scale) * glm::dvec3(player->GetLookAt().x, player->GetLookAt().y, player->GetLookAt().z);
+	location += 0.5 * double(scale) * player->GetForwardVector();
 	player->SetLocation(location);
 	player->GetCamera()->SetPosition({ location.x, location.y, location.z });
 }
 
 void PlayerInputComponent::AddPlayerRightInput(float scale)
 {
-	glm::vec3 location = player->GetLocation();
-
+	glm::dvec3 location = player->GetLocation();
+	location += 0.5 * double(scale) * player->GetRightVector();
+	player->SetLocation(location);
+	player->GetCamera()->SetPosition({ location.x, location.y, location.z });
 }

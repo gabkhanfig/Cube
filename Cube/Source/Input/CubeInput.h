@@ -35,4 +35,6 @@ public:
 
 	static glm::dvec2 GetPreviousCursorPos();
 
+	static InputButtonState GetButtonState(GlobalString button);
+
 };

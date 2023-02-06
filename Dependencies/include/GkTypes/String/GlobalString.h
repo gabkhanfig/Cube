@@ -102,6 +102,16 @@ namespace gk
 			return *internalString;
 		}
 
+		const char* CStr() const
+		{
+			return internalString->CStr();
+		}
+
+		size_t ComputeHash() const
+		{
+			return (size_t)internalString;
+		}
+
 	};
 }
 
@@ -111,7 +121,7 @@ namespace std
 	struct hash<gk::GlobalString>
 	{
 		size_t operator()(const gk::GlobalString& str) const {
-			return str.ToString().ComputeHash();
+			return str.ComputeHash();
 		}
 
 	};

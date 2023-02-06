@@ -50,11 +50,11 @@ int InputMapping::GetInputid(GlobalString str)
 
 darray<GlobalString> InputMapping::GetMappedInputs()
 {
-	//darray<GlobalString> mappedInputStrings;
-	//mappedInputStrings.Reserve(inputStrings.size());
-	//for (auto& str : inputStrings) {
-	//	mappedInputStrings.Add(str.second);
-	//}
-	//return mappedInputStrings;
-	return darray<GlobalString>();
+	static InputMapping::InputsInt_T strs = CreateDefaultInputs().inputStrings;
+	darray<GlobalString> mappedInputStrings;
+	mappedInputStrings.Reserve(strs.size());
+	for (auto& str : strs) {
+		mappedInputStrings.Add(str.second);
+	}
+	return mappedInputStrings;
 }

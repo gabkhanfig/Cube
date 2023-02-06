@@ -1,6 +1,6 @@
 #version 460 core
 
-layout (location = 0) in uint aPos;
+layout (location = 0) in vec3 position;
 layout	(location = 1) in vec2 texCoord;
 
 uniform mat4 u_cameraMVP;
@@ -19,22 +19,12 @@ out vec2 v_TexCoord;
 #define BYTE_3_BITMASK 0xFF0000
 #define BYTE_4_BITMASK 0xFF000000
 
-vec3 PositionFromBitmask(uint mask)
-{
-	const vec3 position = vec3(
-		mask & BYTE_1_BITMASK,
-		(mask >> 8) & BYTE_1_BITMASK,
-		(mask >> 16) & BYTE_1_BITMASK
-	);
-	return position;
-}
-
 void main()
 {
-	const vec3 position = PositionFromBitmask(aPos) / 255.0 - 0.5;
+	//const vec3 position = PositionFromBitmask(aPos) / 255.0 - 0.5;
 	gl_Position = u_cameraMVP * vec4(position, 1.0);
 
-	vertCoord = PositionFromBitmask(aPos) / 255.0;
-	fragCoord = PositionFromBitmask(aPos) / 255.0;
+	vertCoord = position;
+	fragCoord = position;
 	v_TexCoord = texCoord;
 }

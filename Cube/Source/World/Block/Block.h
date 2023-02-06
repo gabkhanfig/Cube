@@ -1,7 +1,7 @@
 #pragma once
 
 #include <EngineCore.h>
-#include <Graphics/Geometry/BlockGeometry.h>
+#include "../../Graphics/Geometry/BlockGeometry.h"
 #include "BlockFactory.h"
 
 /* Sets everything after this back to private. */

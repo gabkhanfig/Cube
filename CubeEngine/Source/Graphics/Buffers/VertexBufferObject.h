@@ -22,6 +22,8 @@ public:
 	void Bind();
 
 	void Unbind();
+
+	uint32 GetId() const { return id; }
 	
 };
 

@@ -24,11 +24,13 @@ void CubeInput::ButtonInputCallback(GlobalString button, EInputAction action, In
 		engine->GetWindow()->Close();
 	}
 
-	//auto pair = buttonStates.find(button);
-	//if (pair != buttonStates.end()) {
-	//	pair->second.isHeld = action == EInputAction::Press;
-	//}
-
+	if (action != EInputAction::Repeat) {
+		auto pair = buttonStates.find(button);
+		if (pair != buttonStates.end()) {
+			pair->second.isHeld = action == EInputAction::Press;
+		}
+	}
+	
 	for (ArrSizeT i = 0; i < activeInputComponents.Size(); i++) {
 		if (action == EInputAction::Press) {
 			activeInputComponents[i]->Press(button, mods);
@@ -81,4 +83,13 @@ void CubeInput::UnbindInputComponent(InputComponent* inputComponent)
 glm::dvec2 CubeInput::GetPreviousCursorPos()
 {
 	return previousCursorPos;
+}
+
+InputButtonState CubeInput::GetButtonState(GlobalString button)
+{
+	auto pair = buttonStates.find(button);
+	if (pair == buttonStates.end()) {
+		throw std::invalid_argument("Cannot get button state of a button that doesn't exist");
+	}
+	return pair->second;
 }

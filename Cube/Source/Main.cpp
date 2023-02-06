@@ -8,7 +8,6 @@
 #include <Graphics/Buffers/ShaderBufferObject.h>
 #include "../Resources/GeneratedFiles.h"
 #include <algorithm>
-#include <Graphics/Geometry/BlockGeometry.h>
 #include <Graphics/Texture/Texture2d.h>
 #include <Input/UserInput.h>
 #include <GLFW/glfw3.h>

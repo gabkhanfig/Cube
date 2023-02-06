@@ -8,7 +8,7 @@
 #include <Graphics/Buffers/VertexArrayObject.h>
 #include <Graphics/Buffers/ShaderBufferObject.h>
 #include "../../Resources/GeneratedFiles.h"
-#include <Graphics/Geometry/BlockGeometry.h>
+#include "../Graphics/Geometry/BlockGeometry.h"
 #include <glad/glad.h>
 #include "Block/BlockTextureAtlas.h"
 
@@ -21,6 +21,8 @@ World::World()
 {
   player = new Player();
   chunkShader = new Shader(generated_Chunk_vert, generated_Chunk_frag);
+  chunkVAO = new VertexArrayObject();
+  chunkVAO->SetFormatLayout(BlockQuad::GetQuadsVertexBufferLayout());
 
   //BlockTextureAtlas::Bind(0);
 }
@@ -35,11 +37,11 @@ void World::DrawWorld()
   Camera* cam = Camera::GetActiveCamera();
   chunkShader->SetUniformMat4f("u_cameraMVP", cam->GetMvpMatrix());
 
-  uint32 positions[4] = {
-    {255 + (255 << 8)},
-    {255},
-    {0}, //  + (255 << 16)
-    {(255 << 8)}
+  glm::vec3 positions[4] = {
+    glm::vec3(1, 1, 1),
+    glm::vec3(1, 0, 1),
+    glm::vec3(0, 0, 1),
+    glm::vec3(0, 1, 1)
   };
 
   glm::vec2 texCoords[4] = {
@@ -51,18 +53,29 @@ void World::DrawWorld()
 
   IndexBufferObject* ibo = BlockQuad::CreateQuadsIndexBuffer(1);
   BlockQuad quad = BlockQuad(positions, texCoords);
-  VertexArrayObject* vao = new VertexArrayObject();
-  vao->Bind();
   VertexBufferObject* vbo = BlockQuad::CreateQuadsVertexBufferObject(&quad, 1);
-  vao->LinkVertexBufferObject(vbo, BlockQuad::GetQuadsVertexBufferLayout());
 
-  
+  chunkVAO->BindVertexBufferObject(vbo, sizeof(BlockVertex));
 
-  vao->Bind();
+
   ibo->Bind();
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-  delete vao;
+  glm::vec3 positions2[4] = {
+    glm::vec3(3, 3, 1),
+    glm::vec3(3, 2, 1),
+    glm::vec3(2, 2, 1),
+    glm::vec3(2, 3, 1)
+  };
+
+  BlockQuad quad2 = BlockQuad(positions2, texCoords);
+  VertexBufferObject* vbo2 = BlockQuad::CreateQuadsVertexBufferObject(&quad2, 1);
+
+  chunkVAO->BindVertexBufferObject(vbo2, sizeof(BlockVertex));
+  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+  //delete vao;
   delete vbo;
   delete ibo;
+  delete vbo2;
 }

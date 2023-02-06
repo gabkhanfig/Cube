@@ -25,7 +25,9 @@ public:
 
 	virtual void Cursor(double xpos, double ypos) override;
 
-	virtual void Press(GlobalString button, InputMods mods);
+	virtual void Press(GlobalString button, InputMods mods) override;
+
+	virtual void Tick(float deltaTime) override;
 
 	void AddPlayerForwardInput(float scale);
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ChunkData.h"
+#include "ChunkDataTypes.h"
 
 class Block;
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <EngineCore.h>
+#include "Chunk/ChunkData.h"
 
 struct BlockFacing
 {
@@ -50,16 +51,16 @@ struct BlockPosition
 		: x(_x), y(_y), z(_z)
 	{}
 
-	constexpr uint16 ToBlockIndex() const {
-		const uint16 index = x + (z * 16) + (y * 16 * 16);
+	constexpr uint32 ToBlockIndex() const {
+		const uint32 index = x + (z * CHUNK_LENGTH) + (y * CHUNK_LENGTH * CHUNK_LENGTH);
 		return index;
 	}
 
-	static constexpr BlockPosition FromBlockIndex(const uint16 index) {
+	static constexpr BlockPosition FromBlockIndex(const uint32 index) {
 		BlockPosition pos{
-			uint8(index % 16), 
-			uint8(index / (16 * 16)),
-			uint8((index % (16 * 16)) / 16)
+			uint8(index % CHUNK_LENGTH),
+			uint8(index / (CHUNK_LENGTH * CHUNK_LENGTH)),
+			uint8((index % (CHUNK_LENGTH * CHUNK_LENGTH)) / CHUNK_LENGTH)
 		};
 		return pos;
 	}
@@ -86,9 +87,9 @@ struct WorldPosition
 
 	static constexpr WorldPosition FromChunkAndBlock(ChunkPosition chunk, BlockPosition block) {
 		WorldPosition wp{
-			(chunk.x * 16) + block.x,
-			chunk.y * 16 + int(block.y),
-			chunk.z * 16 + int(block.z)
+			chunk.x * CHUNK_LENGTH + block.x,
+			chunk.y * CHUNK_LENGTH + int(block.y),
+			chunk.z * CHUNK_LENGTH + int(block.z)
 		};
 		return wp;
 	}
@@ -98,18 +99,18 @@ struct WorldPosition
 		if (outChunk) *outChunk = cpos;
 		if (outBlock) {
 			*outBlock = BlockPosition(
-			x - (cpos.x * 16),
-			y - (cpos.y * 16),
-			z - (cpos.z * 16));
+			x - (cpos.x * CHUNK_LENGTH),
+			y - (cpos.y * CHUNK_LENGTH),
+			z - (cpos.z * CHUNK_LENGTH));
 		}
 		
 	}
 
 	constexpr ChunkPosition ToChunkPosition() const {
 		ChunkPosition pos;
-		pos.x = (x / 16) - (1 * (x < 0));
-		pos.y = (y / 16) - (1 * (y < 0));
-		pos.z = (z / 16) - (1 * (z < 0));
+		pos.x = (x / CHUNK_LENGTH) - (1 * (x < 0));
+		pos.y = (y / CHUNK_LENGTH) - (1 * (y < 0));
+		pos.z = (z / CHUNK_LENGTH) - (1 * (z < 0));
 		return pos;
 	}
 

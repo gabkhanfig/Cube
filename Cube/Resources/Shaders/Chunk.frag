@@ -105,7 +105,4 @@ void main()
 	const vec3 outColor = TrilinearInterpolationColor(subvoxel, cols);
 	const vec4 texColor = texture(u_Texture, v_TexCoord);
 	FragColor = texColor * vec4(outColor, 1);
-	//FragColor = texColor;
-	//FragColor = vec4(outColor, 1);
-	//FragColor = ssbocol;
 }

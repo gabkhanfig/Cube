@@ -171,6 +171,7 @@ GenerateFiles.bat</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Graphics\Geometry\BlockGeometry.cpp" />
     <ClCompile Include="Source\Input\InputComponent.cpp" />
     <ClCompile Include="Source\Entity\Entity.cpp" />
     <ClCompile Include="Source\GameInstance.cpp" />
@@ -204,6 +205,7 @@ GenerateFiles.bat</Command>
     <Text Include="Resources\Files.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Graphics\Geometry\BlockGeometry.h" />
     <ClInclude Include="Source\Input\InputComponent.h" />
     <ClInclude Include="Resources\GeneratedFiles.h" />
     <ClInclude Include="Source\Entity\Entity.h" />
@@ -219,6 +221,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\World\Chunk\ChunkBuffers.h" />
     <ClInclude Include="Source\World\Chunk\ChunkData.h" />
     <ClInclude Include="Source\World\Chunk\ChunkSSBO.h" />
+    <ClInclude Include="Source\World\Chunk\ChunkDataTypes.h" />
     <ClInclude Include="Source\World\World.h" />
     <ClInclude Include="Source\World\WorldTransform.h" />
   </ItemGroup>

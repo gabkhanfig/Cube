@@ -4,7 +4,7 @@ Camera* Camera::activeCamera = nullptr;
 
 glm::mat4 Camera::GetProjectionMatrix() const
 {
-	return glm::perspective(glm::radians(cameraFOV), 1.f / 1.f, 0.1f, float(chunkRenderDistance + 1) * 16.f * 16.f);
+	return glm::perspective(glm::radians(cameraFOV), 1.f / 1.f, 0.01f, float(chunkRenderDistance + 1) * 16.f * 16.f);
 }
 
 glm::mat4 Camera::GetViewMatrix() const

@@ -35,4 +35,8 @@ public:
 	/* Set the unit vector of where this entity is looking. */
 	forceinline void SetLookAt(const glm::vec3 newLookAt) { lookAt = newLookAt; }
 
+	forceinline glm::dvec3 GetForwardVector() const { return glm::dvec3(lookAt.x, lookAt.y, lookAt.z); }
+
+	forceinline glm::dvec3 GetRightVector() const { return glm::cross(GetForwardVector(), glm::dvec3(0, 1, 0)); }
+
 };

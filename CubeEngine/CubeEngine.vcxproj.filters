@@ -39,9 +39,6 @@
     <ClCompile Include="Source\Graphics\Buffers\VertexBufferLayout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Geometry\BlockGeometry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Graphics\Texture\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -102,9 +99,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Buffers\VertexBufferLayout.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Geometry\BlockGeometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Texture\Texture.h">

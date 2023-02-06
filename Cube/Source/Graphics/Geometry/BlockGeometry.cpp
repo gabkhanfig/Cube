@@ -1,6 +1,6 @@
 #include "BlockGeometry.h"
-#include "../Buffers/IndexBufferObject.h"
-#include "../Buffers/VertexBufferObject.h"
+#include <Graphics/Buffers/IndexBufferObject.h>
+#include <Graphics/Buffers/VertexBufferObject.h>
 
 IndexBufferObject* BlockQuad::CreateQuadsIndexBuffer(const uint32 quadCount)
 {
@@ -10,8 +10,10 @@ IndexBufferObject* BlockQuad::CreateQuadsIndexBuffer(const uint32 quadCount)
     3, 0, 2
   };
 
+  checkm((quadCount * indexCount) < (0x7FFFFFFF / sizeof(uint32)), "BlockQuad indices amount cannot exceed max signed 32-bit int / 4");
+
   uint32 index = 0;
-  uint32* quadIndices = new uint32[indexCount * quadCount];
+  uint32* quadIndices = new uint32[uint64(indexCount) * uint64(quadCount)];
   for (int i = 0; i < quadCount; i++) {
     quadIndices[index++] = (indices[0] + (i * 4));
     quadIndices[index++] = (indices[1] + (i * 4));
@@ -32,7 +34,7 @@ VertexBufferObject* BlockQuad::CreateQuadsVertexBufferObject(const BlockQuad* qu
 
 static VertexBufferLayout QuadVBL() {
   VertexBufferLayout layout;
-  layout.Push<uint32>(1); // position
+  layout.Push<float>(3);  // position
   layout.Push<float>(2);  // texCoord
   return layout;
 }

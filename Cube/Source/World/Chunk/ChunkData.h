@@ -1,20 +1,10 @@
 #pragma once
 
 #include <EngineCore.h>
-#include "../WorldTransform.h"
 
-/* 16 x 16 x 16 */
-#define CHUNK_SIZE 4096
+/* Length of a chunk (applies to width and height as well) */
+#define CHUNK_LENGTH 16
 
-class Block;
+/* Amount of blocks per chunk */
+#define CHUNK_SIZE (CHUNK_LENGTH * CHUNK_LENGTH * CHUNK_LENGTH)
 
-struct ChunkBlock
-{
-	Block* block;
-	glm::vec3 light;
-	BlockFacing facing;
-
-	ChunkBlock()
-		: block(nullptr), light({ 0, 0, 0 }), facing(0)
-	{}
-};
