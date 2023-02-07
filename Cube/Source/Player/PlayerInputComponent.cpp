@@ -67,7 +67,7 @@ void PlayerInputComponent::Tick(float deltaTime)
 void PlayerInputComponent::AddPlayerForwardInput(float scale)
 {
 	glm::dvec3 location = player->GetLocation();
-	location += 0.5 * double(scale) * player->GetForwardVector();
+	location += double(scale) * player->GetForwardVector();
 	player->SetLocation(location);
 	player->GetCamera()->SetPosition({ location.x, location.y, location.z });
 }
@@ -75,7 +75,7 @@ void PlayerInputComponent::AddPlayerForwardInput(float scale)
 void PlayerInputComponent::AddPlayerRightInput(float scale)
 {
 	glm::dvec3 location = player->GetLocation();
-	location += 0.5 * double(scale) * player->GetRightVector();
+	location += double(scale) * player->GetRightVector();
 	player->SetLocation(location);
 	player->GetCamera()->SetPosition({ location.x, location.y, location.z });
 }

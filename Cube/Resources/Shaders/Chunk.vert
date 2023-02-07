@@ -1,16 +1,18 @@
 #version 460 core
 
-layout (location = 0) in vec3 position;
-layout	(location = 1) in vec2 texCoord;
+// https://sight.pages.ircad.fr/sight-doc/CodingStyle/src/07-glsl-style.html
+
+layout (location = 0) in vec3 v_in_position;
+layout	(location = 1) in vec2 v_in_texCoord;
 
 uniform mat4 u_cameraMVP;
 
-// Interpolated fragment shader coordinates it's position in the triangle
-out vec3 fragCoord;
-// Normalized coordinates of this vertex
-out flat vec3 vertCoord;
-//
-out vec2 v_TexCoord;
+// Interpolated fragment shader coordinates it's position in the triangle.
+out vec3 v_out_fragCoord;
+// Normalized coordinates of this vertex.
+out flat vec3 v_out_vertCoord;
+// Interpolated texture coordinates.
+out vec2 v_out_texCoord;
 
 #define SUBVOXEL_COUNT 16.0
 
@@ -22,9 +24,9 @@ out vec2 v_TexCoord;
 void main()
 {
 	//const vec3 position = PositionFromBitmask(aPos) / 255.0 - 0.5;
-	gl_Position = u_cameraMVP * vec4(position, 1.0);
+	gl_Position = u_cameraMVP * vec4(v_in_position, 1.0);
 
-	vertCoord = position;
-	fragCoord = position;
-	v_TexCoord = texCoord;
+	v_out_vertCoord = v_in_position;
+	v_out_fragCoord = v_in_position;
+	v_out_texCoord = v_in_texCoord;
 }

@@ -6,7 +6,11 @@ class IndexBufferObject
 {
 private:
 
+	static uint32 boundId;
+
 	uint32 id;
+
+	uint32 indexCount;
 
 public:
 
@@ -17,6 +21,10 @@ public:
 	void Bind();
 
 	void Unbind();
+
+	bool IsBound() const;
+
+	uint32 GetIndexCount() const { return indexCount; }
 
 
 };

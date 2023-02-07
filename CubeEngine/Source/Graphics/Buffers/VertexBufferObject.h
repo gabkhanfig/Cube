@@ -6,6 +6,8 @@ class VertexBufferObject
 {
 private:
 
+	static uint32 boundId;
+
 	uint32 id;
 
 public:
@@ -22,6 +24,8 @@ public:
 	void Bind();
 
 	void Unbind();
+
+	bool IsBound() const;
 
 	uint32 GetId() const { return id; }
 	

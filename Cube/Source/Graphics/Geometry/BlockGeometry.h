@@ -18,6 +18,11 @@ struct BlockVertex
   BlockVertex(glm::vec3 _position, glm::vec2 _texCoord)
     : position(_position), texCoord(_texCoord)
   {}
+
+  /* Shifts the vertex position by a given amount. */
+  forceinline void Shift(glm::vec3 shiftAmount) {
+    position += shiftAmount;
+  }
 };
 static_assert(sizeof(BlockVertex) ==
   sizeof(glm::vec3) + sizeof(glm::vec2)
@@ -27,7 +32,6 @@ static_assert(sizeof(BlockVertex) ==
 struct BlockQuad
 {
   BlockVertex vertices[4];
-
 
   BlockQuad(const glm::vec3 positions[4], const glm::vec2 texCoords[4])
   {
@@ -43,6 +47,14 @@ struct BlockQuad
 
   /* Get the global vertex buffer layout for quads. */
   static const VertexBufferLayout& GetQuadsVertexBufferLayout();
+
+  /* Shifts the 4 vertices by a given amount. */
+  forceinline void Shift(glm::vec3 shiftAmount) {
+    vertices[0].Shift(shiftAmount);
+    vertices[1].Shift(shiftAmount);
+    vertices[2].Shift(shiftAmount);
+    vertices[3].Shift(shiftAmount);
+  }
 
 };
 static_assert(sizeof(BlockQuad) == sizeof(BlockVertex) * 4, "Block quad byte size must be equal to 4x BlockVertex");

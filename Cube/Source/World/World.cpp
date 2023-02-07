@@ -11,6 +11,7 @@
 #include "../Graphics/Geometry/BlockGeometry.h"
 #include <glad/glad.h>
 #include "Block/BlockTextureAtlas.h"
+#include <Graphics/Render/Renderer.h>
 
 World* GetWorld()
 {
@@ -30,7 +31,7 @@ World::World()
 void World::DrawWorld()
 {
   /* Render here */
-  glClear(GL_COLOR_BUFFER_BIT);
+  Renderer::Clear();
 
   chunkShader->Bind();
 
@@ -38,16 +39,16 @@ void World::DrawWorld()
   chunkShader->SetUniformMat4f("u_cameraMVP", cam->GetMvpMatrix());
 
   glm::vec3 positions[4] = {
-    glm::vec3(1, 1, 1),
-    glm::vec3(1, 0, 1),
     glm::vec3(0, 0, 1),
+    glm::vec3(1, 0, 1),
+    glm::vec3(1, 1, 1),
     glm::vec3(0, 1, 1)
   };
 
   glm::vec2 texCoords[4] = {
-    BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {1, 1}),
-    BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {1, 0}),
     BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {0, 0}),
+    BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {1, 0}),
+    BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {1, 1}),
     BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {0, 1})
   };
 
@@ -57,22 +58,27 @@ void World::DrawWorld()
 
   chunkVAO->BindVertexBufferObject(vbo, sizeof(BlockVertex));
 
-
-  ibo->Bind();
-  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+  Renderer::DrawVboTriangles(vbo, ibo);
 
   glm::vec3 positions2[4] = {
-    glm::vec3(3, 3, 1),
-    glm::vec3(3, 2, 1),
+    glm::vec3(1, 1, 1),
+    glm::vec3(2, 1, 1),
     glm::vec3(2, 2, 1),
-    glm::vec3(2, 3, 1)
+    glm::vec3(1, 2, 1)
   };
 
-  BlockQuad quad2 = BlockQuad(positions2, texCoords);
+  glm::vec2 texCoords2[4] = {
+    BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {0, 0}),
+    BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {1, 0}),
+    BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {1, 1}),
+    BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {0, 1})
+  };
+
+  BlockQuad quad2 = BlockQuad(positions2, texCoords2);
   VertexBufferObject* vbo2 = BlockQuad::CreateQuadsVertexBufferObject(&quad2, 1);
 
   chunkVAO->BindVertexBufferObject(vbo2, sizeof(BlockVertex));
-  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+  Renderer::DrawVboTriangles(vbo2, ibo);
 
   //delete vao;
   delete vbo;

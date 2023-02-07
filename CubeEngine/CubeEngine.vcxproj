@@ -154,6 +154,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="Source\Graphics\Buffers\ShaderBufferObject.cpp" />
     <ClCompile Include="Source\Graphics\Camera\Camera.cpp" />
+    <ClCompile Include="Source\Graphics\Render\Renderer.cpp" />
     <ClCompile Include="Source\Graphics\Texture\Texture.cpp" />
     <ClCompile Include="Source\Graphics\Buffers\IndexBufferObject.cpp" />
     <ClCompile Include="Source\Engine.cpp" />
@@ -172,6 +173,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Graphics\Buffers\ShaderBufferObject.h" />
     <ClInclude Include="Source\Graphics\Camera\Camera.h" />
+    <ClInclude Include="Source\Graphics\Render\Renderer.h" />
     <ClInclude Include="Source\Graphics\Texture\Texture.h" />
     <ClInclude Include="Source\Graphics\Buffers\IndexBufferObject.h" />
     <ClInclude Include="Source\Core\Asserts.h" />

@@ -5,9 +5,10 @@
 IndexBufferObject* BlockQuad::CreateQuadsIndexBuffer(const uint32 quadCount)
 {
   constexpr uint32 indexCount = 6;
+
+  // I have no idea why, but indices in this order just works for linear coordinates for quads. Do not change. 2, 3, 0, 1, 2, 0
   constexpr uint32 indices[indexCount] = {
-    0, 1, 2,
-    3, 0, 2
+    2, 3, 0, 1, 2, 0
   };
 
   checkm((quadCount * indexCount) < (0x7FFFFFFF / sizeof(uint32)), "BlockQuad indices amount cannot exceed max signed 32-bit int / 4");
