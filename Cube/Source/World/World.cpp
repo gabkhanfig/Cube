@@ -34,7 +34,6 @@ void World::DrawWorld()
   Renderer::Clear();
 
   chunkShader->Bind();
-
   Camera* cam = Camera::GetActiveCamera();
   chunkShader->SetUniformMat4f("u_cameraMVP", cam->GetMvpMatrix());
 

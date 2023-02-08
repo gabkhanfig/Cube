@@ -2,7 +2,7 @@
 
 #include <EngineCore.h>
 
-class Block;
+class IBlock;
 class Chunk;
 
 class BlockClass
@@ -13,7 +13,7 @@ private:
 	GlobalString name;
 
 	/**/
-	Block* defaultBlock;
+	IBlock* defaultBlock;
 	
 	/**/
 	gk::ClassRef* classRef;
@@ -26,7 +26,7 @@ public:
 	BlockClass();
 
 	template<typename B>
-		requires (std::is_base_of<Block, B>::value)
+		requires (std::is_base_of<IBlock, B>::value)
 	static BlockClass* CreateBlockDependency() 
 	{
 		BlockClass* blockDep = new BlockClass();
@@ -43,7 +43,7 @@ public:
 	}
 
 	/* Either gets the default block object, or creates a new one depending on the block's requirements. */
-	Block* GetBlock();
+	IBlock* GetBlock();
 
 	GlobalString GetName() const { return name; }
 };

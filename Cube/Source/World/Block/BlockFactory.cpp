@@ -1,16 +1,15 @@
 #include "BlockFactory.h"
-
-#include "Block.h"
+#include "IBlock.h"
 
 BlockClass::BlockClass()
 	: defaultBlock(nullptr), classRef(nullptr), createNewBlock(false)
 {}
 
-Block* BlockClass::GetBlock()
+IBlock* BlockClass::GetBlock()
 {
-	Block* block = nullptr;
+	IBlock* block = nullptr;
 	if (createNewBlock) {
-		return (Block*)classRef->NewObject();
+		return (IBlock*)classRef->NewObject();
 	}
 	else {
 		block = defaultBlock;

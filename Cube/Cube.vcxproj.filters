@@ -18,10 +18,10 @@
     <ClCompile Include="Source\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\World\Chunk\ChunkBuffers.cpp">
+    <ClCompile Include="Source\World\Chunk\ChunkRender.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\World\Block\Block.cpp">
+    <ClCompile Include="Source\World\Block\IBlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\World\Chunk\Chunk.cpp">
@@ -63,6 +63,9 @@
     <ClCompile Include="Source\Graphics\Geometry\BlockGeometry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\World\Block\BlockTypes\Stone\StoneBlock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.vert" />
@@ -87,10 +90,10 @@
     <ClInclude Include="Source\World\Chunk\ChunkData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\World\Chunk\ChunkBuffers.h">
+    <ClInclude Include="Source\World\Chunk\ChunkRender.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\World\Block\Block.h">
+    <ClInclude Include="Source\World\Block\IBlock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\World\Chunk\Chunk.h">
@@ -133,6 +136,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\World\Chunk\ChunkDataTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\World\Block\BlockTypes\Stone\StoneBlock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,7 +4,6 @@
 
 class VertexBufferObject;
 class IndexBufferObject;
-class VertexArrayObject;
 class ShaderBufferObject;
 
 
@@ -14,7 +13,7 @@ class ShaderBufferObject;
 */
 
 /* OpenGL buffer objects for chunks. */
-struct ChunkBufferObjects
+struct ChunkRenderBufferObjects
 {
 	/**/
 	VertexBufferObject* vbo;
@@ -23,18 +22,24 @@ struct ChunkBufferObjects
 	IndexBufferObject* ibo;
 
 	/**/
-	VertexArrayObject* vao;
-
-	/**/
 	ShaderBufferObject* ssbo;
+
+	ChunkRenderBufferObjects() : vbo(nullptr), ibo(nullptr), ssbo(nullptr) {}
+
+	~ChunkRenderBufferObjects() {
+		delete vbo;
+		delete ibo;
+		delete ssbo;
+	}
+
 };
 
 
-class ChunkBuffers
+class ChunkRenderComponent
 {
 private:
 
-	ChunkBufferObjects buffers;
+	ChunkRenderBufferObjects buffers;
 
 public:
 };

@@ -6,7 +6,8 @@ constexpr const char* generated_Chunk_vert = R"(#version 460 core
 // https://sight.pages.ircad.fr/sight-doc/CodingStyle/src/07-glsl-style.html
 
 layout (location = 0) in vec3 v_in_position;
-layout	(location = 1) in vec2 v_in_texCoord;
+layout (location = 1) in vec3 v_in_normal;
+layout (location = 2) in vec2 v_in_texCoord;
 
 uniform mat4 u_cameraMVP;
 
@@ -26,7 +27,6 @@ out vec2 v_out_texCoord;
 
 void main()
 {
-	//const vec3 position = PositionFromBitmask(aPos) / 255.0 - 0.5;
 	gl_Position = u_cameraMVP * vec4(v_in_position, 1.0);
 
 	v_out_vertCoord = v_in_position;

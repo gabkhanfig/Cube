@@ -12,7 +12,7 @@
 #include <Input/UserInput.h>
 #include <GLFW/glfw3.h>
 
-#include "World/Block/Block.h"
+#include "World/Block/IBlock.h"
 #include "Vendor/stb_image/stb_image.h"
 #include "World/Block/BlockTextureAtlas.h"
 #include "Player/Player.h"
