@@ -25,7 +25,6 @@ namespace gk
 			if (search != stringMap.end()) {
 				return search->second;
 			}
-
 			gk::string* mapStr = new gk::string(str);
 			stringMap.insert({ str, mapStr });
 			return mapStr;
@@ -110,6 +109,11 @@ namespace gk
 		size_t ComputeHash() const
 		{
 			return (size_t)internalString;
+		}
+
+		/* std::cout << GlobalString */
+		friend std::ostream& operator << (std::ostream& os, const GlobalString& _string) {
+			return os << _string.CStr();
 		}
 
 	};

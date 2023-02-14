@@ -5,6 +5,7 @@
 #include <Input/UserInput.h>
 #include "Input/CubeInput.h"
 #include <Input/InputMapping.h>
+#include "World/Block/BlockFactory.h"
 
 void _CubeGameInstanceTickCallback(float deltaTime)
 {
@@ -13,6 +14,9 @@ void _CubeGameInstanceTickCallback(float deltaTime)
 
 void GameInstance::Init()
 {
+  BlockClass* stone = BlockFactory::GetBlockClass("stoneBlock");
+  std::cout << stone->GetName().ToString() << std::endl;
+
   BlockTextureAtlas::CreateBlockTextureAtlasObject();
   CubeInput::SetupGameCallbacks();
   world = new World();

@@ -138,7 +138,7 @@ namespace gk
 		/* Add an element to the end of the darray by move. */
 		constexpr ArrSizeT Add(T&& element) {
 			if (size == capacity) {
-				Reallocate();
+				Reallocate(capacity * 2);
 			}
 
 			data[size] = std::move(element);
@@ -149,7 +149,7 @@ namespace gk
 		/* Add an element to the end of the darray by copy. */
 		constexpr ArrSizeT Add(const T& element) {
 			if (size == capacity) {
-				Reallocate();
+				Reallocate(capacity * 2);
 			}
 
 			data[size] = element;
@@ -158,14 +158,14 @@ namespace gk
 		}
 
 		/* Set this darray equal to another darray by copy. Wipes the array of any previously held data. */
-		constexpr darray<T>& Set(const darray<T>& other) {
+		constexpr darray<T>& SetEqualTo(const darray<T>& other) {
 			DeleteData();
 			ConstructCopy(other);
 			return *this;
 		}
 
 		/* Set this darray equal to another darray by move. The moved darray is not valid after this. Wipes the array of any previously held data. */
-		constexpr darray<T>& Set(darray<T>&& other) {
+		constexpr darray<T>& SetEqualTo(darray<T>&& other) {
 			DeleteData();
 			ConstructMove(std::move(other));
 			return *this;
@@ -174,14 +174,14 @@ namespace gk
 		/* Set this darray equal to another template typed darray by static cast. Wipes the array of any previously held data. */
 		template<typename U>
 			requires (std::convertible_to<U, T>)
-		constexpr darray<T>& Set(const darray<U>& other) {
+		constexpr darray<T>& SetEqualTo(const darray<U>& other) {
 			DeleteData();
 			CopyDataCast<U>(other.Data(), other.Size());
 			return *this;
 		}
 
 		/* Set this darray equal to a bunch of data given a pointer to the start of it and the number of elements. Wipes the array of any previously held data. */
-		constexpr darray<T>& Set(const T* dataToCopy, ArrSizeT num) {
+		constexpr darray<T>& SetEqualTo(const T* dataToCopy, ArrSizeT num) {
 			DeleteData();
 			CopyData(dataToCopy, num);
 			return *this;
@@ -190,14 +190,14 @@ namespace gk
 		/* Set this darray equal to a bunch of template typed data to static cast given a pointer to the start of it and the number of elements. Wipes the array of any previously held data. */
 		template<typename U>
 			requires (std::convertible_to<U, T>)
-		constexpr darray<T>& Set(const U* dataToCopy, ArrSizeT num) {
+		constexpr darray<T>& SetEqualTo(const U* dataToCopy, ArrSizeT num) {
 			DeleteData();
 			CopyDataCast<U>(dataToCopy, num);
 			return *this;
 		}
 
 		/* Set this darray equal to an initializer list. Wipes the array of any previously held data. */
-		constexpr darray<T>& Set(const std::initializer_list<T>& il) {
+		constexpr darray<T>& SetEqualTo(const std::initializer_list<T>& il) {
 			DeleteData();
 			ConstructInitializerList(il);
 			return *this;
@@ -205,24 +205,24 @@ namespace gk
 
 		/* Set this darray equal to another darray by copy. Wipes the array of any previously held data. */
 		constexpr darray<T>& operator = (const darray<T>& other) {
-			return Set(other);
+			return SetEqualTo(other);
 		}
 
 		/* Set this darray equal to another darray by move. The moved darray is not valid after this. Wipes the array of any previously held data. */
 		constexpr darray<T>& operator = (darray<T>&& other) noexcept {
-			return Set(std::move(other));
+			return SetEqualTo(std::move(other));
 		}
 
 		/* Set this darray equal to an initializer list. Wipes the array of any previously held data. */
 		constexpr darray<T>& operator = (const std::initializer_list<T>& il) {
-			return Set(il);
+			return SetEqualTo(il);
 		}
 
 		/* Set this darray equal to another template typed darray by static cast. Wipes the array of any previously held data. */
 		template<typename U>
 			requires (std::convertible_to<U, T>)
 		constexpr darray<T>& operator = (const darray<U>& other) {
-			return Set<U>(other);
+			return SetEqualTo<U>(other);
 		}
 
 		/* Compare two arrays for if the elements they contain are equal. */
@@ -333,12 +333,152 @@ namespace gk
 			capacity = initialSize;
 		}
 
+		/* Append this array with another array, potentially reallocating. */
+		constexpr darray<T>& Append(const darray<T>& other) {
+			const ArrSizeT newSize = size + other.size;
+			if (newSize > capacity) {
+				const ArrSizeT newCapacity = newSize > (capacity * 2) ? newSize : capacity * 2;
+				Reallocate(newCapacity);
+			}
+			for (ArrSizeT i = 0; i < other.size; i++) {
+				data[size++] = other.data[i];
+			}
+			return *this;
+		}
+
+		/* Append this array with another array by type casting, potentially reallocating. */
+		template<typename U>
+			requires (std::convertible_to<U, T>)
+		constexpr darray<T>& Append(const darray<U>& other) {
+			const ArrSizeT newSize = size + other.Size();
+			if (newSize > capacity) {
+				const ArrSizeT newCapacity = newSize > (capacity * 2) ? newSize : capacity * 2;
+				Reallocate(newCapacity);
+			}
+			for (ArrSizeT i = 0; i < other.Size(); i++) {
+				data[size++] = other.Data()[i];
+			}
+			return *this;
+		}
+
+		/* Append this array with a bunch of elements, potentially reallocating. */
+		constexpr darray<T>& Append(const T* dataToCopy, ArrSizeT num) {
+			const ArrSizeT newSize = size + num;
+			if (newSize > capacity) {
+				const ArrSizeT newCapacity = newSize > (capacity * 2) ? newSize : capacity * 2;
+				Reallocate(newCapacity);
+			}
+			for (ArrSizeT i = 0; i < num; i++) {
+				data[size++] = dataToCopy[i];
+			}
+			return *this;
+		}
+
+		/* Append this array with a bunch of elements by type casting, potentially reallocating. */
+		template<typename U>
+			requires (std::convertible_to<U, T>)
+		constexpr darray<T>& Append(const U* dataToCopy, ArrSizeT num) {
+			const ArrSizeT newSize = size + num;
+			if (newSize > capacity) {
+				const ArrSizeT newCapacity = newSize > (capacity * 2) ? newSize : capacity * 2;
+				Reallocate(newCapacity);
+			}
+			for (ArrSizeT i = 0; i < num; i++) {
+				data[size++] = dataToCopy[i];
+			}
+			return *this;
+		}
+
+		/* Append this array with an initializer list, potentially reallocating. */
+		constexpr darray<T>& Append(const std::initializer_list<T>& il) {
+			const ArrSizeT newSize = size + il.size();
+			if (newSize > capacity) {
+				const ArrSizeT newCapacity = newSize > (capacity * 2) ? newSize : capacity * 2;
+				Reallocate(newCapacity);
+			}
+			for (const T& elem : il) {
+				data[size++] = elem;
+			}
+			return *this;
+		}
+
+		/* Append this array with another array, potentially reallocating. */
+		constexpr darray<T>& operator += (const darray<T>& other) {
+			return Append(other);
+		}
+
+		/* Append this array with another array by type casting, potentially reallocating. */
+		template<typename U>
+			requires (std::convertible_to<U, T>)
+		constexpr darray<T>& operator += (const darray<U>& other) {
+			return Append(other);
+		}
+
+		/* Append this array with an initializer list, potentially reallocating. */
+		constexpr darray<T>& operator += (const std::initializer_list<T>& il) {
+			return Append(il);
+		}
+
+		/* Create a copy of this array with the contents of the other array appended to the copy. */
+		[[nodiscard]] constexpr darray<T> Concatenate(const darray<T>& other) const {
+			gk::darray<T> arr = *this;
+			arr.Append(other);
+			return arr;
+		}
+
+		/* Create a copy of this array with the contents of the other array appended to the copy by type casting. */
+		template<typename U>
+			requires (std::convertible_to<U, T>)
+		[[nodiscard]] constexpr darray<T> Concatenate(const darray<U>& other) const {
+			gk::darray<T> arr = *this;
+			arr.Append(other);
+			return arr;
+		}
+
+		/* Create a copy of this array with the elements passed in appended to the copy. */
+		[[nodiscard]] constexpr darray<T> Concatenate(const T* dataToCopy, ArrSizeT num) const {
+			gk::darray<T> arr = *this;
+			arr.Append(dataToCopy, num);
+			return arr;
+		}
+
+		/* Create a copy of this array with the elements passed in appended to the copy by type casting. */
+		template<typename U>
+			requires (std::convertible_to<U, T>)
+		[[nodiscard]] constexpr darray<T> Concatenate(const U* dataToCopy, ArrSizeT num) const {
+			gk::darray<T> arr = *this;
+			arr.Append(dataToCopy, num);
+			return arr;
+		}
+
+		/* Create a copy of this array with the initializer list contents appended to the copy. */
+		[[nodiscard]] constexpr darray<T> Concatenate(const std::initializer_list<T>& il) const {
+			gk::darray<T> arr = *this;
+			arr.Append(il);
+			return arr;
+		}
+
+		/* Create a copy of this array with the contents of the other array appended to the copy. */
+		[[nodiscard]] constexpr darray<T> operator + (const darray<T>& other) const {
+			return Concatenate(other);
+		}
+
+		/* Create a copy of this array with the contents of the other array appended to the copy by type casting. */
+		template<typename U>
+			requires (std::convertible_to<U, T>)
+		[[nodiscard]] constexpr darray<T> operator + (const darray<U>& other) const {
+			return Concatenate(other);
+		}
+
+		/* Create a copy of this array with the initializer list contents appended to the copy. */
+		[[nodiscard]] constexpr darray<T> operator + (const std::initializer_list<T>& il) const {
+			return Concatenate(il);
+		}
+
 	private:
 
 		/* Reallocate and move the pre-existing data over. Increases capacity by 2x. */
-		constexpr void Reallocate() {
-			const ArrSizeT newCapacity = capacity * 2;
-
+		constexpr void Reallocate(size_t newCapacity) {
 			T* newData = new T[newCapacity];
 			for (ArrSizeT i = 0; i < Size(); i++) {
 				newData[i] = std::move(data[i]);

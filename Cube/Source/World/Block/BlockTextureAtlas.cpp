@@ -3,22 +3,22 @@
 #include <Graphics/Texture/Texture2d.h>
 
 /* Generates pairs of const char* and BlockTexture ids. */
-static void GetTexturePairs(darray<const uint8*>& pngData, darray<BlockTexture>& ids)
+static void GetTexturePairs(darray<const uint8*>& pngData, darray<EBlockTexture>& ids)
 {
 #define pair(png, id) \
 pngData.Add(png); \
 ids.Add(id) 
 
-	pair(generated_16x16wood_png, BlockTexture::wood);
-	pair(generated_16x16black_png, BlockTexture::black);
-	pair(generated_16x16blue_png, BlockTexture::blue);
+	pair(generated_16x16wood_png, EBlockTexture::wood);
+	pair(generated_16x16black_png, EBlockTexture::black);
+	pair(generated_16x16blue_png, EBlockTexture::blue);
 }
 
 /* Simple container for block texture atlas data. */
 struct BlockAtlasData
 {
 	Texture2dAtlasData atlasData;
-	std::unordered_map<BlockTexture, glm::vec2> uvs;
+	std::unordered_map<EBlockTexture, glm::vec2> uvs;
 };
 
 /* Map the texture atlas data including absolute uvs. */
@@ -30,7 +30,7 @@ static BlockAtlasData MapAtlasData()
 	constexpr int bytesPerPixel = 4;
 
 	darray<const uint8*> images;
-	darray<BlockTexture> ids;
+	darray<EBlockTexture> ids;
 	GetTexturePairs(images, ids);
 
 	BlockAtlasData atlas;
@@ -39,7 +39,7 @@ static BlockAtlasData MapAtlasData()
 	int idIndex = 0;
 	for (float y = 0; y < 1; y += 1.f / ((float)atlas.atlasData.width / (float)imageWidth)) {
 		for (float x = 0; x < 1; x += 1.f / ((float)atlas.atlasData.height / (float)imageWidth)) {
-			BlockTexture id = BlockTexture(0);
+			EBlockTexture id = EBlockTexture(0);
 			if (idIndex < images.Size()) {
 				id = ids[idIndex];
 			}
@@ -52,7 +52,7 @@ static BlockAtlasData MapAtlasData()
 
 const BlockAtlasData atlasData = MapAtlasData();
 
-std::unordered_map<BlockTexture, glm::vec2> BlockTextureAtlas::textureUVCoords = atlasData.uvs;
+std::unordered_map<EBlockTexture, glm::vec2> BlockTextureAtlas::textureUVCoords = atlasData.uvs;
 int BlockTextureAtlas::width = atlasData.atlasData.width;
 int BlockTextureAtlas::height = atlasData.atlasData.height;
 uint8* BlockTextureAtlas::textureBytes = atlasData.atlasData.bytes;
@@ -67,7 +67,7 @@ void BlockTextureAtlas::CreateBlockTextureAtlasObject()
 	textureBytes = nullptr;
 }
 
-glm::vec2 BlockTextureAtlas::GetTextureCoord(BlockTexture texture, const glm::vec2 uv)
+glm::vec2 BlockTextureAtlas::GetTextureCoord(EBlockTexture texture, const glm::vec2 uv)
 {
 	const glm::vec2 offset = uv * offsetPerBlock;
 	auto found = textureUVCoords.find(texture);

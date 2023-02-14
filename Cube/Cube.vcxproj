@@ -172,6 +172,8 @@ GenerateFiles.bat</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Graphics\Geometry\BlockGeometry.cpp" />
+    <ClCompile Include="Source\Graphics\Geometry\BlockMesh.cpp" />
+    <ClCompile Include="Source\Graphics\Geometry\ChunkMesh.cpp" />
     <ClCompile Include="Source\Input\InputComponent.cpp" />
     <ClCompile Include="Source\Entity\Entity.cpp" />
     <ClCompile Include="Source\GameInstance.cpp" />
@@ -207,6 +209,8 @@ GenerateFiles.bat</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Graphics\Geometry\BlockGeometry.h" />
+    <ClInclude Include="Source\Graphics\Geometry\BlockMesh.h" />
+    <ClInclude Include="Source\Graphics\Geometry\ChunkMesh.h" />
     <ClInclude Include="Source\Input\InputComponent.h" />
     <ClInclude Include="Resources\GeneratedFiles.h" />
     <ClInclude Include="Source\Entity\Entity.h" />

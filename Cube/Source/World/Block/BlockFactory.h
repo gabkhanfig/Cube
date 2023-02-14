@@ -48,4 +48,14 @@ public:
 	GlobalString GetName() const { return name; }
 };
 
+class BlockFactory
+{
+private:
+
+	static std::unordered_map<GlobalString, BlockClass*> blockClasses;
+
+public:
+
+	static BlockClass* GetBlockClass(GlobalString blockName);
+};
 

@@ -45,10 +45,10 @@ void World::DrawWorld()
   };
 
   glm::vec2 texCoords[4] = {
-    BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {0, 0}),
-    BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {1, 0}),
-    BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {1, 1}),
-    BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {0, 1})
+    BlockTextureAtlas::GetTextureCoord(EBlockTexture::wood, {0, 0}),
+    BlockTextureAtlas::GetTextureCoord(EBlockTexture::wood, {1, 0}),
+    BlockTextureAtlas::GetTextureCoord(EBlockTexture::wood, {1, 1}),
+    BlockTextureAtlas::GetTextureCoord(EBlockTexture::wood, {0, 1})
   };
 
   IndexBufferObject* ibo = BlockQuad::CreateQuadsIndexBuffer(1);
@@ -67,10 +67,10 @@ void World::DrawWorld()
   };
 
   glm::vec2 texCoords2[4] = {
-    BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {0, 0}),
-    BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {1, 0}),
-    BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {1, 1}),
-    BlockTextureAtlas::GetTextureCoord(BlockTexture::wood, {0, 1})
+    BlockTextureAtlas::GetTextureCoord(EBlockTexture::wood, {0, 0}),
+    BlockTextureAtlas::GetTextureCoord(EBlockTexture::wood, {1, 0}),
+    BlockTextureAtlas::GetTextureCoord(EBlockTexture::wood, {1, 1}),
+    BlockTextureAtlas::GetTextureCoord(EBlockTexture::wood, {0, 1})
   };
 
   BlockQuad quad2 = BlockQuad(positions2, texCoords2);

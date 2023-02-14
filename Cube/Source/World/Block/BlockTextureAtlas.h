@@ -2,7 +2,7 @@
 
 #include <EngineCore.h>
 
-enum class BlockTexture
+enum class EBlockTexture
 {
 	wood,
 	black,
@@ -14,7 +14,7 @@ class Texture;
 /* Texture atlas for blocks. Loaded with application. See CreateBlockTextureAtlasObject() for actually creating the opengl texture object. */
 class BlockTextureAtlas
 {
-	static std::unordered_map<BlockTexture, glm::vec2> textureUVCoords;
+	static std::unordered_map<EBlockTexture, glm::vec2> textureUVCoords;
 
 	static int width;
 
@@ -36,7 +36,7 @@ public:
 	@param texture: The block texture id.
 	@param uv: The relative uv coordinates from (0, 0) to (1, 1) that will be transformed. (0, 0) is bottom left. 
 	@return Absolute uv coordinates. */
-	static glm::vec2 GetTextureCoord(BlockTexture texture, const glm::vec2 uv);
+	static glm::vec2 GetTextureCoord(EBlockTexture texture, const glm::vec2 uv);
 
 	static void Bind(uint32 slot);
 
