@@ -5,7 +5,7 @@
 class VertexBufferObject;
 class IndexBufferObject;
 class ShaderBufferObject;
-
+class Chunk;
 
 
 /*
@@ -41,5 +41,10 @@ private:
 
 	ChunkRenderBufferObjects buffers;
 
+	Chunk* owner;
+
 public:
+
+	ChunkRenderComponent(Chunk* _owner);
+
 };

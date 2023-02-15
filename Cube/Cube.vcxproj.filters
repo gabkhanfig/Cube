@@ -66,10 +66,10 @@
     <ClCompile Include="Source\World\Block\BlockTypes\Stone\StoneBlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Geometry\BlockMesh.cpp">
+    <ClCompile Include="Source\Graphics\Geometry\ChunkMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Geometry\ChunkMesh.cpp">
+    <ClCompile Include="Source\World\Block\BlockTypes\Air\AirBlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -151,6 +151,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Geometry\ChunkMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\World\Block\BlockTypes\Air\AirBlock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

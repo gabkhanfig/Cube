@@ -5,6 +5,7 @@
 #include "BlockFactory.h"
 #include "../WorldTransform.h"
 #include "BlockTextureAtlas.h"
+#include "../../Graphics/Geometry/BlockMesh.h"
 
 /* Required macro for all blocks. Sets its class data and name. Also sets everything after this back to private. */
 #define BLOCK_BODY(blockClass, blockName) \
@@ -39,6 +40,11 @@ public: \
 static bool ShouldCreateNewBlock() { return true; } \
 private:
 
+#define CUBE_MESH(texture) \
+public: \
+virtual virtual EBlockTexture GetAllSidedTexture() const { return texture; } \
+private:
+
 class Chunk;
 
 class IBlock
@@ -56,7 +62,7 @@ public:
 	/* Ensure setting whatever references to this block to be nullptr, or removed entirely. Prefer this to operator delete for blocks. */
 	virtual inline void Destroy() = 0;
 	
-	//virtual darray<BlockQuad> GetBlockMesh(Chunk* chunk, WorldPosition position);
+	virtual BlockMesh CreateBlockMesh(Chunk* chunk, WorldPosition position) const;
 
 protected:
 
@@ -64,6 +70,6 @@ protected:
 	virtual void OnDestroy();
 
 	/* Gets the texture that will be used on all sides of this block.  */
-	//virtual EBlockTexture GetAllSidedTexture();
+	virtual EBlockTexture GetAllSidedTexture() const { return EBlockTexture::none; }
 
 };

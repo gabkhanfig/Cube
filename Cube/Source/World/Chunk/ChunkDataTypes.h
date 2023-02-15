@@ -3,15 +3,15 @@
 #include "ChunkData.h"
 #include "../WorldTransform.h"
 
-class Block;
+class IBlock;
 
 struct ChunkBlock
 {
-	Block* block;
-	glm::vec3 light;
+	IBlock* block;
+	BlockLight light;
 	BlockFacing facing;
 
-	ChunkBlock()
-		: block(nullptr), light({ 0, 0, 0 }), facing(0)
-	{}
+	ChunkBlock();
+
+	~ChunkBlock();
 };

@@ -15,4 +15,10 @@ struct BlockMesh
 	void AddQuad(const BlockQuad& quad) {
 		quads.Add(quad);
 	}
+
+	void Shift(glm::vec3 offset) {
+		for (ArrSizeT i = 0; i < quads.Size(); i++) {
+			quads[i].Shift(offset);
+		}
+	}
 };

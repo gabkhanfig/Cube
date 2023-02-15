@@ -57,5 +57,7 @@ private:
 public:
 
 	static BlockClass* GetBlockClass(GlobalString blockName);
+
+	static IBlock* GetAirBlock();
 };
 
