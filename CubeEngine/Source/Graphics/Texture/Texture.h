@@ -2,6 +2,12 @@
 
 #include "../../EngineCore.h"
 
+struct GeneratedPng
+{
+	const uint8* bytes;
+	size_t bytesPerImage;
+};
+
 class Texture
 {
 

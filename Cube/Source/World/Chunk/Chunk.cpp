@@ -18,7 +18,7 @@ IBlock* Chunk::GetBlock(BlockPosition position)
 {
 	const int blockIndex = position.ToBlockIndex();
 	checkm(blockIndex < CHUNK_SIZE, "block index must be within CHUNK_SIZE");
-	return blocks[blockIndex].block;
+	return blocks[blockIndex].GetBlock();
 }
 
 ChunkBlock& Chunk::ChunkBlockAt(BlockPosition position)

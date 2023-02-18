@@ -3,15 +3,14 @@
 #include <Graphics/Texture/Texture2d.h>
 
 /* Generates pairs of const char* and BlockTexture ids. */
-static void GetTexturePairs(darray<const uint8*>& pngData, darray<EBlockTexture>& ids)
+static void GetTexturePairs(darray<GeneratedPng>& pngData, darray<EBlockTexture>& ids)
 {
 #define pair(png, id) \
-pngData.Add(png); \
+pngData.Add({png, sizeof(png)}); \
 ids.Add(id) 
 
-	pair(generated_16x16wood_png, EBlockTexture::wood);
-	pair(generated_16x16black_png, EBlockTexture::black);
-	pair(generated_16x16blue_png, EBlockTexture::blue);
+	pair(generated_InvalidTexture_png, EBlockTexture::none);
+	pair(generated_StoneBlock_png, EBlockTexture::stone);
 }
 
 /* Simple container for block texture atlas data. */
@@ -29,7 +28,7 @@ static BlockAtlasData MapAtlasData()
 	constexpr int imageHeight = 16;
 	constexpr int bytesPerPixel = 4;
 
-	darray<const uint8*> images;
+	darray<GeneratedPng> images;
 	darray<EBlockTexture> ids;
 	GetTexturePairs(images, ids);
 

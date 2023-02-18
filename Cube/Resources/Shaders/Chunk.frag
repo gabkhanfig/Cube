@@ -82,7 +82,7 @@ void main()
 	const vec3 outColor = TrilinearInterpolationColor(subvoxel, cols);
 	const vec4 texColor = texture(u_Texture, v_out_texCoord);
 	//FragColor = texColor * vec4(outColor, 1);
-	FragColor = vec4(subvoxel, 1);
-
+	//FragColor = vec4(subvoxel, 1);
+	FragColor = texColor;
 	//FragColor = vec4(vec3(outColor), 1);
 }

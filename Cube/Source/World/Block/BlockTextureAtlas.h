@@ -5,9 +5,7 @@
 enum class EBlockTexture
 {
 	none,
-	wood,
-	black,
-	blue
+	stone
 };
 
 class Texture;

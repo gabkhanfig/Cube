@@ -1,5 +1,4 @@
 Shaders/Chunk.vert
 Shaders/Chunk.frag
-Textures/16x16wood.png
-Textures/16x16black.png
-Textures/16x16blue.png
+Textures/InvalidTexture.png
+Textures/StoneBlock.png

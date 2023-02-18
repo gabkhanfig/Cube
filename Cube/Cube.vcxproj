@@ -187,6 +187,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\World\Block\BlockFactory.cpp" />
     <ClCompile Include="Source\World\Block\BlockTextureAtlas.cpp" />
     <ClCompile Include="Source\World\Chunk\Chunk.cpp" />
+    <ClCompile Include="Source\World\Chunk\ChunkDataTypes.cpp" />
     <ClCompile Include="Source\World\Chunk\ChunkRender.cpp" />
     <ClCompile Include="Source\World\World.cpp" />
     <ClCompile Include="Source\World\WorldTransform.cpp" />

@@ -72,6 +72,9 @@
     <ClCompile Include="Source\World\Block\BlockTypes\Air\AirBlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\World\Chunk\ChunkDataTypes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.vert" />
