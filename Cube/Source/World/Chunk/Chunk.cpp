@@ -6,7 +6,14 @@
 Chunk::Chunk()
 	: wasChunkModifiedThisTick(false)
 {
+	blocks = new ChunkBlock[CHUNK_SIZE];
 	RenderComponent = new ChunkRenderComponent(this);
+}
+
+Chunk::~Chunk()
+{
+	delete[] blocks;
+	delete RenderComponent;
 }
 
 void Chunk::Tick(float deltaTime)

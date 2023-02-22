@@ -12,6 +12,9 @@
 #include <glad/glad.h>
 #include "Block/BlockTextureAtlas.h"
 #include <Graphics/Render/Renderer.h>
+#include "../Graphics/Geometry/ChunkMesh.h"
+#include "Block/BlockFactory.h"
+#include "Block/IBlock.h"
 
 World* GetWorld()
 {
@@ -37,50 +40,61 @@ void World::DrawWorld()
   Camera* cam = Camera::GetActiveCamera();
   chunkShader->SetUniformMat4f("u_cameraMVP", cam->GetMvpMatrix());
 
-  glm::vec3 positions[4] = {
-    glm::vec3(0, 0, 1),
-    glm::vec3(1, 0, 1),
-    glm::vec3(1, 1, 1),
-    glm::vec3(0, 1, 1)
-  };
+  //glm::vec3 positions[4] = {
+  //  glm::vec3(0, 0, 1),
+  //  glm::vec3(1, 0, 1),
+  //  glm::vec3(1, 1, 1),
+  //  glm::vec3(0, 1, 1)
+  //};
 
-  glm::vec2 texCoords[4] = {
-    BlockTextureAtlas::GetTextureCoord(EBlockTexture::stone, {0, 0}),
-    BlockTextureAtlas::GetTextureCoord(EBlockTexture::stone, {1, 0}),
-    BlockTextureAtlas::GetTextureCoord(EBlockTexture::stone, {1, 1}),
-    BlockTextureAtlas::GetTextureCoord(EBlockTexture::stone, {0, 1})
-  };
+  //glm::vec2 texCoords[4] = {
+  //  BlockTextureAtlas::GetTextureCoord(EBlockTexture::stone, {0, 0}),
+  //  BlockTextureAtlas::GetTextureCoord(EBlockTexture::stone, {1, 0}),
+  //  BlockTextureAtlas::GetTextureCoord(EBlockTexture::stone, {1, 1}),
+  //  BlockTextureAtlas::GetTextureCoord(EBlockTexture::stone, {0, 1})
+  //};
 
-  IndexBufferObject* ibo = BlockQuad::CreateQuadsIndexBuffer(1);
-  BlockQuad quad = BlockQuad(positions, texCoords);
-  VertexBufferObject* vbo = BlockQuad::CreateQuadsVertexBufferObject(&quad, 1);
+  //IndexBufferObject* ibo = BlockQuad::CreateQuadsIndexBuffer(1);
+  //BlockQuad quad = BlockQuad(positions, texCoords);
+  //VertexBufferObject* vbo = BlockQuad::CreateQuadsVertexBufferObject(&quad, 1);
 
-  chunkVAO->BindVertexBufferObject(vbo, sizeof(BlockVertex));
+  //chunkVAO->BindVertexBufferObject(vbo, sizeof(BlockVertex));
 
-  Renderer::DrawVboTriangles(vbo, ibo);
+  //Renderer::DrawVboTriangles(vbo, ibo);
 
-  glm::vec3 positions2[4] = {
-    glm::vec3(1, 1, 1),
-    glm::vec3(2, 1, 1),
-    glm::vec3(2, 2, 1),
-    glm::vec3(1, 2, 1)
-  };
+  //glm::vec3 positions2[4] = {
+  //  glm::vec3(1, 1, 1),
+  //  glm::vec3(2, 1, 1),
+  //  glm::vec3(2, 2, 1),
+  //  glm::vec3(1, 2, 1)
+  //};
 
-  glm::vec2 texCoords2[4] = {
-    BlockTextureAtlas::GetTextureCoord(EBlockTexture::stone, {0, 0}),
-    BlockTextureAtlas::GetTextureCoord(EBlockTexture::stone, {1, 0}),
-    BlockTextureAtlas::GetTextureCoord(EBlockTexture::stone, {1, 1}),
-    BlockTextureAtlas::GetTextureCoord(EBlockTexture::stone, {0, 1})
-  };
+  //glm::vec2 texCoords2[4] = {
+  //  BlockTextureAtlas::GetTextureCoord(EBlockTexture::stone, {0, 0}),
+  //  BlockTextureAtlas::GetTextureCoord(EBlockTexture::stone, {1, 0}),
+  //  BlockTextureAtlas::GetTextureCoord(EBlockTexture::stone, {1, 1}),
+  //  BlockTextureAtlas::GetTextureCoord(EBlockTexture::stone, {0, 1})
+  //};
 
-  BlockQuad quad2 = BlockQuad(positions2, texCoords2);
-  VertexBufferObject* vbo2 = BlockQuad::CreateQuadsVertexBufferObject(&quad2, 1);
+  //BlockQuad quad2 = BlockQuad(positions2, texCoords2);
+  //VertexBufferObject* vbo2 = BlockQuad::CreateQuadsVertexBufferObject(&quad2, 1);
 
-  chunkVAO->BindVertexBufferObject(vbo2, sizeof(BlockVertex));
-  Renderer::DrawVboTriangles(vbo2, ibo);
+  //chunkVAO->BindVertexBufferObject(vbo2, sizeof(BlockVertex));
+  //Renderer::DrawVboTriangles(vbo2, ibo);
+
+  IBlock* stone = BlockFactory::GetBlockClass("stoneBlock")->GetBlock();
+  ChunkMesh mesh;
+  mesh.AddBlockMesh(stone->CreateBlockMesh(nullptr, { 0, 0, 0 }));
+  VertexBufferObject* stoneVBO = mesh.MakeVertexBufferObject();
+  IndexBufferObject* stoneIBO = mesh.MakeIndexBufferObject();
+  chunkVAO->BindVertexBufferObject(stoneVBO, sizeof(BlockVertex));
+  Renderer::DrawVboTriangles(stoneVBO, stoneIBO);
+
 
   //delete vao;
-  delete vbo;
-  delete ibo;
-  delete vbo2;
+  //delete vbo;
+ // delete ibo;
+  //delete vbo2;
+  delete stoneVBO;
+  delete stoneIBO;
 }

@@ -10,8 +10,8 @@ class Chunk
 {
 private:
 
-	/**/
-	ChunkBlock blocks[CHUNK_SIZE];
+	/* Array of chunk blocks. */
+	ChunkBlock* blocks;
 
 	/**/
 	ChunkRenderComponent* RenderComponent;
@@ -23,6 +23,8 @@ public:
 
 	/* Fills the entire chunk with air. */
 	Chunk();
+
+	~Chunk();
 
 	/* Ticks this chunk and keeps track of if it needs to regenerate it's mesh. */
 	void Tick(float deltaTime);

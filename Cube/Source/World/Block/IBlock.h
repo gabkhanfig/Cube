@@ -42,7 +42,8 @@ private:
 
 #define CUBE_MESH(texture) \
 public: \
-virtual virtual EBlockTexture GetAllSidedTexture() const { return texture; } \
+virtual EBlockTexture GetAllSidedTexture() const override { return texture; } \
+virtual EMeshType GetMeshType() const override { return EMeshType::cube; } \
 private:
 
 class Chunk;
@@ -50,6 +51,11 @@ class Chunk;
 class IBlock
 {
 public:
+
+	enum class EMeshType {
+		cube,
+		custom
+	};
 
 	static bool ShouldCreateNewBlock() { return false; }
 
@@ -71,5 +77,12 @@ protected:
 
 	/* Gets the texture that will be used on all sides of this block.  */
 	virtual EBlockTexture GetAllSidedTexture() const { return EBlockTexture::none; }
+
+	/**/
+	virtual EMeshType GetMeshType() const = 0;
+
+	virtual BlockMesh CreateCubeMesh(Chunk* chunk, WorldPosition position) const;
+
+	
 
 };
