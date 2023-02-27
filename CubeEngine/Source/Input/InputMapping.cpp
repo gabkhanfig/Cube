@@ -21,6 +21,7 @@ inputs.inputStrings.insert({id, str})
 	input("S", GLFW_KEY_S);
 	input("D", GLFW_KEY_D);
 	input("Esc", GLFW_KEY_ESCAPE);
+	input("Ctrl", GLFW_KEY_LEFT_CONTROL);
 	input("LMB", GLFW_MOUSE_BUTTON_LEFT);
 	input("RMB", GLFW_MOUSE_BUTTON_RIGHT);
 	input("MMB", GLFW_MOUSE_BUTTON_MIDDLE);

@@ -5,6 +5,7 @@
 layout (location = 0) in vec3 v_in_position;
 layout (location = 1) in vec3 v_in_normal;
 layout (location = 2) in vec2 v_in_texCoord;
+layout (location = 3) in vec3 v_in_color;
 
 uniform mat4 u_cameraMVP;
 
@@ -14,6 +15,8 @@ out vec3 v_out_fragCoord;
 out flat vec3 v_out_vertCoord;
 // Interpolated texture coordinates.
 out vec2 v_out_texCoord;
+// Interpolated color coordinates.
+out vec3 v_out_color;
 
 #define SUBVOXEL_COUNT 16.0
 
@@ -29,4 +32,5 @@ void main()
 	v_out_vertCoord = v_in_position;
 	v_out_fragCoord = v_in_position;
 	v_out_texCoord = v_in_texCoord;
+	v_out_color = v_in_color;
 }

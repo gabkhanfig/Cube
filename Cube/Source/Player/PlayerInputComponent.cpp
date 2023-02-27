@@ -48,6 +48,8 @@ void PlayerInputComponent::Tick(float deltaTime)
 	static GlobalString AKey = "A";
 	static GlobalString SKey = "S";
 	static GlobalString DKey = "D";
+	static GlobalString SpaceKey = "Space";
+	static GlobalString CtrlKey = "Ctrl";
 
 	const float WKeyScale = CubeInput::GetButtonState(WKey).isHeld ? 1 : 0;
 	const float SKeyScale = CubeInput::GetButtonState(SKey).isHeld ? -1 : 0;
@@ -61,6 +63,13 @@ void PlayerInputComponent::Tick(float deltaTime)
 	const float RightScale = AKeyScale + DKeyScale;
 	if (RightScale != 0) {
 		AddPlayerRightInput(RightScale * deltaTime);
+	}
+
+	const float SpaceKeyScale = CubeInput::GetButtonState(SpaceKey).isHeld ? 1 : 0;
+	const float CtrlKeyScale = CubeInput::GetButtonState(CtrlKey).isHeld ? -1 : 0;
+	const float VerticalScale = SpaceKeyScale + CtrlKeyScale;
+	if (VerticalScale != 0) {
+		AddPlayerVerticalInput(VerticalScale * deltaTime);
 	}
 }
 
@@ -76,6 +85,14 @@ void PlayerInputComponent::AddPlayerRightInput(float scale)
 {
 	glm::dvec3 location = player->GetLocation();
 	location += double(scale) * player->GetRightVector();
+	player->SetLocation(location);
+	player->GetCamera()->SetPosition({ location.x, location.y, location.z });
+}
+
+void PlayerInputComponent::AddPlayerVerticalInput(float scale)
+{
+	glm::dvec3 location = player->GetLocation();
+	location.y += scale;
 	player->SetLocation(location);
 	player->GetCamera()->SetPosition({ location.x, location.y, location.z });
 }

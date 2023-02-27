@@ -33,4 +33,5 @@ public:
 
 	void AddPlayerRightInput(float scale);
 
+	void AddPlayerVerticalInput(float scale);
 };

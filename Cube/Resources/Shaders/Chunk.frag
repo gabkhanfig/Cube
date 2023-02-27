@@ -8,6 +8,8 @@ in vec3 v_out_fragCoord;
 in flat vec3 v_out_vertCoord;
 // Interpolated texture coordinates.
 in vec2 v_out_texCoord;
+// Interpolated color coordinates.
+in vec3 v_out_color;
 
 uniform sampler2D u_Texture;
 
@@ -62,27 +64,28 @@ vec3 TrilinearInterpolationColor(const vec3 _coord, const CubicColors _col)
 /* Get the relative subvoxel position. Clamped to the 16x16 full block area. */
 vec3 GetRelativeSubvoxelPosition(const vec3 _fragCoord, const vec3 _vertCoord) 
 {
-	const vec3 coord = floor(abs(_fragCoord * SUBVOXEL_COUNT - _vertCoord * SUBVOXEL_COUNT)) / SUBVOXEL_COUNT;
-	return coord;// + _vertCoord;
+	//const vec3 coord = floor(abs(_fragCoord * SUBVOXEL_COUNT - _vertCoord * SUBVOXEL_COUNT)) / SUBVOXEL_COUNT;
+	//return coord;// + _vertCoord;
+	return floor(_fragCoord * SUBVOXEL_COUNT) / SUBVOXEL_COUNT;
 }
 
 void main()
 {
 	CubicColors cols;
-	cols.c000 = vec3(1, 1, 1); // non-z
+	cols.c000 = vec3(0, 0, 0); // non-z
 	cols.c100 = vec3(1, 0, 0); // non-z
 	cols.c010 = vec3(0, 1, 0); // non-z
-	cols.c110 = vec3(0, 0, 1); // non-z
-	cols.c001 = vec3(1, 1, 1);
-	cols.c101 = vec3(0, 0, 0);
-	cols.c011 = vec3(1, 1, 1);
+	cols.c110 = vec3(1, 1, 0); // non-z
+	cols.c001 = vec3(0, 0, 1);
+	cols.c101 = vec3(1, 0, 1);
+	cols.c011 = vec3(0, 1, 1);
 	cols.c111 = vec3(1, 1, 1);
 
-	const vec3 subvoxel = GetRelativeSubvoxelPosition(v_out_fragCoord, v_out_vertCoord);
-	const vec3 outColor = TrilinearInterpolationColor(subvoxel, cols);
+	//const vec3 subvoxel = GetRelativeSubvoxelPosition(v_out_fragCoord, v_out_vertCoord);
+	//const vec3 outColor = TrilinearInterpolationColor(subvoxel, cols);
 	const vec4 texColor = texture(u_Texture, v_out_texCoord);
-	//FragColor = texColor * vec4(outColor, 1);
+	FragColor = texColor * vec4(v_out_color, 1);
 	//FragColor = vec4(subvoxel, 1);
-	FragColor = texColor;
+	//FragColor = texColor;
 	//FragColor = vec4(vec3(outColor), 1);
 }
