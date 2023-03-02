@@ -114,6 +114,14 @@ struct WorldPosition
 		return pos;
 	}
 
+	constexpr BlockPosition ToBlockPosition() const {
+		const ChunkPosition cpos = ToChunkPosition();
+		return BlockPosition(
+			x - (cpos.x * CHUNK_LENGTH),
+			y - (cpos.y * CHUNK_LENGTH),
+			z - (cpos.z * CHUNK_LENGTH));
+	}
+
 	forceinline constexpr bool operator == (WorldPosition other) const {
 		return x == other.x && y == other.y && z == other.z;
 	}

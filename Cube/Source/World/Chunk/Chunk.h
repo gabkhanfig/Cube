@@ -5,6 +5,8 @@
 
 class IBlock;
 class ChunkRenderComponent;
+class VertexArrayObject;
+class Shader;
 
 class Chunk
 {
@@ -13,8 +15,10 @@ private:
 	/* Array of chunk blocks. */
 	ChunkBlock* blocks;
 
+	ChunkPosition position;
+
 	/**/
-	ChunkRenderComponent* RenderComponent;
+	ChunkRenderComponent* renderComponent;
 
 	/**/
 	bool wasChunkModifiedThisTick;
@@ -37,6 +41,17 @@ public:
 
 	/* Get a const reference to a block and it's chunk data at a specific relative position within the chunk. */
 	const ChunkBlock& ChunkBlockAt(BlockPosition position) const;
+
+	/* Fill the chunk with a specified block. */
+	void FillChunkWithBlock(GlobalString blockName);
+
+	forceinline ChunkPosition GetPosition() const { return position; }
+
+	void RecreateMesh() const;
+
+	void Draw(Shader* chunkShader, VertexArrayObject* chunkVAO);
+
+	ChunkRenderComponent* GetRenderComponent() const { return renderComponent; }
 
 private:
 

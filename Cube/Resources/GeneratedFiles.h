@@ -18,7 +18,7 @@ out vec3 v_out_fragCoord;
 out flat vec3 v_out_vertCoord;
 // Interpolated texture coordinates.
 out vec2 v_out_texCoord;
-//
+// Interpolated color coordinates.
 out vec3 v_out_color;
 
 #define SUBVOXEL_COUNT 16.0
@@ -49,7 +49,7 @@ in vec3 v_out_fragCoord;
 in flat vec3 v_out_vertCoord;
 // Interpolated texture coordinates.
 in vec2 v_out_texCoord;
-//
+// Interpolated color coordinates.
 in vec3 v_out_color;
 
 uniform sampler2D u_Texture;

@@ -16,7 +16,7 @@ ChunkBlock::~ChunkBlock()
 
 void ChunkBlock::ReplaceBlock(IBlock* newBlock)
 {
-	checkm(newBlock, "ChunkBlock block cannot be nullptr");
+	checkm(newBlock, "Cannot replace a ChunkBlock block with nullptr");
 	if (block) {
 		block->Destroy();
 	}

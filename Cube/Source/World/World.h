@@ -3,6 +3,7 @@
 class Player;
 class Shader;
 class VertexArrayObject;
+class Chunk;
 
 class World
 {
@@ -13,6 +14,8 @@ private:
 	Shader* chunkShader;
 
 	VertexArrayObject* chunkVAO;
+
+	Chunk* testChunk;
 
 public:
 

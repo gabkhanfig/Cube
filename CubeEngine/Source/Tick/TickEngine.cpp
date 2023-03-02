@@ -28,7 +28,7 @@ void TickEngine::RunEngineLoop()
 
 void TickEngine::UpdateFps()
 {
-#ifdef DEVELOPMENT
+//#ifdef DEVELOPMENT
 	const float fpsCounterUpdateInterval = 0.5;
 
 	fpsCounter += deltaTime;
@@ -40,5 +40,5 @@ void TickEngine::UpdateFps()
 		windowWithFps += std::to_string((int)CurrentFps());
 		glfwSetWindowTitle(engine->GetWindow()->GetGlfwWindow(), windowWithFps.c_str());
 	}
-#endif
+//#endif
 }

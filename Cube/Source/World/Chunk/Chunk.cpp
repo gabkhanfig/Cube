@@ -7,13 +7,13 @@ Chunk::Chunk()
 	: wasChunkModifiedThisTick(false)
 {
 	blocks = new ChunkBlock[CHUNK_SIZE];
-	RenderComponent = new ChunkRenderComponent(this);
+	renderComponent = new ChunkRenderComponent(this);
 }
 
 Chunk::~Chunk()
 {
 	delete[] blocks;
-	delete RenderComponent;
+	delete renderComponent;
 }
 
 void Chunk::Tick(float deltaTime)
@@ -40,5 +40,24 @@ const ChunkBlock& Chunk::ChunkBlockAt(BlockPosition position) const
 	const int blockIndex = position.ToBlockIndex();
 	checkm(blockIndex < CHUNK_SIZE, "block index must be within CHUNK_SIZE");
 	return blocks[blockIndex];
+}
+
+void Chunk::FillChunkWithBlock(GlobalString blockName)
+{
+	BlockClass* blockClass = BlockFactory::GetBlockClass(blockName);
+	for (int i = 0; i < CHUNK_SIZE; i++) {
+		IBlock* block = blockClass->GetBlock();
+		blocks[i].ReplaceBlock(block);
+	}
+}
+
+void Chunk::RecreateMesh() const
+{
+	renderComponent->RecreateMesh();
+}
+
+void Chunk::Draw(Shader* chunkShader, VertexArrayObject* chunkVAO)
+{
+	renderComponent->Draw(chunkShader, chunkVAO);
 }
 

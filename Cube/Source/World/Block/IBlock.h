@@ -6,6 +6,7 @@
 #include "../WorldTransform.h"
 #include "BlockTextureAtlas.h"
 #include "../../Graphics/Geometry/BlockMesh.h"
+#include "../../Graphics/Geometry/ChunkMesh.h"
 
 /* Required macro for all blocks. Sets its class data and name. Also sets everything after this back to private. */
 #define BLOCK_BODY(blockClass, blockName) \
@@ -68,7 +69,8 @@ public:
 	/* Ensure setting whatever references to this block to be nullptr, or removed entirely. Prefer this to operator delete for blocks. */
 	virtual inline void Destroy() = 0;
 	
-	virtual BlockMesh CreateBlockMesh(Chunk* chunk, WorldPosition position) const;
+	/* Create the mesh data for the block. Must be multithreading safe. */
+	virtual void AddBlockMeshToChunkMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position) const;
 
 protected:
 
@@ -81,7 +83,7 @@ protected:
 	/**/
 	virtual EMeshType GetMeshType() const = 0;
 
-	virtual BlockMesh CreateCubeMesh(Chunk* chunk, WorldPosition position) const;
+	void CreateCubeMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position) const;
 
 	
 

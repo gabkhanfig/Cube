@@ -9,11 +9,6 @@ ChunkMesh::ChunkMesh()
   quads.Reserve(CHUNK_LENGTH * CHUNK_LENGTH * 2);
 }
 
-void ChunkMesh::AddBlockMesh(const BlockMesh& mesh)
-{
-	quads.Append(mesh.quads);
-}
-
 VertexBufferObject* ChunkMesh::MakeVertexBufferObject() const
 {
   return VertexBufferObject::Create<BlockQuad>(quads.Data(), quads.Size());
@@ -45,4 +40,14 @@ IndexBufferObject* ChunkMesh::MakeIndexBufferObject() const
   IndexBufferObject* ibo = new IndexBufferObject(quadIndices, indexCount * quadCount);
   delete[] quadIndices;
   return ibo;
+}
+
+void ChunkMesh::Empty()
+{
+  quads.Empty();
+}
+
+void ChunkMesh::AddQuad(const BlockQuad& quad)
+{
+  quads.Add(quad);
 }

@@ -15,6 +15,9 @@
 #include "../Graphics/Geometry/ChunkMesh.h"
 #include "Block/BlockFactory.h"
 #include "Block/IBlock.h"
+#include "Chunk/Chunk.h"
+
+#include <chrono>
 
 World* GetWorld()
 {
@@ -27,6 +30,20 @@ World::World()
   chunkShader = new Shader(generated_Chunk_vert, generated_Chunk_frag);
   chunkVAO = new VertexArrayObject();
   chunkVAO->SetFormatLayout(BlockQuad::GetQuadsVertexBufferLayout());
+
+  auto start1 = std::chrono::high_resolution_clock::now();
+  testChunk = new Chunk();
+  testChunk->FillChunkWithBlock("stoneBlock");
+  auto stop1 = std::chrono::high_resolution_clock::now();
+  auto start2 = std::chrono::high_resolution_clock::now();
+  testChunk->RecreateMesh();
+  auto stop2 = std::chrono::high_resolution_clock::now();
+  auto start3 = std::chrono::high_resolution_clock::now();
+  testChunk->GetRenderComponent()->MeshToOpenGLObjects();
+  auto stop3 = std::chrono::high_resolution_clock::now();
+  std::cout << "Time to create and fill chunk: " << std::chrono::duration_cast<std::chrono::milliseconds>(stop1 - start1).count() << "ms\n";
+  std::cout << "Time to create chunk mesh: " << std::chrono::duration_cast<std::chrono::milliseconds>(stop2 - start2).count() << "ms\n";
+  std::cout << "Time to send to GPU: " << std::chrono::duration_cast<std::chrono::milliseconds>(stop3 - start3).count() << "ms\n";
 
   //BlockTextureAtlas::Bind(0);
 }
@@ -82,19 +99,19 @@ void World::DrawWorld()
   //chunkVAO->BindVertexBufferObject(vbo2, sizeof(BlockVertex));
   //Renderer::DrawVboTriangles(vbo2, ibo);
 
-  IBlock* stone = BlockFactory::GetBlockClass("stoneBlock")->GetBlock();
+  /*IBlock* stone = BlockFactory::GetBlockClass("stoneBlock")->GetBlock();
   ChunkMesh mesh;
   mesh.AddBlockMesh(stone->CreateBlockMesh(nullptr, { 0, 0, 0 }));
   VertexBufferObject* stoneVBO = mesh.MakeVertexBufferObject();
   IndexBufferObject* stoneIBO = mesh.MakeIndexBufferObject();
   chunkVAO->BindVertexBufferObject(stoneVBO, sizeof(BlockVertex));
-  Renderer::DrawVboTriangles(stoneVBO, stoneIBO);
+  Renderer::DrawVboTriangles(stoneVBO, stoneIBO);*/
 
-
+  testChunk->Draw(chunkShader, chunkVAO);
   //delete vao;
   //delete vbo;
  // delete ibo;
   //delete vbo2;
-  delete stoneVBO;
-  delete stoneIBO;
+  //delete stoneVBO;
+  //delete stoneIBO;
 }

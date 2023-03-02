@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BlockMesh.h"
+#include "BlockGeometry.h"
 
 class VertexBufferObject;
 class IndexBufferObject;
@@ -15,10 +15,12 @@ public:
 
 	ChunkMesh();
 
-	void AddBlockMesh(const BlockMesh& mesh);
-
 	VertexBufferObject* MakeVertexBufferObject() const;
 
 	IndexBufferObject* MakeIndexBufferObject() const;
+
+	void Empty();
+
+	void AddQuad(const BlockQuad& quad);
 
 };

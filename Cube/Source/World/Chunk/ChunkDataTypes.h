@@ -50,7 +50,7 @@ public:
 
 	~ChunkBlock();
 
-	/* CAUTION!!! If the intent is to destroy this block, call DestroyBlock() instead. */
+	/* CAUTION!!! If the intent is to destroy this block, call DestroyBlock(). */
 	IBlock* GetBlock() const { return block; }
 	BlockLight GetLight() const { return light; }
 	BlockFacing GetFacing() const { return facing; }

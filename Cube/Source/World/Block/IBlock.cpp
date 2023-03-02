@@ -1,23 +1,22 @@
 #include "IBlock.h"
 
-
-BlockMesh IBlock::CreateBlockMesh(Chunk* chunk, WorldPosition position) const
+void IBlock::AddBlockMeshToChunkMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position) const
 {
   EMeshType meshType = GetMeshType();
   switch (meshType) {
   case EMeshType::cube:
-    return CreateCubeMesh(chunk, position);
+    CreateCubeMesh(chunkMesh, chunk, position);
   case EMeshType::custom:
-    return BlockMesh();
+    //return BlockMesh();
+    break;
   }
-  
 }
 
 void IBlock::OnDestroy()
 {
 }
 
-BlockMesh IBlock::CreateCubeMesh(Chunk* chunk, WorldPosition position) const
+void IBlock::CreateCubeMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position) const
 {
   const EBlockTexture allSideTexture = GetAllSidedTexture();
   const glm::vec2 texCoords[4] = {
@@ -35,7 +34,7 @@ BlockMesh IBlock::CreateCubeMesh(Chunk* chunk, WorldPosition position) const
   const glm::vec3 c101{ 1, 0, 1 };
   const glm::vec3 c011{ 0, 1, 1 };
   const glm::vec3 c111{ 1, 1, 1 };
-  
+
   const glm::vec3 bottomPos[4] = {
    glm::vec3(0, 0, 0),
    glm::vec3(0, 0, 1),
@@ -95,22 +94,28 @@ BlockMesh IBlock::CreateCubeMesh(Chunk* chunk, WorldPosition position) const
   const glm::vec3 topCols[4] = {
     c010, c110, c111, c011
   };
-  
-  const BlockQuad bottom = BlockQuad(bottomPos, texCoords, bottomCols);
-  const BlockQuad north = BlockQuad(northPos, texCoords, northCols);
-  const BlockQuad east = BlockQuad(eastPos, texCoords, eastCols);
-  const BlockQuad south = BlockQuad(southPos, texCoords, southCols);
-  const BlockQuad west = BlockQuad(westPos, texCoords, westCols);
-  const BlockQuad top = BlockQuad(topPos, texCoords, topCols);
 
-  BlockMesh mesh;
-  mesh.AddQuad(bottom);
-  mesh.AddQuad(north);
-  mesh.AddQuad(east);
-  mesh.AddQuad(south);
-  mesh.AddQuad(west);
-  mesh.AddQuad(top);
+  const BlockPosition blockPos = position.ToBlockPosition();
+  const glm::vec3 shift = glm::vec3(blockPos.x, blockPos.y, blockPos.z);
 
-  return mesh;
+  BlockQuad bottom = BlockQuad(bottomPos, texCoords, bottomCols);
+  bottom.Shift(shift);
+  BlockQuad north = BlockQuad(northPos, texCoords, northCols);
+  north.Shift(shift);
+  BlockQuad east = BlockQuad(eastPos, texCoords, eastCols);
+  east.Shift(shift);
+  BlockQuad south = BlockQuad(southPos, texCoords, southCols);
+  south.Shift(shift);
+  BlockQuad west = BlockQuad(westPos, texCoords, westCols);
+  west.Shift(shift);
+  BlockQuad top = BlockQuad(topPos, texCoords, topCols);
+  top.Shift(shift);
+
+  chunkMesh.AddQuad(bottom);
+  chunkMesh.AddQuad(north);
+  chunkMesh.AddQuad(east);
+  chunkMesh.AddQuad(south);
+  chunkMesh.AddQuad(west);
+  chunkMesh.AddQuad(top);
 }
 
