@@ -1,4 +1,4 @@
-#include "ChunkRender.h"
+#include "ChunkRenderComponent.h"
 #include <Graphics/Buffers/VertexBufferObject.h>
 #include <Graphics/Buffers/IndexBufferObject.h>
 #include <Graphics/Buffers/VertexArrayObject.h>

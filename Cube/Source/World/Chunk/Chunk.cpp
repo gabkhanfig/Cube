@@ -1,7 +1,7 @@
 #include "Chunk.h"
 #include "../Block/BlockFactory.h"
 #include "../Block/IBlock.h"
-#include "ChunkRender.h"
+#include "ChunkRenderComponent.h"
 
 Chunk::Chunk()
 	: wasChunkModifiedThisTick(false)

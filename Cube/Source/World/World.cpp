@@ -16,6 +16,7 @@
 #include "Block/BlockFactory.h"
 #include "Block/IBlock.h"
 #include "Chunk/Chunk.h"
+#include "Chunk/ChunkRenderComponent.h"
 
 #include <chrono>
 

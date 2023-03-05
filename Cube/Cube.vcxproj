@@ -188,7 +188,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\World\Block\BlockTextureAtlas.cpp" />
     <ClCompile Include="Source\World\Chunk\Chunk.cpp" />
     <ClCompile Include="Source\World\Chunk\ChunkDataTypes.cpp" />
-    <ClCompile Include="Source\World\Chunk\ChunkRender.cpp" />
+    <ClCompile Include="Source\World\Chunk\ChunkRenderComponent.cpp" />
     <ClCompile Include="Source\World\World.cpp" />
     <ClCompile Include="Source\World\WorldTransform.cpp" />
   </ItemGroup>
@@ -226,7 +226,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\World\Block\BlockFactory.h" />
     <ClInclude Include="Source\World\Block\BlockTextureAtlas.h" />
     <ClInclude Include="Source\World\Chunk\Chunk.h" />
-    <ClInclude Include="Source\World\Chunk\ChunkRender.h" />
+    <ClInclude Include="Source\World\Chunk\ChunkRenderComponent.h" />
     <ClInclude Include="Source\World\Chunk\ChunkData.h" />
     <ClInclude Include="Source\World\Chunk\ChunkSSBO.h" />
     <ClInclude Include="Source\World\Chunk\ChunkDataTypes.h" />

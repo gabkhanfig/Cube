@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ChunkDataTypes.h"
-#include "ChunkRender.h"
+//#include "ChunkRenderComponent.h"
 
 class IBlock;
 class ChunkRenderComponent;

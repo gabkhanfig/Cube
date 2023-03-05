@@ -18,7 +18,7 @@
     <ClCompile Include="Source\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\World\Chunk\ChunkRender.cpp">
+    <ClCompile Include="Source\World\Chunk\ChunkRenderComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\World\Block\IBlock.cpp">
@@ -99,7 +99,7 @@
     <ClInclude Include="Source\World\Chunk\ChunkData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\World\Chunk\ChunkRender.h">
+    <ClInclude Include="Source\World\Chunk\ChunkRenderComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\World\Block\IBlock.h">
