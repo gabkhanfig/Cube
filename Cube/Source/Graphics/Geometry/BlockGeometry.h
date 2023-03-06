@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Core/EngineTypes.h>
-#include <Graphics/Buffers/VertexBufferLayout.h>
+#include "../../Core/EngineTypes.h"
+#include "../OpenGL/Buffers/VertexBufferLayout.h"
 
 /* Block vertex data to be sent to the GPU vertex shader. */
 struct BlockVertex

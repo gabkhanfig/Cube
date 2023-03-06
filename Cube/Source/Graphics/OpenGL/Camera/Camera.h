@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../EngineCore.h"
+#include "../../../Engine/EngineCore.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 constexpr float cameraFOV = 90.f;

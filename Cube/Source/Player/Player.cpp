@@ -1,5 +1,5 @@
 #include "Player.h"
-#include <Graphics/Camera/Camera.h>
+#include "../Graphics/OpenGL/Camera/Camera.h"
 #include "PlayerInputComponent.h"
 
 Player::Player()

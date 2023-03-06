@@ -1,7 +1,7 @@
 #include "UserInput.h"
 #include "InputMapping.h"
 #include <GLFW/glfw3.h>
-#include "../Graphics/Camera/Camera.h"
+#include "../../Graphics/OpenGL/Camera/Camera.h"
 #include "../Engine.h"
 #include "../Window/Window.h"
 

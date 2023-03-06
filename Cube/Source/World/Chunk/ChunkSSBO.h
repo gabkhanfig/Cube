@@ -1,6 +1,6 @@
 #pragma once
 
-#include <EngineCore.h>
+#include "../../Engine/EngineCore.h"
 #include "ChunkData.h"
 
 #define COLORS_COUNT 17 * 17 * 17

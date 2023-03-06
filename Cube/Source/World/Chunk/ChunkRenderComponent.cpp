@@ -1,8 +1,8 @@
 #include "ChunkRenderComponent.h"
-#include <Graphics/Buffers/VertexBufferObject.h>
-#include <Graphics/Buffers/IndexBufferObject.h>
-#include <Graphics/Buffers/VertexArrayObject.h>
-#include <Graphics/Render/Renderer.h>
+#include "../../Graphics/OpenGL/Buffers/VertexBufferObject.h"
+#include "../../Graphics/OpenGL/Buffers/IndexBufferObject.h"
+#include "../../Graphics/OpenGL/Buffers/VertexArrayObject.h"
+#include "../../Graphics/OpenGL/Render/Renderer.h"
 #include "Chunk.h"
 #include "../Block/IBlock.h"
 

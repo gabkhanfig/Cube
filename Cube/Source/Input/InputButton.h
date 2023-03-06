@@ -1,7 +1,7 @@
 #pragma once
 
-#include <EngineCore.h>
-#include <Input/UserInput.h>
+#include "../Engine/EngineCore.h"
+#include "../Engine/Input/UserInput.h"
 #include <functional>
 
 struct InputButtonState

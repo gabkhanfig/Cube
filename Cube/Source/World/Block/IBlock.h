@@ -1,6 +1,5 @@
 #pragma once
 
-#include <EngineCore.h>
 #include "../../Graphics/Geometry/BlockGeometry.h"
 #include "BlockFactory.h"
 #include "../WorldTransform.h"

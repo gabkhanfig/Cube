@@ -1,6 +1,6 @@
 #include "BlockTextureAtlas.h"
 #include "../../Cube/Resources/GeneratedFiles.h"
-#include <Graphics/Texture/Texture2d.h>
+#include "../../Graphics/OpenGL/Texture/Texture2d.h"
 
 /* Generates pairs of const char* and BlockTexture ids. */
 static void GetTexturePairs(darray<GeneratedPng>& pngData, darray<EBlockTexture>& ids)

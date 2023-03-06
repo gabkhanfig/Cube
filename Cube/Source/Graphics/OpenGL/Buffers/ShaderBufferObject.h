@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../EngineCore.h"
+#include "../../../Engine/EngineCore.h"
 
 /* Shader Storage Buffer Object. 
 https://www.khronos.org/opengl/wiki/Shader_Storage_Buffer_Object */

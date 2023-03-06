@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../EngineCore.h"
+#include "../../../Engine/EngineCore.h"
 #include "VertexBufferLayout.h"
 
 class VertexBufferObject;

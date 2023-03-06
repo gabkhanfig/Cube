@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -171,8 +171,26 @@ GenerateFiles.bat</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="glad.c" />
+    <ClCompile Include="Source\Core\Log\Logger.cpp" />
+    <ClCompile Include="Source\Engine\Engine.cpp" />
+    <ClCompile Include="Source\Engine\Input\InputMapping.cpp" />
+    <ClCompile Include="Source\Engine\Input\UserInput.cpp" />
+    <ClCompile Include="Source\Engine\Tick\TickEngine.cpp" />
+    <ClCompile Include="Source\Engine\Vendor\stb_image\stb_image.cpp" />
+    <ClCompile Include="Source\Engine\Window\Window.cpp" />
     <ClCompile Include="Source\Graphics\Geometry\BlockGeometry.cpp" />
     <ClCompile Include="Source\Graphics\Geometry\ChunkMesh.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\Buffers\IndexBufferObject.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\Buffers\ShaderBufferObject.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\Buffers\VertexArrayObject.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\Buffers\VertexBufferLayout.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\Buffers\VertexBufferObject.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\Camera\Camera.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\Render\Renderer.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\Shader\Shader.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\Texture\Texture.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\Texture\Texture2d.cpp" />
     <ClCompile Include="Source\Input\InputComponent.cpp" />
     <ClCompile Include="Source\Entity\Entity.cpp" />
     <ClCompile Include="Source\GameInstance.cpp" />
@@ -193,11 +211,6 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\World\WorldTransform.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CubeEngine\CubeEngine.vcxproj">
-      <Project>{7868669f-c207-415f-9c57-c8d0091c9351}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\GenerateFile.py" />
     <None Include="Resources\GenerateFiles.bat" />
     <None Include="Resources\Shaders\Basic.frag" />
@@ -209,9 +222,30 @@ GenerateFiles.bat</Command>
     <Text Include="Resources\Files.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Core\Asserts.h" />
+    <ClInclude Include="Source\Core\Development.h" />
+    <ClInclude Include="Source\Core\EngineTypes.h" />
+    <ClInclude Include="Source\Core\Log\Logger.h" />
+    <ClInclude Include="Source\Engine\Engine.h" />
+    <ClInclude Include="Source\Engine\EngineCore.h" />
+    <ClInclude Include="Source\Engine\Input\InputMapping.h" />
+    <ClInclude Include="Source\Engine\Input\UserInput.h" />
+    <ClInclude Include="Source\Engine\Tick\TickEngine.h" />
+    <ClInclude Include="Source\Engine\Vendor\stb_image\stb_image.h" />
+    <ClInclude Include="Source\Engine\Window\Window.h" />
     <ClInclude Include="Source\Graphics\Geometry\BlockGeometry.h" />
     <ClInclude Include="Source\Graphics\Geometry\BlockMesh.h" />
     <ClInclude Include="Source\Graphics\Geometry\ChunkMesh.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Buffers\IndexBufferObject.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Buffers\ShaderBufferObject.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Buffers\VertexArrayObject.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Buffers\VertexBufferLayout.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Buffers\VertexBufferObject.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Camera\Camera.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Render\Renderer.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Shader\Shader.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Texture\Texture.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Texture\Texture2d.h" />
     <ClInclude Include="Source\Input\InputComponent.h" />
     <ClInclude Include="Resources\GeneratedFiles.h" />
     <ClInclude Include="Source\Entity\Entity.h" />

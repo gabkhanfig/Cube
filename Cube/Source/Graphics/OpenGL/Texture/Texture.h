@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../../EngineCore.h"
+#include "../../../Engine/EngineCore.h"
+#include "../../../Engine/Vendor/stb_image/stb_image.h"
 
 struct GeneratedPng
 {

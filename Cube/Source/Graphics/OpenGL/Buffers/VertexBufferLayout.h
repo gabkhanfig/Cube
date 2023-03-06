@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../../EngineCore.h"
-#include <vector>
+#include "../../../Engine/EngineCore.h"
 
 struct VertexBufferLayout
 {

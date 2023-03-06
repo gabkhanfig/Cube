@@ -1,5 +1,5 @@
 #include "InputComponent.h"
-#include <Input/InputMapping.h>
+#include "../Engine/Input/UserInput.h"
 #include "InputButton.h"
 #include "CubeInput.h"
 

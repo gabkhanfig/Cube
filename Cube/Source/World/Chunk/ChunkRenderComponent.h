@@ -48,8 +48,6 @@ private:
 
 	IndexBufferObject* ibo;
 
-	//ChunkRenderBufferObjects buffers;
-
 	Chunk* owner;
 
 	bool meshWasRecreated;

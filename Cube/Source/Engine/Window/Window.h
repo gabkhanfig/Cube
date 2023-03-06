@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Core/EngineTypes.h"
+#include "../../Core/EngineTypes.h"
 
 struct GLFWmonitor;
 struct GLFWwindow;

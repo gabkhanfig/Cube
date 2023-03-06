@@ -1,6 +1,5 @@
 #include "Texture2d.h"
 #include <glad/glad.h>
-#include "../../Vendor/stb_image/stb_image.h"
 
 Texture2d::Texture2d(const unsigned char* imageBytes, int _width, int _height)
 {

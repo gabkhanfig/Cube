@@ -1,6 +1,6 @@
 #include "BlockGeometry.h"
-#include <Graphics/Buffers/IndexBufferObject.h>
-#include <Graphics/Buffers/VertexBufferObject.h>
+#include "../OpenGL/Buffers/IndexBufferObject.h"
+#include "../OpenGL/Buffers/VertexBufferObject.h"
 
 IndexBufferObject* BlockQuad::CreateQuadsIndexBuffer(const uint32 quadCount)
 {

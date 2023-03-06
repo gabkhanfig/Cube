@@ -1,6 +1,6 @@
 #include "PlayerInputComponent.h"
 #include "../Input/CubeInput.h"
-#include <Graphics/Camera/Camera.h>
+#include "../Graphics/OpenGL/Camera/Camera.h"
 #include "Player.h"
 #include "../Input/InputButton.h"
 #include <functional>

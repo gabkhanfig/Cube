@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Texture.h"
 
 /* Bytes need to be manually freed. */

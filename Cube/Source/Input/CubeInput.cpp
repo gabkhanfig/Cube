@@ -1,8 +1,8 @@
 #include "CubeInput.h"
-#include <Engine.h>
-#include <Window/Window.h>
+#include "../Engine/Engine.h"
+#include "../Engine/Window/Window.h"
+#include "../Engine/Input/InputMapping.h"
 #include "InputComponent.h"
-#include <Input/InputMapping.h>
 
 static std::unordered_map<GlobalString, InputButtonState> MakeButtonStates() {
 	std::unordered_map<GlobalString, InputButtonState> buttonStates;
