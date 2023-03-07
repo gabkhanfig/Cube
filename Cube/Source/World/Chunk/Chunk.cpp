@@ -23,21 +23,21 @@ void Chunk::Tick(float deltaTime)
 
 IBlock* Chunk::GetBlock(BlockPosition position)
 {
-	const int blockIndex = position.ToBlockIndex();
+	const int blockIndex = position.index;
 	checkm(blockIndex < CHUNK_SIZE, "block index must be within CHUNK_SIZE");
 	return blocks[blockIndex].GetBlock();
 }
 
 ChunkBlock& Chunk::ChunkBlockAt(BlockPosition position)
 {
-	const int blockIndex = position.ToBlockIndex();
+	const int blockIndex = position.index;
 	checkm(blockIndex < CHUNK_SIZE, "block index must be within CHUNK_SIZE");
 	return blocks[blockIndex];
 }
 
 const ChunkBlock& Chunk::ChunkBlockAt(BlockPosition position) const
 {
-	const int blockIndex = position.ToBlockIndex();
+	const int blockIndex = position.index;
 	checkm(blockIndex < CHUNK_SIZE, "block index must be within CHUNK_SIZE");
 	return blocks[blockIndex];
 }
@@ -56,8 +56,8 @@ void Chunk::RecreateMesh() const
 	renderComponent->RecreateMesh();
 }
 
-void Chunk::Draw(Shader* chunkShader, VertexArrayObject* chunkVAO)
+void Chunk::Draw(ChunkRenderer* renderer)
 {
-	renderComponent->Draw(chunkShader, chunkVAO);
+	renderComponent->Draw(renderer);
 }
 

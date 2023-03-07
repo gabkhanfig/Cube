@@ -129,6 +129,9 @@
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\World\Render\ChunkRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.vert" />
@@ -204,9 +207,6 @@
     <ClInclude Include="Source\World\Block\BlockTypes\Stone\StoneBlock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Geometry\BlockMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Graphics\Geometry\ChunkMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -274,6 +274,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Asserts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\World\Render\ChunkRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

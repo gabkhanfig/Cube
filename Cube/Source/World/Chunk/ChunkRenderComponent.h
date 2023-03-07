@@ -9,34 +9,7 @@ class ShaderBufferObject;
 class VertexArrayObject;
 class Shader;
 class Chunk;
-
-
-/*
-
-*/
-
-/* OpenGL buffer objects for chunks. */
-struct ChunkRenderBufferObjects
-{
-	/**/
-	VertexBufferObject* vbo;
-	
-	/**/
-	IndexBufferObject* ibo;
-
-	/**/
-	ShaderBufferObject* ssbo;
-
-	ChunkRenderBufferObjects() : vbo(nullptr), ibo(nullptr), ssbo(nullptr) {}
-
-	~ChunkRenderBufferObjects() {
-		delete vbo;
-		delete ibo;
-		delete ssbo;
-	}
-
-};
-
+class ChunkRenderer;
 
 class ChunkRenderComponent
 {
@@ -63,6 +36,6 @@ public:
 
 	void MeshToOpenGLObjects();
 
-	void Draw(Shader* chunkShader, VertexArrayObject* chunkVAO);
+	void Draw(ChunkRenderer* renderer);
 
 };

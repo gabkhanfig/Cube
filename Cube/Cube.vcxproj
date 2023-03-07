@@ -207,6 +207,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\World\Chunk\Chunk.cpp" />
     <ClCompile Include="Source\World\Chunk\ChunkDataTypes.cpp" />
     <ClCompile Include="Source\World\Chunk\ChunkRenderComponent.cpp" />
+    <ClCompile Include="Source\World\Render\ChunkRenderer.cpp" />
     <ClCompile Include="Source\World\World.cpp" />
     <ClCompile Include="Source\World\WorldTransform.cpp" />
   </ItemGroup>
@@ -234,7 +235,6 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\Engine\Vendor\stb_image\stb_image.h" />
     <ClInclude Include="Source\Engine\Window\Window.h" />
     <ClInclude Include="Source\Graphics\Geometry\BlockGeometry.h" />
-    <ClInclude Include="Source\Graphics\Geometry\BlockMesh.h" />
     <ClInclude Include="Source\Graphics\Geometry\ChunkMesh.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\IndexBufferObject.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\ShaderBufferObject.h" />
@@ -264,6 +264,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\World\Chunk\ChunkData.h" />
     <ClInclude Include="Source\World\Chunk\ChunkSSBO.h" />
     <ClInclude Include="Source\World\Chunk\ChunkDataTypes.h" />
+    <ClInclude Include="Source\World\Render\ChunkRenderer.h" />
     <ClInclude Include="Source\World\World.h" />
     <ClInclude Include="Source\World\WorldTransform.h" />
   </ItemGroup>

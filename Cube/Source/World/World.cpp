@@ -17,7 +17,7 @@
 #include "Block/IBlock.h"
 #include "Chunk/Chunk.h"
 #include "Chunk/ChunkRenderComponent.h"
-
+#include "Render/ChunkRenderer.h"
 #include <chrono>
 
 World* GetWorld()
@@ -28,9 +28,10 @@ World* GetWorld()
 World::World()
 {
   player = new Player();
-  chunkShader = new Shader(generated_Chunk_vert, generated_Chunk_frag);
-  chunkVAO = new VertexArrayObject();
-  chunkVAO->SetFormatLayout(BlockQuad::GetQuadsVertexBufferLayout());
+  chunkRenderer = new ChunkRenderer();
+  //chunkShader = new Shader(generated_Chunk_vert, generated_Chunk_frag);
+  //chunkVAO = new VertexArrayObject();
+  //chunkVAO->SetFormatLayout(BlockQuad::GetQuadsVertexBufferLayout());
 
   auto start1 = std::chrono::high_resolution_clock::now();
   testChunk = new Chunk();
@@ -42,9 +43,8 @@ World::World()
   auto start3 = std::chrono::high_resolution_clock::now();
   testChunk->GetRenderComponent()->MeshToOpenGLObjects();
   auto stop3 = std::chrono::high_resolution_clock::now();
-  std::cout << "Time to create and fill chunk: " << std::chrono::duration_cast<std::chrono::milliseconds>(stop1 - start1).count() << "ms\n";
-  std::cout << "Time to create chunk mesh: " << std::chrono::duration_cast<std::chrono::milliseconds>(stop2 - start2).count() << "ms\n";
-  std::cout << "Time to send to GPU: " << std::chrono::duration_cast<std::chrono::milliseconds>(stop3 - start3).count() << "ms\n";
+  std::cout << "Time to create chunk mesh on the CPU:  " << std::chrono::duration_cast<std::chrono::milliseconds>(stop2 - start2).count() << "ms\n";
+  std::cout << "Time to send to chunk mesh to the GPU: " << std::chrono::duration_cast<std::chrono::milliseconds>(stop3 - start3).count() << "ms\n";
 
   //BlockTextureAtlas::Bind(0);
 }
@@ -54,9 +54,15 @@ void World::DrawWorld()
   /* Render here */
   Renderer::Clear();
 
-  chunkShader->Bind();
+  //chunkShader->Bind();
   Camera* cam = Camera::GetActiveCamera();
-  chunkShader->SetUniformMat4f("u_cameraMVP", cam->GetMvpMatrix());
+  //chunkShader->SetUniformMat4f("u_cameraMVP", cam->GetMvpMatrix());
+  //chunkShader->SetUniform3f("u_chunkOffset", { 10, 10, 10 });
+  chunkRenderer->SetShaderCameraMVP(cam->GetMvpMatrix());
+  //chunkRenderer->SetShaderChunkOffset({ 10, 10, 10 });
+  chunkRenderer->SetShaderChunkOffset(chunkRenderer->GetOffsetForChunkDraw(testChunk));
+
+  testChunk->Draw(chunkRenderer);
 
   //glm::vec3 positions[4] = {
   //  glm::vec3(0, 0, 1),
@@ -108,7 +114,7 @@ void World::DrawWorld()
   chunkVAO->BindVertexBufferObject(stoneVBO, sizeof(BlockVertex));
   Renderer::DrawVboTriangles(stoneVBO, stoneIBO);*/
 
-  testChunk->Draw(chunkShader, chunkVAO);
+  
   //delete vao;
   //delete vbo;
  // delete ibo;

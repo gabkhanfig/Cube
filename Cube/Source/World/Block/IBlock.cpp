@@ -96,7 +96,7 @@ void IBlock::CreateCubeMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition po
   };
 
   const BlockPosition blockPos = position.ToBlockPosition();
-  const glm::vec3 shift = glm::vec3(blockPos.x, blockPos.y, blockPos.z);
+  const glm::vec3 shift = glm::vec3(blockPos.X(), blockPos.Y(), blockPos.Z());
 
   BlockQuad bottom = BlockQuad(bottomPos, texCoords, bottomCols);
   bottom.Shift(shift);

@@ -5,8 +5,7 @@
 
 ChunkMesh::ChunkMesh()
 {
-  /* Reserve more than enough for a single flat chunk face to be visible. */
-  quads.Reserve(CHUNK_LENGTH * CHUNK_LENGTH * 2);
+  quads.Reserve(CHUNK_LENGTH * CHUNK_LENGTH * 6);
 }
 
 VertexBufferObject* ChunkMesh::MakeVertexBufferObject() const

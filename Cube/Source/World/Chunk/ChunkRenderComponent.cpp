@@ -2,9 +2,9 @@
 #include "../../Graphics/OpenGL/Buffers/VertexBufferObject.h"
 #include "../../Graphics/OpenGL/Buffers/IndexBufferObject.h"
 #include "../../Graphics/OpenGL/Buffers/VertexArrayObject.h"
-#include "../../Graphics/OpenGL/Render/Renderer.h"
 #include "Chunk.h"
 #include "../Block/IBlock.h"
+#include "../Render/ChunkRenderer.h"
 
 ChunkRenderComponent::ChunkRenderComponent(Chunk* _owner)
 	: owner(_owner), vbo(nullptr), ibo(nullptr), meshWasRecreated(false)
@@ -22,17 +22,13 @@ void ChunkRenderComponent::RecreateMesh()
 	const IBlock* air = BlockFactory::GetAirBlock();
 
 	for (int i = 0; i < CHUNK_SIZE; i++) {
-		const BlockPosition blockPos = BlockPosition::FromBlockIndex(i);
-		const WorldPosition worldPos = WorldPosition::FromChunkAndBlock(owner->GetPosition(), blockPos);
-
+		const BlockPosition blockPos = i;
 		const IBlock* block = owner->GetBlock(blockPos);
-		if (block == air)
-			continue;
 
+		if (block == air) continue;
+
+		const WorldPosition worldPos = WorldPosition::FromChunkAndBlock(owner->GetPosition(), blockPos);
 		block->AddBlockMeshToChunkMesh(mesh, owner, worldPos);
-		//BlockMesh blockMesh = block->AddBlockMeshToChunk(owner, worldPos);
-		//blockMesh.Shift(glm::vec3(blockPos.x, blockPos.y, blockPos.z));
-		//mesh.AddBlockMesh(blockMesh);
 	}
 }
 
@@ -47,12 +43,12 @@ void ChunkRenderComponent::MeshToOpenGLObjects()
 	meshWasRecreated = false;
 }
 
-void ChunkRenderComponent::Draw(Shader* chunkShader, VertexArrayObject* chunkVAO)
+void ChunkRenderComponent::Draw(ChunkRenderer* renderer)
 {
 	if (meshWasRecreated) {
 		MeshToOpenGLObjects();
 	}
 
-	chunkVAO->BindVertexBufferObject(vbo, sizeof(BlockVertex));
-	Renderer::DrawVboTriangles(vbo, ibo);
+	renderer->BindBlocksVertexBufferObject(vbo);
+	renderer->Draw(vbo, ibo);
 }

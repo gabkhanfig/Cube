@@ -43,32 +43,36 @@ struct ChunkPosition
 
 struct BlockPosition
 {
-	int x;
-	int y;
-	int z;
+	int index;
 
-	constexpr BlockPosition(int _x = 0, int _y = 0, int _z = 0)
-		: x(_x), y(_y), z(_z)
-	{}
-
-	constexpr int ToBlockIndex() const {
-		const int index = x + (z * CHUNK_LENGTH) + (y * CHUNK_LENGTH * CHUNK_LENGTH);
-		return index;
+	constexpr BlockPosition(int x, int y, int z)
+	{
+		checkm(x >= 0 && x < CHUNK_LENGTH, "BlockPosition x must be between 0 and CHUNK_LENGTH");
+		checkm(y >= 0 && y < CHUNK_LENGTH, "BlockPosition y must be between 0 and CHUNK_LENGTH");
+		checkm(z >= 0 && z < CHUNK_LENGTH, "BlockPosition z must be between 0 and CHUNK_LENGTH");
+		index = x + (z * CHUNK_LENGTH) + (y * CHUNK_LENGTH * CHUNK_LENGTH);
 	}
 
-	static constexpr BlockPosition FromBlockIndex(const int index) {
-		BlockPosition pos{
-			index % CHUNK_LENGTH,
-			index / (CHUNK_LENGTH * CHUNK_LENGTH),
-			(index % (CHUNK_LENGTH * CHUNK_LENGTH)) / CHUNK_LENGTH
-		};
-		return pos;
+	constexpr BlockPosition(int _index) {
+		checkm(_index >= 0 && _index < CHUNK_SIZE, "BlockPosition index mumst be between 0 and CHUNK_SIZE");
+		index = _index;
 	}
 
 	forceinline constexpr bool operator == (BlockPosition other) const {
-		return x == other.x && y == other.y && z == other.z;
+		return index == other.index;
 	}
 
+	forceinline constexpr int X() const {
+		return index % CHUNK_LENGTH;
+	}
+
+	forceinline constexpr int Y() const {
+		return index / (CHUNK_LENGTH * CHUNK_LENGTH);
+	}
+
+	forceinline constexpr int Z() const {
+		return (index % (CHUNK_LENGTH * CHUNK_LENGTH)) / CHUNK_LENGTH;
+	}
 };
 
 struct WorldPosition
@@ -87,9 +91,9 @@ struct WorldPosition
 
 	static constexpr WorldPosition FromChunkAndBlock(ChunkPosition chunk, BlockPosition block) {
 		WorldPosition wp{
-			chunk.x * CHUNK_LENGTH + block.x,
-			chunk.y * CHUNK_LENGTH + block.y,
-			chunk.z * CHUNK_LENGTH + block.z
+			chunk.x * CHUNK_LENGTH + block.X(),
+			chunk.y * CHUNK_LENGTH + block.Y(),
+			chunk.z * CHUNK_LENGTH + block.Z()
 		};
 		return wp;
 	}
@@ -148,11 +152,7 @@ namespace std
 	{
 		size_t operator()(const BlockPosition& v) const
 		{
-			std::size_t h = 0;
-			h ^= std::hash<int>{}(v.x) + 0x9e3779b9 + (h << 6) + (h >> 2);
-			h ^= std::hash<int>{}(v.y) + 0x9e3779b9 + (h << 6) + (h >> 2);
-			h ^= std::hash<int>{}(v.z) + 0x9e3779b9 + (h << 6) + (h >> 2);
-			return h;
+			return v.index;
 		}
 	};
 

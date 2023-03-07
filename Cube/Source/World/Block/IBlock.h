@@ -4,7 +4,6 @@
 #include "BlockFactory.h"
 #include "../WorldTransform.h"
 #include "BlockTextureAtlas.h"
-#include "../../Graphics/Geometry/BlockMesh.h"
 #include "../../Graphics/Geometry/ChunkMesh.h"
 
 /* Required macro for all blocks. Sets its class data and name. Also sets everything after this back to private. */
@@ -68,7 +67,8 @@ public:
 	/* Ensure setting whatever references to this block to be nullptr, or removed entirely. Prefer this to operator delete for blocks. */
 	virtual inline void Destroy() = 0;
 	
-	/* Create the mesh data for the block. Must be multithreading safe. */
+	/* Create the mesh data for the block, adding to the Chunk's mesh. Must be multithreading safe. 
+	DEVELOPER NOTE!!!! Block's are responsible for their own mesh offsets within the chunk. */
 	virtual void AddBlockMeshToChunkMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position) const;
 
 protected:

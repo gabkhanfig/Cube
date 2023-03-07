@@ -55,21 +55,21 @@ void PlayerInputComponent::Tick(float deltaTime)
 	const float SKeyScale = CubeInput::GetButtonState(SKey).isHeld ? -1 : 0;
 	const float ForwardScale = WKeyScale + SKeyScale;
 	if (ForwardScale != 0) {
-		AddPlayerForwardInput(ForwardScale * deltaTime);
+		AddPlayerForwardInput(ForwardScale * deltaTime * 5);
 	}
 
 	const float AKeyScale = CubeInput::GetButtonState(AKey).isHeld ? -1 : 0;
 	const float DKeyScale = CubeInput::GetButtonState(DKey).isHeld ? 1 : 0;
 	const float RightScale = AKeyScale + DKeyScale;
 	if (RightScale != 0) {
-		AddPlayerRightInput(RightScale * deltaTime);
+		AddPlayerRightInput(RightScale * deltaTime * 5);
 	}
 
 	const float SpaceKeyScale = CubeInput::GetButtonState(SpaceKey).isHeld ? 1 : 0;
 	const float CtrlKeyScale = CubeInput::GetButtonState(CtrlKey).isHeld ? -1 : 0;
 	const float VerticalScale = SpaceKeyScale + CtrlKeyScale;
 	if (VerticalScale != 0) {
-		AddPlayerVerticalInput(VerticalScale * deltaTime);
+		AddPlayerVerticalInput(VerticalScale * deltaTime * 5);
 	}
 }
 

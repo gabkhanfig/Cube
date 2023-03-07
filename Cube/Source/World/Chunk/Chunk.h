@@ -7,6 +7,7 @@ class IBlock;
 class ChunkRenderComponent;
 class VertexArrayObject;
 class Shader;
+class ChunkRenderer;
 
 class Chunk
 {
@@ -49,7 +50,7 @@ public:
 
 	void RecreateMesh() const;
 
-	void Draw(Shader* chunkShader, VertexArrayObject* chunkVAO);
+	void Draw(ChunkRenderer* renderer);
 
 	ChunkRenderComponent* GetRenderComponent() const { return renderComponent; }
 

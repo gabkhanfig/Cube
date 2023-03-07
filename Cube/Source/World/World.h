@@ -1,9 +1,12 @@
 #pragma once
 
+#include "../Engine/EngineCore.h"
+
 class Player;
 class Shader;
 class VertexArrayObject;
 class Chunk;
+class ChunkRenderer;
 
 class World
 {
@@ -17,12 +20,15 @@ private:
 
 	Chunk* testChunk;
 
+	ChunkRenderer* chunkRenderer;
+
 public:
 
 	World();
 
 	void DrawWorld();
 
+	Player* GetPlayer() const { return player; }
 
 };
 
