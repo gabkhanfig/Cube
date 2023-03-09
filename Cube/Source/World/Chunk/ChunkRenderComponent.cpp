@@ -5,6 +5,7 @@
 #include "Chunk.h"
 #include "../Block/IBlock.h"
 #include "../Render/ChunkRenderer.h"
+#include <chrono>
 
 ChunkRenderComponent::ChunkRenderComponent(Chunk* _owner)
 	: owner(_owner), vbo(nullptr), ibo(nullptr), meshWasRecreated(false)
@@ -37,10 +38,25 @@ void ChunkRenderComponent::MeshToOpenGLObjects()
 	if (vbo) delete vbo;
 	if (ibo) delete ibo;
 
+	auto start1 = std::chrono::high_resolution_clock::now();
 	vbo = mesh.MakeVertexBufferObject();
+	auto stop1 = std::chrono::high_resolution_clock::now();
+	auto start2 = std::chrono::high_resolution_clock::now();
 	ibo = mesh.MakeIndexBufferObject();
+	auto stop2 = std::chrono::high_resolution_clock::now();
+	std::cout << "Time to create VBO:  " << std::chrono::duration_cast<std::chrono::microseconds>(stop1 - start1).count() << "us\n";
+	std::cout << "Time to create IBO: " << std::chrono::duration_cast<std::chrono::microseconds>(stop2 - start2).count() << "us\n";
 	mesh.Empty();
 	meshWasRecreated = false;
+}
+
+void ChunkRenderComponent::CopyToSameVBO()
+{
+	void* mapVBO = vbo->GetMapBuffer();
+	memcpy(mapVBO, mesh.GetQuads().Data(), mesh.GetQuads().Size() * sizeof(BlockQuad));
+	VertexBufferObject::UnmapBuffer();
+	//uint32* mapIBO = ibo->GetMapBuffer();
+	//memcpy(mapIBO, mesh.GetQuads().)
 }
 
 void ChunkRenderComponent::Draw(ChunkRenderer* renderer)

@@ -173,6 +173,7 @@ GenerateFiles.bat</Command>
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="Source\Core\Log\Logger.cpp" />
+    <ClCompile Include="Source\Core\Utils\Benchmark.cpp" />
     <ClCompile Include="Source\Engine\Engine.cpp" />
     <ClCompile Include="Source\Engine\Input\InputMapping.cpp" />
     <ClCompile Include="Source\Engine\Input\UserInput.cpp" />
@@ -182,6 +183,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\Graphics\Geometry\BlockGeometry.cpp" />
     <ClCompile Include="Source\Graphics\Geometry\ChunkMesh.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\IndexBufferObject.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleVbo.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\ShaderBufferObject.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\VertexArrayObject.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\VertexBufferLayout.cpp" />
@@ -227,6 +229,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\Core\Development.h" />
     <ClInclude Include="Source\Core\EngineTypes.h" />
     <ClInclude Include="Source\Core\Log\Logger.h" />
+    <ClInclude Include="Source\Core\Utils\Benchmark.h" />
     <ClInclude Include="Source\Engine\Engine.h" />
     <ClInclude Include="Source\Engine\EngineCore.h" />
     <ClInclude Include="Source\Engine\Input\InputMapping.h" />
@@ -237,6 +240,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\Graphics\Geometry\BlockGeometry.h" />
     <ClInclude Include="Source\Graphics\Geometry\ChunkMesh.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\IndexBufferObject.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleVbo.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\ShaderBufferObject.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\VertexArrayObject.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\VertexBufferLayout.h" />

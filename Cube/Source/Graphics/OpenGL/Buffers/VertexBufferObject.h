@@ -12,7 +12,12 @@ private:
 
 public:
 
+
+	/* Create a completely empty VBO. */
+	VertexBufferObject();
+
 	VertexBufferObject(const void* data, uint32 size);
+
 
 	~VertexBufferObject();
 
@@ -21,6 +26,11 @@ public:
 		return new VertexBufferObject(data, sizeof(T) * num);
 	}
 
+	/* Create a VBO that has a persistently mapped buffer. https://www.khronos.org/opengl/wiki/Buffer_Object#Persistent_mapping
+	@param capacity: Number of bytes that are required.
+	@param mappedBufferOut: A double pointer that will copy the mapped buffer pointer into. Cannot be nullptr. */
+	static VertexBufferObject* CreatePersistentMappedVbo(uint32 capacity, void** mappedBufferOut);
+
 	void Bind();
 
 	void Unbind();
@@ -28,7 +38,13 @@ public:
 	bool IsBound() const;
 
 	uint32 GetId() const { return id; }
+
+	static uint32 GetBoundId() { return boundId; }
+
+	/* Binds and then returns a write only pointer to the map buffer.
+	Call UnmapBuffer(); at some point */
+	void* GetMapBuffer();
+
+	static void UnmapBuffer();
 	
 };
-
-

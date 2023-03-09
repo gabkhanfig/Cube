@@ -10,7 +10,9 @@ layout (location = 1) in vec3 v_in_normal;
 layout (location = 2) in vec2 v_in_texCoord;
 layout (location = 3) in vec3 v_in_color;
 
+// Camera Model-View-Projection matrix.
 uniform mat4 u_cameraMVP;
+// Position offset of the chunk that is being drawn.
 uniform vec3 u_chunkOffset;
 
 // Interpolated fragment shader coordinates it's position in the triangle.

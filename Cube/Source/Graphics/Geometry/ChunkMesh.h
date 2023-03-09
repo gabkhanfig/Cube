@@ -23,4 +23,9 @@ public:
 
 	void AddQuad(const BlockQuad& quad);
 
+	darray<BlockQuad>& GetQuads() { return quads; }
+
+	/* Pointer needs to be manually freed/deleted. */
+	static uint32* CreateQuadIndices(const uint32 quadCount);
+
 };

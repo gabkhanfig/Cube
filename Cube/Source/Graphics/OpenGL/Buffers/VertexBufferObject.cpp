@@ -3,6 +3,12 @@
 
 uint32 VertexBufferObject::boundId = 0;
 
+VertexBufferObject::VertexBufferObject()
+{
+	glGenBuffers(1, &id);
+	Bind();
+}
+
 VertexBufferObject::VertexBufferObject(const void* data, uint32 size)
 {
 	glGenBuffers(1, &id);
@@ -17,6 +23,16 @@ VertexBufferObject::~VertexBufferObject()
 		boundId = 0;
 	}
 	glDeleteBuffers(1, &id);
+}
+
+VertexBufferObject* VertexBufferObject::CreatePersistentMappedVbo(uint32 capacity, void** mappedBufferOut)
+{
+	checkm(mappedBufferOut, "mappedBufferOut must be a non-null pointer to copy the mapped buffer to");
+	VertexBufferObject* vbo = new VertexBufferObject();
+	GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+	glBufferStorage(GL_ARRAY_BUFFER, capacity, 0, mapFlags);
+	*mappedBufferOut = glMapBufferRange(GL_ARRAY_BUFFER, 0, capacity, mapFlags);
+	return vbo;
 }
 
 void VertexBufferObject::Bind()
@@ -35,6 +51,17 @@ void VertexBufferObject::Unbind()
 bool VertexBufferObject::IsBound() const
 {
 	return id == boundId;
+}
+
+void* VertexBufferObject::GetMapBuffer()
+{
+	Bind();
+	return glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+}
+
+void VertexBufferObject::UnmapBuffer()
+{
+	glUnmapBuffer(GL_ARRAY_BUFFER);
 }
 
 

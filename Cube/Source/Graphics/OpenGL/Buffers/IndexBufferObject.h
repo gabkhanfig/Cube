@@ -14,9 +14,15 @@ private:
 
 public:
 
+	/* Creates an empty IBO. */
+	IndexBufferObject();
+
 	IndexBufferObject(const uint32* indices, uint32 num);
 
 	~IndexBufferObject();
+
+	/* Due to index buffer objects always using uint32s, the capacity is not the bytes, rather the amount of ints. */
+	static IndexBufferObject* CreatePersistentMappedIbo(uint32 capacity, uint32** mappedBufferOut);
 
 	void Bind();
 
@@ -25,6 +31,15 @@ public:
 	bool IsBound() const;
 
 	uint32 GetIndexCount() const { return indexCount; }
+
+	void SetIndexCount(uint32 newIndexCount) { indexCount = newIndexCount; }
+
+	/* Binds and then returns a write only pointer to the map buffer.
+	Call UnmapBuffer(); at some point */
+	uint32* GetMapBuffer();
+
+	static void UnmapBuffer();
+
 
 
 };

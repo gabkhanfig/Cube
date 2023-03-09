@@ -36,6 +36,10 @@ public:
 
 	void MeshToOpenGLObjects();
 
+	void CopyToSameVBO();
+
 	void Draw(ChunkRenderer* renderer);
+
+
 
 };
