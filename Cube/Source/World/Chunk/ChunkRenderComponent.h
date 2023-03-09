@@ -2,6 +2,7 @@
 
 #include "ChunkSSBO.h"
 #include "../../Graphics/Geometry/ChunkMesh.h"
+#include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleVbo.h"
 
 class VertexBufferObject;
 class IndexBufferObject;
@@ -21,11 +22,15 @@ private:
 
 	IndexBufferObject* ibo;
 
+	
+
 	Chunk* owner;
 
 	bool meshWasRecreated;
 
 public:
+
+	PersistentMappedTripleVbo<BlockQuad>* vbos;
 
 	ChunkRenderComponent(Chunk* _owner);
 

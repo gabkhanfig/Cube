@@ -11,7 +11,7 @@ void Benchmark::End(TimeUnit timeUnit)
 {
 	std::chrono::steady_clock::time_point end = std::chrono::high_resolution_clock::now();
 	auto duration = end - start;
-	std::cout << "[Benchmark]: " << name;
+	std::cout << "[Benchmark]: " << name << ' ';
 	switch (timeUnit) {
 	case TimeUnit::ns:
 		std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count() << "ns\n";
@@ -26,5 +26,4 @@ void Benchmark::End(TimeUnit timeUnit)
 		std::cout << std::chrono::duration_cast<std::chrono::seconds>(duration).count() << "s\n";
 		break;
 	}
-	std::cout << "Time to create VBO:  " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << "us\n";
 }

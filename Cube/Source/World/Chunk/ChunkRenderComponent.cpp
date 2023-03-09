@@ -9,16 +9,20 @@
 
 ChunkRenderComponent::ChunkRenderComponent(Chunk* _owner)
 	: owner(_owner), vbo(nullptr), ibo(nullptr), meshWasRecreated(false)
-{}
+{
+	vbos = new PersistentMappedTripleVbo<BlockQuad>();
+}
 
 ChunkRenderComponent::~ChunkRenderComponent()
 {
 	if (vbo) delete vbo;
 	if (ibo) delete ibo;
+	if (vbos) delete vbos;
 }
 
 void ChunkRenderComponent::RecreateMesh()
 {
+	//Benchmark remesh = Benchmark("Recreate chunk mesh");
 	mesh.Empty();
 	const IBlock* air = BlockFactory::GetAirBlock();
 
@@ -31,6 +35,16 @@ void ChunkRenderComponent::RecreateMesh()
 		const WorldPosition worldPos = WorldPosition::FromChunkAndBlock(owner->GetPosition(), blockPos);
 		block->AddBlockMeshToChunkMesh(mesh, owner, worldPos);
 	}
+	//remesh.End(Benchmark::TimeUnit::us);
+
+	const uint32 quadCount = mesh.GetQuads().Size();
+	if (vbos->GetCapacity() == 0) {
+		vbos->Reserve(quadCount);
+	}
+	PersistentMappedTripleVbo<BlockQuad>::MappedVbo mapped = vbos->GetModifyMappedVbo();
+	//Benchmark b = Benchmark("modify persistent map");
+	memcpy(mapped.data, mesh.GetQuads().Data(), quadCount * sizeof(BlockQuad));
+	//b.End(Benchmark::TimeUnit::us);
 }
 
 void ChunkRenderComponent::MeshToOpenGLObjects()
@@ -52,19 +66,21 @@ void ChunkRenderComponent::MeshToOpenGLObjects()
 
 void ChunkRenderComponent::CopyToSameVBO()
 {
-	void* mapVBO = vbo->GetMapBuffer();
-	memcpy(mapVBO, mesh.GetQuads().Data(), mesh.GetQuads().Size() * sizeof(BlockQuad));
-	VertexBufferObject::UnmapBuffer();
+	//void* mapVBO = vbo->GetMapBuffer();
+	//memcpy(mapVBO, mesh.GetQuads().Data(), mesh.GetQuads().Size() * sizeof(BlockQuad));
+	//VertexBufferObject::UnmapBuffer();
 	//uint32* mapIBO = ibo->GetMapBuffer();
 	//memcpy(mapIBO, mesh.GetQuads().)
 }
 
 void ChunkRenderComponent::Draw(ChunkRenderer* renderer)
 {
-	if (meshWasRecreated) {
-		MeshToOpenGLObjects();
-	}
+	//if (meshWasRecreated) {
+	//	MeshToOpenGLObjects();
+	//}
 
-	renderer->BindBlocksVertexBufferObject(vbo);
-	renderer->Draw(vbo, ibo);
+	VertexBufferObject* drawVbo = vbos->GetBoundMappedVbo().vbo;
+	renderer->BindBlocksVertexBufferObject(drawVbo);
+	renderer->Draw(drawVbo, ibo);
+	vbos->SwapNextBuffer();
 }

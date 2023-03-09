@@ -21,6 +21,16 @@ public:
 		: capacity(0), boundId(-1), modifyId(-1)
 	{}
 
+	~PersistentMappedTripleVbo()
+	{
+		for (int i = 0; i < 3; i++) {
+			VertexBufferObject* vbo = vbos[i].vbo;
+			if (vbo) {
+				delete vbo;
+			}
+		}
+	}
+
 	/* Amount of T elements to reserve. */
 	void Reserve(uint32 count) {
 		capacity = count * sizeof(T);
@@ -29,7 +39,8 @@ public:
 
 		for (int i = 0; i < 3; i++) {
 			MappedVbo mapped;
-			mapped.vbo = VertexBufferObject::CreatePersistentMappedVbo(capacity, &mapped.data);
+			mapped.vbo = VertexBufferObject::CreatePersistentMappedVbo(capacity, (void**) & mapped.data);
+			vbos[i] = mapped;
 		}
 	}
 

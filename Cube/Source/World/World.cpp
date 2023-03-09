@@ -64,6 +64,6 @@ void World::DrawWorld()
 
   testChunk->RecreateMesh();
   //testChunk->GetRenderComponent()->MeshToOpenGLObjects();
-  testChunk->GetRenderComponent()->CopyToSameVBO();
+  //testChunk->GetRenderComponent()->CopyToSameVBO();
   testChunk->Draw(chunkRenderer);
 }
