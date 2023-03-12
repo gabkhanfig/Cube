@@ -33,7 +33,8 @@ void ChunkRenderComponent::RecreateMesh()
 		if (block == air) continue;
 
 		const WorldPosition worldPos = WorldPosition::FromChunkAndBlock(owner->GetPosition(), blockPos);
-		block->AddBlockMeshToChunkMesh(mesh, owner, worldPos);
+		const glm::vec3 vertexOffset{ blockPos.X(), blockPos.Y(), blockPos.Z() };
+		block->AddBlockMeshToChunkMesh(mesh, owner, worldPos, vertexOffset);
 	}
 	//remesh.End(Benchmark::TimeUnit::us);
 

@@ -1,11 +1,12 @@
 #include "IBlock.h"
+#include "../World.h"
 
-void IBlock::AddBlockMeshToChunkMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position) const
+void IBlock::AddBlockMeshToChunkMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const
 {
   EMeshType meshType = GetMeshType();
   switch (meshType) {
   case EMeshType::cube:
-    CreateCubeMesh(chunkMesh, chunk, position);
+    CreateCubeMesh(chunkMesh, chunk, position, vertexOffset);
   case EMeshType::custom:
     //return BlockMesh();
     break;
@@ -16,7 +17,7 @@ void IBlock::OnDestroy()
 {
 }
 
-void IBlock::CreateCubeMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position) const
+void IBlock::CreateCubeMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const
 {
   const EBlockTexture allSideTexture = GetAllSidedTexture();
   const glm::vec2 texCoords[4] = {
@@ -95,27 +96,67 @@ void IBlock::CreateCubeMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition po
     c010, c110, c111, c011
   };
 
-  const BlockPosition blockPos = position.ToBlockPosition();
-  const glm::vec3 shift = glm::vec3(blockPos.X(), blockPos.Y(), blockPos.Z());
+#define DRAW_FACE_IF_NULL_ADJACENT true
 
-  BlockQuad bottom = BlockQuad(bottomPos, texCoords, bottomCols);
-  bottom.Shift(shift);
-  BlockQuad north = BlockQuad(northPos, texCoords, northCols);
-  north.Shift(shift);
-  BlockQuad east = BlockQuad(eastPos, texCoords, eastCols);
-  east.Shift(shift);
-  BlockQuad south = BlockQuad(southPos, texCoords, southCols);
-  south.Shift(shift);
-  BlockQuad west = BlockQuad(westPos, texCoords, westCols);
-  west.Shift(shift);
-  BlockQuad top = BlockQuad(topPos, texCoords, topCols);
-  top.Shift(shift);
+  IBlock* adjacentBottom = GetWorld()->GetBlock(WorldPosition(position.x, position.y - 1, position.z));
+  //IBlock* adjacentBottom = GetBlockNextTo(position, BlockFacing::Direction::Dir_Down);
+  IBlock* adjacentNorth = GetWorld()->GetBlock(WorldPosition(position.x, position.y, position.z - 1));
+  IBlock* adjacentEast = GetWorld()->GetBlock(WorldPosition(position.x - 1, position.y, position.z));
+  IBlock* adjacentSouth = GetWorld()->GetBlock(WorldPosition(position.x, position.y, position.z + 1));
+  IBlock* adjacentWest = GetWorld()->GetBlock(WorldPosition(position.x + 1, position.y, position.z));
+  IBlock* adjacentTop = GetWorld()->GetBlock(WorldPosition(position.x, position.y + 1, position.z));
 
-  chunkMesh.AddQuad(bottom);
-  chunkMesh.AddQuad(north);
-  chunkMesh.AddQuad(east);
-  chunkMesh.AddQuad(south);
-  chunkMesh.AddQuad(west);
-  chunkMesh.AddQuad(top);
+#if DRAW_FACE_IF_NULL_ADJACENT == true
+  const bool canDrawBottom = adjacentBottom == nullptr;
+  const bool canDrawNorth = adjacentNorth == nullptr;
+  const bool canDrawEast = adjacentEast == nullptr;
+  const bool canDrawSouth = adjacentSouth == nullptr;
+  const bool canDrawWest = adjacentWest == nullptr;
+  const bool canDrawTop = adjacentTop == nullptr;
+#else
+
+#endif
+
+  if (canDrawBottom) {
+    BlockQuad bottom = BlockQuad(bottomPos, texCoords, bottomCols);
+    bottom.Shift(vertexOffset);
+    chunkMesh.AddQuad(bottom);
+  }
+  if (canDrawNorth) {
+    BlockQuad north = BlockQuad(northPos, texCoords, northCols);
+    north.Shift(vertexOffset);
+    chunkMesh.AddQuad(north);
+  }
+  if (canDrawEast) {
+    BlockQuad east = BlockQuad(eastPos, texCoords, eastCols);
+    east.Shift(vertexOffset);
+    chunkMesh.AddQuad(east);
+  }
+  if (canDrawSouth) {
+    BlockQuad south = BlockQuad(southPos, texCoords, southCols);
+    south.Shift(vertexOffset);
+    chunkMesh.AddQuad(south);
+  }
+  if (canDrawWest) {
+    BlockQuad west = BlockQuad(westPos, texCoords, westCols);
+    west.Shift(vertexOffset);
+    chunkMesh.AddQuad(west);
+  }
+  if (canDrawTop) {
+    BlockQuad top = BlockQuad(topPos, texCoords, topCols);
+    top.Shift(vertexOffset);
+    chunkMesh.AddQuad(top);
+  }
+  
+}
+
+IBlock* IBlock::GetBlockNextTo(WorldPosition thisPosition, BlockFacing facing) const
+{
+  WorldPosition otherPosition = (
+    thisPosition.x,// - bool(facing.facing == BlockFacing::Direction::Dir_East) + bool(facing.facing == BlockFacing::Direction::Dir_West),
+    thisPosition.y - 10,//bool(facing.facing == BlockFacing::Direction::Dir_Down) + bool(facing.facing == BlockFacing::Direction::Dir_Up),
+    thisPosition.z// - bool(facing.facing == BlockFacing::Direction::Dir_North) + bool(facing.facing == BlockFacing::Direction::Dir_South)
+    );
+  return GetWorld()->GetBlock(otherPosition);
 }
 

@@ -56,6 +56,12 @@ public:
 		custom
 	};
 
+	enum class EMeshTransparency {
+		solid, 
+		transparent,
+		custom
+	};
+
 	static bool ShouldCreateNewBlock() { return false; }
 
 	/* Get the name of a block. See BLOCK_BODY() macro. */
@@ -69,7 +75,7 @@ public:
 	
 	/* Create the mesh data for the block, adding to the Chunk's mesh. Must be multithreading safe. 
 	DEVELOPER NOTE!!!! Block's are responsible for their own mesh offsets within the chunk. */
-	virtual void AddBlockMeshToChunkMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position) const;
+	virtual void AddBlockMeshToChunkMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const;
 
 protected:
 
@@ -82,8 +88,8 @@ protected:
 	/**/
 	virtual EMeshType GetMeshType() const = 0;
 
-	void CreateCubeMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position) const;
+	void CreateCubeMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const;
 
-	
+	IBlock* GetBlockNextTo(WorldPosition thisPosition, BlockFacing facing) const;
 
 };

@@ -7,20 +7,24 @@ struct BlockFacing
 {
 public:
 
-	enum class Direction : uint8
+	enum Direction : uint8
 	{
-		Down = 0b1,
-		Up = 0b10,
-		North = 0b100,
-		South = 0b1000,
-		East = 0b10000,
-		West = 0b100000
+		Dir_Down = 0b1,
+		Dir_Up = 0b10,
+		Dir_North = 0b100,
+		Dir_South = 0b1000,
+		Dir_East = 0b10000,
+		Dir_West = 0b100000
 	};
 
 	uint8 facing;
 
-	constexpr BlockFacing(uint8 _facing = uint8(BlockFacing::Direction::Down))
+	constexpr BlockFacing(uint8 _facing = uint8(BlockFacing::Direction::Dir_Down))
 		: facing(_facing)
+	{}
+
+	constexpr BlockFacing(BlockFacing::Direction direction)
+		: facing(direction)
 	{}
 
 };
@@ -53,7 +57,7 @@ struct BlockPosition
 		index = x + (z * CHUNK_LENGTH) + (y * CHUNK_LENGTH * CHUNK_LENGTH);
 	}
 
-	constexpr BlockPosition(int _index) {
+	constexpr BlockPosition(int _index = 0) {
 		checkm(_index >= 0 && _index < CHUNK_SIZE, "BlockPosition index mumst be between 0 and CHUNK_SIZE");
 		index = _index;
 	}

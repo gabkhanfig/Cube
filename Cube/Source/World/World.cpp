@@ -22,6 +22,7 @@
 
 World* GetWorld()
 {
+  checkm(GetGameInstance()->GetWorld() != nullptr, "The world cannot be nullptr");
   return GetGameInstance()->GetWorld();
 }
 
@@ -29,12 +30,57 @@ World::World()
 {
   player = new Player();
   chunkRenderer = new ChunkRenderer();
-  //chunkShader = new Shader(generated_Chunk_vert, generated_Chunk_frag);
-  //chunkVAO = new VertexArrayObject();
-  //chunkVAO->SetFormatLayout(BlockQuad::GetQuadsVertexBufferLayout());
+}
 
+void World::Tick(float deltaTime)
+{
+  DrawWorld();
+}
+
+Chunk* World::GetChunk(ChunkPosition position) const
+{
+  auto found = chunks.find(position);
+  if (found == chunks.end()) {
+    return nullptr;
+  }
+  return found->second;
+}
+
+IBlock* World::GetBlock(WorldPosition position) const
+{
+  ChunkPosition cpos;
+  BlockPosition bpos;
+  position.ToChunkAndBlock(&cpos, &bpos);
+  const Chunk* chunk = GetChunk(cpos);
+  if (chunk == nullptr) return nullptr;
+  return chunk->ChunkBlockAt(bpos)->GetBlock();
+}
+
+ChunkBlock* World::ChunkBlockAt(WorldPosition position) const
+{
+  ChunkPosition cpos;
+  BlockPosition bpos;
+  position.ToChunkAndBlock(&cpos, &bpos);
+  const Chunk* chunk = GetChunk(cpos);
+  if (chunk == nullptr) return nullptr; 
+  return chunk->ChunkBlockAt(bpos);
+}
+
+bool World::DoesChunkExist(ChunkPosition position) const
+{
+  return chunks.contains(position);
+}
+
+bool World::DoesBlockExist(WorldPosition position) const
+{
+  return chunks.contains(position.ToChunkPosition());
+}
+
+void World::TestFirstChunkRemesh()
+{
   auto start1 = std::chrono::high_resolution_clock::now();
   testChunk = new Chunk();
+  chunks.insert({ testChunk->GetPosition(), testChunk });
   testChunk->FillChunkWithBlock("stoneBlock");
   auto stop1 = std::chrono::high_resolution_clock::now();
   auto start2 = std::chrono::high_resolution_clock::now();
@@ -46,7 +92,6 @@ World::World()
   std::cout << "Time to create chunk mesh on the CPU:  " << std::chrono::duration_cast<std::chrono::milliseconds>(stop2 - start2).count() << "ms\n";
   std::cout << "Time to send to chunk mesh to the GPU: " << std::chrono::duration_cast<std::chrono::milliseconds>(stop3 - start3).count() << "ms\n";
 
-  //BlockTextureAtlas::Bind(0);
 }
 
 void World::DrawWorld()

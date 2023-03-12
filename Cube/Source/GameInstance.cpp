@@ -14,16 +14,14 @@ void _CubeGameInstanceTickCallback(float deltaTime)
 
 void GameInstance::Init()
 {
-  BlockClass* stone = BlockFactory::GetBlockClass("stoneBlock");
-  std::cout << stone->GetName().ToString() << std::endl;
-
   BlockTextureAtlas::CreateBlockTextureAtlasObject();
   CubeInput::SetupGameCallbacks();
   world = new World();
+  world->TestFirstChunkRemesh();
 }
 
 void GameInstance::Tick(float deltaTime)
 {
   CubeInput::Tick(deltaTime);
-  world->DrawWorld();
+  world->Tick(deltaTime);
 }

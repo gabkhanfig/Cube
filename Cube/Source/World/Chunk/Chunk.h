@@ -35,13 +35,10 @@ public:
 	void Tick(float deltaTime);
 
 	/* Get a block at a specific relative position within the chunk. */
-	IBlock* GetBlock(BlockPosition position);
+	IBlock* GetBlock(BlockPosition position) const;
 
 	/* Get a reference to a block and it's chunk data at a specific relative position within the chunk. */
-	ChunkBlock& ChunkBlockAt(BlockPosition position);
-
-	/* Get a const reference to a block and it's chunk data at a specific relative position within the chunk. */
-	const ChunkBlock& ChunkBlockAt(BlockPosition position) const;
+	ChunkBlock* ChunkBlockAt(BlockPosition position) const;
 
 	/* Fill the chunk with a specified block. */
 	void FillChunkWithBlock(GlobalString blockName);
