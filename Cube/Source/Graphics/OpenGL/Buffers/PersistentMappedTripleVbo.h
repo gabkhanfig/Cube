@@ -23,16 +23,12 @@ public:
 
 	~PersistentMappedTripleVbo()
 	{
-		for (int i = 0; i < 3; i++) {
-			VertexBufferObject* vbo = vbos[i].vbo;
-			if (vbo) {
-				delete vbo;
-			}
-		}
+		DeleteVbos();
 	}
 
-	/* Amount of T elements to reserve. */
+	/* Delete (if they exist) the previous vbos and create 3 new vbos that have a maximum T capacity of count. */
 	void Reserve(uint32 count) {
+		DeleteVbos();
 		capacity = count * sizeof(T);
 		boundId = 0;
 		modifyId = 2;
@@ -44,6 +40,7 @@ public:
 		}
 	}
 
+	/* Swap the bound and modify buffers to the next one, round robin. */
 	void SwapNextBuffer() {
 		boundId = (boundId + 1) % 3;
 		modifyId = (modifyId + 1) % 3;
@@ -55,6 +52,19 @@ public:
 	MappedVbo& GetModifyMappedVbo() { return vbos[modifyId]; }
 	/* Get the amount of T elements that the vbo(s) can hold. */
 	uint32 GetCapacity() const { return capacity; }
+
+private:
+
+	/* Delete the pre-existing vbos if they are non-null. */
+	void DeleteVbos() {
+		for (int i = 0; i < 3; i++) {
+			VertexBufferObject* vbo = vbos[i].vbo;
+			if (vbo) {
+				delete vbo;
+			}
+			vbos[i] = MappedVbo();
+		}
+	}
 
 private:
 

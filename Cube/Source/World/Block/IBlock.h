@@ -90,6 +90,6 @@ protected:
 
 	void CreateCubeMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const;
 
-	IBlock* GetBlockNextTo(WorldPosition thisPosition, BlockFacing facing) const;
+	//IBlock* GetBlockNextTo(WorldPosition thisPosition, BlockFacing facing) const;
 
 };

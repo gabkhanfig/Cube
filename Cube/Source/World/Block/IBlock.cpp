@@ -150,13 +150,13 @@ void IBlock::CreateCubeMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition po
   
 }
 
-IBlock* IBlock::GetBlockNextTo(WorldPosition thisPosition, BlockFacing facing) const
-{
-  WorldPosition otherPosition = (
-    thisPosition.x,// - bool(facing.facing == BlockFacing::Direction::Dir_East) + bool(facing.facing == BlockFacing::Direction::Dir_West),
-    thisPosition.y - 10,//bool(facing.facing == BlockFacing::Direction::Dir_Down) + bool(facing.facing == BlockFacing::Direction::Dir_Up),
-    thisPosition.z// - bool(facing.facing == BlockFacing::Direction::Dir_North) + bool(facing.facing == BlockFacing::Direction::Dir_South)
-    );
-  return GetWorld()->GetBlock(otherPosition);
-}
+//IBlock* IBlock::GetBlockNextTo(WorldPosition thisPosition, BlockFacing facing) const
+//{
+//  WorldPosition otherPosition = (
+//    thisPosition.x,// - bool(facing.facing == BlockFacing::Direction::Dir_East) + bool(facing.facing == BlockFacing::Direction::Dir_West),
+//    thisPosition.y - 10,//bool(facing.facing == BlockFacing::Direction::Dir_Down) + bool(facing.facing == BlockFacing::Direction::Dir_Up),
+//    thisPosition.z// - bool(facing.facing == BlockFacing::Direction::Dir_North) + bool(facing.facing == BlockFacing::Direction::Dir_South)
+//    );
+//  return GetWorld()->GetBlock(otherPosition);
+//}
 
