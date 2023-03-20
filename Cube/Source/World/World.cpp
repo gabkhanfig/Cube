@@ -78,19 +78,12 @@ bool World::DoesBlockExist(WorldPosition position) const
 
 void World::TestFirstChunkRemesh()
 {
-  auto start1 = std::chrono::high_resolution_clock::now();
   testChunk = new Chunk();
   chunks.insert({ testChunk->GetPosition(), testChunk });
   testChunk->FillChunkWithBlock("stoneBlock");
-  auto stop1 = std::chrono::high_resolution_clock::now();
-  auto start2 = std::chrono::high_resolution_clock::now();
+  Benchmark cpuRemesh = Benchmark("CPU chunk remesh");
   testChunk->RecreateMesh();
-  auto stop2 = std::chrono::high_resolution_clock::now();
-  auto start3 = std::chrono::high_resolution_clock::now();
-  testChunk->GetRenderComponent()->MeshToOpenGLObjects();
-  auto stop3 = std::chrono::high_resolution_clock::now();
-  std::cout << "Time to create chunk mesh on the CPU:  " << std::chrono::duration_cast<std::chrono::milliseconds>(stop2 - start2).count() << "ms\n";
-  std::cout << "Time to send to chunk mesh to the GPU: " << std::chrono::duration_cast<std::chrono::milliseconds>(stop3 - start3).count() << "ms\n";
+  cpuRemesh.End(Benchmark::TimeUnit::us);
 
 }
 

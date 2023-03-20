@@ -7,81 +7,75 @@
 #include "../Render/ChunkRenderer.h"
 #include <chrono>
 
-ChunkRenderComponent::ChunkRenderComponent(Chunk* _owner)
-	: owner(_owner), vbo(nullptr), ibo(nullptr), meshWasRecreated(false)
+ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
+	: chunk(chunkOwner), meshWasRecreated(false)
 {
 	vbos = new PersistentMappedTripleVbo<BlockQuad>();
+	ibos = new PersistentMappedTripleIbo();
 }
 
 ChunkRenderComponent::~ChunkRenderComponent()
 {
-	if (vbo) delete vbo;
-	if (ibo) delete ibo;
 	if (vbos) delete vbos;
+	if (ibos) delete ibos;
 }
 
 void ChunkRenderComponent::RecreateMesh()
 {
-	//Benchmark remesh = Benchmark("Recreate chunk mesh");
+	meshWasRecreated = true;
 	mesh.Empty();
 	const IBlock* air = BlockFactory::GetAirBlock();
 
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		const BlockPosition blockPos = i;
-		const IBlock* block = owner->GetBlock(blockPos);
+		const IBlock* block = chunk->GetBlock(blockPos);
 
 		if (block == air) continue;
 
-		const WorldPosition worldPos = WorldPosition::FromChunkAndBlock(owner->GetPosition(), blockPos);
+		const WorldPosition worldPos = WorldPosition::FromChunkAndBlock(chunk->GetPosition(), blockPos);
 		const glm::vec3 vertexOffset{ blockPos.X(), blockPos.Y(), blockPos.Z() };
-		block->AddBlockMeshToChunkMesh(mesh, owner, worldPos, vertexOffset);
+		block->AddBlockMeshToChunkMesh(mesh, chunk, worldPos, vertexOffset);
 	}
-	//remesh.End(Benchmark::TimeUnit::us);
 
-	const uint32 quadCount = mesh.GetQuads().Size();
-	if (vbos->GetCapacity() == 0) {
-		vbos->Reserve(quadCount);
+	/* Reserve more vram capacity than required to reduce the necessity for recreating the buffers. */
+	const uint32 quadCount = mesh.GetQuadCount();
+	const uint32 indexCount = mesh.GetIndexCount();
+	if (vbos->GetCapacity() < quadCount) {
+		vbos->Reserve(quadCount * 2); 
 	}
-	PersistentMappedTripleVbo<BlockQuad>::MappedVbo mapped = vbos->GetModifyMappedVbo();
-	//Benchmark b = Benchmark("modify persistent map");
-	memcpy(mapped.data, mesh.GetQuads().Data(), quadCount * sizeof(BlockQuad));
-	//b.End(Benchmark::TimeUnit::us);
+	if (ibos->GetCapacity() < indexCount) {
+		ibos->Reserve(indexCount * 2);
+	}
+	PersistentMappedTripleVbo<BlockQuad>::MappedVbo mappedVbo = vbos->GetModifyMappedVbo();
+	PersistentMappedTripleIbo::MappedIbo mappedIbo = ibos->GetModifyMappedIbo();
+	mesh.CopyQuadsToBuffer(mappedVbo.data);
+	mesh.CopyIndicesToBuffer(mappedIbo.data);
+	mappedIbo.ibo->SetIndexCount(mesh.GetIndexCount());
 }
 
-void ChunkRenderComponent::MeshToOpenGLObjects()
-{
-	if (vbo) delete vbo;
-	if (ibo) delete ibo;
-
-	auto start1 = std::chrono::high_resolution_clock::now();
-	vbo = mesh.MakeVertexBufferObject();
-	auto stop1 = std::chrono::high_resolution_clock::now();
-	auto start2 = std::chrono::high_resolution_clock::now();
-	ibo = mesh.MakeIndexBufferObject();
-	auto stop2 = std::chrono::high_resolution_clock::now();
-	std::cout << "Time to create VBO:  " << std::chrono::duration_cast<std::chrono::microseconds>(stop1 - start1).count() << "us\n";
-	std::cout << "Time to create IBO: " << std::chrono::duration_cast<std::chrono::microseconds>(stop2 - start2).count() << "us\n";
-	mesh.Empty();
-	meshWasRecreated = false;
-}
-
-void ChunkRenderComponent::CopyToSameVBO()
-{
-	//void* mapVBO = vbo->GetMapBuffer();
-	//memcpy(mapVBO, mesh.GetQuads().Data(), mesh.GetQuads().Size() * sizeof(BlockQuad));
-	//VertexBufferObject::UnmapBuffer();
-	//uint32* mapIBO = ibo->GetMapBuffer();
-	//memcpy(mapIBO, mesh.GetQuads().)
-}
+//void ChunkRenderComponent::MeshToOpenGLObjects()
+//{
+//	if (vbo) delete vbo;
+//	if (ibo) delete ibo;
+//
+//	vbo = mesh.MakeVertexBufferObject();
+//	ibo = mesh.MakeIndexBufferObject();
+//	mesh.Empty();
+//	meshWasRecreated = false;
+//}
 
 void ChunkRenderComponent::Draw(ChunkRenderer* renderer)
 {
-	//if (meshWasRecreated) {
-	//	MeshToOpenGLObjects();
-	//}
-
 	VertexBufferObject* drawVbo = vbos->GetBoundMappedVbo().vbo;
+	IndexBufferObject* drawIbo = ibos->GetBoundMappedIbo().ibo;
 	renderer->BindBlocksVertexBufferObject(drawVbo);
-	renderer->Draw(drawVbo, ibo);
+	renderer->Draw(drawVbo, drawIbo);
+
+	if (!meshWasRecreated) { 
+		return;
+	}
+	// Updated chunk information will be drawn next frame.
 	vbos->SwapNextBuffer();
+	ibos->SwapNextBuffer();
+	meshWasRecreated = false;
 }

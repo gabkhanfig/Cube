@@ -16,8 +16,6 @@ VertexBufferObject* ChunkMesh::MakeVertexBufferObject() const
 
 IndexBufferObject* ChunkMesh::MakeIndexBufferObject() const
 {
-  auto start1 = std::chrono::high_resolution_clock::now();
-  
   constexpr uint32 indexCount = 6;
 
   // I have no idea why, but indices in this order just works for linear coordinates for quads. Do not change. 2, 3, 0, 1, 2, 0
@@ -39,16 +37,35 @@ IndexBufferObject* ChunkMesh::MakeIndexBufferObject() const
     quadIndices[index++] = (indices[4] + (i * 4));
     quadIndices[index++] = (indices[5] + (i * 4));
   }
-  auto stop1 = std::chrono::high_resolution_clock::now();
-  auto start2 = std::chrono::high_resolution_clock::now();
   IndexBufferObject* ibo = new IndexBufferObject(quadIndices, indexCount * quadCount);
-  auto stop2 = std::chrono::high_resolution_clock::now();
-
-  std::cout << "Time to create IBO data:  " << std::chrono::duration_cast<std::chrono::microseconds>(stop1 - start1).count() << "us\n";
-  std::cout << "Time to create GPU IBO: " << std::chrono::duration_cast<std::chrono::microseconds>(stop2 - start2).count() << "us\n";
 
   delete[] quadIndices;
   return ibo;
+}
+
+void ChunkMesh::CopyQuadsToBuffer(BlockQuad* buffer) const
+{
+  checkm(buffer, "VBO BlockQuad buffer cannot be null");
+  memcpy(buffer, quads.Data(), quads.Size() * sizeof(BlockQuad));
+}
+
+void ChunkMesh::CopyIndicesToBuffer(uint32* buffer) const
+{
+  checkm(buffer, "IBO quad indices buffer cannot be null");
+  // I have no idea why, but indices in this order just works for linear coordinates for quads. Do not change. 2, 3, 0, 1, 2, 0
+  constexpr uint32 indices[6] = {
+    2, 3, 0, 1, 2, 0
+  };
+  const uint32 quadCount = quads.Size();
+  uint32 index = 0; 
+  for (uint32 i = 0; i < quadCount; i++) {
+    buffer[index++] = (indices[0] + (i * 4));
+    buffer[index++] = (indices[1] + (i * 4));
+    buffer[index++] = (indices[2] + (i * 4));
+    buffer[index++] = (indices[3] + (i * 4));
+    buffer[index++] = (indices[4] + (i * 4));
+    buffer[index++] = (indices[5] + (i * 4));
+  }
 }
 
 void ChunkMesh::Empty()

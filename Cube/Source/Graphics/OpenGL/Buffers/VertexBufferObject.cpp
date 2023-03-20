@@ -31,7 +31,9 @@ VertexBufferObject* VertexBufferObject::CreatePersistentMappedVbo(uint32 capacit
 	VertexBufferObject* vbo = new VertexBufferObject();
 	GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
 	glBufferStorage(GL_ARRAY_BUFFER, capacity, 0, mapFlags);
-	*mappedBufferOut = glMapBufferRange(GL_ARRAY_BUFFER, 0, capacity, mapFlags);
+	void* bufferRange = glMapBufferRange(GL_ARRAY_BUFFER, 0, capacity, mapFlags);
+	checkm(bufferRange, "glMapBufferRange returned nullptr");
+	*mappedBufferOut = bufferRange;
 	return vbo;
 }
 

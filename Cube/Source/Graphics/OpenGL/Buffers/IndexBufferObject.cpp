@@ -34,9 +34,11 @@ IndexBufferObject* IndexBufferObject::CreatePersistentMappedIbo(uint32 capacity,
 	checkm(mappedBufferOut, "mappedBufferOut must be a non-null pointer to copy the mapped buffer to");
 	IndexBufferObject* ibo = new IndexBufferObject();
 	GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
-	glBufferStorage(GL_ARRAY_BUFFER, capacity * sizeof(uint32), 0, mapFlags);
-	*mappedBufferOut = (uint32*)glMapBufferRange(GL_ARRAY_BUFFER, 0, capacity * sizeof(uint32), mapFlags);
-	return nullptr;
+	glBufferStorage(GL_ELEMENT_ARRAY_BUFFER, capacity * sizeof(uint32), 0, mapFlags);
+	uint32* bufferRange = (uint32*)glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, capacity * sizeof(uint32), mapFlags);
+	checkm(bufferRange, "glMapBufferRange returned nullptr");
+	*mappedBufferOut = bufferRange;
+	return ibo;
 }
 
 void IndexBufferObject::Bind()
