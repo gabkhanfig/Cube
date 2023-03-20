@@ -18,7 +18,7 @@ public:
 	};
 
 	PersistentMappedTripleVbo()
-		: capacity(0), boundId(-1), modifyId(-1)
+		: capacity(0), boundId(0), modifyId(2)
 	{}
 
 	~PersistentMappedTripleVbo()
@@ -29,13 +29,13 @@ public:
 	/* Delete (if they exist) the previous vbos and create 3 new vbos that have a maximum T capacity of count. */
 	void Reserve(uint32 count) {
 		DeleteVbos();
-		capacity = count * sizeof(T);
+		capacity = count;
 		boundId = 0;
 		modifyId = 2;
 
 		for (int i = 0; i < 3; i++) {
 			MappedVbo mapped;
-			mapped.vbo = VertexBufferObject::CreatePersistentMappedVbo(capacity, (void**) & mapped.data);
+			mapped.vbo = VertexBufferObject::CreatePersistentMappedVbo(capacity * sizeof(T), (void**)&mapped.data);
 			vbos[i] = mapped;
 		}
 	}

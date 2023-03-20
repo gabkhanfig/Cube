@@ -28,6 +28,16 @@ public:
 
 private:
 
+	/* Attempts to copy the mesh's BlockQuad data to the modifiable vertex buffer object. 
+	If the vbo does not have enough space, meshRequiresLargeVbo will be set to true. */
+	void TryCopyMeshQuadsToVbo();
+
+	/* Attempts to copy the mesh's index data to the modifiable index buffer object.
+	If the ibo does not have enough space, meshRequiresLargeIbo will be set to true. */
+	void TryCopyMeshIndicesToIbo();
+
+private:
+
 	/* The chunk that owns this render component, and who's mesh will be created and drawn from. */
 	Chunk* chunk;
 
@@ -47,4 +57,9 @@ private:
 	/* Tracks if the mesh for this chunk was recreated, if so, meaning a buffer swap / potential buffer reallocation will be required. Gets reset to false after every draw. */
 	bool meshWasRecreated;
 
+	/* Tracks if the recreated mesh requires a vbo capacity greater than the current vbo(s) can contain. Can only be true if meshWasRecreated is also true. */
+	bool meshRequiresLargerVbo;
+
+	/* Tracks if the recreated mesh requires an ibo capacity greater than the current ibo(s) can contain. Can only be true if meshWasRecreated is also true. */
+	bool meshRequiresLargerIbo;
 };

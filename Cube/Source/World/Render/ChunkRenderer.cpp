@@ -24,7 +24,7 @@ glm::vec3 ChunkRenderer::GetOffsetForChunkDraw(const Chunk* chunk) const
   const glm::dvec3 playerLocation = GetWorld()->GetPlayer()->GetLocation();
   const ChunkPosition _cPos = chunk->GetPosition();
   const glm::dvec3 chunkLocation = glm::dvec3(_cPos.x * CHUNK_LENGTH, _cPos.y * CHUNK_LENGTH, _cPos.z * CHUNK_LENGTH);
-  return glm::vec3(chunkLocation.x - playerLocation.x, chunkLocation.y - playerLocation.y, chunkLocation.z - playerLocation.z);
+  return glm::vec3(double(chunkLocation.x - playerLocation.x), double(chunkLocation.y - playerLocation.y), double(chunkLocation.z - playerLocation.z));
 }
 
 void ChunkRenderer::SetShaderChunkOffset(glm::vec3 chunkOffset)

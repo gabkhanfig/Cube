@@ -8,7 +8,7 @@
 #include <chrono>
 
 ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
-	: chunk(chunkOwner), meshWasRecreated(false)
+	: chunk(chunkOwner), meshWasRecreated(false), meshRequiresLargerVbo(false), meshRequiresLargerIbo(false)
 {
 	vbos = new PersistentMappedTripleVbo<BlockQuad>();
 	ibos = new PersistentMappedTripleIbo();
@@ -37,20 +37,8 @@ void ChunkRenderComponent::RecreateMesh()
 		block->AddBlockMeshToChunkMesh(mesh, chunk, worldPos, vertexOffset);
 	}
 
-	/* Reserve more vram capacity than required to reduce the necessity for recreating the buffers. */
-	const uint32 quadCount = mesh.GetQuadCount();
-	const uint32 indexCount = mesh.GetIndexCount();
-	if (vbos->GetCapacity() < quadCount) {
-		vbos->Reserve(quadCount * 2); 
-	}
-	if (ibos->GetCapacity() < indexCount) {
-		ibos->Reserve(indexCount * 2);
-	}
-	PersistentMappedTripleVbo<BlockQuad>::MappedVbo mappedVbo = vbos->GetModifyMappedVbo();
-	PersistentMappedTripleIbo::MappedIbo mappedIbo = ibos->GetModifyMappedIbo();
-	mesh.CopyQuadsToBuffer(mappedVbo.data);
-	mesh.CopyIndicesToBuffer(mappedIbo.data);
-	mappedIbo.ibo->SetIndexCount(mesh.GetIndexCount());
+	TryCopyMeshQuadsToVbo();
+	TryCopyMeshIndicesToIbo();
 }
 
 //void ChunkRenderComponent::MeshToOpenGLObjects()
@@ -68,14 +56,65 @@ void ChunkRenderComponent::Draw(ChunkRenderer* renderer)
 {
 	VertexBufferObject* drawVbo = vbos->GetBoundMappedVbo().vbo;
 	IndexBufferObject* drawIbo = ibos->GetBoundMappedIbo().ibo;
-	renderer->BindBlocksVertexBufferObject(drawVbo);
-	renderer->Draw(drawVbo, drawIbo);
 
-	if (!meshWasRecreated) { 
+	/* It's possible that the mesh will not have been sent to the gpu yet, or it's using buffers that haven't been swapped yet.
+	As a result, the valid buffers can be set for the next frame, and drawing this chunk during this frame can be skipped. */
+	if (drawVbo && drawIbo) { 
+		renderer->BindBlocksVertexBufferObject(drawVbo);
+		renderer->SetShaderChunkOffset(renderer->GetOffsetForChunkDraw(chunk));
+		renderer->Draw(drawVbo, drawIbo);
+	}
+	
+	if (!meshWasRecreated) {
 		return;
 	}
+
+	// Reserve extra capacity to be able to be able to easily handle changes to the mesh
+	#define CAPACITY_INCREASE_FACTOR 1.5
+
+	if (meshRequiresLargerVbo) {
+		meshRequiresLargerVbo = false;
+		vbos->Reserve((mesh.GetQuadCount() * CAPACITY_INCREASE_FACTOR));
+		TryCopyMeshQuadsToVbo();
+		checkm(!meshRequiresLargerVbo, "Mesh VBO should have enough capacity");
+	}
+
+	if (meshRequiresLargerIbo) {
+		meshRequiresLargerIbo = false;
+		ibos->Reserve((mesh.GetIndexCount() * CAPACITY_INCREASE_FACTOR));
+		TryCopyMeshIndicesToIbo();
+		checkm(!meshRequiresLargerIbo, "Mesh IBO should have enough capacity");
+	}
+	
 	// Updated chunk information will be drawn next frame.
 	vbos->SwapNextBuffer();
 	ibos->SwapNextBuffer();
 	meshWasRecreated = false;
+}
+
+void ChunkRenderComponent::TryCopyMeshQuadsToVbo()
+{
+	const uint32 quadCount = mesh.GetQuadCount();
+	if (vbos->GetCapacity() < quadCount) {
+		meshRequiresLargerVbo = true;
+		return;
+	}
+
+	PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo = vbos->GetModifyMappedVbo();
+	mesh.CopyQuadsToBuffer(mappedVbo.data);
+	mappedVbo.size = quadCount;
+}
+
+void ChunkRenderComponent::TryCopyMeshIndicesToIbo()
+{
+	const uint32 indexCount = mesh.GetIndexCount();
+	if (ibos->GetCapacity() < indexCount) {
+		meshRequiresLargerIbo = true;
+		return;
+	}
+
+	PersistentMappedTripleIbo::MappedIbo& mappedIbo = ibos->GetModifyMappedIbo();
+	mesh.CopyIndicesToBuffer(mappedIbo.data);
+	mappedIbo.ibo->SetIndexCount(mesh.GetIndexCount());
+	mappedIbo.size = indexCount;
 }

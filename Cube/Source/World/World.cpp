@@ -94,14 +94,8 @@ void World::DrawWorld()
 
   //chunkShader->Bind();
   Camera* cam = Camera::GetActiveCamera();
-  //chunkShader->SetUniformMat4f("u_cameraMVP", cam->GetMvpMatrix());
-  //chunkShader->SetUniform3f("u_chunkOffset", { 10, 10, 10 });
   chunkRenderer->SetShaderCameraMVP(cam->GetMvpMatrix());
-  //chunkRenderer->SetShaderChunkOffset({ 10, 10, 10 });
-  chunkRenderer->SetShaderChunkOffset(chunkRenderer->GetOffsetForChunkDraw(testChunk));
 
   testChunk->RecreateMesh();
-  //testChunk->GetRenderComponent()->MeshToOpenGLObjects();
-  //testChunk->GetRenderComponent()->CopyToSameVBO();
   testChunk->Draw(chunkRenderer);
 }
