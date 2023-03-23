@@ -16,7 +16,7 @@ void TickEngine::RunEngineLoop()
 		deltaTime = current - previous;
 		UpdateFps();
 
-		callback(deltaTime);
+		callback(std::min(deltaTime, MAX_DELTA_TIME));
 
 		/* Swap front and back buffers */
 		engine->GetWindow()->SwapBuffers();
@@ -34,10 +34,9 @@ void TickEngine::UpdateFps()
 	fpsCounter += deltaTime;
 	if (fpsCounter >= fpsCounterUpdateInterval) {
 		fpsCounter = 0; 
-		std::string windowWithFps;
-		windowWithFps += engine->GetWindow()->GetTitle().CStr();
+		string windowWithFps = engine->GetWindow()->GetTitle();
 		windowWithFps += "   FPS: ";
-		windowWithFps += std::to_string((int)CurrentFps());
+		windowWithFps += string::FromInt(CurrentFps());
 		glfwSetWindowTitle(engine->GetWindow()->GetGlfwWindow(), windowWithFps.c_str());
 	}
 //#endif

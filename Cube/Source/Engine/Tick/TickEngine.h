@@ -7,6 +7,9 @@ class TickEngine
 
 private:
 
+	/* The maximum allowed delta time, to ensure all physics events occur properly */
+	static constexpr float MAX_DELTA_TIME = 0.25;
+
 	_TickCallback callback;
 
 	double previous;

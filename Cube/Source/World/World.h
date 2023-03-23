@@ -36,6 +36,7 @@ public:
 	/* Basically just checks if the chunk that the world position would be in exists. If it does, the block will always exist. */
 	bool DoesBlockExist(WorldPosition position) const;
 
+	/**/
 	void TestFirstChunkRemesh();
 
 private:
