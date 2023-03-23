@@ -27,7 +27,7 @@ private:
 public:
 
 	/* Fills the entire chunk with air. */
-	Chunk();
+	Chunk(ChunkPosition inPosition);
 
 	~Chunk();
 

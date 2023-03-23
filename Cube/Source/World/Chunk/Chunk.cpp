@@ -3,12 +3,11 @@
 #include "../Block/IBlock.h"
 #include "ChunkRenderComponent.h"
 
-Chunk::Chunk()
-	: wasChunkModifiedThisTick(false)
+Chunk::Chunk(ChunkPosition inPosition)
+	: wasChunkModifiedThisTick(false), position(inPosition)
 {
 	blocks = new ChunkBlock[CHUNK_SIZE];
 	renderComponent = new ChunkRenderComponent(this);
-	position = ChunkPosition(0, 0, 0);
 }
 
 Chunk::~Chunk()

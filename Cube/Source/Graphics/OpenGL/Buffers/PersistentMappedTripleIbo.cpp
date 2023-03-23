@@ -1,7 +1,7 @@
 #include "PersistentMappedTripleIbo.h"
 
 PersistentMappedTripleIbo::PersistentMappedTripleIbo()
-	: capacity(0), boundId(0), modifyId(2)
+	: capacity(0), boundId(0), modifyId(1)
 {}
 
 PersistentMappedTripleIbo::~PersistentMappedTripleIbo()
@@ -14,7 +14,7 @@ void PersistentMappedTripleIbo::Reserve(uint32 count)
 	DeleteIbos();
 	capacity = count;
 	boundId = 0;
-	modifyId = 2;
+	modifyId = 1;
 
 	for (int i = 0; i < 3; i++) {
 		MappedIbo mapped;

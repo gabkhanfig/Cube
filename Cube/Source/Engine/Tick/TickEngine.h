@@ -26,9 +26,10 @@ public:
 
 	void RunEngineLoop();
 
-	forceinline float GetDeltaTime() const { return deltaTime; }
+	/* Get the delta time, or if it's above the maximum allowed by the engine due to lag, you'll get the maximum instead. */
+	forceinline float GetDeltaTime() const { return std::min(deltaTime, MAX_DELTA_TIME); }
 
-	forceinline float CurrentFps() const { return 1 / deltaTime; }
+	forceinline float CurrentFps() const { return 1.f / deltaTime; }
 
 private:
 

@@ -18,7 +18,7 @@ public:
 	};
 
 	PersistentMappedTripleVbo()
-		: capacity(0), boundId(0), modifyId(2)
+		: capacity(0), boundId(0), modifyId(1)
 	{}
 
 	~PersistentMappedTripleVbo()
@@ -31,7 +31,7 @@ public:
 		DeleteVbos();
 		capacity = count;
 		boundId = 0;
-		modifyId = 2;
+		modifyId = 1;
 
 		for (int i = 0; i < 3; i++) {
 			MappedVbo mapped;

@@ -49,6 +49,8 @@ private:
 
 	Chunk* testChunk;
 
+	Chunk* testChunk2;
+
 	ChunkRenderer* chunkRenderer;
 
 	HashMap<ChunkPosition, Chunk*> chunks;

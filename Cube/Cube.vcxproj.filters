@@ -297,6 +297,9 @@
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIbo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\World\Raycast.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\16x16wood.png">
