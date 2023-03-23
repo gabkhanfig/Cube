@@ -77,6 +77,8 @@ public:
 	DEVELOPER NOTE!!!! Block's are responsible for their own mesh offsets within the chunk. */
 	virtual void AddBlockMeshToChunkMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const;
 
+	virtual EMeshTransparency GetFaceTransparency(BlockFacing face) const { return EMeshTransparency::solid; }
+
 protected:
 
 	/* Event to be fired upon this block getting destroyed (or not actually destroyed if its using the global block object). */
@@ -90,6 +92,6 @@ protected:
 
 	void CreateCubeMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const;
 
-	//IBlock* GetBlockNextTo(WorldPosition thisPosition, BlockFacing facing) const;
+	bool CanDrawFace(WorldPosition position, BlockFacing face) const;
 
 };

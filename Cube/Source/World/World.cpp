@@ -81,14 +81,19 @@ void World::TestFirstChunkRemesh()
   testChunk = new Chunk({0, 0, 0});
   chunks.insert({ testChunk->GetPosition(), testChunk });
   testChunk->FillChunkWithBlock("stoneBlock");
-  Benchmark cpuRemesh = Benchmark("CPU chunk remesh");
-  testChunk->RecreateMesh();
-  cpuRemesh.End(Benchmark::TimeUnit::us);
 
   testChunk2 = new Chunk({ 0, 1, 0 });
   chunks.insert({ testChunk2->GetPosition(), testChunk2 });
   testChunk2->FillChunkWithBlock("stoneBlock");
+
+  Benchmark cpuRemesh = Benchmark("CPU chunk remesh");
+  testChunk->RecreateMesh();
+  cpuRemesh.End(Benchmark::TimeUnit::us);
+
   testChunk2->RecreateMesh();
+
+  BlockFacing b = BlockFacing::Direction::Dir_Down;
+  std::cout << int(b.Opposite().facing) << std::endl;
 }
 
 void World::DrawWorld()

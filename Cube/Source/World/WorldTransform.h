@@ -27,6 +27,19 @@ public:
 		: facing(direction)
 	{}
 
+	/* Get the opposite direction of this facing. */
+	constexpr BlockFacing Opposite() const {
+		const uint8 allDirectionBits = 0b00111111;
+		uint8 oppositeBits = 0;
+		if (facing & Dir_Down) oppositeBits |= Dir_Up;
+		if (facing & Dir_Up) oppositeBits |= Dir_Down;
+		if (facing & Dir_North) oppositeBits |= Dir_South;
+		if (facing & Dir_South) oppositeBits |= Dir_North;
+		if (facing & Dir_East) oppositeBits |= Dir_West;
+		if (facing & Dir_West) oppositeBits |= Dir_East;
+		return BlockFacing(oppositeBits);
+	}
+
 };
 
 struct ChunkPosition
@@ -79,6 +92,13 @@ struct BlockPosition
 	}
 };
 
+/* World position of a block. 
+Down = -y,
+Up = +y,
+North = -z,
+South = +z,
+East = -x,
+West = +x */
 struct WorldPosition
 {
 	int x;
@@ -134,6 +154,25 @@ struct WorldPosition
 		return x == other.x && y == other.y && z == other.z;
 	}
 
+	constexpr WorldPosition Adjacent(BlockFacing adjacentDirection) const {
+		switch (adjacentDirection.facing) {
+		case BlockFacing::Direction::Dir_Down:
+			return WorldPosition(x, y - 1, z);
+		case BlockFacing::Direction::Dir_Up:
+			return WorldPosition(x, y + 1, z);
+		case BlockFacing::Direction::Dir_North:
+			return WorldPosition(x, y, z - 1);
+		case BlockFacing::Direction::Dir_South:
+			return WorldPosition(x, y, z + 1);
+		case BlockFacing::Direction::Dir_East:
+			return WorldPosition(x - 1, y, z);
+		case BlockFacing::Direction::Dir_West:
+			return WorldPosition(x + 1, y, z);
+		default:
+			checkm(false, "Unreachable code block. BlockFacing face must only be one of the 6 cube faces");
+			return *this;
+		}
+	}
 };
 
 namespace std

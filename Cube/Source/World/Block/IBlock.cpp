@@ -96,53 +96,32 @@ void IBlock::CreateCubeMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition po
     c010, c110, c111, c011
   };
 
-#define DRAW_FACE_IF_NULL_ADJACENT true
-
-  IBlock* adjacentBottom = GetWorld()->GetBlock(WorldPosition(position.x, position.y - 1, position.z));
-  //IBlock* adjacentBottom = GetBlockNextTo(position, BlockFacing::Direction::Dir_Down);
-  IBlock* adjacentNorth = GetWorld()->GetBlock(WorldPosition(position.x, position.y, position.z - 1));
-  IBlock* adjacentEast = GetWorld()->GetBlock(WorldPosition(position.x - 1, position.y, position.z));
-  IBlock* adjacentSouth = GetWorld()->GetBlock(WorldPosition(position.x, position.y, position.z + 1));
-  IBlock* adjacentWest = GetWorld()->GetBlock(WorldPosition(position.x + 1, position.y, position.z));
-  IBlock* adjacentTop = GetWorld()->GetBlock(WorldPosition(position.x, position.y + 1, position.z));
-
-#if DRAW_FACE_IF_NULL_ADJACENT == true
-  const bool canDrawBottom = adjacentBottom == nullptr;
-  const bool canDrawNorth = adjacentNorth == nullptr;
-  const bool canDrawEast = adjacentEast == nullptr;
-  const bool canDrawSouth = adjacentSouth == nullptr;
-  const bool canDrawWest = adjacentWest == nullptr;
-  const bool canDrawTop = adjacentTop == nullptr;
-#else
-
-#endif
-
-  if (canDrawBottom) {
+  if (CanDrawFace(position, BlockFacing::Dir_Down)) {
     BlockQuad bottom = BlockQuad(bottomPos, texCoords, bottomCols);
     bottom.Shift(vertexOffset);
     chunkMesh.AddQuad(bottom);
   }
-  if (canDrawNorth) {
+  if (CanDrawFace(position, BlockFacing::Dir_North)) {
     BlockQuad north = BlockQuad(northPos, texCoords, northCols);
     north.Shift(vertexOffset);
     chunkMesh.AddQuad(north);
   }
-  if (canDrawEast) {
+  if (CanDrawFace(position, BlockFacing::Dir_East)) {
     BlockQuad east = BlockQuad(eastPos, texCoords, eastCols);
     east.Shift(vertexOffset);
     chunkMesh.AddQuad(east);
   }
-  if (canDrawSouth) {
+  if (CanDrawFace(position, BlockFacing::Dir_South)) {
     BlockQuad south = BlockQuad(southPos, texCoords, southCols);
     south.Shift(vertexOffset);
     chunkMesh.AddQuad(south);
   }
-  if (canDrawWest) {
+  if (CanDrawFace(position, BlockFacing::Dir_West)) {
     BlockQuad west = BlockQuad(westPos, texCoords, westCols);
     west.Shift(vertexOffset);
     chunkMesh.AddQuad(west);
   }
-  if (canDrawTop) {
+  if (CanDrawFace(position, BlockFacing::Dir_Up)) {
     BlockQuad top = BlockQuad(topPos, texCoords, topCols);
     top.Shift(vertexOffset);
     chunkMesh.AddQuad(top);
@@ -150,13 +129,29 @@ void IBlock::CreateCubeMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition po
   
 }
 
-//IBlock* IBlock::GetBlockNextTo(WorldPosition thisPosition, BlockFacing facing) const
-//{
-//  WorldPosition otherPosition = (
-//    thisPosition.x,// - bool(facing.facing == BlockFacing::Direction::Dir_East) + bool(facing.facing == BlockFacing::Direction::Dir_West),
-//    thisPosition.y - 10,//bool(facing.facing == BlockFacing::Direction::Dir_Down) + bool(facing.facing == BlockFacing::Direction::Dir_Up),
-//    thisPosition.z// - bool(facing.facing == BlockFacing::Direction::Dir_North) + bool(facing.facing == BlockFacing::Direction::Dir_South)
-//    );
-//  return GetWorld()->GetBlock(otherPosition);
-//}
+bool IBlock::CanDrawFace(WorldPosition position, BlockFacing face) const
+{
+  const WorldPosition adjacentPosition = position.Adjacent(face);
+
+#define DRAW_FACE_IF_NULL_ADJACENT true
+
+  const IBlock* adjacentBlock = GetWorld()->GetBlock(adjacentPosition);
+  if (adjacentBlock == nullptr) {
+    return DRAW_FACE_IF_NULL_ADJACENT;
+  }
+  
+  const IBlock::EMeshTransparency adjacentTransparency = adjacentBlock->GetFaceTransparency(face.Opposite());
+  switch (adjacentTransparency) {
+  case IBlock::EMeshTransparency::solid:
+    return false;
+  case IBlock::EMeshTransparency::transparent:
+    return true;
+  case IBlock::EMeshTransparency::custom:
+    // TODO: Implement something for custom mesh transparency idk
+    return true;
+  default:
+    checkm(false, "Unreachable code block. Mesh transparency type must be one of the enum class values within IBlcok::EMeshTransparency");
+    return true;
+  }
+}
 
