@@ -96,23 +96,6 @@ bool World::DoesBlockExist(WorldPosition position) const
   return chunks.contains(position.ToChunkPosition());
 }
 
-void World::TestFirstChunkRemesh()
-{
-  testChunk = new Chunk({0, 0, 0});
-  chunks.insert({ testChunk->GetPosition(), testChunk });
-  testChunk->FillChunkWithBlock("stoneBlock");
-
-  testChunk2 = new Chunk({ 0, 1, 0 });
-  chunks.insert({ testChunk2->GetPosition(), testChunk2 });
-  testChunk2->FillChunkWithBlock("stoneBlock");
-
-  Benchmark cpuRemesh = Benchmark("CPU chunk remesh");
-  testChunk->RecreateMesh();
-  cpuRemesh.End(Benchmark::TimeUnit::us);
-
-  testChunk2->RecreateMesh();
-}
-
 void World::DrawWorld()
 {
   /* Render here */
@@ -122,11 +105,6 @@ void World::DrawWorld()
   Camera* cam = Camera::GetActiveCamera();
   chunkRenderer->SetShaderCameraMVP(cam->GetMvpMatrix());
 
-  //testChunk->RecreateMesh();
-  //testChunk->Draw(chunkRenderer);
-
-  //testChunk2->RecreateMesh();
-  //testChunk2->Draw(chunkRenderer);
   for (auto& chunkPair : chunks) {
     Chunk* chunk = chunkPair.second;
     chunk->Draw(chunkRenderer);
