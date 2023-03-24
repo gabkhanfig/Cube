@@ -17,6 +17,8 @@ public:
 
 	World();
 
+	void BeginWorld();
+
 	void Tick(float deltaTime);
 
 	Player* GetPlayer() const { return player; }

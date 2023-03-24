@@ -13,9 +13,9 @@ uniform mat4 u_cameraMVP;
 uniform vec3 u_chunkOffset;
 
 // Interpolated fragment shader coordinates it's position in the triangle.
-out vec3 v_out_fragCoord;
+//out vec3 v_out_fragCoord;
 // Normalized coordinates of this vertex.
-out flat vec3 v_out_vertCoord;
+//out flat vec3 v_out_vertCoord;
 // Interpolated texture coordinates.
 out vec2 v_out_texCoord;
 // Interpolated color coordinates.
@@ -32,8 +32,8 @@ void main()
 {
 	gl_Position = u_cameraMVP * vec4(v_in_position + u_chunkOffset, 1.0);
 
-	v_out_vertCoord = v_in_position;
-	v_out_fragCoord = v_in_position;
+	//v_out_vertCoord = v_in_position;
+	//v_out_fragCoord = v_in_position;
 	v_out_texCoord = v_in_texCoord;
 	v_out_color = v_in_color;
 }

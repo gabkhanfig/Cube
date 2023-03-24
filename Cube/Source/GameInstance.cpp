@@ -17,7 +17,7 @@ void GameInstance::Init()
   BlockTextureAtlas::CreateBlockTextureAtlasObject();
   CubeInput::SetupGameCallbacks();
   world = new World();
-  world->TestFirstChunkRemesh();
+  world->BeginWorld();
 }
 
 void GameInstance::Tick(float deltaTime)

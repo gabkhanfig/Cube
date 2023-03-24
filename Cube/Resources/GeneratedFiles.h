@@ -16,9 +16,9 @@ uniform mat4 u_cameraMVP;
 uniform vec3 u_chunkOffset;
 
 // Interpolated fragment shader coordinates it's position in the triangle.
-out vec3 v_out_fragCoord;
+//out vec3 v_out_fragCoord;
 // Normalized coordinates of this vertex.
-out flat vec3 v_out_vertCoord;
+//out flat vec3 v_out_vertCoord;
 // Interpolated texture coordinates.
 out vec2 v_out_texCoord;
 // Interpolated color coordinates.
@@ -35,8 +35,8 @@ void main()
 {
 	gl_Position = u_cameraMVP * vec4(v_in_position + u_chunkOffset, 1.0);
 
-	v_out_vertCoord = v_in_position;
-	v_out_fragCoord = v_in_position;
+	//v_out_vertCoord = v_in_position;
+	//v_out_fragCoord = v_in_position;
 	v_out_texCoord = v_in_texCoord;
 	v_out_color = v_in_color;
 })";
@@ -47,9 +47,9 @@ constexpr const char* generated_Chunk_frag = R"(#version 460 core
 // https://sight.pages.ircad.fr/sight-doc/CodingStyle/src/07-glsl-style.html
 
 // Interpolated fragment shader coordinates it's position in the triangle.
-in vec3 v_out_fragCoord;
+//in vec3 v_out_fragCoord;
 // Normalized coordinates of this vertex.
-in flat vec3 v_out_vertCoord;
+//in flat vec3 v_out_vertCoord;
 // Interpolated texture coordinates.
 in vec2 v_out_texCoord;
 // Interpolated color coordinates.
@@ -65,12 +65,6 @@ out vec4 FragColor;
 #define BYTE_2_BITMASK 0xFF00
 #define BYTE_3_BITMASK 0xFF0000
 #define BYTE_4_BITMASK 0xFF000000
-
-
-layout(std430, binding = 4) buffer TestBuffer
-{
-	vec4 ssbocol;
-};
 
 /*  */
 struct CubicColors
@@ -115,15 +109,15 @@ vec3 GetRelativeSubvoxelPosition(const vec3 _fragCoord, const vec3 _vertCoord)
 
 void main()
 {
-	CubicColors cols;
-	cols.c000 = vec3(0, 0, 0); // non-z
-	cols.c100 = vec3(1, 0, 0); // non-z
-	cols.c010 = vec3(0, 1, 0); // non-z
-	cols.c110 = vec3(1, 1, 0); // non-z
-	cols.c001 = vec3(0, 0, 1);
-	cols.c101 = vec3(1, 0, 1);
-	cols.c011 = vec3(0, 1, 1);
-	cols.c111 = vec3(1, 1, 1);
+	//CubicColors cols;
+	//cols.c000 = vec3(0, 0, 0); // non-z
+	//cols.c100 = vec3(1, 0, 0); // non-z
+	//cols.c010 = vec3(0, 1, 0); // non-z
+	//cols.c110 = vec3(1, 1, 0); // non-z
+	//cols.c001 = vec3(0, 0, 1);
+	//cols.c101 = vec3(1, 0, 1);
+	//cols.c011 = vec3(0, 1, 1);
+	//cols.c111 = vec3(1, 1, 1);
 
 	//const vec3 subvoxel = GetRelativeSubvoxelPosition(v_out_fragCoord, v_out_vertCoord);
 	//const vec3 outColor = TrilinearInterpolationColor(subvoxel, cols);

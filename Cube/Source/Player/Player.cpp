@@ -11,9 +11,6 @@ Player::Player()
 
 	camera->Bind();
 	inputComponent->Enable();
-
-	//std::function<void(Player*, InputMods)> f = std::bind(&Player::TestEmpty, this, std::placeholders::_1);
-	//inputComponent->BindPlayerAction("Space", EInputAction::Press, );
 }
 
 void Player::Tick(float DeltaTime)

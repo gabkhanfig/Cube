@@ -5,8 +5,8 @@
 #include "Window/Window.h"
 #include "Tick/TickEngine.h"
 
-constexpr int windowWidth = 800;
-constexpr int windowHeight = 800;
+constexpr int windowWidth = 960;
+constexpr int windowHeight = 540;
 
 Engine* engine;
 

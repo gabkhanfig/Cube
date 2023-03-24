@@ -95,7 +95,13 @@ void ChunkRenderComponent::Draw(ChunkRenderer* renderer)
 void ChunkRenderComponent::TryCopyMeshQuadsToVbo()
 {
 	const uint32 quadCount = mesh.GetQuadCount();
-	if (vbos->GetCapacity() < quadCount) {
+	const uint32 vboCapacity = vbos->GetCapacity();
+
+	if (vboCapacity == 0 && quadCount == 0) {
+		return;
+	}
+
+	if (vboCapacity < quadCount) {
 		meshRequiresLargerVbo = true;
 		return;
 	}
@@ -108,7 +114,13 @@ void ChunkRenderComponent::TryCopyMeshQuadsToVbo()
 void ChunkRenderComponent::TryCopyMeshIndicesToIbo()
 {
 	const uint32 indexCount = mesh.GetIndexCount();
-	if (ibos->GetCapacity() < indexCount) {
+	const uint32 iboCapacity = ibos->GetCapacity();
+
+	if (iboCapacity == 0 && indexCount == 0) {
+		return;
+	}
+
+	if (iboCapacity < indexCount) {
 		meshRequiresLargerIbo = true;
 		return;
 	}

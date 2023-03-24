@@ -32,6 +32,26 @@ World::World()
   chunkRenderer = new ChunkRenderer();
 }
 
+void World::BeginWorld()
+{
+  const int c = 3;
+  for (int x = 0; x < c; x++) {
+    for (int y = 0; y < c; y++) {
+      for (int z = 0; z < c; z++) {
+        Chunk* chunk = new Chunk({ x, y, z });
+        chunk->FillChunkWithBlock("stoneBlock");
+        chunks.insert({ chunk->GetPosition(), chunk });
+      }
+    }
+  }
+  int b = 1;
+  for (auto& chunkPair : chunks) {
+    Chunk* chunk = chunkPair.second;
+    chunk->RecreateMesh();
+  }
+  int a = 1;
+}
+
 void World::Tick(float deltaTime)
 {
   DrawWorld();
@@ -91,9 +111,6 @@ void World::TestFirstChunkRemesh()
   cpuRemesh.End(Benchmark::TimeUnit::us);
 
   testChunk2->RecreateMesh();
-
-  BlockFacing b = BlockFacing::Direction::Dir_Down;
-  std::cout << int(b.Opposite().facing) << std::endl;
 }
 
 void World::DrawWorld()
@@ -106,8 +123,12 @@ void World::DrawWorld()
   chunkRenderer->SetShaderCameraMVP(cam->GetMvpMatrix());
 
   //testChunk->RecreateMesh();
-  testChunk->Draw(chunkRenderer);
+  //testChunk->Draw(chunkRenderer);
 
   //testChunk2->RecreateMesh();
-  testChunk2->Draw(chunkRenderer);
+  //testChunk2->Draw(chunkRenderer);
+  for (auto& chunkPair : chunks) {
+    Chunk* chunk = chunkPair.second;
+    chunk->Draw(chunkRenderer);
+  }
 }
