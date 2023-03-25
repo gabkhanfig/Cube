@@ -13,6 +13,7 @@
 #include "../../Graphics/OpenGL/Render/Renderer.h"
 
 ChunkRenderer::ChunkRenderer()
+  : chunkOffsetUniform("u_chunkOffset"), cameraMvpUniform("u_cameraMVP")
 {
   shader = new Shader(generated_Chunk_vert, generated_Chunk_frag);
   vao = new VertexArrayObject();
@@ -29,12 +30,12 @@ glm::vec3 ChunkRenderer::GetOffsetForChunkDraw(const Chunk* chunk) const
 
 void ChunkRenderer::SetShaderChunkOffset(glm::vec3 chunkOffset)
 {
-  shader->SetUniform3f("u_chunkOffset", chunkOffset);
+  shader->SetUniform3f(chunkOffsetUniform, chunkOffset);
 }
 
 void ChunkRenderer::SetShaderCameraMVP(const glm::mat4& cameraMVP)
 {
-  shader->SetUniformMat4f("u_cameraMVP", cameraMVP);
+  shader->SetUniformMat4f(cameraMvpUniform, cameraMVP);
 }
 
 void ChunkRenderer::Bind()

@@ -33,6 +33,8 @@ public:
 	/* Get the amount of uint32 elements that the ibos can hold. */
 	uint32 GetCapacity() const { return capacity; }
 
+	IndexBufferObject* GetBoundIbo() const { return ibos[boundId].ibo; }
+
 private:
 
 	/* Delete the pre-existing ibos if they are non-null. */

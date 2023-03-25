@@ -8,7 +8,7 @@
 #include <chrono>
 
 ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
-	: chunk(chunkOwner), meshWasRecreated(false), meshRequiresLargerVbo(false), meshRequiresLargerIbo(false)
+	: chunk(chunkOwner), meshWasRecreated(false), meshRequiresLargerVbo(false), meshRequiresLargerIbo(false), isMeshEmpty(false)
 {
 	vbos = new PersistentMappedTripleVbo<BlockQuad>();
 	ibos = new PersistentMappedTripleIbo();
@@ -37,6 +37,8 @@ void ChunkRenderComponent::RecreateMesh()
 		block->AddBlockMeshToChunkMesh(mesh, chunk, worldPos, vertexOffset);
 	}
 
+	isMeshEmpty = mesh.GetQuadCount() == 0;
+
 	TryCopyMeshQuadsToVbo();
 	TryCopyMeshIndicesToIbo();
 }
@@ -54,8 +56,10 @@ void ChunkRenderComponent::RecreateMesh()
 
 void ChunkRenderComponent::Draw(ChunkRenderer* renderer)
 {
-	VertexBufferObject* drawVbo = vbos->GetBoundMappedVbo().vbo;
-	IndexBufferObject* drawIbo = ibos->GetBoundMappedIbo().ibo;
+	if (isMeshEmpty) return;
+
+	VertexBufferObject* drawVbo = vbos->GetBoundVbo();
+	IndexBufferObject* drawIbo = ibos->GetBoundIbo();
 
 	/* It's possible that the mesh will not have been sent to the gpu yet, or it's using buffers that haven't been swapped yet.
 	As a result, the valid buffers can be set for the next frame, and drawing this chunk during this frame can be skipped. */
@@ -65,7 +69,7 @@ void ChunkRenderComponent::Draw(ChunkRenderer* renderer)
 		renderer->Draw(drawVbo, drawIbo);
 	}
 	
-	if (!meshWasRecreated) {
+	if (!meshWasRecreated) { // This takes a lot of cpu cycles. Investigate an alternative solution.
 		return;
 	}
 

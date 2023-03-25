@@ -32,4 +32,8 @@ private:
 
 	VertexArrayObject* vao;
 
+	const GlobalString cameraMvpUniform;
+
+	const GlobalString chunkOffsetUniform;
+
 };

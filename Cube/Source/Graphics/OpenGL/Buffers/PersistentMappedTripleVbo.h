@@ -53,6 +53,8 @@ public:
 	/* Get the amount of T elements that the vbo(s) can hold. */
 	uint32 GetCapacity() const { return capacity; }
 
+	VertexBufferObject* GetBoundVbo() const { return vbos[boundId].vbo; }
+
 private:
 
 	/* Delete the pre-existing vbos if they are non-null. */

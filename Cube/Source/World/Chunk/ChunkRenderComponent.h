@@ -54,6 +54,9 @@ private:
 	This means upon remeshing, the existing IBOs will likely be able to be used. If not, the IBOs will need to be reallocated. */
 	PersistentMappedTripleIbo* ibos;
 
+	/**/
+	bool isMeshEmpty;
+
 	/* Tracks if the mesh for this chunk was recreated, if so, meaning a buffer swap / potential buffer reallocation will be required. Gets reset to false after every draw. */
 	bool meshWasRecreated;
 

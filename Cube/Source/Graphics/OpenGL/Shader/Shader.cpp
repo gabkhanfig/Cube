@@ -71,8 +71,9 @@ uint32 Shader::CreateShader(const char* vertexSource, const char* fragmentSource
 
 uint32 Shader::GetUniformLocation(GlobalString uniformName)
 {
-	if (uniforms.find(uniformName) != uniforms.end()) {
-		return uniforms[uniformName];
+	auto found = uniforms.find(uniformName);
+	if (found != uniforms.end()) {
+		return found->second;
 	}
 
 	const uint32 location = glGetUniformLocation(shaderProgram, uniformName.ToString().CStr());
