@@ -24,6 +24,8 @@ public:
 	/* Recreates the mesh on the CPU side. Logic must multithread safe, performing no write operations to the chunk, blocks, or OpenGL. */
 	void RecreateMesh();
 
+	static void MultithreadRecreateMeshes(const darray<ChunkRenderComponent*>& components);
+	
 	void Draw(ChunkRenderer* renderer);
 
 private:

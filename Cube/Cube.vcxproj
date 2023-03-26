@@ -250,6 +250,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\Graphics\OpenGL\Camera\Camera.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Render\Renderer.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Shader\Shader.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\OpenGLStructures.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Texture\Texture.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Texture\Texture2d.h" />
     <ClInclude Include="Source\Input\InputComponent.h" />

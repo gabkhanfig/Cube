@@ -12,6 +12,12 @@ void _CubeGameInstanceTickCallback(float deltaTime)
   GetGameInstance()->Tick(deltaTime);
 }
 
+GameInstance::GameInstance()
+  : world(nullptr)
+{
+  threadPool = new gk::ThreadPool(gk::ThreadPool::SystemThreadCount() - 1);
+}
+
 void GameInstance::Init()
 {
   BlockTextureAtlas::CreateBlockTextureAtlasObject();

@@ -12,13 +12,19 @@ private:
 
 	World* world;
 
+	gk::ThreadPool* threadPool;
+
 public:
+
+	GameInstance();
 
 	void Init();
 
 	void Tick(float deltaTime);
 
 	forceinline World* GetWorld() const { return world; }
+
+	forceinline gk::ThreadPool* GetThreadPool() const { return threadPool; }
 };
 
 /**/

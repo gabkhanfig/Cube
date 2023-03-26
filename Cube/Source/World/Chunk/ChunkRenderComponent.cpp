@@ -6,6 +6,7 @@
 #include "../Block/IBlock.h"
 #include "../Render/ChunkRenderer.h"
 #include <chrono>
+#include "../../GameInstance.h"
 
 ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
 	: chunk(chunkOwner), meshWasRecreated(false), meshRequiresLargerVbo(false), meshRequiresLargerIbo(false), isMeshEmpty(false)
@@ -41,6 +42,17 @@ void ChunkRenderComponent::RecreateMesh()
 
 	TryCopyMeshQuadsToVbo();
 	TryCopyMeshIndicesToIbo();
+}
+
+void ChunkRenderComponent::MultithreadRecreateMeshes(const darray<ChunkRenderComponent*>& components)
+{
+	gk::ThreadPool* threadPool = GetGameInstance()->GetThreadPool();
+	for (ChunkRenderComponent* component : components) {
+		auto func = std::bind(&ChunkRenderComponent::RecreateMesh, component);
+		threadPool->AddFunctionToQueue(func);
+	}
+
+	threadPool->ExecuteQueue();
 }
 
 //void ChunkRenderComponent::MeshToOpenGLObjects()

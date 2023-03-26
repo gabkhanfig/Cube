@@ -34,7 +34,7 @@ World::World()
 
 void World::BeginWorld()
 {
-  const int c = 3;
+  const int c = 20;
   for (int x = 0; x < c; x++) {
     for (int y = 0; y < c; y++) {
       for (int z = 0; z < c; z++) {
@@ -44,12 +44,25 @@ void World::BeginWorld()
       }
     }
   }
-  int b = 1;
+
+//#define MULTITHREAD
+//#ifdef MULTITHREAD
+  Benchmark remeshBenchmarkSingle = Benchmark("Singlethread remesh");
   for (auto& chunkPair : chunks) {
     Chunk* chunk = chunkPair.second;
     chunk->RecreateMesh();
   }
-  int a = 1;
+  remeshBenchmarkSingle.End(Benchmark::TimeUnit::ms);
+  Benchmark remeshBenchmarkMulti = Benchmark("Multithreaded remesh");
+  darray<ChunkRenderComponent*> chunkRenderComponents;
+  for (auto& chunkPair : chunks) {
+    Chunk* chunk = chunkPair.second;
+    chunkRenderComponents.Add(chunk->GetRenderComponent());
+  }
+  ChunkRenderComponent::MultithreadRecreateMeshes(chunkRenderComponents);
+  remeshBenchmarkMulti.End(Benchmark::TimeUnit::ms);
+//#else
+//#endif
 }
 
 void World::Tick(float deltaTime)
