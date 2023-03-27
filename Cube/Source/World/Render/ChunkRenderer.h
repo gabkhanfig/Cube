@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../Engine/EngineCore.h"
+#include "../../Graphics/Geometry/ChunkMesh.h"
 #include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleVbo.h"
 #include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleIbo.h"
 
