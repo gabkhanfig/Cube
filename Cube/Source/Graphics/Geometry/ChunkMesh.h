@@ -15,15 +15,15 @@ public:
 
 	ChunkMesh();
 
-	VertexBufferObject* MakeVertexBufferObject() const;
+	//VertexBufferObject* MakeVertexBufferObject() const;
 
-	IndexBufferObject* MakeIndexBufferObject() const;
+	//IndexBufferObject* MakeIndexBufferObject() const;
 
 	/* Assumes there's enough space in the buffer. */
 	void CopyQuadsToBuffer(BlockQuad* buffer) const;
 
-	/* Assumes there's enough space in the buffer. */
-	void CopyIndicesToBuffer(uint32* buffer) const;
+	/* Assumes there's enough space in the buffer. indexOffset is a number that will be added to every index in the buffer. Useful for multidraw. */
+	void CopyIndicesToBuffer(uint32* buffer, uint32 indexOffset) const;
 
 	void Empty();
 

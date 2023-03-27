@@ -11,6 +11,7 @@
 #include "../../Player/Player.h"
 #include "../Chunk/Chunk.h"
 #include "../../Graphics/OpenGL/Render/Renderer.h"
+#include "../Chunk/ChunkRenderComponent.h"
 
 ChunkRenderer::ChunkRenderer()
   : chunkOffsetUniform("u_chunkOffset"), cameraMvpUniform("u_cameraMVP")
@@ -18,6 +19,8 @@ ChunkRenderer::ChunkRenderer()
   shader = new Shader(generated_Chunk_vert, generated_Chunk_frag);
   vao = new VertexArrayObject();
   vao->SetFormatLayout(BlockQuad::GetQuadsVertexBufferLayout());
+  multidrawVbos = new PersistentMappedTripleVbo<BlockQuad>();
+  multidrawIbos = new PersistentMappedTripleIbo();
 }
 
 glm::vec3 ChunkRenderer::GetOffsetForChunkDraw(const Chunk* chunk) const
@@ -52,4 +55,14 @@ void ChunkRenderer::BindBlocksVertexBufferObject(VertexBufferObject* vbo)
 void ChunkRenderer::Draw(VertexBufferObject* vbo, IndexBufferObject* ibo)
 {
   Renderer::DrawVboTriangles(vbo, ibo);
+}
+
+void ChunkRenderer::ReserveVbosAndIbosForChunkQuantity(uint32 chunksNum)
+{
+  check(chunksNum > 0);
+  const uint32 vbosCapacity = chunksNum * ChunkRenderComponent::GetMaximumQuadsPerChunkMesh();
+  const uint32 ibosCapacity = chunksNum * ChunkRenderComponent::GetMaximumIndicesPerChunkMesh();
+
+  multidrawVbos->Reserve(vbosCapacity);
+  multidrawIbos->Reserve(ibosCapacity);
 }

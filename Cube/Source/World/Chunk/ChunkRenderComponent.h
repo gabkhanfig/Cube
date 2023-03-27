@@ -29,6 +29,12 @@ public:
 	
 	void Draw(ChunkRenderer* renderer);
 
+	/* Maximum number of BlockQuad's per chunk mesh to use for multidraw vbo capacity. */
+	static uint32 GetMaximumQuadsPerChunkMesh();
+
+	/* Maximum number of indices per chunk mesh to use for multidraw ibo capacity. */
+	static uint32 GetMaximumIndicesPerChunkMesh();
+
 private:
 
 	/* Attempts to copy the mesh's BlockQuad data to the modifiable vertex buffer object. 

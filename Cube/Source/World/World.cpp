@@ -45,6 +45,8 @@ void World::BeginWorld()
     }
   }
 
+  chunkRenderer->ReserveVbosAndIbosForChunkQuantity(chunks.size());
+
   darray<ChunkRenderComponent*> chunkRenderComponents;
   for (auto& chunkPair : chunks) {
     Chunk* chunk = chunkPair.second;

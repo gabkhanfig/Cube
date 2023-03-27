@@ -8,12 +8,6 @@ class World;
 
 class GameInstance
 {
-private:
-
-	World* world;
-
-	gk::ThreadPool* threadPool;
-
 public:
 
 	GameInstance();
@@ -25,6 +19,12 @@ public:
 	forceinline World* GetWorld() const { return world; }
 
 	forceinline gk::ThreadPool* GetThreadPool() const { return threadPool; }
+
+private:
+
+	World* world;
+
+	gk::ThreadPool* threadPool;
 };
 
 /**/

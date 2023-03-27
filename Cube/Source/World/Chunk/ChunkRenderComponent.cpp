@@ -39,6 +39,13 @@ void ChunkRenderComponent::RecreateMesh()
 	}
 
 	isMeshEmpty = mesh.GetQuadCount() == 0;
+	if (mesh.GetQuadCount() > GetMaximumQuadsPerChunkMesh()) {
+		cubeLog(
+			string("[Error]: ChunkRenderComponent::RecreateMesh()... Number of generated quads exceeds maximum allowed per chunk. Generated: ") 
+			+ string::FromInt(mesh.GetQuadCount()) 
+			+ string(", Allowed: ") 
+			+ string::FromInt(GetMaximumQuadsPerChunkMesh()));
+	}
 
 	TryCopyMeshQuadsToVbo();
 	TryCopyMeshIndicesToIbo();
@@ -108,6 +115,18 @@ void ChunkRenderComponent::Draw(ChunkRenderer* renderer)
 	meshWasRecreated = false;
 }
 
+uint32 ChunkRenderComponent::GetMaximumQuadsPerChunkMesh()
+{
+	// Amount of blocks per chunk * faces per block (this may need to be changed in the future for blocks with complex meshes)
+	return CHUNK_SIZE * 6;
+}
+
+uint32 ChunkRenderComponent::GetMaximumIndicesPerChunkMesh()
+{
+	// Amount of blocks per chunk * faces per block * indices per face (this may need to be changed in the future for blocks with complex meshes)
+	return CHUNK_SIZE * 6 * 6;
+}
+
 void ChunkRenderComponent::TryCopyMeshQuadsToVbo()
 {
 	const uint32 quadCount = mesh.GetQuadCount();
@@ -142,7 +161,7 @@ void ChunkRenderComponent::TryCopyMeshIndicesToIbo()
 	}
 
 	PersistentMappedTripleIbo::MappedIbo& mappedIbo = ibos->GetModifyMappedIbo();
-	mesh.CopyIndicesToBuffer(mappedIbo.data);
+	mesh.CopyIndicesToBuffer(mappedIbo.data, 0);
 	mappedIbo.ibo->SetIndexCount(mesh.GetIndexCount());
 	mappedIbo.size = indexCount;
 }
