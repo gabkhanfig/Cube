@@ -34,7 +34,7 @@ World::World()
 
 void World::BeginWorld()
 {
-  const int c = 20;
+  const int c = 2;
   for (int x = 0; x < c; x++) {
     for (int y = 0; y < c; y++) {
       for (int z = 0; z < c; z++) {

@@ -14,4 +14,5 @@ public:
 
 	/* Draw vbo triangles with a specific ibo. */
 	static void DrawVboTriangles(VertexBufferObject* vbo, IndexBufferObject* ibo);
+
 };
