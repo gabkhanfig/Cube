@@ -1,5 +1,5 @@
 #pragma once
 
-#if _DEBUG == 1
+//#if _DEBUG == 1
 #define DEVELOPMENT
-#endif
+//#endif

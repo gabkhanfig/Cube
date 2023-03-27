@@ -45,24 +45,12 @@ void World::BeginWorld()
     }
   }
 
-//#define MULTITHREAD
-//#ifdef MULTITHREAD
-  Benchmark remeshBenchmarkSingle = Benchmark("Singlethread remesh");
-  for (auto& chunkPair : chunks) {
-    Chunk* chunk = chunkPair.second;
-    chunk->RecreateMesh();
-  }
-  remeshBenchmarkSingle.End(Benchmark::TimeUnit::ms);
-  Benchmark remeshBenchmarkMulti = Benchmark("Multithreaded remesh");
   darray<ChunkRenderComponent*> chunkRenderComponents;
   for (auto& chunkPair : chunks) {
     Chunk* chunk = chunkPair.second;
     chunkRenderComponents.Add(chunk->GetRenderComponent());
   }
   ChunkRenderComponent::MultithreadRecreateMeshes(chunkRenderComponents);
-  remeshBenchmarkMulti.End(Benchmark::TimeUnit::ms);
-//#else
-//#endif
 }
 
 void World::Tick(float deltaTime)
