@@ -130,7 +130,7 @@ uint32 ChunkRenderComponent::GetMaximumIndicesPerChunkMesh()
 DrawElementsIndirectCommand ChunkRenderComponent::GenerateDrawElementsIndirectCommand() const
 {
 	DrawElementsIndirectCommand command;
-	command.count = mesh.GetQuadCount() * 4;
+	command.vertexCount = mesh.GetQuadCount() * 4;
 	command.instanceCount = 1;
 	command.firstIndex = 0;
 	command.baseVertex = 0;
