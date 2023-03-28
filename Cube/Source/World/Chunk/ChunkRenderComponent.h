@@ -4,6 +4,7 @@
 #include "../../Graphics/Geometry/ChunkMesh.h"
 #include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleVbo.h"
 #include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleIbo.h"
+#include "../../Graphics/OpenGL/OpenGLStructures.h"
 
 class VertexBufferObject;
 class IndexBufferObject;
@@ -34,6 +35,10 @@ public:
 
 	/* Maximum number of indices per chunk mesh to use for multidraw ibo capacity. */
 	static uint32 GetMaximumIndicesPerChunkMesh();
+
+	DrawElementsIndirectCommand GenerateDrawElementsIndirectCommand() const;
+
+	const ChunkMesh& GetMesh() const { return mesh; }
 
 private:
 

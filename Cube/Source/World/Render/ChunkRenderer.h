@@ -21,6 +21,7 @@ public:
 	glm::vec3 GetOffsetForChunkDraw(const Chunk* chunk) const;
 
 	void SetShaderChunkOffset(glm::vec3 chunkOffset);
+
 	void SetShaderCameraMVP(const glm::mat4& cameraMVP);
 
 	void Bind();
@@ -30,6 +31,12 @@ public:
 	void Draw(VertexBufferObject* vbo, IndexBufferObject* ibo);
 
 	void ReserveVbosAndIbosForChunkQuantity(uint32 chunksNum);
+
+	PersistentMappedTripleVbo<BlockQuad>* GetMultidrawVbos() const { return multidrawVbos; }
+
+	PersistentMappedTripleIbo* GetMultidrawIbos() const { return multidrawIbos; }
+
+	void SwapNextBuffer();
 
 private:
 

@@ -34,10 +34,10 @@ World::World()
 
 void World::BeginWorld()
 {
-  const int c = 2;
-  for (int x = 0; x < c; x++) {
-    for (int y = 0; y < c; y++) {
-      for (int z = 0; z < c; z++) {
+  const int c = 1;
+  for (int x = 0; x < 1; x++) {
+    for (int y = 0; y < 1; y++) {
+      for (int z = 0; z < 1; z++) {
         Chunk* chunk = new Chunk({ x, y, z });
         chunk->FillChunkWithBlock("stoneBlock");
         chunks.insert({ chunk->GetPosition(), chunk });
@@ -108,8 +108,45 @@ void World::DrawWorld()
   Camera* cam = Camera::GetActiveCamera();
   chunkRenderer->SetShaderCameraMVP(cam->GetMvpMatrix());
 
-  for (auto& chunkPair : chunks) {
-    Chunk* chunk = chunkPair.second;
-    chunk->Draw(chunkRenderer);
-  }
+  //for (auto& chunkPair : chunks) {
+  //  Chunk* chunk = chunkPair.second;
+  //  chunk->Draw(chunkRenderer);
+  //}
+  
+  Chunk* chunk = chunks.find(ChunkPosition(0, 0, 0))->second;
+  ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
+
+  chunkRenderer->SetShaderChunkOffset(chunkRenderer->GetOffsetForChunkDraw(chunk));
+
+  uint32 gIndirectBuffer;
+  glGenBuffers(1, &gIndirectBuffer);
+  glBindBuffer(GL_DRAW_INDIRECT_BUFFER, gIndirectBuffer);
+  DrawElementsIndirectCommand cmd = renderComponent->GenerateDrawElementsIndirectCommand();
+  glBufferData(GL_DRAW_INDIRECT_BUFFER, sizeof(DrawElementsIndirectCommand), &cmd, GL_DYNAMIC_DRAW);
+
+  PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo = chunkRenderer->GetMultidrawVbos()->GetModifyMappedVbo();
+  const ChunkMesh& mesh = renderComponent->GetMesh();
+  mesh.CopyQuadsToBuffer(mappedVbo.data);
+
+  PersistentMappedTripleIbo::MappedIbo& mappedIbo = chunkRenderer->GetMultidrawIbos()->GetModifyMappedIbo();
+  mesh.CopyIndicesToBuffer(mappedIbo.data, 0);
+  mappedIbo.ibo->SetIndexCount(mesh.GetIndexCount());
+
+  //chunkRenderer->GetMultidrawVbos()->GetBoundVbo()->Bind();
+  //chunkRenderer->GetMultidrawIbos()->GetBoundIbo()->Bind();
+
+  VertexBufferObject* boundVbo = chunkRenderer->GetMultidrawVbos()->GetBoundVbo();
+  IndexBufferObject* boundIbo = chunkRenderer->GetMultidrawIbos()->GetBoundIbo();
+  chunkRenderer->BindBlocksVertexBufferObject(boundVbo);
+  boundVbo->Bind();
+  boundIbo->Bind();
+
+  glMultiDrawElementsIndirect(GL_TRIANGLES, //type
+    GL_UNSIGNED_INT, //indices represented as unsigned ints
+    (void*)0, //start with the first draw command
+    1, //draw n chunks
+    0); //no stride, the draw commands are tightly packed
+  //glDrawElements(GL_TRIANGLES, boundIbo->GetIndexCount(), GL_UNSIGNED_INT, 0);
+
+  chunkRenderer->SwapNextBuffer();
 }

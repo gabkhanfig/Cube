@@ -66,3 +66,9 @@ void ChunkRenderer::ReserveVbosAndIbosForChunkQuantity(uint32 chunksNum)
   multidrawVbos->Reserve(vbosCapacity);
   multidrawIbos->Reserve(ibosCapacity);
 }
+
+void ChunkRenderer::SwapNextBuffer()
+{
+  multidrawVbos->SwapNextBuffer();
+  multidrawIbos->SwapNextBuffer();
+}

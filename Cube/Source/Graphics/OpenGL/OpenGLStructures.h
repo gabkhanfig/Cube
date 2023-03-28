@@ -4,7 +4,7 @@
 
 struct DrawArraysIndirectCommand
 {
-  uint32 count;
+  uint32 vertexCount;
   uint32 instanceCount;
   uint32 first;
   uint32 baseInstance;
@@ -12,9 +12,14 @@ struct DrawArraysIndirectCommand
 
 struct DrawElementsIndirectCommand 
 {
-  uint32  count;
+  /* Number of vertices */
+  uint32  vertexCount;
+  /* Number of instance of this to draw (eg, 1 for 1 chunk) */
   uint32  instanceCount;
+  /*  */
   uint32  firstIndex;
+  /* Starting from within vbo */
   int  baseVertex;
+  /* gl_InstanceID */
   uint32  baseInstance;
 };

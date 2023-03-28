@@ -127,6 +127,17 @@ uint32 ChunkRenderComponent::GetMaximumIndicesPerChunkMesh()
 	return CHUNK_SIZE * 6 * 6;
 }
 
+DrawElementsIndirectCommand ChunkRenderComponent::GenerateDrawElementsIndirectCommand() const
+{
+	DrawElementsIndirectCommand command;
+	command.count = mesh.GetQuadCount() * 4;
+	command.instanceCount = 1;
+	command.firstIndex = 0;
+	command.baseVertex = 0;
+	command.baseInstance = 0;
+	return command;
+}
+
 void ChunkRenderComponent::TryCopyMeshQuadsToVbo()
 {
 	const uint32 quadCount = mesh.GetQuadCount();
@@ -162,6 +173,6 @@ void ChunkRenderComponent::TryCopyMeshIndicesToIbo()
 
 	PersistentMappedTripleIbo::MappedIbo& mappedIbo = ibos->GetModifyMappedIbo();
 	mesh.CopyIndicesToBuffer(mappedIbo.data, 0);
-	mappedIbo.ibo->SetIndexCount(mesh.GetIndexCount());
+	mappedIbo.ibo->SetIndexCount(indexCount);
 	mappedIbo.size = indexCount;
 }
