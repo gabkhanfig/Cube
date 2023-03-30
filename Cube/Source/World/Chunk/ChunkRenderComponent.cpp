@@ -138,14 +138,14 @@ DrawElementsIndirectCommand ChunkRenderComponent::GenerateDrawElementsIndirectCo
 	return command;
 }
 
-void ChunkRenderComponent::CopyMeshQuadsToVboOffset(PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo, uint32 quadMemoryOffset)
+void ChunkRenderComponent::CopyMeshQuadsToVboOffset(PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo, uint32 quadMemoryOffset) const
 {
 	const uint32 quadCount = mesh.GetQuadCount();
 	mesh.CopyQuadsToBuffer(mappedVbo.data + quadMemoryOffset);
 	//mappedVbo.size = quadCount;
 }
 
-void ChunkRenderComponent::CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo::MappedIbo& mappedIbo, uint32 integerMemoryOffset, uint32 indexOffset)
+void ChunkRenderComponent::CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo::MappedIbo& mappedIbo, uint32 integerMemoryOffset, uint32 indexOffset) const
 {
 	const uint32 indexCount = mesh.GetIndexCount();
 	mesh.CopyIndicesToBuffer(mappedIbo.data + integerMemoryOffset, indexOffset);
