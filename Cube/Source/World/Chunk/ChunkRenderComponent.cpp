@@ -130,12 +130,27 @@ uint32 ChunkRenderComponent::GetMaximumIndicesPerChunkMesh()
 DrawElementsIndirectCommand ChunkRenderComponent::GenerateDrawElementsIndirectCommand() const
 {
 	DrawElementsIndirectCommand command;
-	command.vertexCount = mesh.GetQuadCount() * 4;
+	command.count = mesh.GetIndexCount(); 
 	command.instanceCount = 1;
 	command.firstIndex = 0;
 	command.baseVertex = 0;
 	command.baseInstance = 0;
 	return command;
+}
+
+void ChunkRenderComponent::CopyMeshQuadsToVboOffset(PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo, uint32 quadMemoryOffset)
+{
+	const uint32 quadCount = mesh.GetQuadCount();
+	mesh.CopyQuadsToBuffer(mappedVbo.data + quadMemoryOffset);
+	//mappedVbo.size = quadCount;
+}
+
+void ChunkRenderComponent::CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo::MappedIbo& mappedIbo, uint32 integerMemoryOffset, uint32 indexOffset)
+{
+	const uint32 indexCount = mesh.GetIndexCount();
+	mesh.CopyIndicesToBuffer(mappedIbo.data + integerMemoryOffset, indexOffset);
+	mappedIbo.ibo->SetIndexCount(indexCount);
+	//mappedIbo.size = indexCount;
 }
 
 void ChunkRenderComponent::TryCopyMeshQuadsToVbo()

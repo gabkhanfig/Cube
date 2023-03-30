@@ -125,15 +125,10 @@ void World::DrawWorld()
   glBufferData(GL_DRAW_INDIRECT_BUFFER, sizeof(DrawElementsIndirectCommand), &cmd, GL_DYNAMIC_DRAW);
 
   PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo = chunkRenderer->GetMultidrawVbos()->GetModifyMappedVbo();
-  const ChunkMesh& mesh = renderComponent->GetMesh();
-  mesh.CopyQuadsToBuffer(mappedVbo.data);
+  renderComponent->CopyMeshQuadsToVboOffset(mappedVbo, 0);
 
   PersistentMappedTripleIbo::MappedIbo& mappedIbo = chunkRenderer->GetMultidrawIbos()->GetModifyMappedIbo();
-  mesh.CopyIndicesToBuffer(mappedIbo.data, 0);
-  mappedIbo.ibo->SetIndexCount(mesh.GetIndexCount());
-
-  //chunkRenderer->GetMultidrawVbos()->GetBoundVbo()->Bind();
-  //chunkRenderer->GetMultidrawIbos()->GetBoundIbo()->Bind();
+  renderComponent->CopyMeshIndicesToIboOffset(mappedIbo, 0, 0);
 
   VertexBufferObject* boundVbo = chunkRenderer->GetMultidrawVbos()->GetBoundVbo();
   IndexBufferObject* boundIbo = chunkRenderer->GetMultidrawIbos()->GetBoundIbo();

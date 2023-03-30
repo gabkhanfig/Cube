@@ -12,8 +12,8 @@ struct DrawArraysIndirectCommand
 
 struct DrawElementsIndirectCommand 
 {
-  /* Number of vertices */
-  uint32  vertexCount;
+  /* Number of indices to draw. */
+  uint32  count;
   /* Number of instance of this to draw (eg, 1 for 1 chunk) */
   uint32  instanceCount;
   /*  */

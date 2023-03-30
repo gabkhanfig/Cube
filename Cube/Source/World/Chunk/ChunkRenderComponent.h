@@ -40,6 +40,10 @@ public:
 
 	const ChunkMesh& GetMesh() const { return mesh; }
 
+	void CopyMeshQuadsToVboOffset(PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo, uint32 quadMemoryOffset);
+
+	void CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo::MappedIbo& mappedIbo, uint32 integerMemoryOffset, uint32 indexOffset);
+
 private:
 
 	/* Attempts to copy the mesh's BlockQuad data to the modifiable vertex buffer object. 
