@@ -1,5 +1,4 @@
 #include "IndexBufferObject.h"
-
 #include <glad/glad.h>
 
 uint32 IndexBufferObject::boundId = 0;

@@ -7,6 +7,7 @@
 #include "../Graphics/OpenGL/Buffers/IndexBufferObject.h"
 #include "../Graphics/OpenGL/Buffers/VertexArrayObject.h"
 #include "../Graphics/OpenGL/Buffers/ShaderBufferObject.h"
+#include "../Graphics/OpenGL/Buffers/DrawIndirectBufferObject.h"
 #include "../../Resources/GeneratedFiles.h"
 #include "../Graphics/Geometry/BlockGeometry.h"
 #include <glad/glad.h>
@@ -118,11 +119,10 @@ void World::DrawWorld()
 
   chunkRenderer->SetShaderChunkOffset(chunkRenderer->GetOffsetForChunkDraw(chunk));
 
-  uint32 gIndirectBuffer;
-  glGenBuffers(1, &gIndirectBuffer);
-  glBindBuffer(GL_DRAW_INDIRECT_BUFFER, gIndirectBuffer);
+
   DrawElementsIndirectCommand cmd = renderComponent->GenerateDrawElementsIndirectCommand();
-  glBufferData(GL_DRAW_INDIRECT_BUFFER, sizeof(DrawElementsIndirectCommand), &cmd, GL_DYNAMIC_DRAW);
+
+  DrawIndirectBufferObject* dbo = DrawIndirectBufferObject::Create(&cmd, 1);
 
   PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo = chunkRenderer->GetMultidrawVbos()->GetModifyMappedVbo();
   renderComponent->CopyMeshQuadsToVboOffset(mappedVbo, 0);

@@ -1,7 +1,6 @@
 #include <glad/glad.h>
 #include "VertexArrayObject.h"
 #include "VertexBufferObject.h"
-#include <vector>
 
 uint32 VertexArrayObject::boundId = 0;
 
