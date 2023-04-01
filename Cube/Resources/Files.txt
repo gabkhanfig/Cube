@@ -1,4 +1,6 @@
 Shaders/Chunk.vert
 Shaders/Chunk.frag
+Shaders/ChunkMultidraw.vert
+Shaders/ChunkMultidraw.frag
 Textures/InvalidTexture.png
 Textures/StoneBlock.png

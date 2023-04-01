@@ -128,6 +128,134 @@ void main()
 	//FragColor = vec4(vec3(outColor), 1);
 })";
 
+// Generated from ChunkMultidraw.vert.
+constexpr const char* generated_ChunkMultidraw_vert = R"(#version 460 core
+
+// https://sight.pages.ircad.fr/sight-doc/CodingStyle/src/07-glsl-style.html
+
+layout (location = 0) in vec3 v_in_position;
+layout (location = 1) in vec3 v_in_normal;
+layout (location = 2) in vec2 v_in_texCoord;
+layout (location = 3) in vec3 v_in_color;
+
+// Camera Model-View-Projection matrix.
+uniform mat4 u_cameraMVP;
+// Position offset of the chunk that is being drawn.
+uniform vec3 u_chunkOffset;
+
+// Interpolated fragment shader coordinates it's position in the triangle.
+//out vec3 v_out_fragCoord;
+// Normalized coordinates of this vertex.
+//out flat vec3 v_out_vertCoord;
+// Interpolated texture coordinates.
+out vec2 v_out_texCoord;
+// Interpolated color coordinates.
+out vec3 v_out_color;
+
+#define SUBVOXEL_COUNT 16.0
+
+#define BYTE_1_BITMASK 0xFF
+#define BYTE_2_BITMASK 0xFF00
+#define BYTE_3_BITMASK 0xFF0000
+#define BYTE_4_BITMASK 0xFF000000
+
+void main()
+{
+	gl_Position = u_cameraMVP * vec4(v_in_position + u_chunkOffset, 1.0);
+
+	//v_out_vertCoord = v_in_position;
+	//v_out_fragCoord = v_in_position;
+	v_out_texCoord = v_in_texCoord;
+	v_out_color = v_in_color;
+})";
+
+// Generated from ChunkMultidraw.frag.
+constexpr const char* generated_ChunkMultidraw_frag = R"(#version 460 core
+
+// https://sight.pages.ircad.fr/sight-doc/CodingStyle/src/07-glsl-style.html
+
+// Interpolated fragment shader coordinates it's position in the triangle.
+//in vec3 v_out_fragCoord;
+// Normalized coordinates of this vertex.
+//in flat vec3 v_out_vertCoord;
+// Interpolated texture coordinates.
+in vec2 v_out_texCoord;
+// Interpolated color coordinates.
+in vec3 v_out_color;
+
+uniform sampler2D u_Texture;
+
+out vec4 FragColor;
+
+#define SUBVOXEL_COUNT 16.0
+
+#define BYTE_1_BITMASK 0xFF
+#define BYTE_2_BITMASK 0xFF00
+#define BYTE_3_BITMASK 0xFF0000
+#define BYTE_4_BITMASK 0xFF000000
+
+/*  */
+struct CubicColors
+{
+	vec3 c000;
+	vec3 c100;
+	vec3 c010;
+	vec3 c110;
+	vec3 c001;
+	vec3 c101;
+	vec3 c011;
+	vec3 c111;
+};
+
+/* 0, 0, 0 top back right. 1, 1, 1 bottom front left 
+https://en.wikipedia.org/wiki/Trilinear_interpolation */ 
+vec3 TrilinearInterpolationColor(const vec3 _coord, const CubicColors _col) 
+{
+	// Remove integer part example: 1.5 -> 0.5
+	const vec3 coord = _coord;//vec3(_coord - floor(_coord));
+
+	const vec3 c00 = _col.c000 * (1 - coord.x) + _col.c100 * coord.x;
+	const vec3 c01 = _col.c001 * (1 - coord.x) + _col.c101 * coord.x;
+	const vec3 c10 = _col.c010 * (1 - coord.x) + _col.c110 * coord.x;
+	const vec3 c11 = _col.c011 * (1 - coord.x) + _col.c111 * coord.x;
+
+	const vec3 c0 = c00 * (1 - coord.y) + c10 * coord.y;
+	const vec3 c1 = c01 * (1 - coord.y) + c11 * coord.y;
+
+	const vec3 c = c0 * (1 - coord.z) + c1 * coord.z;
+
+	return c;
+}
+
+/* Get the relative subvoxel position. Clamped to the 16x16 full block area. */
+vec3 GetRelativeSubvoxelPosition(const vec3 _fragCoord, const vec3 _vertCoord) 
+{
+	//const vec3 coord = floor(abs(_fragCoord * SUBVOXEL_COUNT - _vertCoord * SUBVOXEL_COUNT)) / SUBVOXEL_COUNT;
+	//return coord;// + _vertCoord;
+	return floor(_fragCoord * SUBVOXEL_COUNT) / SUBVOXEL_COUNT;
+}
+
+void main()
+{
+	//CubicColors cols;
+	//cols.c000 = vec3(0, 0, 0); // non-z
+	//cols.c100 = vec3(1, 0, 0); // non-z
+	//cols.c010 = vec3(0, 1, 0); // non-z
+	//cols.c110 = vec3(1, 1, 0); // non-z
+	//cols.c001 = vec3(0, 0, 1);
+	//cols.c101 = vec3(1, 0, 1);
+	//cols.c011 = vec3(0, 1, 1);
+	//cols.c111 = vec3(1, 1, 1);
+
+	//const vec3 subvoxel = GetRelativeSubvoxelPosition(v_out_fragCoord, v_out_vertCoord);
+	//const vec3 outColor = TrilinearInterpolationColor(subvoxel, cols);
+	const vec4 texColor = texture(u_Texture, v_out_texCoord);
+	FragColor = texColor * vec4(v_out_color, 1);
+	//FragColor = vec4(subvoxel, 1);
+	//FragColor = texColor;
+	//FragColor = vec4(vec3(outColor), 1);
+})";
+
 // Generated from InvalidTexture.png. Use sizeof operator to get the amount of bytes.
 constexpr const unsigned char generated_InvalidTexture_png[192] = { 137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 16, 0, 0, 0, 16, 8, 6, 0, 0, 0, 31, 243, 255, 97, 0, 0, 0, 1, 115, 82, 71, 66, 0, 174, 206, 28, 233, 0, 0, 0, 122, 73, 68, 65, 84, 56, 79, 189, 211, 209, 9, 128, 48, 12, 4, 208, 187, 69, 156, 193, 81, 212, 65, 173, 163, 56, 131, 139, 68, 34, 68, 33, 26, 72, 9, 216, 159, 126, 148, 188, 54, 189, 150, 34, 34, 40, 12, 42, 64, 50, 36, 26, 214, 112, 109, 146, 25, 47, 96, 60, 128, 125, 120, 106, 186, 0, 45, 182, 97, 72, 26, 176, 157, 253, 156, 6, 108, 231, 82, 11, 138, 148, 1, 127, 229, 169, 22, 54, 182, 48, 170, 25, 75, 184, 166, 79, 232, 138, 49, 11, 248, 246, 186, 128, 175, 136, 211, 64, 20, 113, 26, 136, 34, 254, 31, 240, 113, 220, 39, 40, 252, 102, 156, 121, 220, 147, 209, 110, 202, 149, 43, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130 };
 
