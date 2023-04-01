@@ -153,6 +153,13 @@ void ChunkRenderComponent::CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo:
 	//mappedIbo.size = indexCount;
 }
 
+void ChunkRenderComponent::CopyDrawCommandToIndirectOffset(PersistentMappedTripleIndirect::MappedIndirect& mappedIndirect, uint32 commandMemoryOffset) const
+{
+	check(mappedIndirect.data);
+	DrawElementsIndirectCommand cmd = GenerateDrawElementsIndirectCommand();
+	memcpy(mappedIndirect.data + commandMemoryOffset, &cmd, sizeof(DrawElementsIndirectCommand));
+}
+
 void ChunkRenderComponent::TryCopyMeshQuadsToVbo()
 {
 	const uint32 quadCount = mesh.GetQuadCount();

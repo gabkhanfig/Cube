@@ -4,6 +4,7 @@
 #include "../../Graphics/Geometry/ChunkMesh.h"
 #include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleVbo.h"
 #include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleIbo.h"
+#include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleIndirect.h"
 #include "../../Graphics/OpenGL/OpenGLStructures.h"
 
 class VertexBufferObject;
@@ -43,6 +44,8 @@ public:
 	void CopyMeshQuadsToVboOffset(PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo, uint32 quadMemoryOffset) const;
 
 	void CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo::MappedIbo& mappedIbo, uint32 integerMemoryOffset, uint32 indexOffset) const;
+
+	void CopyDrawCommandToIndirectOffset(PersistentMappedTripleIndirect::MappedIndirect& mappedIndirect, uint32 commandMemoryOffset) const;
 
 	bool IsMeshEmpty() const { return isMeshEmpty; }
 

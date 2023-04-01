@@ -4,6 +4,9 @@
 #include "../../Graphics/Geometry/ChunkMesh.h"
 #include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleVbo.h"
 #include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleIbo.h"
+#include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleIndirect.h"
+#include "../WorldTransform.h"
+#include "../Chunk/ChunkDataTypes.h"
 
 class Player;
 class Shader;
@@ -38,6 +41,10 @@ public:
 
 	void SwapNextBuffer();
 
+	void DrawAllChunks(const HashMap<ChunkPosition, Chunk*>& chunks);
+
+	void MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chunk*>& chunks);
+
 private:
 
 	Shader* shader;
@@ -57,5 +64,7 @@ private:
 	This will have a capacity (like a dynamic array) that should be able to hold more than or equal to the amount of indices required by the mesh.
 	This means upon remeshing, the existing IBOs will likely be able to be used. If not, the IBOs will need to be reallocated. */
 	PersistentMappedTripleIbo* multidrawIbos;
+
+	PersistentMappedTripleIndirect* multidrawIndirectBuffers;
 
 };

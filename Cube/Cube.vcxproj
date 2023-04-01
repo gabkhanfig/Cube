@@ -184,6 +184,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\Graphics\Geometry\ChunkMesh.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\DrawIndirectBufferObject.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\IndexBufferObject.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIndirect.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIbo.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleVbo.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\ShaderBufferObject.cpp" />
@@ -243,6 +244,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\Graphics\Geometry\ChunkMesh.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\DrawIndirectBufferObject.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\IndexBufferObject.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIndirect.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIbo.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleVbo.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\ShaderBufferObject.h" />

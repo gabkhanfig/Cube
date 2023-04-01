@@ -108,12 +108,14 @@ void World::DrawWorld()
   //chunkShader->Bind();
   Camera* cam = Camera::GetActiveCamera();
   chunkRenderer->SetShaderCameraMVP(cam->GetMvpMatrix());
+  //chunkRenderer->DrawAllChunks(chunks);
+  chunkRenderer->MultidrawIndirectAllChunks(chunks);
 
   //for (auto& chunkPair : chunks) {
   //  Chunk* chunk = chunkPair.second;
   //  chunk->Draw(chunkRenderer);
   //}
-  
+  /*
   Chunk* chunk = chunks.find(ChunkPosition(0, 0, 0))->second;
   ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
 
@@ -143,5 +145,5 @@ void World::DrawWorld()
     0); //no stride, the draw commands are tightly packed
   //glDrawElements(GL_TRIANGLES, boundIbo->GetIndexCount(), GL_UNSIGNED_INT, 0);
 
-  chunkRenderer->SwapNextBuffer();
+  chunkRenderer->SwapNextBuffer();*/
 }
