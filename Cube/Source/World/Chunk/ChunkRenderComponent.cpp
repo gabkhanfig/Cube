@@ -127,14 +127,14 @@ uint32 ChunkRenderComponent::GetMaximumIndicesPerChunkMesh()
 	return CHUNK_SIZE * 6 * 6;
 }
 
-DrawElementsIndirectCommand ChunkRenderComponent::GenerateDrawElementsIndirectCommand() const
+DrawElementsIndirectCommand ChunkRenderComponent::GenerateDrawElementsIndirectCommand(uint32 firstIndex, uint32 baseVertex, uint32 gl_InstanceId) const
 {
 	DrawElementsIndirectCommand command;
 	command.count = mesh.GetIndexCount(); 
 	command.instanceCount = 1;
-	command.firstIndex = 0;
-	command.baseVertex = 0;
-	command.baseInstance = 0;
+	command.firstIndex = firstIndex;
+	command.baseVertex = baseVertex;
+	command.baseInstance = gl_InstanceId;
 	return command;
 }
 
@@ -153,11 +153,10 @@ void ChunkRenderComponent::CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo:
 	//mappedIbo.size = indexCount;
 }
 
-void ChunkRenderComponent::CopyDrawCommandToIndirectOffset(PersistentMappedTripleIndirect::MappedIndirect& mappedIndirect, uint32 commandMemoryOffset) const
+void ChunkRenderComponent::CopyDrawCommandToIndirectOffset(PersistentMappedTripleIndirect::MappedIndirect& mappedIndirect, uint32 commandMemoryOffset, DrawElementsIndirectCommand command) const
 {
 	check(mappedIndirect.data);
-	DrawElementsIndirectCommand cmd = GenerateDrawElementsIndirectCommand();
-	memcpy(mappedIndirect.data + commandMemoryOffset, &cmd, sizeof(DrawElementsIndirectCommand));
+	memcpy(mappedIndirect.data + commandMemoryOffset, &command, sizeof(DrawElementsIndirectCommand));
 }
 
 void ChunkRenderComponent::TryCopyMeshQuadsToVbo()

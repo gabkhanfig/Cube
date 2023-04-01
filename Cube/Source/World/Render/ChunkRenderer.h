@@ -39,7 +39,7 @@ public:
 
 	PersistentMappedTripleIbo* GetMultidrawIbos() const { return multidrawIbos; }
 
-	void SwapNextBuffer();
+	void SwapNextBuffers();
 
 	void DrawAllChunks(const HashMap<ChunkPosition, Chunk*>& chunks);
 

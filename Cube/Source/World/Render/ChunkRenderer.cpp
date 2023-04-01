@@ -71,7 +71,7 @@ void ChunkRenderer::ReserveVbosAndIbosForChunkQuantity(uint32 chunksNum)
   multidrawIndirectBuffers->Reserve(indirectCapacity);
 }
 
-void ChunkRenderer::SwapNextBuffer()
+void ChunkRenderer::SwapNextBuffers()
 {
   multidrawVbos->SwapNextBuffer();
   multidrawIbos->SwapNextBuffer();
@@ -88,6 +88,14 @@ void ChunkRenderer::DrawAllChunks(const HashMap<ChunkPosition, Chunk*>& chunks)
 
 void ChunkRenderer::MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chunk*>& chunks)
 {
+  int i = 0;
+  for (const auto& chunkPair : chunks) {
+    const Chunk* chunk = chunkPair.second;
+    ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
+
+  }
+
+
   Chunk* chunk = chunks.find(ChunkPosition(0, 0, 0))->second;
   ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
 
@@ -104,7 +112,7 @@ void ChunkRenderer::MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chun
   renderComponent->CopyMeshIndicesToIboOffset(mappedIbo, 0, 0);
 
   PersistentMappedTripleIndirect::MappedIndirect& mappedDibo = multidrawIndirectBuffers->GetModifyMappedDibo();
-  renderComponent->CopyDrawCommandToIndirectOffset(mappedDibo, 0);
+  renderComponent->CopyDrawCommandToIndirectOffset(mappedDibo, 0, renderComponent->GenerateDrawElementsIndirectCommand(0, 0, 0));
 
   VertexBufferObject* boundVbo = multidrawVbos->GetBoundVbo();
   IndexBufferObject* boundIbo = multidrawIbos->GetBoundIbo();
@@ -121,5 +129,5 @@ void ChunkRenderer::MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chun
     0); //no stride, the draw commands are tightly packed
   //glDrawElements(GL_TRIANGLES, boundIbo->GetIndexCount(), GL_UNSIGNED_INT, 0);
 
-  SwapNextBuffer();
+  SwapNextBuffers();
 }
