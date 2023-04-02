@@ -12,12 +12,14 @@
 #include "../Chunk/Chunk.h"
 #include "../../Graphics/OpenGL/Render/Renderer.h"
 #include "../Chunk/ChunkRenderComponent.h"
+#include "../../Graphics/OpenGL/Camera/Camera.h"
 #include <glad/glad.h>
 
 ChunkRenderer::ChunkRenderer()
   : chunkOffsetUniform("u_chunkOffset"), cameraMvpUniform("u_cameraMVP")
 {
   shader = new Shader(generated_Chunk_vert, generated_Chunk_frag);
+  multidrawShader = new Shader(generated_ChunkMultidraw_vert, generated_ChunkMultidraw_frag);
   vao = new VertexArrayObject();
   vao->SetFormatLayout(BlockQuad::GetQuadsVertexBufferLayout());
   multidrawVbos = new PersistentMappedTripleVbo<BlockQuad>();
@@ -80,54 +82,73 @@ void ChunkRenderer::SwapNextBuffers()
 
 void ChunkRenderer::DrawAllChunks(const HashMap<ChunkPosition, Chunk*>& chunks)
 {
+  shader->Bind();
+  Camera* cam = Camera::GetActiveCamera();
+  SetShaderCameraMVP(cam->GetMvpMatrix());
   for (auto& chunkPair : chunks) {
     Chunk* chunk = chunkPair.second;
-    chunk->Draw(this);
+    ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
+    renderComponent->Draw(this);
   }
 }
 
 void ChunkRenderer::MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chunk*>& chunks)
 {
-  int i = 0;
+  //https://github.com/litasa/Advanced-OpenGL-Examples/blob/master/src/MultidrawIndirect/MultidrawIndirect.cpp
+
+  multidrawShader->Bind(); // Use the multidraw shader
+  Camera* cam = Camera::GetActiveCamera(); 
+  multidrawShader->SetUniformMat4f(cameraMvpUniform, cam->GetMvpMatrix()); // Set the u_cameraMVP matrix in ChunkMultidraw.vert
+
+  uint32 chunkIndex = 0;
+  uint32 baseQuad = 0;
+  uint32 indexOffset = 0;
+
+  darray<DrawElementsIndirectCommand> indirectCommands;
+  //darray<glm::vec3> chunkOffsets;
+
   for (const auto& chunkPair : chunks) {
+
+    // TODO add chunk offsets as a mat4 for vertex shader
+
     const Chunk* chunk = chunkPair.second;
     ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
 
+    indirectCommands.Add(renderComponent->GenerateDrawElementsIndirectCommand(
+      baseQuad * 4, // Starting from this vertex as an offset into the vbo (4 vertices per quad)
+      chunkIndex)); // gl_InstanceID
+    //chunkOffsets.Add(GetOffsetForChunkDraw(chunk));
+
+    PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo = multidrawVbos->GetModifyMappedVbo();
+    renderComponent->CopyMeshQuadsToVboOffset(mappedVbo, baseQuad); // Copy the mesh data into the modifiable vbo starting at baseQuad offset into the memory
+
+    PersistentMappedTripleIbo::MappedIbo& mappedIbo = multidrawIbos->GetModifyMappedIbo();
+    renderComponent->CopyMeshIndicesToIboOffset(mappedIbo, indexOffset); // Copy the indices into the modifiable ibo starting at indexOffset into the memory
+
+    chunkIndex++; // Increment for the next chunk
+    baseQuad += renderComponent->GetMesh().GetQuadCount(); // Increment the quad memory offset for the next chunk
+    indexOffset += renderComponent->GetMesh().GetIndexCount(); // Increment the index memory offset for the next chunk
   }
 
-
-  Chunk* chunk = chunks.find(ChunkPosition(0, 0, 0))->second;
-  ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
-
-  SetShaderChunkOffset(GetOffsetForChunkDraw(chunk));
-
-  //DrawElementsIndirectCommand cmd = renderComponent->GenerateDrawElementsIndirectCommand();
-
-  //DrawIndirectBufferObject* dbo = DrawIndirectBufferObject::Create(&cmd, 1);
-
-  PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo = multidrawVbos->GetModifyMappedVbo();
-  renderComponent->CopyMeshQuadsToVboOffset(mappedVbo, 0);
-
-  PersistentMappedTripleIbo::MappedIbo& mappedIbo = multidrawIbos->GetModifyMappedIbo();
-  renderComponent->CopyMeshIndicesToIboOffset(mappedIbo, 0, 0);
-
-  PersistentMappedTripleIndirect::MappedIndirect& mappedDibo = multidrawIndirectBuffers->GetModifyMappedDibo();
-  renderComponent->CopyDrawCommandToIndirectOffset(mappedDibo, 0, renderComponent->GenerateDrawElementsIndirectCommand(0, 0, 0));
+  PersistentMappedTripleIndirect::MappedIndirect& mappedIndirect = multidrawIndirectBuffers->GetModifyMappedDibo();
+  memcpy(mappedIndirect.data, indirectCommands.Data(), sizeof(DrawElementsIndirectCommand) * indirectCommands.Size()); // Copy the draw indirect commands into the modifiable buffer object
 
   VertexBufferObject* boundVbo = multidrawVbos->GetBoundVbo();
   IndexBufferObject* boundIbo = multidrawIbos->GetBoundIbo();
   DrawIndirectBufferObject* boundIndirect = multidrawIndirectBuffers->GetBoundBufferObject();
-  BindBlocksVertexBufferObject(boundVbo);
+  BindBlocksVertexBufferObject(boundVbo); // Bind the vbo to the vao's format
   boundVbo->Bind();
-  boundIbo->Bind();
-  boundIndirect->Bind();
+  boundIbo->Bind(); // Bind the ibo
+  boundIndirect->Bind(); // Bind the draw elements indirect commands
 
-  glMultiDrawElementsIndirect(GL_TRIANGLES, //type
-    GL_UNSIGNED_INT, //indices represented as unsigned ints
-    (void*)0, //start with the first draw command
-    1, //draw n chunks
-    0); //no stride, the draw commands are tightly packed
-  //glDrawElements(GL_TRIANGLES, boundIbo->GetIndexCount(), GL_UNSIGNED_INT, 0);
+  //ShaderBufferObject* ssbo = ShaderBufferObject::Create<glm::vec3>(chunkOffsets.Data(), 2, 3);
+
+  glMultiDrawElementsIndirect(
+    GL_TRIANGLES,     //type
+    GL_UNSIGNED_INT,  //indices represented as unsigned ints
+    (void*)0,         //start with the first draw command
+    chunkIndex,       //draw n chunks
+    0);               //no stride, the draw commands are tightly packed
 
   SwapNextBuffers();
 }

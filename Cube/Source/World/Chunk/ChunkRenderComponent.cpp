@@ -127,12 +127,12 @@ uint32 ChunkRenderComponent::GetMaximumIndicesPerChunkMesh()
 	return CHUNK_SIZE * 6 * 6;
 }
 
-DrawElementsIndirectCommand ChunkRenderComponent::GenerateDrawElementsIndirectCommand(uint32 firstIndex, uint32 baseVertex, uint32 gl_InstanceId) const
+DrawElementsIndirectCommand ChunkRenderComponent::GenerateDrawElementsIndirectCommand(uint32 baseVertex, uint32 gl_InstanceId) const
 {
 	DrawElementsIndirectCommand command;
 	command.count = mesh.GetIndexCount(); 
 	command.instanceCount = 1;
-	command.firstIndex = firstIndex;
+	command.firstIndex = 0;
 	command.baseVertex = baseVertex;
 	command.baseInstance = gl_InstanceId;
 	return command;
@@ -145,10 +145,10 @@ void ChunkRenderComponent::CopyMeshQuadsToVboOffset(PersistentMappedTripleVbo<Bl
 	//mappedVbo.size = quadCount;
 }
 
-void ChunkRenderComponent::CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo::MappedIbo& mappedIbo, uint32 integerMemoryOffset, uint32 indexOffset) const
+void ChunkRenderComponent::CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo::MappedIbo& mappedIbo, uint32 integerMemoryOffset) const
 {
 	const uint32 indexCount = mesh.GetIndexCount();
-	mesh.CopyIndicesToBuffer(mappedIbo.data + integerMemoryOffset, indexOffset);
+	mesh.CopyIndicesToBuffer(mappedIbo.data + integerMemoryOffset, 0);
 	mappedIbo.ibo->SetIndexCount(indexCount);
 	//mappedIbo.size = indexCount;
 }

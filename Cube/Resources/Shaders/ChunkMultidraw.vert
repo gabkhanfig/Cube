@@ -19,7 +19,7 @@ out vec2 v_out_texCoord;
 // Interpolated color coordinates.
 out vec3 v_out_color;
 
-layout(std430, binding = 0) buffer chunkOffsets
+layout(std430, binding = 3) buffer chunkOffsets
 {
 	vec3 offsets[];
 };
@@ -33,7 +33,7 @@ layout(std430, binding = 0) buffer chunkOffsets
 
 void main()
 {
-	vec3 chunkOffset = offsets[gl_InstanceID];
+	vec3 chunkOffset = vec3(0, 0, 0);
 	gl_Position = u_cameraMVP * vec4(v_in_position + chunkOffset, 1.0);
 
 	//v_out_vertCoord = v_in_position;

@@ -49,6 +49,8 @@ private:
 
 	Shader* shader;
 
+	Shader* multidrawShader;
+
 	VertexArrayObject* vao;
 
 	const GlobalString cameraMvpUniform;

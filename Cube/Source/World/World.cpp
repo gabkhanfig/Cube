@@ -37,7 +37,7 @@ void World::BeginWorld()
 {
   const int c = 1;
   for (int x = 0; x < 1; x++) {
-    for (int y = 0; y < 1; y++) {
+    for (int y = 0; y < 2; y++) {
       for (int z = 0; z < 1; z++) {
         Chunk* chunk = new Chunk({ x, y, z });
         chunk->FillChunkWithBlock("stoneBlock");
@@ -105,45 +105,6 @@ void World::DrawWorld()
   /* Render here */
   Renderer::Clear();
 
-  //chunkShader->Bind();
-  Camera* cam = Camera::GetActiveCamera();
-  chunkRenderer->SetShaderCameraMVP(cam->GetMvpMatrix());
   //chunkRenderer->DrawAllChunks(chunks);
   chunkRenderer->MultidrawIndirectAllChunks(chunks);
-
-  //for (auto& chunkPair : chunks) {
-  //  Chunk* chunk = chunkPair.second;
-  //  chunk->Draw(chunkRenderer);
-  //}
-  /*
-  Chunk* chunk = chunks.find(ChunkPosition(0, 0, 0))->second;
-  ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
-
-  chunkRenderer->SetShaderChunkOffset(chunkRenderer->GetOffsetForChunkDraw(chunk));
-
-
-  DrawElementsIndirectCommand cmd = renderComponent->GenerateDrawElementsIndirectCommand();
-
-  DrawIndirectBufferObject* dbo = DrawIndirectBufferObject::Create(&cmd, 1);
-
-  PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo = chunkRenderer->GetMultidrawVbos()->GetModifyMappedVbo();
-  renderComponent->CopyMeshQuadsToVboOffset(mappedVbo, 0);
-
-  PersistentMappedTripleIbo::MappedIbo& mappedIbo = chunkRenderer->GetMultidrawIbos()->GetModifyMappedIbo();
-  renderComponent->CopyMeshIndicesToIboOffset(mappedIbo, 0, 0);
-
-  VertexBufferObject* boundVbo = chunkRenderer->GetMultidrawVbos()->GetBoundVbo();
-  IndexBufferObject* boundIbo = chunkRenderer->GetMultidrawIbos()->GetBoundIbo();
-  chunkRenderer->BindBlocksVertexBufferObject(boundVbo);
-  boundVbo->Bind();
-  boundIbo->Bind();
-
-  glMultiDrawElementsIndirect(GL_TRIANGLES, //type
-    GL_UNSIGNED_INT, //indices represented as unsigned ints
-    (void*)0, //start with the first draw command
-    1, //draw n chunks
-    0); //no stride, the draw commands are tightly packed
-  //glDrawElements(GL_TRIANGLES, boundIbo->GetIndexCount(), GL_UNSIGNED_INT, 0);
-
-  chunkRenderer->SwapNextBuffer();*/
 }

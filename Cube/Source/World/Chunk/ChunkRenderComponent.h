@@ -37,13 +37,13 @@ public:
 	/* Maximum number of indices per chunk mesh to use for multidraw ibo capacity. */
 	static uint32 GetMaximumIndicesPerChunkMesh();
 
-	DrawElementsIndirectCommand GenerateDrawElementsIndirectCommand(uint32 firstIndex, uint32 baseVertex, uint32 gl_InstanceId) const;
+	DrawElementsIndirectCommand GenerateDrawElementsIndirectCommand(uint32 baseVertex, uint32 gl_InstanceId) const;
 
 	const ChunkMesh& GetMesh() const { return mesh; }
 
 	void CopyMeshQuadsToVboOffset(PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo, uint32 quadMemoryOffset) const;
 
-	void CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo::MappedIbo& mappedIbo, uint32 integerMemoryOffset, uint32 indexOffset) const;
+	void CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo::MappedIbo& mappedIbo, uint32 integerMemoryOffset) const;
 
 	void CopyDrawCommandToIndirectOffset(PersistentMappedTripleIndirect::MappedIndirect& mappedIndirect, uint32 commandMemoryOffset, DrawElementsIndirectCommand command) const;
 

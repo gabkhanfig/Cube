@@ -47,8 +47,6 @@ public:
 
 	void RecreateMesh() const;
 
-	void Draw(ChunkRenderer* renderer);
-
 	ChunkRenderComponent* GetRenderComponent() const { return renderComponent; }
 
 private:

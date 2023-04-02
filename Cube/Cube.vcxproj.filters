@@ -157,6 +157,8 @@
     </None>
     <None Include="Resources\Shaders\Chunk.vert" />
     <None Include="Resources\Shaders\Chunk.frag" />
+    <None Include="Resources\Shaders\ChunkMultidraw.frag" />
+    <None Include="Resources\Shaders\ChunkMultidraw.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\Files.txt" />

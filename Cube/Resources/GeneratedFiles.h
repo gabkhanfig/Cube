@@ -140,8 +140,6 @@ layout (location = 3) in vec3 v_in_color;
 
 // Camera Model-View-Projection matrix.
 uniform mat4 u_cameraMVP;
-// Position offset of the chunk that is being drawn.
-uniform vec3 u_chunkOffset;
 
 // Interpolated fragment shader coordinates it's position in the triangle.
 //out vec3 v_out_fragCoord;
@@ -152,6 +150,11 @@ out vec2 v_out_texCoord;
 // Interpolated color coordinates.
 out vec3 v_out_color;
 
+layout(std430, binding = 3) buffer chunkOffsets
+{
+	vec3 offsets[];
+};
+
 #define SUBVOXEL_COUNT 16.0
 
 #define BYTE_1_BITMASK 0xFF
@@ -161,7 +164,8 @@ out vec3 v_out_color;
 
 void main()
 {
-	gl_Position = u_cameraMVP * vec4(v_in_position + u_chunkOffset, 1.0);
+	vec3 chunkOffset = offsets[gl_InstanceID];//vec3(0, 0, 0);
+	gl_Position = u_cameraMVP * vec4(v_in_position + chunkOffset, 1.0);
 
 	//v_out_vertCoord = v_in_position;
 	//v_out_fragCoord = v_in_position;

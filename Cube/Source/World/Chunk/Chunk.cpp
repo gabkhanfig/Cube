@@ -49,8 +49,3 @@ void Chunk::RecreateMesh() const
 	renderComponent->RecreateMesh();
 }
 
-void Chunk::Draw(ChunkRenderer* renderer)
-{
-	renderComponent->Draw(renderer);
-}
-
