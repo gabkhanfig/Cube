@@ -7,6 +7,7 @@
 #include "../Render/ChunkRenderer.h"
 #include <chrono>
 #include "../../GameInstance.h"
+#include "../../Graphics/Geometry/BlockGeometry.h"
 
 ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
 	: chunk(chunkOwner), meshWasRecreated(false), meshRequiresLargerVbo(false), meshRequiresLargerIbo(false), isMeshEmpty(false)
@@ -46,6 +47,9 @@ void ChunkRenderComponent::RecreateMesh()
 			+ string(", Allowed: ") 
 			+ string::FromInt(GetMaximumQuadsPerChunkMesh()));
 	}
+
+	int bytesUsedByMesh = sizeof(BlockQuad) * size_t(mesh.GetQuads().Capacity());
+	std::cout << "Bytes used by mesh: " << bytesUsedByMesh << std::endl;
 
 	TryCopyMeshQuadsToVbo();
 	TryCopyMeshIndicesToIbo();
@@ -147,6 +151,7 @@ void ChunkRenderComponent::CopyMeshQuadsToVboOffset(PersistentMappedTripleVbo<Bl
 
 void ChunkRenderComponent::CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo::MappedIbo& mappedIbo, uint32 integerMemoryOffset) const
 {
+	check(mappedIbo.data);
 	const uint32 indexCount = mesh.GetIndexCount();
 	mesh.CopyIndicesToBuffer(mappedIbo.data + integerMemoryOffset, 0);
 	mappedIbo.ibo->SetIndexCount(indexCount);

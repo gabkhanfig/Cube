@@ -67,6 +67,9 @@ private:
 	This means upon remeshing, the existing IBOs will likely be able to be used. If not, the IBOs will need to be reallocated. */
 	PersistentMappedTripleIbo* multidrawIbos;
 
+	/**/
+	PersistentMappedTripleVbo<glm::vec3>* multidrawOffsets;
+
 	PersistentMappedTripleIndirect* multidrawIndirectBuffers;
 
 };

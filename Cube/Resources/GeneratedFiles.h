@@ -137,6 +137,7 @@ layout (location = 0) in vec3 v_in_position;
 layout (location = 1) in vec3 v_in_normal;
 layout (location = 2) in vec2 v_in_texCoord;
 layout (location = 3) in vec3 v_in_color;
+layout (location = 4) in vec3 v_in_chunkOffset;
 
 // Camera Model-View-Projection matrix.
 uniform mat4 u_cameraMVP;
@@ -164,8 +165,7 @@ layout(std430, binding = 3) buffer chunkOffsets
 
 void main()
 {
-	vec3 chunkOffset = offsets[gl_InstanceID];//vec3(0, 0, 0);
-	gl_Position = u_cameraMVP * vec4(v_in_position + chunkOffset, 1.0);
+	gl_Position = u_cameraMVP * vec4(v_in_position + v_in_chunkOffset, 1.0);
 
 	//v_out_vertCoord = v_in_position;
 	//v_out_fragCoord = v_in_position;
