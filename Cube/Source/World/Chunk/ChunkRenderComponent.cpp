@@ -48,8 +48,8 @@ void ChunkRenderComponent::RecreateMesh()
 			+ string::FromInt(GetMaximumQuadsPerChunkMesh()));
 	}
 
-	int bytesUsedByMesh = sizeof(BlockQuad) * size_t(mesh.GetQuads().Capacity());
-	std::cout << "Bytes used by mesh: " << bytesUsedByMesh << std::endl;
+	//int bytesUsedByMesh = sizeof(BlockQuad) * size_t(mesh.GetQuads().Capacity());
+	//std::cout << "Bytes used by mesh: " << bytesUsedByMesh << std::endl;
 
 	TryCopyMeshQuadsToVbo();
 	TryCopyMeshIndicesToIbo();
@@ -57,6 +57,7 @@ void ChunkRenderComponent::RecreateMesh()
 
 void ChunkRenderComponent::MultithreadRecreateMeshes(const darray<ChunkRenderComponent*>& components)
 {
+	cubeLog(string("Multithread - recreating ") + string::FromInt(components.Size()) + string(" chunk meshes"));
 	gk::ThreadPool* threadPool = GetGameInstance()->GetThreadPool();
 	for (ChunkRenderComponent* component : components) {
 		auto func = std::bind(&ChunkRenderComponent::RecreateMesh, component);

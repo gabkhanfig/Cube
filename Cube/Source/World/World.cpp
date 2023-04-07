@@ -35,10 +35,10 @@ World::World()
 
 void World::BeginWorld()
 {
-  const int c = 6;
-  for (int x = 0; x < c; x++) {
-    for (int y = 0; y < c; y++) {
-      for (int z = 0; z < c; z++) {
+  const int c = 7;
+  for (int x = 0; x < 6; x++) {
+    for (int y = 0; y < 1; y++) {
+      for (int z = 0; z < 1; z++) {
         Chunk* chunk = new Chunk({ x, y, z });
         chunk->FillChunkWithBlock("stoneBlock");
         chunks.insert({ chunk->GetPosition(), chunk });
@@ -46,16 +46,13 @@ void World::BeginWorld()
     }
   }
 
-  chunkRenderer->ReserveVbosAndIbosForChunkQuantity(chunks.size());
-
   darray<ChunkRenderComponent*> chunkRenderComponents;
   for (auto& chunkPair : chunks) {
     Chunk* chunk = chunkPair.second;
     chunkRenderComponents.Add(chunk->GetRenderComponent());
-    chunk->GetRenderComponent()->RecreateMesh();
+    //chunk->GetRenderComponent()->RecreateMesh();
   }
-  //ChunkRenderComponent::MultithreadRecreateMeshes(chunkRenderComponents);
-  std::cout << "finished recreating" << std::endl;
+  ChunkRenderComponent::MultithreadRecreateMeshes(chunkRenderComponents);
 }
 
 void World::Tick(float deltaTime)

@@ -20,6 +20,8 @@ static std::unordered_map<GlobalString, BlockClass*> MapBlockClasses()
 	block(AirBlock);
 	block(StoneBlock);
 
+#undef block
+
 	return classes;
 }
 

@@ -20,11 +20,6 @@ out vec2 v_out_texCoord;
 // Interpolated color coordinates.
 out vec3 v_out_color;
 
-layout(std430, binding = 3) buffer chunkOffsets
-{
-	vec3 offsets[];
-};
-
 #define SUBVOXEL_COUNT 16.0
 
 #define BYTE_1_BITMASK 0xFF

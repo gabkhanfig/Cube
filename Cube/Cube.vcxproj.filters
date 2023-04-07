@@ -147,6 +147,9 @@
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIndirect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Asserts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.vert" />

@@ -65,13 +65,16 @@ void ChunkRenderer::Draw(VertexBufferObject* vbo, IndexBufferObject* ibo)
 void ChunkRenderer::ReserveVbosAndIbosForChunkQuantity(uint32 chunksNum)
 {
   check(chunksNum > 0);
-  const uint32 vbosCapacity = chunksNum * ChunkRenderComponent::GetMaximumQuadsPerChunkMesh() * 4;
-  const uint32 ibosCapacity = chunksNum * ChunkRenderComponent::GetMaximumIndicesPerChunkMesh() * 4;
-  const uint32 indirectCapacity = chunksNum * 4;
+  std::cout << chunksNum << std::endl;
+  const uint32 vbosCapacity = chunksNum * ChunkRenderComponent::GetMaximumQuadsPerChunkMesh();
+  const uint32 ibosCapacity = chunksNum * ChunkRenderComponent::GetMaximumIndicesPerChunkMesh();
+  const uint32 indirectCapacity = chunksNum;
+
+  std::cout << vbosCapacity << std::endl;
 
   multidrawVbos->Reserve(vbosCapacity);
   multidrawIbos->Reserve(ibosCapacity);
-  multidrawOffsets->Reserve(chunksNum * 4);
+  multidrawOffsets->Reserve(chunksNum);
   multidrawIndirectBuffers->Reserve(indirectCapacity);
 }
 
@@ -105,6 +108,45 @@ void ChunkRenderer::MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chun
   Camera* cam = Camera::GetActiveCamera(); 
   multidrawShader->SetUniformMat4f(cameraMvpUniform, cam->GetMvpMatrix()); // Set the u_cameraMVP matrix in ChunkMultidraw.vert
 
+  darray<const Chunk*> drawChunks;
+  drawChunks.Reserve(chunks.size());
+
+  uint32 requiredVboCapacity = 0;
+  uint32 requiredIboCapacity = 0;
+  uint32 requiredOffsetCount = 0;
+  uint32 requiredIndirectCapacity = 0;
+
+  // Check which chunks should be drawn, and how much buffer capacity is required.
+  for (const auto& chunkPair : chunks) {
+    const Chunk* chunk = chunkPair.second;
+    ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
+    if (renderComponent->IsMeshEmpty()) continue;
+
+    const ChunkMesh& mesh = renderComponent->GetMesh();
+
+    drawChunks.Add(chunk);
+    requiredVboCapacity += mesh.GetQuadCount();
+    requiredIboCapacity += mesh.GetIndexCount();
+    requiredOffsetCount++;
+    requiredIndirectCapacity++;
+  }
+
+  //std::cout << "quad count: " << requiredVboCapacity << std::endl;
+  //std::cout << "index count: " << requiredIboCapacity << std::endl;
+
+  if (multidrawVbos->GetCapacity() < requiredVboCapacity) { // Reserve more block quad vbo capacity if necessary
+    multidrawVbos->Reserve(requiredVboCapacity);
+  }
+  if (multidrawIbos->GetCapacity() < requiredIboCapacity) { // Reserve more ibo capacity if necessary
+    multidrawIbos->Reserve(requiredIboCapacity);
+  }
+  if (multidrawOffsets->GetCapacity() < requiredOffsetCount) { // Reserve more offset vbo capacity if necessary
+    multidrawOffsets->Reserve(requiredOffsetCount);
+  }
+  if (multidrawIndirectBuffers->GetCapacity() < requiredIndirectCapacity) { // Reserve more indirect buffer capacity if necessary
+    multidrawIndirectBuffers->Reserve(requiredIndirectCapacity);
+  }
+
   uint32 chunkIndex = 0;
   uint32 baseQuad = 0;
   uint32 indexOffset = 0;
@@ -112,11 +154,13 @@ void ChunkRenderer::MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chun
   darray<DrawElementsIndirectCommand> indirectCommands;
   darray<glm::vec3> chunkOffsets;
 
-  for (const auto& chunkPair : chunks) {
+  for (const Chunk* chunk : drawChunks) {
+    //if (chunk->GetPosition() != ChunkPosition(0, 0, 0)) continue;
+    //if (chunkIndex == 300) break;
     //std::cout << chunkIndex << std::endl;
     // TODO add chunk offsets as a mat4 for vertex shader
 
-    const Chunk* chunk = chunkPair.second;
+    //const Chunk* chunk = chunkPair.second;
     ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
 
     indirectCommands.Add(renderComponent->GenerateDrawElementsIndirectCommand(
@@ -133,7 +177,10 @@ void ChunkRenderer::MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chun
     chunkIndex++; // Increment for the next chunk
     baseQuad += renderComponent->GetMesh().GetQuadCount(); // Increment the quad memory offset for the next chunk
     indexOffset += renderComponent->GetMesh().GetIndexCount(); // Increment the index memory offset for the next chunk
+    std::cout << "baseQuad: " << baseQuad << std::endl;
+    std::cout << "indexOffset: " << indexOffset << std::endl;
   }
+  std::cout << "\n\n";
 
   PersistentMappedTripleIndirect::MappedIndirect& mappedIndirect = multidrawIndirectBuffers->GetModifyMappedDibo();
   memcpy(mappedIndirect.data, indirectCommands.Data(), sizeof(DrawElementsIndirectCommand) * indirectCommands.Size()); // Copy the draw indirect commands into the modifiable buffer object
