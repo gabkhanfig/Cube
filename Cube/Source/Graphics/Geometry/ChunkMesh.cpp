@@ -78,6 +78,25 @@ void ChunkMesh::AddQuad(const BlockQuad& quad)
   quads.Add(quad);
 }
 
+darray<uint32> ChunkMesh::GetIndices() const
+{
+  constexpr uint32 indices[6] = {
+    2, 3, 0, 1, 2, 0
+  };
+  const uint32 quadCount = quads.Size();
+
+  darray<uint32> outIndices;
+  for (int i = 0; i < quadCount; i++) {
+    outIndices.Add(indices[0] + (i * 4));
+    outIndices.Add(indices[1] + (i * 4));
+    outIndices.Add(indices[2] + (i * 4));
+    outIndices.Add(indices[3] + (i * 4));
+    outIndices.Add(indices[4] + (i * 4));
+    outIndices.Add(indices[5] + (i * 4));
+  }
+  return outIndices;
+}
+
 uint32* ChunkMesh::CreateQuadIndices(const uint32 quadCount)
 {
   constexpr uint32 indexCount = 6;

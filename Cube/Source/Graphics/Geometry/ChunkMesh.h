@@ -31,6 +31,10 @@ public:
 
 	darray<BlockQuad>& GetQuads() { return quads; }
 
+	const darray<BlockQuad>& GetQuads() const { return quads; }
+
+	darray<uint32> GetIndices() const;
+
 	uint32 GetIndexCount() const { return quads.Size() * 6; }
 
 	uint32 GetQuadCount() const { return quads.Size(); }
