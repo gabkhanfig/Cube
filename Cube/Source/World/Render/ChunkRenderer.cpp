@@ -177,10 +177,10 @@ void ChunkRenderer::MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chun
     chunkIndex++; // Increment for the next chunk
     baseQuad += renderComponent->GetMesh().GetQuadCount(); // Increment the quad memory offset for the next chunk
     indexOffset += renderComponent->GetMesh().GetIndexCount(); // Increment the index memory offset for the next chunk
-    std::cout << "baseQuad: " << baseQuad << std::endl;
-    std::cout << "indexOffset: " << indexOffset << std::endl;
+    //std::cout << "baseQuad: " << baseQuad << std::endl;
+    //std::cout << "indexOffset: " << indexOffset << std::endl;
   }
-  std::cout << "\n\n";
+  //std::cout << "\n\n";
 
   PersistentMappedTripleIndirect::MappedIndirect& mappedIndirect = multidrawIndirectBuffers->GetModifyMappedDibo();
   memcpy(mappedIndirect.data, indirectCommands.Data(), sizeof(DrawElementsIndirectCommand) * indirectCommands.Size()); // Copy the draw indirect commands into the modifiable buffer object
@@ -189,20 +189,6 @@ void ChunkRenderer::MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chun
   IndexBufferObject* boundIbo = multidrawIbos->GetBoundIbo();
   DrawIndirectBufferObject* boundIndirect = multidrawIndirectBuffers->GetBoundBufferObject();
   BindBlocksVertexBufferObject(boundVbo); // Bind the vbo to the vao's format
-
-  // Make another vbo for the per-instance chunk offset data. The actual chunk data was previously bound.
-  // TODO MAKE THIS FASTER
-  //uint32 offsetsVbo;
-  //Benchmark buffer{ "create offset vbo" };
-  //glGenBuffers(1, &offsetsVbo);
-  //buffer.End(Benchmark::TimeUnit::ms);
-  //Benchmark bindBuffer{ "bind offset vbo" };
-  //glBindBuffer(GL_ARRAY_BUFFER, offsetsVbo);
-  //bindBuffer.End(Benchmark::TimeUnit::ms);
-  //// Bind all chunk offsets.
-  //Benchmark offsetBench{ "offset data vbo" };
-  //glBufferData(GL_ARRAY_BUFFER, chunkOffsets.Size() * sizeof(glm::vec3), chunkOffsets.Data(), GL_STATIC_DRAW);
-  //offsetBench.End(Benchmark::TimeUnit::ms);
 
   PersistentMappedTripleVbo<glm::vec3>::MappedVbo& mappedOffset = multidrawOffsets->GetModifyMappedVbo();
   memcpy(mappedOffset.data, chunkOffsets.Data(), chunkOffsets.Size() * sizeof(glm::vec3));
@@ -225,9 +211,8 @@ void ChunkRenderer::MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chun
   boundIbo->Bind(); // Bind the ibo
   boundIndirect->Bind(); // Bind the draw elements indirect commands
 
-  //ShaderBufferObject* ssbo = ShaderBufferObject::Create<glm::vec3>(chunkOffsets.Data(), 2, 3);
-  //multidraw.End(Benchmark::TimeUnit::ms);
-  //std::cout << chunkIndex << std::endl;
+  //DrawIndirectBufferObject* dbo = DrawIndirectBufferObject::Create(indirectCommands.Data(), indirectCommands.Size());
+
   glMultiDrawElementsIndirect(
     GL_TRIANGLES,     //type
     GL_UNSIGNED_INT,  //indices represented as unsigned ints
@@ -238,4 +223,5 @@ void ChunkRenderer::MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chun
   SwapNextBuffers();
 
   //glDeleteBuffers(1, &offsetsVbo);
+  //delete dbo;
 }
