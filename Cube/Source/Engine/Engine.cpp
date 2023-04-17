@@ -29,7 +29,9 @@ float Engine::GetDeltaTime() const
 	return tick->GetDeltaTime();
 }
 
-Engine::Engine()
+Engine::Engine() :
+	useRenderThread(false),
+	tick(nullptr)
 {
 	input = new UserInput();
 #ifdef DEVELOPMENT
@@ -38,8 +40,22 @@ Engine::Engine()
 	const char* windowTitle = "Cube";
 #endif
 	window = new Window(windowWidth, windowHeight, windowTitle);
-	tick = nullptr;
 	glfwSetInputMode(window->GetGlfwWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	if (!useRenderThread) {
+		renderThread = nullptr;
+		Window::SetGLFWContextOnCallingThread(window);
+	}
+	else {
+		renderThread = new gk::Thread();
+		renderThread->BindFunction(std::bind(Window::SetGLFWContextOnCallingThread, window)); // Bind function for setting OpenGL context on render thread.
+		//std::cout << std::this_thread::get_id() << std::endl;
+		renderThread->Execute(); // Set OpenGL context on render thread.
+		while (!renderThread->IsReady()); // Wait until render thread finishes execution.
+	}
+
+	glfwSwapInterval(0); // No FPS Limit
+
 }
 
 void Engine::Start()

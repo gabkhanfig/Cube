@@ -104,6 +104,6 @@ void World::DrawWorld()
   /* Render here */
   Renderer::Clear();
 
-  //chunkRenderer->DrawAllChunks(chunks);
-  chunkRenderer->MultidrawIndirectAllChunks(chunks);
+  chunkRenderer->DrawAllChunks(chunks);
+  //chunkRenderer->MultidrawIndirectAllChunks(chunks);
 }

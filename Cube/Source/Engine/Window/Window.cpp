@@ -36,8 +36,8 @@ Window::Window(int inWidth, int inHeight, string inTitle, GLFWmonitor* inMonitor
 	}
 
 	/* Make the window's context current */
-	glfwMakeContextCurrent(window);
-	glfwSwapInterval(0);
+	//glfwMakeContextCurrent(window);
+	//glfwSwapInterval(0);
 }
 
 bool Window::ShouldWindowClose() const
@@ -48,6 +48,12 @@ bool Window::ShouldWindowClose() const
 void Window::Close()
 {
 	glfwSetWindowShouldClose(window, 1);
+}
+
+void Window::SetGLFWContextOnCallingThread(Window* window)
+{
+	//std::cout << std::this_thread::get_id() << std::endl;
+	glfwMakeContextCurrent(window->GetGlfwWindow());
 }
 
 void Window::SwapBuffers()

@@ -69,7 +69,7 @@ public:
 	/* Get the height of the window. */
 	forceinline int GetHeight() const { return height; }
 
-
+	static void SetGLFWContextOnCallingThread(Window* window);
 
 
 

@@ -140,6 +140,8 @@ DrawElementsIndirectCommand ChunkRenderComponent::GenerateDrawElementsIndirectCo
 	command.firstIndex = 0;
 	command.baseVertex = baseVertex;
 	command.baseInstance = gl_InstanceId;
+
+	std::cout << "draw count: " << command.count << std::endl;
 	return command;
 }
 

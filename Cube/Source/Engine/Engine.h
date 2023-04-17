@@ -11,16 +11,7 @@ extern Engine* engine;
 
 class Engine
 {
-private:
 
-	/**/
-	UserInput* input;
-
-	/**/
-	Window* window;
-
-	/**/
-	TickEngine* tick;
 
 public:
 
@@ -41,6 +32,22 @@ public:
 private:
 
 	Engine();
+
+private:
+
+	/**/
+	UserInput* input;
+
+	/**/
+	Window* window;
+
+	/**/
+	TickEngine* tick;
+
+	bool useRenderThread;
+
+	/**/
+	gk::Thread* renderThread;
 
 
 };
