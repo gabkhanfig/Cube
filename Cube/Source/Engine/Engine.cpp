@@ -55,7 +55,19 @@ Engine::Engine() :
 	}
 
 	glfwSwapInterval(0); // No FPS Limit
+}
 
+void Engine::InitializeOpenGL(Window* _window, glm::vec4 clearColor)
+{
+	gladLoadGL();
+	glViewport(0, 0, _window->GetWidth(), _window->GetHeight());
+	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+	glEnable(GL_DEPTH_TEST | GL_DEBUG_OUTPUT);
+	glDebugMessageCallback(MessageCallback, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glEnable(GL_CULL_FACE);
+	glFrontFace(GL_CW); // See chunk mesh index buffer object. this works and i dont know why
 }
 
 void Engine::Start()
@@ -63,15 +75,26 @@ void Engine::Start()
 	Window::InitializeGLFW();
 	engine = new Engine();
 	UserInput::SetCallbacks();
-	gladLoadGL(); 
-	glViewport(0, 0, windowWidth, windowHeight);
-	glClearColor(0.1, 0.1, 0.1, 1.0);
-	glEnable(GL_DEPTH_TEST | GL_DEBUG_OUTPUT);
-	glDebugMessageCallback(MessageCallback, 0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glEnable(GL_CULL_FACE);
-	glFrontFace(GL_CW); // See chunk mesh index buffer object. this works and i dont know why
+	const glm::vec4 clearColor = glm::vec4(0.1, 0.1, 0.1, 1.0);
+	if (!engine->useRenderThread) {
+		InitializeOpenGL(engine->window, clearColor);
+	}
+	else {
+		engine->renderThread->BindFunction(std::bind(Engine::InitializeOpenGL, engine->window, clearColor));
+		engine->renderThread->Execute();
+		while (!engine->renderThread->IsReady());
+	}
+	//gladLoadGL();
+	//glViewport(0, 0, windowWidth, windowHeight);
+	//glClearColor(0.1, 0.1, 0.1, 1.0);
+	//glEnable(GL_DEPTH_TEST | GL_DEBUG_OUTPUT);
+	//glDebugMessageCallback(MessageCallback, 0);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//glEnable(GL_CULL_FACE);
+	//glFrontFace(GL_CW); // See chunk mesh index buffer object. this works and i dont know why
+	std::cout << "test" << std::endl;
 }
 
 void Engine::Run(_TickCallback tickCallback)
