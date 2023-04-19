@@ -20,6 +20,7 @@
 #include "Chunk/ChunkRenderComponent.h"
 #include "Render/ChunkRenderer.h"
 #include <chrono>
+#include "../Engine/Engine.h"
 
 World* GetWorld()
 {
@@ -106,4 +107,6 @@ void World::DrawWorld()
 
   chunkRenderer->DrawAllChunks(chunks);
   //chunkRenderer->MultidrawIndirectAllChunks(chunks);
+
+  engine->SwapGlfwBuffers();
 }

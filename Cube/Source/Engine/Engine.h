@@ -27,7 +27,13 @@ public:
 
 	forceinline TickEngine* GetTick() const { return tick; }
 
+	forceinline bool IsUsingRenderThread() const { return useRenderThread; }
+
+	forceinline gk::Thread* GetRenderThread() const { return renderThread; }
+
 	float GetDeltaTime() const;
+
+	void SwapGlfwBuffers();
 
 private:
 

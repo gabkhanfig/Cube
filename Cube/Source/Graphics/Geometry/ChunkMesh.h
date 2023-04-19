@@ -43,3 +43,19 @@ public:
 	static uint32* CreateQuadIndices(const uint32 quadCount);
 
 };
+
+struct ChunkRenderMeshData 
+{
+	ChunkRenderMeshData()
+		: positionOffset(0, 0, 0)
+	{
+		mesh = new ChunkMesh();
+	}
+
+	~ChunkRenderMeshData() {
+		delete mesh;
+	}
+
+	ChunkMesh* mesh;
+	glm::vec3 positionOffset;
+};

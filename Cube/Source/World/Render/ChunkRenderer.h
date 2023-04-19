@@ -72,4 +72,6 @@ private:
 
 	PersistentMappedTripleIndirect* multidrawIndirectBuffers;
 
+	HashMap<Chunk*, ChunkRenderMeshData> drawChunks;
+
 };

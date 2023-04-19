@@ -19,7 +19,7 @@ void TickEngine::RunEngineLoop()
 		callback(std::min(deltaTime, MAX_DELTA_TIME));
 
 		/* Swap front and back buffers */
-		engine->GetWindow()->SwapBuffers();
+		//engine->GetWindow()->SwapBuffers();
 
 		/* Poll for and process events */
 		Window::PollEvents();

@@ -29,6 +29,11 @@ float Engine::GetDeltaTime() const
 	return tick->GetDeltaTime();
 }
 
+void Engine::SwapGlfwBuffers()
+{
+	window->SwapBuffers();
+}
+
 Engine::Engine() :
 	useRenderThread(false),
 	tick(nullptr)
@@ -85,16 +90,6 @@ void Engine::Start()
 		engine->renderThread->Execute();
 		while (!engine->renderThread->IsReady());
 	}
-	//gladLoadGL();
-	//glViewport(0, 0, windowWidth, windowHeight);
-	//glClearColor(0.1, 0.1, 0.1, 1.0);
-	//glEnable(GL_DEPTH_TEST | GL_DEBUG_OUTPUT);
-	//glDebugMessageCallback(MessageCallback, 0);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	//glEnable(GL_CULL_FACE);
-	//glFrontFace(GL_CW); // See chunk mesh index buffer object. this works and i dont know why
-	std::cout << "test" << std::endl;
 }
 
 void Engine::Run(_TickCallback tickCallback)
