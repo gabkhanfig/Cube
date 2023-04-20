@@ -44,18 +44,50 @@ public:
 
 };
 
+struct ChunkDrawCommand {
+	/* Number of indices to draw. */
+	uint32  count;
+	/* Vertex to start drawing from. */
+	int  baseVertex;
+
+	ChunkDrawCommand() : count(0), baseVertex(0) {}
+
+	/*
+	void glDrawElementsInstancedBaseVertexBaseInstance(	
+		GLenum mode, -> GL_TRIANGLES
+ 		GLsizei count, -> count
+ 		GLenum type, -> GL_UNSIGNED_INT
+ 		void *indices, -> (void*)0
+ 		GLsizei instancecount, -> 1
+ 		GLint basevertex, -> baseVertex
+ 		GLuint baseinstance); -> 0
+	*/
+};
+
 struct ChunkRenderMeshData 
 {
 	ChunkRenderMeshData()
-		: positionOffset(0, 0, 0)
-	{
-		mesh = new ChunkMesh();
-	}
+		: positionOffset(0, 0, 0), boundId(0), modifyId(1)
+	{}
 
 	~ChunkRenderMeshData() {
-		delete mesh;
 	}
 
-	ChunkMesh* mesh;
+	ChunkDrawCommand& GetBoundCommand() { return commands[boundId]; }
+	ChunkDrawCommand& GetModifyCommand() { return commands[modifyId]; }
+
+	void SwapCommand() {
+		boundId = (boundId + 1) % 2;
+		modifyId = (modifyId + 1) % 2;
+	}
+
+	ChunkMesh mesh;
 	glm::vec3 positionOffset;
+
+private:
+
+	ChunkDrawCommand commands[2];
+	int boundId;
+	int modifyId;
+
 };

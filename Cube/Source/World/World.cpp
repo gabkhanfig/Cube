@@ -58,7 +58,40 @@ void World::BeginWorld()
 
 void World::Tick(float deltaTime)
 {
-  DrawWorld();
+  // Tick world
+
+  
+
+  // Render Loop
+  if (!engine->IsUsingRenderThread()) {
+    Renderer::Clear();
+    DrawWorld();
+    return;
+  }
+
+  // 1. Get all of the chunks, including LOD chunks that should be drawn.
+  darray<Chunk*> chunksToDraw;
+  for (auto& chunkPair : chunks) {
+    chunksToDraw.Add(chunkPair.second);
+  }
+  // 2. Wait until previous render execution is finished.
+  gk::Thread* renderThread = engine->GetRenderThread();
+  while (!renderThread->IsReady());
+  // 3. Remove any chunks that shouldn't be drawn from the ChunkRenderer's drawChunks map.
+
+  // 4. From the chunks to be drawn, find which ones need to be remeshed.
+
+  // 5. Remesh each chunk, passing in the mapped ChunkRenderMeshData structure to each chunk render component.
+
+  // 6. Store player position data, camera mvp matrix, and any other data that may change while drawing is occurring within the ChunkRenderer.
+
+  // 7. Execute whole world draw task on the render thread.
+
+  // 8. Copy all of the chunks mesh data within a single VBO and IBO using offsets within them. Will potentially need to reallocate the buffers.
+
+  // 9. Iterate through each chunk, drawing it's data using the ChunkRenderMeshData.
+
+  // 10. Swap buffers.
 }
 
 Chunk* World::GetChunk(ChunkPosition position) const
@@ -103,7 +136,7 @@ bool World::DoesBlockExist(WorldPosition position) const
 void World::DrawWorld()
 {
   /* Render here */
-  Renderer::Clear();
+  //Renderer::Clear();
 
   chunkRenderer->DrawAllChunks(chunks);
   //chunkRenderer->MultidrawIndirectAllChunks(chunks);
