@@ -247,6 +247,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\Graphics\Geometry\ChunkMesh.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\DrawIndirectBufferObject.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\IndexBufferObject.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleBuffer.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIndirect.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIbo.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleVbo.h" />

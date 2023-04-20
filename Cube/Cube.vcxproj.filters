@@ -320,6 +320,9 @@
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIndirect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\16x16wood.png">
