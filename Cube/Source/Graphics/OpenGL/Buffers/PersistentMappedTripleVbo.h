@@ -35,7 +35,7 @@ public:
 
 		for (int i = 0; i < 3; i++) {
 			MappedVbo mapped;
-			mapped.vbo = VertexBufferObject::CreatePersistentMappedVbo(capacity * sizeof(T), (void**)&mapped.data);
+			mapped.vbo = VertexBufferObject::CreatePersistentMapped(capacity * sizeof(T), (void**)&mapped.data);
 			vbos[i] = mapped;
 		}
 	}

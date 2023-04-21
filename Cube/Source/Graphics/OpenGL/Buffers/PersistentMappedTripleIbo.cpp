@@ -18,7 +18,7 @@ void PersistentMappedTripleIbo::Reserve(uint32 count)
 
 	for (int i = 0; i < 3; i++) {
 		MappedIbo mapped;
-		mapped.ibo = IndexBufferObject::CreatePersistentMappedIbo(capacity, &mapped.data);
+		mapped.ibo = IndexBufferObject::CreatePersistentMapped(capacity * sizeof(uint32), (void**)&mapped.data);
 		ibos[i] = mapped;
 	}
 }

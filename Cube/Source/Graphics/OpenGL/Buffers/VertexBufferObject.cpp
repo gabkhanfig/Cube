@@ -25,7 +25,7 @@ VertexBufferObject::~VertexBufferObject()
 	glDeleteBuffers(1, &id);
 }
 
-VertexBufferObject* VertexBufferObject::CreatePersistentMappedVbo(uint32 capacity, void** mappedBufferOut)
+VertexBufferObject* VertexBufferObject::CreatePersistentMapped(uint32 capacity, void** mappedBufferOut)
 {
 	checkm(mappedBufferOut, "mappedBufferOut must be a non-null pointer to copy the mapped buffer to");
 	VertexBufferObject* vbo = new VertexBufferObject();

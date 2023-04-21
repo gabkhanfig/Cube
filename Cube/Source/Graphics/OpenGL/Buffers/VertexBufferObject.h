@@ -29,7 +29,7 @@ public:
 	/* Create a VBO that has a persistently mapped buffer. https://www.khronos.org/opengl/wiki/Buffer_Object#Persistent_mapping
 	@param capacity: Number of bytes that are required.
 	@param mappedBufferOut: A double pointer that will copy the mapped buffer pointer into. Cannot be nullptr. */
-	static VertexBufferObject* CreatePersistentMappedVbo(uint32 capacity, void** mappedBufferOut);
+	static VertexBufferObject* CreatePersistentMapped(uint32 capacity, void** mappedBufferOut);
 
 	void Bind();
 

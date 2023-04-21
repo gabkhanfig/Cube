@@ -22,7 +22,7 @@ public:
 	~IndexBufferObject();
 
 	/* Due to index buffer objects always using uint32s, the capacity is not the bytes, rather the amount of ints. */
-	static IndexBufferObject* CreatePersistentMappedIbo(uint32 capacity, uint32** mappedBufferOut);
+	static IndexBufferObject* CreatePersistentMapped(uint32 capacity, void** mappedBufferOut);
 
 	void Bind();
 
