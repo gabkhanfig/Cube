@@ -67,21 +67,15 @@ private:
 	/* The chunk that owns this render component, and who's mesh will be created and drawn from. */
 	Chunk* chunk;
 
-	/* The mesh that is stored on the cpu, to later be sent to the gpu through the persistent mapped buffers. */
-	//ChunkMesh mesh;
-
 	/* Persistently mapped triple buffered VBOs for faster gpu data syncronization. 
 	This will have a capacity (like a dynamic array) that should be able to hold more than or equal to the amount of quads required by the mesh.
 	This means upon remeshing, the existing VBOs will likely be able to be used. If not, the VBOs will need to be reallocated. */
 	PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* vbos;
-
+	 
 	/* Persistently mapped triple buffered IBOs for faster gpu data syncronization.
 	This will have a capacity (like a dynamic array) that should be able to hold more than or equal to the amount of indices required by the mesh.
 	This means upon remeshing, the existing IBOs will likely be able to be used. If not, the IBOs will need to be reallocated. */
 	PersistentMappedTripleBuffer<IndexBufferObject, uint32>* ibos;
-
-
-
 
 	/**/
 	bool isMeshEmpty;

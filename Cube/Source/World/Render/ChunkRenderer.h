@@ -5,6 +5,7 @@
 #include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleVbo.h"
 #include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleIbo.h"
 #include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleIndirect.h"
+#include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleBuffer.h"
 #include "../WorldTransform.h"
 #include "../Chunk/ChunkDataTypes.h"
 
@@ -21,6 +22,12 @@ class ChunkRenderer
 		glm::dvec3 playerPos;
 		glm::mat4 cameraMVP;
 		darray<ChunkDrawCommand> commands;
+	};
+
+	struct ChunkBuffers {
+		PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* vbos;
+		PersistentMappedTripleBuffer<IndexBufferObject, uint32>* ibos;
+		glm::vec3 positionOffset;
 	};
 
 public:
@@ -60,6 +67,14 @@ public:
 	/* Will create a mesh object for the provided chunk in the meshes map. */
 	void AllocateMeshForChunk(Chunk* chunk);
 
+	void OtherThreadDrawTest();
+
+private:
+
+	void PerformBoundDrawCalls();
+
+	glm::vec3 GetChunkShaderPositionOffset(const glm::dvec3 playerPos, const Chunk* chunk);
+
 private:
 
 	Shader* shader;
@@ -89,10 +104,15 @@ private:
 
 	HashMap<Chunk*, ChunkMesh*> meshes;
 
+	HashMap<Chunk*, ChunkBuffers> buffers;
+
 	//HashMap<Chunk*, ChunkRenderMeshData*> drawChunks;
 
 	DrawCallData drawCalls[2];
 	int boundDrawCallId;
 	int modifyDrawCallId;
+
+	PersistentMappedTripleVbo<BlockQuad>* vbos;
+	PersistentMappedTripleIbo* ibos;
 
 };

@@ -13,8 +13,6 @@
 ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
 	: chunk(chunkOwner), meshWasRecreated(false), meshRequiresLargerVbo(false), meshRequiresLargerIbo(false), isMeshEmpty(false)
 {
-	//vbos = new PersistentMappedTripleVbo<BlockQuad>();
-	//ibos = new PersistentMappedTripleIbo();
 	vbos = new PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>();
 	ibos = new PersistentMappedTripleBuffer<IndexBufferObject, uint32>();
 }

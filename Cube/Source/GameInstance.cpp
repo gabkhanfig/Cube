@@ -20,7 +20,15 @@ GameInstance::GameInstance()
 
 void GameInstance::Init()
 {
-  BlockTextureAtlas::CreateBlockTextureAtlasObject();
+  if (!engine->IsUsingRenderThread()) {
+    BlockTextureAtlas::CreateBlockTextureAtlasObject();
+  }
+  else {
+    gk::Thread* renderThread = engine->GetRenderThread();
+    renderThread->BindFunction(BlockTextureAtlas::CreateBlockTextureAtlasObject);
+    renderThread->Execute();
+    while (!renderThread->IsReady());
+  }
   CubeInput::SetupGameCallbacks();
   world = new World();
   world->BeginWorld();

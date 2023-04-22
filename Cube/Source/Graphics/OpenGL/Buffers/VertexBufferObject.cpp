@@ -7,6 +7,7 @@ VertexBufferObject::VertexBufferObject()
 {
 	glGenBuffers(1, &id);
 	Bind();
+	check(IsBound());
 }
 
 VertexBufferObject::VertexBufferObject(const void* data, uint32 size)

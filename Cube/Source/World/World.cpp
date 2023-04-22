@@ -31,7 +31,16 @@ World* GetWorld()
 World::World()
 {
   player = new Player();
-  chunkRenderer = new ChunkRenderer();
+  if (!engine->IsUsingRenderThread()) {
+    CreateChunkRenderer();
+  }
+  else {
+    gk::Thread* renderThread = engine->GetRenderThread();
+    auto func = std::bind(&World::CreateChunkRenderer, this);
+    renderThread->BindFunction(func);
+    renderThread->Execute();
+    while (!renderThread->IsReady());
+  }
 }
 
 void World::BeginWorld()
@@ -47,7 +56,16 @@ void World::BeginWorld()
     }
   }
 
-  chunkRenderer->AllocateMeshesForChunks(chunks);
+  if (!engine->IsUsingRenderThread()) {
+    chunkRenderer->AllocateMeshesForChunks(chunks);
+  }
+  else {
+    gk::Thread* renderThread = engine->GetRenderThread();
+    auto func = std::bind(&ChunkRenderer::AllocateMeshesForChunks, chunkRenderer, chunks);
+    renderThread->BindFunction(func);
+    renderThread->Execute();
+    while (!renderThread->IsReady());
+  }
   darray<ChunkRenderComponent*> chunkRenderComponents;
   for (auto& chunkPair : chunks) {
     Chunk* chunk = chunkPair.second;
@@ -85,9 +103,13 @@ void World::Tick(float deltaTime)
   // 5. Remesh each chunk, passing in the mapped ChunkRenderMeshData structure to each chunk render component.
 
   // 6. Store player position data, camera mvp matrix, and any other data that may change while drawing is occurring within the ChunkRenderer.
-
+  chunkRenderer->StoreModifyDrawCallData();
   // 7. Execute whole world draw task on the render thread.
-
+  auto func = std::bind(&ChunkRenderer::OtherThreadDrawTest, chunkRenderer);
+  renderThread->BindFunction(func);
+  renderThread->Execute();
+  while (!renderThread->IsReady());
+  //chunkRenderer->OtherThreadDrawTest();
   // 8. Copy all of the chunks mesh data within a single VBO and IBO using offsets within them. Will potentially need to reallocate the buffers.
 
   // 9. Iterate through each chunk, drawing it's data using the ChunkRenderMeshData.
@@ -143,4 +165,9 @@ void World::DrawWorld()
   //chunkRenderer->MultidrawIndirectAllChunks(chunks);
 
   engine->SwapGlfwBuffers();
+}
+
+void World::CreateChunkRenderer()
+{
+  chunkRenderer = new ChunkRenderer();
 }

@@ -44,6 +44,8 @@ private:
 
 	void DrawWorld();
 
+	void CreateChunkRenderer();
+
 private:
 
 	Player* player;

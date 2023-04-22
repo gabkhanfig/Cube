@@ -35,7 +35,7 @@ void Engine::SwapGlfwBuffers()
 }
 
 Engine::Engine() :
-	useRenderThread(false),
+	useRenderThread(true),
 	tick(nullptr)
 {
 	input = new UserInput();
