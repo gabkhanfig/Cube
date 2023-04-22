@@ -13,8 +13,10 @@
 ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
 	: chunk(chunkOwner), meshWasRecreated(false), meshRequiresLargerVbo(false), meshRequiresLargerIbo(false), isMeshEmpty(false)
 {
-	vbos = new PersistentMappedTripleVbo<BlockQuad>();
-	ibos = new PersistentMappedTripleIbo();
+	//vbos = new PersistentMappedTripleVbo<BlockQuad>();
+	//ibos = new PersistentMappedTripleIbo();
+	vbos = new PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>();
+	ibos = new PersistentMappedTripleBuffer<IndexBufferObject, uint32>();
 }
 
 ChunkRenderComponent::~ChunkRenderComponent()
@@ -84,8 +86,8 @@ void ChunkRenderComponent::Draw(ChunkRenderer* renderer)
 	const ChunkMesh* mesh = GetMesh();
 	if (isMeshEmpty) return;
 
-	VertexBufferObject* drawVbo = vbos->GetBoundVbo();
-	IndexBufferObject* drawIbo = ibos->GetBoundIbo();
+	VertexBufferObject* drawVbo = vbos->GetBoundBuffer();
+	IndexBufferObject* drawIbo = ibos->GetBoundBuffer();
 
 	/* It's possible that the mesh will not have been sent to the gpu yet, or it's using buffers that haven't been swapped yet.
 	As a result, the valid buffers can be set for the next frame, and drawing this chunk during this frame can be skipped. */
@@ -152,29 +154,29 @@ ChunkMesh* ChunkRenderComponent::GetMesh() const
 	return GetWorld()->GetChunkRenderer()->GetChunkMesh(chunk);
 }
 
-void ChunkRenderComponent::CopyMeshQuadsToVboOffset(PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo, uint32 quadMemoryOffset) const
-{
-	const ChunkMesh* mesh = GetMesh();
-	const uint32 quadCount = mesh->GetQuadCount();
-	mesh->CopyQuadsToBuffer(mappedVbo.data + quadMemoryOffset);
-	//mappedVbo.size = quadCount;
-}
-
-void ChunkRenderComponent::CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo::MappedIbo& mappedIbo, uint32 integerMemoryOffset) const
-{
-	const ChunkMesh* mesh = GetMesh();
-	check(mappedIbo.data);
-	const uint32 indexCount = mesh->GetIndexCount();
-	mesh->CopyIndicesToBuffer(mappedIbo.data + integerMemoryOffset, 0);
-	mappedIbo.ibo->SetIndexCount(indexCount);
-	//mappedIbo.size = indexCount;
-}
-
-void ChunkRenderComponent::CopyDrawCommandToIndirectOffset(PersistentMappedTripleIndirect::MappedIndirect& mappedIndirect, uint32 commandMemoryOffset, DrawElementsIndirectCommand command) const
-{
-	check(mappedIndirect.data);
-	memcpy(mappedIndirect.data + commandMemoryOffset, &command, sizeof(DrawElementsIndirectCommand));
-}
+//void ChunkRenderComponent::CopyMeshQuadsToVboOffset(PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo, uint32 quadMemoryOffset) const
+//{
+//	const ChunkMesh* mesh = GetMesh();
+//	const uint32 quadCount = mesh->GetQuadCount();
+//	mesh->CopyQuadsToBuffer(mappedVbo.data + quadMemoryOffset);
+//	//mappedVbo.size = quadCount;
+//}
+//
+//void ChunkRenderComponent::CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo::MappedIbo& mappedIbo, uint32 integerMemoryOffset) const
+//{
+//	const ChunkMesh* mesh = GetMesh();
+//	check(mappedIbo.data);
+//	const uint32 indexCount = mesh->GetIndexCount();
+//	mesh->CopyIndicesToBuffer(mappedIbo.data + integerMemoryOffset, 0);
+//	mappedIbo.ibo->SetIndexCount(indexCount);
+//	//mappedIbo.size = indexCount;
+//}
+//
+//void ChunkRenderComponent::CopyDrawCommandToIndirectOffset(PersistentMappedTripleIndirect::MappedIndirect& mappedIndirect, uint32 commandMemoryOffset, DrawElementsIndirectCommand command) const
+//{
+//	check(mappedIndirect.data);
+//	memcpy(mappedIndirect.data + commandMemoryOffset, &command, sizeof(DrawElementsIndirectCommand));
+//}
 
 void ChunkRenderComponent::TryCopyMeshQuadsToVbo()
 {
@@ -191,9 +193,9 @@ void ChunkRenderComponent::TryCopyMeshQuadsToVbo()
 		return;
 	}
 
-	PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo = vbos->GetModifyMappedVbo();
+	auto& mappedVbo = vbos->GetModifyMapped();
 	mesh->CopyQuadsToBuffer(mappedVbo.data);
-	mappedVbo.size = quadCount;
+	//mappedVbo.size = quadCount;
 }
 
 void ChunkRenderComponent::TryCopyMeshIndicesToIbo()
@@ -211,8 +213,8 @@ void ChunkRenderComponent::TryCopyMeshIndicesToIbo()
 		return;
 	}
 
-	PersistentMappedTripleIbo::MappedIbo& mappedIbo = ibos->GetModifyMappedIbo();
+	auto& mappedIbo = ibos->GetModifyMapped();
 	mesh->CopyIndicesToBuffer(mappedIbo.data, 0);
-	mappedIbo.ibo->SetIndexCount(indexCount);
-	mappedIbo.size = indexCount;
+	mappedIbo.buffer->SetIndexCount(indexCount);
+	//mappedIbo.size = indexCount;
 }

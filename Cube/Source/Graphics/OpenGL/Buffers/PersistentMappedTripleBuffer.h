@@ -11,7 +11,7 @@ public:
 		Buffer* buffer;
 		BufferDataType* data;
 
-		Mapped() : buffer(nullptr), data(nullptr)
+		Mapped() : buffer(nullptr), data(nullptr) {}
 	};
 
 	PersistentMappedTripleBuffer() : capacity(0), boundId(0), modifyId(1) {}
@@ -49,7 +49,7 @@ private:
 
 	void DeleteBuffers() {
 		for (int i = 0; i < 3; i++) {
-			Buffer* bufferObject = mappedBuffers[i];
+			Buffer* bufferObject = mappedBuffers[i].buffer;
 			if (bufferObject) delete bufferObject;
 			mappedBuffers[i] = Mapped();
 		}

@@ -2,10 +2,11 @@
 
 #include "ChunkSSBO.h"
 #include "../../Graphics/Geometry/ChunkMesh.h"
-#include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleVbo.h"
-#include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleIbo.h"
-#include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleIndirect.h"
+//#include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleVbo.h"
+//#include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleIbo.h"
+//#include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleIndirect.h"
 #include "../../Graphics/OpenGL/OpenGLStructures.h"
+#include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleBuffer.h"
 
 class VertexBufferObject;
 class IndexBufferObject;
@@ -41,11 +42,11 @@ public:
 
 	ChunkMesh* GetMesh() const; //{ return mesh; }
 
-	void CopyMeshQuadsToVboOffset(PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo, uint32 quadMemoryOffset) const;
+	//void CopyMeshQuadsToVboOffset(PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo, uint32 quadMemoryOffset) const;
 
-	void CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo::MappedIbo& mappedIbo, uint32 integerMemoryOffset) const;
+	//void CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo::MappedIbo& mappedIbo, uint32 integerMemoryOffset) const;
 
-	void CopyDrawCommandToIndirectOffset(PersistentMappedTripleIndirect::MappedIndirect& mappedIndirect, uint32 commandMemoryOffset, DrawElementsIndirectCommand command) const;
+	//void CopyDrawCommandToIndirectOffset(PersistentMappedTripleIndirect::MappedIndirect& mappedIndirect, uint32 commandMemoryOffset, DrawElementsIndirectCommand command) const;
 
 	bool IsMeshEmpty() const { return isMeshEmpty; }
 
@@ -72,12 +73,15 @@ private:
 	/* Persistently mapped triple buffered VBOs for faster gpu data syncronization. 
 	This will have a capacity (like a dynamic array) that should be able to hold more than or equal to the amount of quads required by the mesh.
 	This means upon remeshing, the existing VBOs will likely be able to be used. If not, the VBOs will need to be reallocated. */
-	PersistentMappedTripleVbo<BlockQuad>* vbos;
+	PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* vbos;
 
 	/* Persistently mapped triple buffered IBOs for faster gpu data syncronization.
 	This will have a capacity (like a dynamic array) that should be able to hold more than or equal to the amount of indices required by the mesh.
 	This means upon remeshing, the existing IBOs will likely be able to be used. If not, the IBOs will need to be reallocated. */
-	PersistentMappedTripleIbo* ibos;
+	PersistentMappedTripleBuffer<IndexBufferObject, uint32>* ibos;
+
+
+
 
 	/**/
 	bool isMeshEmpty;

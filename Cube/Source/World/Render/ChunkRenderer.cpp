@@ -263,7 +263,12 @@ ChunkMesh* ChunkRenderer::GetChunkMesh(Chunk* chunk) const
 void ChunkRenderer::AllocateMeshesForChunks(const HashMap<ChunkPosition, Chunk*>& chunks)
 {
   for (const auto& chunkPair : chunks) {
-    if (meshes.contains(chunkPair.second)) continue;
-    meshes.insert({ chunkPair.second, new ChunkMesh() });
+    AllocateMeshForChunk(chunkPair.second);
   }
+}
+
+void ChunkRenderer::AllocateMeshForChunk(Chunk* chunk)
+{
+  if (meshes.contains(chunk)) return;
+  meshes.insert({ chunk, new ChunkMesh() });
 }

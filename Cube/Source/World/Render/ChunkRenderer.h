@@ -55,8 +55,10 @@ public:
 
 	ChunkMesh* GetChunkMesh(Chunk* chunk) const;
 
-	/* Will create new mesh objects for  */
+	/* Will create new mesh objects for the provided chunks in the meshes map. */
 	void AllocateMeshesForChunks(const HashMap<ChunkPosition, Chunk*>& chunks);
+	/* Will create a mesh object for the provided chunk in the meshes map. */
+	void AllocateMeshForChunk(Chunk* chunk);
 
 private:
 
