@@ -45,6 +45,8 @@ public:
 };
 
 struct ChunkDrawCommand {
+	/**/
+	glm::vec3 positionOffset;
 	/* Number of indices to draw. */
 	uint32  count;
 	/* Vertex to start drawing from. */

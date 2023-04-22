@@ -47,13 +47,14 @@ void World::BeginWorld()
     }
   }
 
+  chunkRenderer->AllocateMeshesForChunks(chunks);
   darray<ChunkRenderComponent*> chunkRenderComponents;
   for (auto& chunkPair : chunks) {
     Chunk* chunk = chunkPair.second;
     chunkRenderComponents.Add(chunk->GetRenderComponent());
     //chunk->GetRenderComponent()->RecreateMesh();
   }
-  ChunkRenderComponent::MultithreadRecreateMeshes(chunkRenderComponents);
+  ChunkRenderComponent::MultithreadRecreateMeshes(chunkRenderer, chunkRenderComponents);
 }
 
 void World::Tick(float deltaTime)

@@ -55,7 +55,7 @@ void ChunkRenderComponent::RecreateMesh()
 	TryCopyMeshIndicesToIbo();
 }
 
-void ChunkRenderComponent::MultithreadRecreateMeshes(const darray<ChunkRenderComponent*>& components)
+void ChunkRenderComponent::MultithreadRecreateMeshes(const ChunkRenderer* chunkRenderer, const darray<ChunkRenderComponent*>& components)
 {
 	cubeLog(string("Multithread - recreating ") + string::FromInt(components.Size()) + string(" chunk meshes"));
 	gk::ThreadPool* threadPool = GetGameInstance()->GetThreadPool();

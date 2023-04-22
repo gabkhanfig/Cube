@@ -16,7 +16,7 @@
 #include <glad/glad.h>
 
 ChunkRenderer::ChunkRenderer()
-  : chunkOffsetUniform("u_chunkOffset"), cameraMvpUniform("u_cameraMVP")
+  : chunkOffsetUniform("u_chunkOffset"), cameraMvpUniform("u_cameraMVP"), boundDrawCallId(0), modifyDrawCallId(1)
 {
   shader = new Shader(generated_Chunk_vert, generated_Chunk_frag);
   multidrawShader = new Shader(generated_ChunkMultidraw_vert, generated_ChunkMultidraw_frag);
@@ -242,4 +242,28 @@ void ChunkRenderer::MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chun
   delete quadsIbo;
   delete offsetsVbo;
   delete dbo;
+}
+
+void ChunkRenderer::StoreModifyDrawCallData()
+{
+  DrawCallData& modifyDrawData = drawCalls[modifyDrawCallId];
+  modifyDrawData.playerPos = GetWorld()->GetPlayer()->GetLocation();
+  modifyDrawData.cameraMVP = Camera::GetActiveCamera()->GetMvpMatrix();
+
+
+}
+
+ChunkMesh* ChunkRenderer::GetChunkMesh(Chunk* chunk) const
+{
+  auto found = meshes.find(chunk);
+  check(found != meshes.end());
+  return found->second;
+}
+
+void ChunkRenderer::AllocateMeshesForChunks(const HashMap<ChunkPosition, Chunk*>& chunks)
+{
+  for (const auto& chunkPair : chunks) {
+    if (meshes.contains(chunkPair.second)) continue;
+    meshes.insert({ chunkPair.second, new ChunkMesh() });
+  }
 }

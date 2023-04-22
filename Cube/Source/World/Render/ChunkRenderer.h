@@ -17,6 +17,12 @@ class IndexBufferObject;
 
 class ChunkRenderer
 {
+	struct DrawCallData {
+		glm::dvec3 playerPos;
+		glm::mat4 cameraMVP;
+		darray<ChunkDrawCommand> commands;
+	};
+
 public:
 
 	ChunkRenderer();
@@ -45,6 +51,13 @@ public:
 
 	void MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chunk*>& chunks);
 
+	void StoreModifyDrawCallData();
+
+	ChunkMesh* GetChunkMesh(Chunk* chunk) const;
+
+	/* Will create new mesh objects for  */
+	void AllocateMeshesForChunks(const HashMap<ChunkPosition, Chunk*>& chunks);
+
 private:
 
 	Shader* shader;
@@ -72,6 +85,12 @@ private:
 
 	PersistentMappedTripleIndirect* multidrawIndirectBuffers;
 
-	HashMap<Chunk*, ChunkRenderMeshData*> drawChunks;
+	HashMap<Chunk*, ChunkMesh*> meshes;
+
+	//HashMap<Chunk*, ChunkRenderMeshData*> drawChunks;
+
+	DrawCallData drawCalls[2];
+	int boundDrawCallId;
+	int modifyDrawCallId;
 
 };

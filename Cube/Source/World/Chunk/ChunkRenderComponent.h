@@ -27,7 +27,7 @@ public:
 	void RecreateMesh();
 
 	/* See RecreateMesh() */
-	static void MultithreadRecreateMeshes(const darray<ChunkRenderComponent*>& components);
+	static void MultithreadRecreateMeshes(const ChunkRenderer* chunkRenderer, const darray<ChunkRenderComponent*>& components);
 	
 	void Draw(ChunkRenderer* renderer);
 
