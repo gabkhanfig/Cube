@@ -24,7 +24,7 @@ public:
 	~ChunkRenderComponent();
 
 	/* Recreates the mesh on the CPU side. Logic must multithread safe, performing no write operations to the chunk, blocks, or OpenGL. */
-	void RecreateMesh();
+	void RecreateMesh(ChunkMesh* mesh);
 
 	/* See RecreateMesh() */
 	static void MultithreadRecreateMeshes(const ChunkRenderer* chunkRenderer, const darray<ChunkRenderComponent*>& components);
@@ -39,7 +39,7 @@ public:
 
 	DrawElementsIndirectCommand GenerateDrawElementsIndirectCommand(uint32 baseVertex, uint32 gl_InstanceId) const;
 
-	const ChunkMesh& GetMesh() const { return mesh; }
+	ChunkMesh* GetMesh() const; //{ return mesh; }
 
 	void CopyMeshQuadsToVboOffset(PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo, uint32 quadMemoryOffset) const;
 
@@ -48,6 +48,8 @@ public:
 	void CopyDrawCommandToIndirectOffset(PersistentMappedTripleIndirect::MappedIndirect& mappedIndirect, uint32 commandMemoryOffset, DrawElementsIndirectCommand command) const;
 
 	bool IsMeshEmpty() const { return isMeshEmpty; }
+
+	Chunk* GetChunk() const { return chunk; }
 
 private:
 
@@ -65,7 +67,7 @@ private:
 	Chunk* chunk;
 
 	/* The mesh that is stored on the cpu, to later be sent to the gpu through the persistent mapped buffers. */
-	ChunkMesh mesh;
+	//ChunkMesh mesh;
 
 	/* Persistently mapped triple buffered VBOs for faster gpu data syncronization. 
 	This will have a capacity (like a dynamic array) that should be able to hold more than or equal to the amount of quads required by the mesh.

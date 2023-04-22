@@ -122,11 +122,11 @@ void ChunkRenderer::MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chun
     ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
     if (renderComponent->IsMeshEmpty()) continue;
 
-    const ChunkMesh& mesh = renderComponent->GetMesh();
+    const ChunkMesh* mesh = renderComponent->GetMesh();
 
     drawChunks.Add(chunk);
-    requiredVboCapacity += mesh.GetQuadCount();
-    requiredIboCapacity += mesh.GetIndexCount();
+    requiredVboCapacity += mesh->GetQuadCount();
+    requiredIboCapacity += mesh->GetIndexCount();
     requiredOffsetCount++;
     requiredIndirectCapacity++;
   }
@@ -176,13 +176,13 @@ void ChunkRenderer::MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chun
     //PersistentMappedTripleIbo::MappedIbo& mappedIbo = multidrawIbos->GetModifyMappedIbo();
     //renderComponent->CopyMeshIndicesToIboOffset(mappedIbo, indexOffset); // Copy the indices into the modifiable ibo starting at indexOffset into the memory
 
-    const ChunkMesh& mesh = renderComponent->GetMesh();
-    quads.Append(mesh.GetQuads());
-    indices.Append(mesh.GetIndices());
+    const ChunkMesh* mesh = renderComponent->GetMesh();
+    quads.Append(mesh->GetQuads());
+    indices.Append(mesh->GetIndices());
 
     chunkIndex++; // Increment for the next chunk
-    baseQuad += renderComponent->GetMesh().GetQuadCount() * 4; // Increment the quad memory offset for the next chunk
-    indexOffset += renderComponent->GetMesh().GetIndexCount(); // Increment the index memory offset for the next chunk
+    baseQuad += mesh->GetQuadCount() * 4; // Increment the quad memory offset for the next chunk
+    indexOffset += mesh->GetIndexCount(); // Increment the index memory offset for the next chunk
     //std::cout << "baseQuad: " << baseQuad << std::endl;
     //std::cout << "indexOffset: " << indexOffset << std::endl;
   }

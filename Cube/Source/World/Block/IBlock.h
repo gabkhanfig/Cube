@@ -75,7 +75,7 @@ public:
 	
 	/* Create the mesh data for the block, adding to the Chunk's mesh. Must be multithreading safe. 
 	DEVELOPER NOTE!!!! Block's are responsible for their own mesh offsets within the chunk. */
-	virtual void AddBlockMeshToChunkMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const;
+	virtual void AddBlockMeshToChunkMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const;
 
 	virtual EMeshTransparency GetFaceTransparency(BlockFacing face) const { return EMeshTransparency::solid; }
 
@@ -90,7 +90,7 @@ protected:
 	/**/
 	virtual EMeshType GetMeshType() const = 0;
 
-	void CreateCubeMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const;
+	void CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const;
 
 	bool CanDrawFace(WorldPosition position, BlockFacing face) const;
 

@@ -1,7 +1,7 @@
 #include "IBlock.h"
 #include "../World.h"
 
-void IBlock::AddBlockMeshToChunkMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const
+void IBlock::AddBlockMeshToChunkMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const
 {
   EMeshType meshType = GetMeshType();
   switch (meshType) {
@@ -17,7 +17,7 @@ void IBlock::OnDestroy()
 {
 }
 
-void IBlock::CreateCubeMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const
+void IBlock::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const
 {
   const EBlockTexture allSideTexture = GetAllSidedTexture();
   const glm::vec2 texCoords[4] = {
@@ -99,32 +99,32 @@ void IBlock::CreateCubeMesh(ChunkMesh& chunkMesh, Chunk* chunk, WorldPosition po
   if (CanDrawFace(position, BlockFacing::Dir_Down)) {
     BlockQuad bottom = BlockQuad(bottomPos, texCoords, bottomCols);
     bottom.Shift(vertexOffset);
-    chunkMesh.AddQuad(bottom);
+    chunkMesh->AddQuad(bottom);
   }
   if (CanDrawFace(position, BlockFacing::Dir_North)) {
     BlockQuad north = BlockQuad(northPos, texCoords, northCols);
     north.Shift(vertexOffset);
-    chunkMesh.AddQuad(north);
+    chunkMesh->AddQuad(north);
   }
   if (CanDrawFace(position, BlockFacing::Dir_East)) {
     BlockQuad east = BlockQuad(eastPos, texCoords, eastCols);
     east.Shift(vertexOffset);
-    chunkMesh.AddQuad(east);
+    chunkMesh->AddQuad(east);
   }
   if (CanDrawFace(position, BlockFacing::Dir_South)) {
     BlockQuad south = BlockQuad(southPos, texCoords, southCols);
     south.Shift(vertexOffset);
-    chunkMesh.AddQuad(south);
+    chunkMesh->AddQuad(south);
   }
   if (CanDrawFace(position, BlockFacing::Dir_West)) {
     BlockQuad west = BlockQuad(westPos, texCoords, westCols);
     west.Shift(vertexOffset);
-    chunkMesh.AddQuad(west);
+    chunkMesh->AddQuad(west);
   }
   if (CanDrawFace(position, BlockFacing::Dir_Up)) {
     BlockQuad top = BlockQuad(topPos, texCoords, topCols);
     top.Shift(vertexOffset);
-    chunkMesh.AddQuad(top);
+    chunkMesh->AddQuad(top);
   }
   
 }

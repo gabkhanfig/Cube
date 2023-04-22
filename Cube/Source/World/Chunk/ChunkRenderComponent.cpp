@@ -8,6 +8,7 @@
 #include <chrono>
 #include "../../GameInstance.h"
 #include "../../Graphics/Geometry/BlockGeometry.h"
+#include "../World.h"
 
 ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
 	: chunk(chunkOwner), meshWasRecreated(false), meshRequiresLargerVbo(false), meshRequiresLargerIbo(false), isMeshEmpty(false)
@@ -22,10 +23,10 @@ ChunkRenderComponent::~ChunkRenderComponent()
 	if (ibos) delete ibos;
 }
 
-void ChunkRenderComponent::RecreateMesh()
+void ChunkRenderComponent::RecreateMesh(ChunkMesh* mesh)
 {
 	meshWasRecreated = true;
-	mesh.Empty();
+	mesh->Empty();
 	const IBlock* air = BlockFactory::GetAirBlock();
 
 	for (int i = 0; i < CHUNK_SIZE; i++) {
@@ -39,11 +40,11 @@ void ChunkRenderComponent::RecreateMesh()
 		block->AddBlockMeshToChunkMesh(mesh, chunk, worldPos, vertexOffset);
 	}
 
-	isMeshEmpty = mesh.GetQuadCount() == 0;
-	if (mesh.GetQuadCount() > GetMaximumQuadsPerChunkMesh()) {
+	isMeshEmpty = mesh->GetQuadCount() == 0;
+	if (mesh->GetQuadCount() > GetMaximumQuadsPerChunkMesh()) {
 		cubeLog(
 			string("[Error]: ChunkRenderComponent::RecreateMesh()... Number of generated quads exceeds maximum allowed per chunk. Generated: ") 
-			+ string::FromInt(mesh.GetQuadCount()) 
+			+ string::FromInt(mesh->GetQuadCount()) 
 			+ string(", Allowed: ") 
 			+ string::FromInt(GetMaximumQuadsPerChunkMesh()));
 	}
@@ -60,7 +61,7 @@ void ChunkRenderComponent::MultithreadRecreateMeshes(const ChunkRenderer* chunkR
 	cubeLog(string("Multithread - recreating ") + string::FromInt(components.Size()) + string(" chunk meshes"));
 	gk::ThreadPool* threadPool = GetGameInstance()->GetThreadPool();
 	for (ChunkRenderComponent* component : components) {
-		auto func = std::bind(&ChunkRenderComponent::RecreateMesh, component);
+		auto func = std::bind(&ChunkRenderComponent::RecreateMesh, component, chunkRenderer->GetChunkMesh(component->GetChunk()));
 		threadPool->AddFunctionToQueue(func);
 	}
 
@@ -80,6 +81,7 @@ void ChunkRenderComponent::MultithreadRecreateMeshes(const ChunkRenderer* chunkR
 
 void ChunkRenderComponent::Draw(ChunkRenderer* renderer)
 {
+	const ChunkMesh* mesh = GetMesh();
 	if (isMeshEmpty) return;
 
 	VertexBufferObject* drawVbo = vbos->GetBoundVbo();
@@ -102,14 +104,14 @@ void ChunkRenderComponent::Draw(ChunkRenderer* renderer)
 
 	if (meshRequiresLargerVbo) {
 		meshRequiresLargerVbo = false;
-		vbos->Reserve((mesh.GetQuadCount() * CAPACITY_INCREASE_FACTOR));
+		vbos->Reserve((mesh->GetQuadCount() * CAPACITY_INCREASE_FACTOR));
 		TryCopyMeshQuadsToVbo();
 		checkm(!meshRequiresLargerVbo, "Mesh VBO should have enough capacity");
 	}
 
 	if (meshRequiresLargerIbo) {
 		meshRequiresLargerIbo = false;
-		ibos->Reserve((mesh.GetIndexCount() * CAPACITY_INCREASE_FACTOR));
+		ibos->Reserve((mesh->GetIndexCount() * CAPACITY_INCREASE_FACTOR));
 		TryCopyMeshIndicesToIbo();
 		checkm(!meshRequiresLargerIbo, "Mesh IBO should have enough capacity");
 	}
@@ -135,7 +137,7 @@ uint32 ChunkRenderComponent::GetMaximumIndicesPerChunkMesh()
 DrawElementsIndirectCommand ChunkRenderComponent::GenerateDrawElementsIndirectCommand(uint32 baseVertex, uint32 gl_InstanceId) const
 {
 	DrawElementsIndirectCommand command;
-	command.count = mesh.GetIndexCount(); 
+	command.count = GetMesh()->GetIndexCount();
 	command.instanceCount = 1;
 	command.firstIndex = 0;
 	command.baseVertex = baseVertex;
@@ -145,18 +147,25 @@ DrawElementsIndirectCommand ChunkRenderComponent::GenerateDrawElementsIndirectCo
 	return command;
 }
 
+ChunkMesh* ChunkRenderComponent::GetMesh() const
+{
+	return GetWorld()->GetChunkRenderer()->GetChunkMesh(chunk);
+}
+
 void ChunkRenderComponent::CopyMeshQuadsToVboOffset(PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo, uint32 quadMemoryOffset) const
 {
-	const uint32 quadCount = mesh.GetQuadCount();
-	mesh.CopyQuadsToBuffer(mappedVbo.data + quadMemoryOffset);
+	const ChunkMesh* mesh = GetMesh();
+	const uint32 quadCount = mesh->GetQuadCount();
+	mesh->CopyQuadsToBuffer(mappedVbo.data + quadMemoryOffset);
 	//mappedVbo.size = quadCount;
 }
 
 void ChunkRenderComponent::CopyMeshIndicesToIboOffset(PersistentMappedTripleIbo::MappedIbo& mappedIbo, uint32 integerMemoryOffset) const
 {
+	const ChunkMesh* mesh = GetMesh();
 	check(mappedIbo.data);
-	const uint32 indexCount = mesh.GetIndexCount();
-	mesh.CopyIndicesToBuffer(mappedIbo.data + integerMemoryOffset, 0);
+	const uint32 indexCount = mesh->GetIndexCount();
+	mesh->CopyIndicesToBuffer(mappedIbo.data + integerMemoryOffset, 0);
 	mappedIbo.ibo->SetIndexCount(indexCount);
 	//mappedIbo.size = indexCount;
 }
@@ -169,7 +178,8 @@ void ChunkRenderComponent::CopyDrawCommandToIndirectOffset(PersistentMappedTripl
 
 void ChunkRenderComponent::TryCopyMeshQuadsToVbo()
 {
-	const uint32 quadCount = mesh.GetQuadCount();
+	const ChunkMesh* mesh = GetMesh();
+	const uint32 quadCount = mesh->GetQuadCount();
 	const uint32 vboCapacity = vbos->GetCapacity();
 
 	if (vboCapacity == 0 && quadCount == 0) {
@@ -182,13 +192,14 @@ void ChunkRenderComponent::TryCopyMeshQuadsToVbo()
 	}
 
 	PersistentMappedTripleVbo<BlockQuad>::MappedVbo& mappedVbo = vbos->GetModifyMappedVbo();
-	mesh.CopyQuadsToBuffer(mappedVbo.data);
+	mesh->CopyQuadsToBuffer(mappedVbo.data);
 	mappedVbo.size = quadCount;
 }
 
 void ChunkRenderComponent::TryCopyMeshIndicesToIbo()
 {
-	const uint32 indexCount = mesh.GetIndexCount();
+	const ChunkMesh* mesh = GetMesh();
+	const uint32 indexCount = mesh->GetIndexCount();
 	const uint32 iboCapacity = ibos->GetCapacity();
 
 	if (iboCapacity == 0 && indexCount == 0) {
@@ -201,7 +212,7 @@ void ChunkRenderComponent::TryCopyMeshIndicesToIbo()
 	}
 
 	PersistentMappedTripleIbo::MappedIbo& mappedIbo = ibos->GetModifyMappedIbo();
-	mesh.CopyIndicesToBuffer(mappedIbo.data, 0);
+	mesh->CopyIndicesToBuffer(mappedIbo.data, 0);
 	mappedIbo.ibo->SetIndexCount(indexCount);
 	mappedIbo.size = indexCount;
 }

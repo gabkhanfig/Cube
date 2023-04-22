@@ -46,6 +46,7 @@ void Chunk::FillChunkWithBlock(GlobalString blockName)
 
 void Chunk::RecreateMesh() const
 {
-	renderComponent->RecreateMesh();
+	ChunkMesh* mesh = renderComponent->GetMesh();
+	renderComponent->RecreateMesh(mesh);
 }
 
