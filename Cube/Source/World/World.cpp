@@ -67,12 +67,15 @@ void World::BeginWorld()
     while (!renderThread->IsReady());
   }
   darray<ChunkRenderComponent*> chunkRenderComponents;
+  darray<Chunk*> remeshedChunks;
   for (auto& chunkPair : chunks) {
     Chunk* chunk = chunkPair.second;
     chunkRenderComponents.Add(chunk->GetRenderComponent());
+    remeshedChunks.Add(chunk);
     //chunk->GetRenderComponent()->RecreateMesh();
   }
   ChunkRenderComponent::MultithreadRecreateMeshes(chunkRenderer, chunkRenderComponents);
+  chunkRenderer->SetRemeshedChunks(remeshedChunks);
 }
 
 void World::Tick(float deltaTime)
@@ -105,7 +108,7 @@ void World::Tick(float deltaTime)
   // 6. Store player position data, camera mvp matrix, and any other data that may change while drawing is occurring within the ChunkRenderer.
   chunkRenderer->StoreModifyDrawCallData();
   // 7. Execute whole world draw task on the render thread.
-  auto func = std::bind(&ChunkRenderer::OtherThreadDrawTest, chunkRenderer);
+  auto func = std::bind(&ChunkRenderer::DrawAllChunksAndPrepareNext, chunkRenderer);
   renderThread->BindFunction(func);
   renderThread->Execute();
   while (!renderThread->IsReady());

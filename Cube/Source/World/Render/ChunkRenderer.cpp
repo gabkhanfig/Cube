@@ -94,10 +94,7 @@ void ChunkRenderer::SwapNextBuffers()
   ibos->SwapNextBuffer();
   boundDrawCallId = (boundDrawCallId + 1) % 2;
   modifyDrawCallId = (modifyDrawCallId + 1) % 2;
-  for (const auto& buffersPair : buffers) {
-    buffersPair.second.vbos->SwapNextBuffer();
-    buffersPair.second.ibos->SwapNextBuffer();
-  }
+  // Dont swap chunk buffers. They only get swapped for remesh.
 }
 
 void ChunkRenderer::DrawAllChunks(const HashMap<ChunkPosition, Chunk*>& chunks)
@@ -263,13 +260,14 @@ void ChunkRenderer::StoreModifyDrawCallData()
   DrawCallData& modifyDrawData = drawCalls[modifyDrawCallId];
   modifyDrawData.playerPos = GetWorld()->GetPlayer()->GetLocation();
   modifyDrawData.cameraMVP = Camera::GetActiveCamera()->GetMvpMatrix();
+  modifyDrawData.canDraw = true;
 }
 
 ChunkMesh* ChunkRenderer::GetChunkMesh(Chunk* chunk) const
 {
-  auto found = meshes.find(chunk);
-  check(found != meshes.end());
-  return found->second;
+  auto found = buffers.find(chunk);
+  check(found != buffers.end());
+  return found->second.mesh;
 }
 
 void ChunkRenderer::AllocateMeshesForChunks(const HashMap<ChunkPosition, Chunk*>& chunks)
@@ -281,32 +279,35 @@ void ChunkRenderer::AllocateMeshesForChunks(const HashMap<ChunkPosition, Chunk*>
 
 void ChunkRenderer::AllocateMeshForChunk(Chunk* chunk)
 {
-  if (meshes.contains(chunk)) return;
-  meshes.insert({ chunk, new ChunkMesh() });
+  if (buffers.contains(chunk)) return;
   ChunkBuffers cbuffers;
   cbuffers.vbos = new PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>();
   cbuffers.ibos = new PersistentMappedTripleBuffer<IndexBufferObject, uint32>();
+  cbuffers.mesh = new ChunkMesh();
   buffers.insert({ chunk, cbuffers });
 }
 
-void ChunkRenderer::OtherThreadDrawTest()
+void ChunkRenderer::DrawAllChunksAndPrepareNext()
 {
   const DrawCallData& boundDrawData = drawCalls[boundDrawCallId];
-  if (boundDrawData.commands.Size() != 0) {
+  if (boundDrawData.canDraw) {
     PerformBoundDrawCalls();
   }
 
   DrawCallData& modifyDrawData = drawCalls[modifyDrawCallId];
-  modifyDrawData.commands.Empty();
 
   darray<BlockQuad> quads;
   darray<uint32> indices;
   uint32 baseVertex = 0;
 
-  for (const auto& meshPair : meshes) {
+  // Copy the remeshed chunks to their OpenGL buffers.
+  for (Chunk* chunk : remeshedChunks) {
+    auto found = buffers.find(chunk);
+    check(found != buffers.end());
 
-    ChunkMesh* mesh = meshPair.second;
-    ChunkBuffers& cbuffers = buffers.find(meshPair.first)->second;
+    ChunkBuffers& cbuffers = found->second; 
+    ChunkMesh* mesh = cbuffers.mesh;
+    if (mesh->GetQuadCount() == 0) continue;
 
     auto cvbos = cbuffers.vbos;
     auto cibos = cbuffers.ibos;
@@ -324,36 +325,32 @@ void ChunkRenderer::OtherThreadDrawTest()
     memcpy(mappedIbo.data, mesh->GetIndices().Data(), mesh->GetIndexCount() * sizeof(uint32));
     mappedIbo.buffer->SetIndexCount(mesh->GetIndexCount());
 
-    cbuffers.positionOffset = GetChunkShaderPositionOffset(modifyDrawData.playerPos, meshPair.first);
+    cvbos->SwapNextBuffer();
+    cibos->SwapNextBuffer();
 
+    cbuffers.positionOffset = GetChunkShaderPositionOffset(modifyDrawData.playerPos, chunk);
+  }
+  remeshedChunks.Empty();
 
-    ChunkDrawCommand command;
-    command.count = meshPair.second->GetIndexCount();
-    command.baseVertex = baseVertex;
-    command.positionOffset = GetChunkShaderPositionOffset(modifyDrawData.playerPos, meshPair.first);
-    modifyDrawData.commands.Add(command);
+  // Prepare the draw calls for the next frame.
+  frameChunkDrawCalls.Empty();
+  for (const auto& bufferPair : buffers) {
+    const ChunkBuffers cbuffers = bufferPair.second;
 
-    quads.Append(meshPair.second->GetQuads());
-    indices.Append(meshPair.second->GetIndices());
-    baseVertex += meshPair.second->GetQuadCount() * 4;
+    ChunkDrawCall drawCall;
+    drawCall.chunk = bufferPair.first;
+    drawCall.vbos = cbuffers.vbos;
+    drawCall.ibos = cbuffers.ibos;
+    drawCall.positionOffset = cbuffers.positionOffset;
+    frameChunkDrawCalls.Add(drawCall);
   }
 
-  //if (vbos->GetCapacity() < quads.Size()) {
-  //  //std::cout << quads.Size() << std::endl;
-  //  //std::cout << quads.Size() * 1.5 << std::endl;
-  //  vbos->Reserve(quads.Size() * 1.5);
-  //}
-  //if (ibos->GetCapacity() < indices.Size()) {
-  //  std::cout << indices.Size() << std::endl;
-  //  ibos->Reserve(indices.Size() * 1.5);
-  //}
-
-  //auto& mappedVbo = vbos->GetModifyMappedVbo();
-  //memcpy(mappedVbo.data, quads.Data(), quads.Size() * sizeof(BlockQuad));
-  //auto& mappedIbo = ibos->GetModifyMappedIbo();
-  //memcpy(mappedIbo.data, indices.Data(), indices.Size() * sizeof(uint32));
-
   SwapNextBuffers();
+}
+
+void ChunkRenderer::SetRemeshedChunks(const darray<Chunk*> newRemeshedChunks)
+{
+  remeshedChunks = newRemeshedChunks;
 }
 
 void ChunkRenderer::PerformBoundDrawCalls()
@@ -362,30 +359,18 @@ void ChunkRenderer::PerformBoundDrawCalls()
   const DrawCallData& boundDrawData = drawCalls[boundDrawCallId];
   shader->Bind();
   SetShaderCameraMVP(boundDrawData.cameraMVP);
-  //VertexBufferObject* vbo = vbos->GetBoundVbo();
-  //IndexBufferObject* ibo = ibos->GetBoundIbo();
-  //vbo->Bind();
-  //ibo->Bind();
 
-  //for (int i = 0; i < boundDrawData.commands.Size(); i++) {
-  //  const ChunkDrawCommand& command = boundDrawData.commands[i];
-  //  SetShaderChunkOffset(command.positionOffset);
-  //  glDrawElementsInstancedBaseVertexBaseInstance(
-  //    GL_TRIANGLES,
-  //    command.count,
-  //    GL_UNSIGNED_INT,
-  //    (void*)0,
-  //    1,
-  //    command.baseVertex,
-  //    0);
-  //}
-  for (const auto& buffersPair : buffers) {
-    VertexBufferObject* vbo = buffersPair.second.vbos->GetBoundBuffer();
-    IndexBufferObject* ibo = buffersPair.second.ibos->GetBoundBuffer(); 
+  for (int i = 0; i < frameChunkDrawCalls.Size(); i++) {
+    const ChunkDrawCall& drawCall = frameChunkDrawCalls[i];
+    VertexBufferObject* vbo = drawCall.vbos->GetBoundBuffer();
+    IndexBufferObject* ibo = drawCall.ibos->GetBoundBuffer();
+    if (vbo == nullptr || ibo == nullptr) continue;
+
     BindBlocksVertexBufferObject(vbo);
-    SetShaderChunkOffset(buffersPair.second.positionOffset);
+    SetShaderChunkOffset(drawCall.positionOffset);
     Draw(vbo, ibo);
   }
+
   engine->SwapGlfwBuffers();
 }
 

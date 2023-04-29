@@ -5,12 +5,14 @@
 #include <string>
 
 TickEngine::TickEngine(_TickCallback tickCallback)
-	: callback(tickCallback), previous(0), current(0), deltaTime(0), fpsCounter(0)
+	: callback(tickCallback), previous(0), current(0), deltaTime(0), fpsCounter(0), tickNum(0)
 {}
 
 void TickEngine::RunEngineLoop()
 {
 	while (!engine->GetWindow()->ShouldWindowClose()) {
+		std::cout << "tickNum: " << tickNum << '\n';
+		tickNum++;
 		previous = current;
 		current = glfwGetTime();
 		deltaTime = current - previous;

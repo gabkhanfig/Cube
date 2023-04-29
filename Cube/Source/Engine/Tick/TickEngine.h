@@ -20,6 +20,8 @@ private:
 
 	float fpsCounter;
 
+	uint64 tickNum;
+
 public:
 	
 	TickEngine(_TickCallback tickCallback);

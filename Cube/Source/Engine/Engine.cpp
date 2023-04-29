@@ -58,8 +58,6 @@ Engine::Engine() :
 		renderThread->Execute(); // Set OpenGL context on render thread.
 		while (!renderThread->IsReady()); // Wait until render thread finishes execution.
 	}
-
-	glfwSwapInterval(0); // No FPS Limit
 }
 
 void Engine::InitializeOpenGL(Window* _window, glm::vec4 clearColor)

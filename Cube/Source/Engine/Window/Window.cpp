@@ -34,7 +34,6 @@ Window::Window(int inWidth, int inHeight, string inTitle, GLFWmonitor* inMonitor
 	if (!window) {
 		glfwTerminate();
 	}
-
 	/* Make the window's context current */
 	//glfwMakeContextCurrent(window);
 	//glfwSwapInterval(0);
@@ -54,6 +53,7 @@ void Window::SetGLFWContextOnCallingThread(Window* window)
 {
 	//std::cout << std::this_thread::get_id() << std::endl;
 	glfwMakeContextCurrent(window->GetGlfwWindow());
+	glfwSwapInterval(0); // No FPS Limit
 }
 
 void Window::SwapBuffers()

@@ -21,10 +21,19 @@ class ChunkRenderer
 	struct DrawCallData {
 		glm::dvec3 playerPos;
 		glm::mat4 cameraMVP;
-		darray<ChunkDrawCommand> commands;
+		bool canDraw;
+		DrawCallData() : canDraw(false) {}
 	};
 
 	struct ChunkBuffers {
+		PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* vbos;
+		PersistentMappedTripleBuffer<IndexBufferObject, uint32>* ibos;
+		ChunkMesh* mesh;
+		glm::vec3 positionOffset;
+	};
+
+	struct ChunkDrawCall {
+		Chunk* chunk;
 		PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* vbos;
 		PersistentMappedTripleBuffer<IndexBufferObject, uint32>* ibos;
 		glm::vec3 positionOffset;
@@ -67,7 +76,9 @@ public:
 	/* Will create a mesh object for the provided chunk in the meshes map. */
 	void AllocateMeshForChunk(Chunk* chunk);
 
-	void OtherThreadDrawTest();
+	void DrawAllChunksAndPrepareNext();
+
+	void SetRemeshedChunks(const darray<Chunk*> newRemeshedChunks);
 
 private:
 
@@ -102,8 +113,6 @@ private:
 
 	PersistentMappedTripleIndirect* multidrawIndirectBuffers;
 
-	HashMap<Chunk*, ChunkMesh*> meshes;
-
 	HashMap<Chunk*, ChunkBuffers> buffers;
 
 	//HashMap<Chunk*, ChunkRenderMeshData*> drawChunks;
@@ -115,4 +124,8 @@ private:
 	PersistentMappedTripleVbo<BlockQuad>* vbos;
 	PersistentMappedTripleIbo* ibos;
 
+
+	darray<Chunk*> remeshedChunks;
+
+	darray<ChunkDrawCall> frameChunkDrawCalls;
 };
