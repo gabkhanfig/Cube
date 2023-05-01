@@ -21,8 +21,6 @@ class ChunkRenderer
 	struct DrawCallData {
 		glm::dvec3 playerPos;
 		glm::mat4 cameraMVP;
-		bool canDraw;
-		DrawCallData() : canDraw(false) {}
 	};
 
 	struct ChunkBuffers {
@@ -53,19 +51,7 @@ public:
 
 	void BindBlocksVertexBufferObject(VertexBufferObject* vbo);
 
-	void Draw(VertexBufferObject* vbo, IndexBufferObject* ibo);
-
-	void ReserveVbosAndIbosForChunkQuantity(uint32 chunksNum);
-
-	PersistentMappedTripleVbo<BlockQuad>* GetMultidrawVbos() const { return multidrawVbos; }
-
-	PersistentMappedTripleIbo* GetMultidrawIbos() const { return multidrawIbos; }
-
 	void SwapNextBuffers();
-
-	void DrawAllChunks(const HashMap<ChunkPosition, Chunk*>& chunks);
-
-	void MultidrawIndirectAllChunks(const HashMap<ChunkPosition, Chunk*>& chunks);
 
 	void StoreModifyDrawCallData();
 
@@ -84,13 +70,13 @@ private:
 
 	void PerformBoundDrawCalls();
 
+	void DrawChunk(const ChunkDrawCall& drawCall);
+
 	glm::vec3 GetChunkShaderPositionOffset(const glm::dvec3 playerPos, const Chunk* chunk);
 
 private:
 
 	Shader* shader;
-
-	Shader* multidrawShader;
 
 	VertexArrayObject* vao;
 
@@ -98,31 +84,11 @@ private:
 
 	const GlobalString chunkOffsetUniform;
 
-	/* Persistently mapped triple buffered VBOs for faster gpu data syncronization and multidraw.
-	This will have a capacity (like a dynamic array) that should be able to hold more than or equal to the amount of quads required by the mesh.
-	This means upon remeshing, the existing VBOs will likely be able to be used. If not, the VBOs will need to be reallocated. */
-	PersistentMappedTripleVbo<BlockQuad>* multidrawVbos;
-
-	/* Persistently mapped triple buffered IBOs for faster gpu data syncronization and multidraw.
-	This will have a capacity (like a dynamic array) that should be able to hold more than or equal to the amount of indices required by the mesh.
-	This means upon remeshing, the existing IBOs will likely be able to be used. If not, the IBOs will need to be reallocated. */
-	PersistentMappedTripleIbo* multidrawIbos;
-
-	/**/
-	PersistentMappedTripleVbo<glm::vec3>* multidrawOffsets;
-
-	PersistentMappedTripleIndirect* multidrawIndirectBuffers;
-
 	HashMap<Chunk*, ChunkBuffers> buffers;
-
-	//HashMap<Chunk*, ChunkRenderMeshData*> drawChunks;
 
 	DrawCallData drawCalls[2];
 	int boundDrawCallId;
 	int modifyDrawCallId;
-
-	PersistentMappedTripleVbo<BlockQuad>* vbos;
-	PersistentMappedTripleIbo* ibos;
 
 
 	darray<Chunk*> remeshedChunks;
