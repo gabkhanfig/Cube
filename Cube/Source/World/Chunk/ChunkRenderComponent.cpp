@@ -9,6 +9,7 @@
 #include "../../GameInstance.h"
 #include "../../Graphics/Geometry/BlockGeometry.h"
 #include "../World.h"
+#include "../Block/BlockTypes/Air/AirBlock.h"
 
 ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
 	: chunk(chunkOwner)
@@ -22,13 +23,13 @@ ChunkRenderComponent::~ChunkRenderComponent()
 void ChunkRenderComponent::RecreateMesh(ChunkMesh* mesh)
 {
 	mesh->Empty();
-	const Block* air = BlockFactory::GetAirBlock();
+	const GlobalString airName = AirBlock::GetStaticName();
 
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		const BlockPosition blockPos = i;
 		const Block* block = chunk->GetBlock(blockPos);
 
-		if (block == air) continue;
+		if (block->GetName() == airName) continue;
 
 		const WorldPosition worldPos = WorldPosition::FromChunkAndBlock(chunk->GetPosition(), blockPos);
 		const glm::vec3 vertexOffset{ blockPos.X(), blockPos.Y(), blockPos.Z() };
