@@ -1,9 +1,9 @@
 #include "ChunkDataTypes.h"
-#include "../Block/IBlock.h"
+#include "../Block/Block.h"
 
 ChunkBlock::ChunkBlock()
 {
-	IBlock* airBlock = BlockFactory::GetAirBlock();
+	Block* airBlock = BlockFactory::GetAirBlock();
 	block = airBlock;
 }
 
@@ -14,7 +14,7 @@ ChunkBlock::~ChunkBlock()
 	}
 }
 
-void ChunkBlock::ReplaceBlock(IBlock* newBlock)
+void ChunkBlock::ReplaceBlock(Block* newBlock)
 {
 	checkm(newBlock, "Cannot replace a ChunkBlock block with nullptr");
 	if (block) {

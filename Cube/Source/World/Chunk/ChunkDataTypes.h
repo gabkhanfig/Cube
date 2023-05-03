@@ -3,7 +3,7 @@
 #include "ChunkData.h"
 #include "../WorldTransform.h"
 
-class IBlock;
+class Block;
 
 struct BlockLight
 {
@@ -40,7 +40,7 @@ struct ChunkBlock
 {
 private:
 
-	IBlock* block;
+	Block* block;
 	BlockLight light;
 	BlockFacing facing;
 
@@ -51,12 +51,12 @@ public:
 	~ChunkBlock();
 
 	/* CAUTION!!! If the intent is to destroy this block, call DestroyBlock(). */
-	IBlock* GetBlock() const { return block; }
+	Block* GetBlock() const { return block; }
 	BlockLight GetLight() const { return light; }
 	BlockFacing GetFacing() const { return facing; }
 
 	/* Destroys the block currently stored and replaces it with the newBlock. */
-	void ReplaceBlock(IBlock* newBlock);
+	void ReplaceBlock(Block* newBlock);
 	/* Destroys the block currently stored and sets it to air. */
 	void DestroyBlock();
 	/* Set the lighting value of this block. */

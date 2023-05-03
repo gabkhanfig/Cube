@@ -1,11 +1,11 @@
 #include "BlockFactory.h"
-#include "IBlock.h"
+#include "Block.h"
 
 #include "BlockTypes/Stone/StoneBlock.h"
 #include "BlockTypes/Air/AirBlock.h"
 
 template<typename B>
-	requires (std::is_base_of<IBlock, B>::value)
+	requires (std::is_base_of<Block, B>::value)
 static void AddBlockToMap(std::unordered_map<GlobalString, BlockClass*>* map) {
 	BlockClass* block = B::GetStaticClass();
 	map->insert({ block->GetName(), block });
@@ -26,18 +26,12 @@ static std::unordered_map<GlobalString, BlockClass*> MapBlockClasses()
 }
 
 BlockClass::BlockClass()
-	: defaultBlock(nullptr), classRef(nullptr), createNewBlock(false)
+	: classRef(nullptr)
 {}
 
-IBlock* BlockClass::GetBlock()
+Block* BlockClass::GetBlock()
 {
-	IBlock* block = nullptr;
-	if (createNewBlock) {
-		return (IBlock*)classRef->NewObject();
-	}
-	else {
-		block = defaultBlock;
-	}
+	Block* block = (Block*)classRef->NewObject();
 	checkm(block != nullptr, "Block Dependency GetBlock() must never return nullptr");
 	return block;
 }
@@ -54,7 +48,7 @@ BlockClass* BlockFactory::GetBlockClass(GlobalString blockName)
 	return found->second;
 }
 
-IBlock* BlockFactory::GetAirBlock()
+Block* BlockFactory::GetAirBlock()
 {
 	static const GlobalString AirBlockName = "airBlock";
 #ifdef DEVELOPMENT

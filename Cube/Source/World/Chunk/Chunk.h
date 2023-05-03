@@ -3,7 +3,7 @@
 #include "ChunkDataTypes.h"
 //#include "ChunkRenderComponent.h"
 
-class IBlock;
+class Block;
 class ChunkRenderComponent;
 class VertexArrayObject;
 class Shader;
@@ -35,7 +35,7 @@ public:
 	void Tick(float deltaTime);
 
 	/* Get a block at a specific relative position within the chunk. */
-	IBlock* GetBlock(BlockPosition position) const;
+	Block* GetBlock(BlockPosition position) const;
 
 	/* Get a reference to a block and it's chunk data at a specific relative position within the chunk. */
 	ChunkBlock* ChunkBlockAt(BlockPosition position) const;

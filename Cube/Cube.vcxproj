@@ -207,7 +207,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\Player\PlayerInputComponent.cpp" />
     <ClCompile Include="Source\World\Block\BlockTypes\Air\AirBlock.cpp" />
     <ClCompile Include="Source\World\Block\BlockTypes\Stone\StoneBlock.cpp" />
-    <ClCompile Include="Source\World\Block\IBlock.cpp" />
+    <ClCompile Include="Source\World\Block\Block.cpp" />
     <ClCompile Include="Source\World\Block\BlockFactory.cpp" />
     <ClCompile Include="Source\World\Block\BlockTextureAtlas.cpp" />
     <ClCompile Include="Source\World\Chunk\Chunk.cpp" />
@@ -271,7 +271,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\Player\PlayerInputComponent.h" />
     <ClInclude Include="Source\World\Block\BlockTypes\Air\AirBlock.h" />
     <ClInclude Include="Source\World\Block\BlockTypes\Stone\StoneBlock.h" />
-    <ClInclude Include="Source\World\Block\IBlock.h" />
+    <ClInclude Include="Source\World\Block\Block.h" />
     <ClInclude Include="Source\World\Block\BlockFactory.h" />
     <ClInclude Include="Source\World\Block\BlockTextureAtlas.h" />
     <ClInclude Include="Source\World\Chunk\Chunk.h" />

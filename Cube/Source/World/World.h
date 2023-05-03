@@ -9,7 +9,7 @@ class Shader;
 class VertexArrayObject;
 class Chunk;
 class ChunkRenderer;
-class IBlock;
+class Block;
 
 class World
 {
@@ -27,7 +27,7 @@ public:
 	Chunk* GetChunk(ChunkPosition position) const;
 
 	/* Get a block at a specific world position. Returns nullptr if the chunk the block would be in doesn't exist. */
-	IBlock* GetBlock(WorldPosition position) const;
+	Block* GetBlock(WorldPosition position) const;
 
 	/* Get a chunk's block data at a specific world position. Returns nullptr if the chunk the block would be in doesn't exist. */
 	ChunkBlock* ChunkBlockAt(WorldPosition position) const;

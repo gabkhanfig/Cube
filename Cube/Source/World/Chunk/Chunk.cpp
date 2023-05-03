@@ -1,6 +1,6 @@
 #include "Chunk.h"
 #include "../Block/BlockFactory.h"
-#include "../Block/IBlock.h"
+#include "../Block/Block.h"
 #include "ChunkRenderComponent.h"
 
 Chunk::Chunk(ChunkPosition inPosition)
@@ -21,7 +21,7 @@ void Chunk::Tick(float deltaTime)
 	wasChunkModifiedThisTick = false;
 }
 
-IBlock* Chunk::GetBlock(BlockPosition position) const
+Block* Chunk::GetBlock(BlockPosition position) const
 {
 	const int blockIndex = position.index;
 	checkm(blockIndex < CHUNK_SIZE, "block index must be within CHUNK_SIZE");
@@ -39,7 +39,7 @@ void Chunk::FillChunkWithBlock(GlobalString blockName)
 {
 	BlockClass* blockClass = BlockFactory::GetBlockClass(blockName);
 	for (int i = 0; i < CHUNK_SIZE; i++) {
-		IBlock* block = blockClass->GetBlock();
+		Block* block = blockClass->GetBlock();
 		blocks[i].ReplaceBlock(block);
 	}
 }

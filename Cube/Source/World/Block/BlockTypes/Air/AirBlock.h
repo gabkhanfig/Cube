@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../IBlock.h"
+#include "../../Block.h"
 
-class AirBlock : public IBlock 
+class AirBlock : public Block 
 {
 	BLOCK_BODY(AirBlock, "airBlock");
 

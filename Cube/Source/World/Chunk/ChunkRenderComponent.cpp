@@ -3,7 +3,7 @@
 #include "../../Graphics/OpenGL/Buffers/IndexBufferObject.h"
 #include "../../Graphics/OpenGL/Buffers/VertexArrayObject.h"
 #include "Chunk.h"
-#include "../Block/IBlock.h"
+#include "../Block/Block.h"
 #include "../Render/ChunkRenderer.h"
 #include <chrono>
 #include "../../GameInstance.h"
@@ -22,11 +22,11 @@ ChunkRenderComponent::~ChunkRenderComponent()
 void ChunkRenderComponent::RecreateMesh(ChunkMesh* mesh)
 {
 	mesh->Empty();
-	const IBlock* air = BlockFactory::GetAirBlock();
+	const Block* air = BlockFactory::GetAirBlock();
 
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		const BlockPosition blockPos = i;
-		const IBlock* block = chunk->GetBlock(blockPos);
+		const Block* block = chunk->GetBlock(blockPos);
 
 		if (block == air) continue;
 

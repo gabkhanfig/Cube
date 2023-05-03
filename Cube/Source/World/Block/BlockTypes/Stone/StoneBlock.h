@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../IBlock.h"
+#include "../../Block.h"
 
-class StoneBlock : public IBlock
+class StoneBlock : public Block
 {
 	BLOCK_BODY(StoneBlock, "stoneBlock");
 	CUBE_MESH(EBlockTexture::stone);

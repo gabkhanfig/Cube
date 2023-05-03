@@ -2,7 +2,7 @@
 
 #include "../Engine/EngineCore.h"
 
-class IBlock;
+class Block;
 class Entity;
 class World;
 

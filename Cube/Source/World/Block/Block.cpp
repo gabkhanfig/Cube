@@ -1,7 +1,13 @@
-#include "IBlock.h"
+#include "Block.h"
 #include "../World.h"
 
-void IBlock::AddBlockMeshToChunkMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const
+void Block::Destroy()
+{
+  OnDestroy();
+  delete this;
+}
+
+void Block::AddBlockMeshToChunkMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const
 {
   EMeshType meshType = GetMeshType();
   switch (meshType) {
@@ -13,11 +19,21 @@ void IBlock::AddBlockMeshToChunkMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPo
   }
 }
 
-void IBlock::OnDestroy()
+void Block::SetLight(BlockLight newLight)
+{
+  light = newLight;
+}
+
+void Block::SetFacing(BlockFacing newFacing)
+{
+  facing = newFacing;
+}
+
+void Block::OnDestroy()
 {
 }
 
-void IBlock::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const
+void Block::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const
 {
   const EBlockTexture allSideTexture = GetAllSidedTexture();
   const glm::vec2 texCoords[4] = {
@@ -129,24 +145,24 @@ void IBlock::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition po
   
 }
 
-bool IBlock::CanDrawFace(WorldPosition position, BlockFacing face) const
+bool Block::CanDrawFace(WorldPosition position, BlockFacing face) const
 {
   const WorldPosition adjacentPosition = position.Adjacent(face);
 
 #define DRAW_FACE_IF_NULL_ADJACENT true
 
-  const IBlock* adjacentBlock = GetWorld()->GetBlock(adjacentPosition);
+  const Block* adjacentBlock = GetWorld()->GetBlock(adjacentPosition);
   if (adjacentBlock == nullptr) {
     return DRAW_FACE_IF_NULL_ADJACENT;
   }
   
-  const IBlock::EMeshTransparency adjacentTransparency = adjacentBlock->GetFaceTransparency(face.Opposite());
+  const Block::EMeshTransparency adjacentTransparency = adjacentBlock->GetFaceTransparency(face.Opposite());
   switch (adjacentTransparency) {
-  case IBlock::EMeshTransparency::solid:
+  case Block::EMeshTransparency::solid:
     return false;
-  case IBlock::EMeshTransparency::transparent:
+  case Block::EMeshTransparency::transparent:
     return true;
-  case IBlock::EMeshTransparency::custom:
+  case Block::EMeshTransparency::custom:
     // TODO: Implement something for custom mesh transparency idk
     return true;
   default:

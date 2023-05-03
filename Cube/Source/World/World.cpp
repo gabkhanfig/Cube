@@ -15,7 +15,7 @@
 #include "../Graphics/OpenGL/Render/Renderer.h"
 #include "../Graphics/Geometry/ChunkMesh.h"
 #include "Block/BlockFactory.h"
-#include "Block/IBlock.h"
+#include "Block/Block.h"
 #include "Chunk/Chunk.h"
 #include "Chunk/ChunkRenderComponent.h"
 #include "Render/ChunkRenderer.h"
@@ -94,7 +94,7 @@ Chunk* World::GetChunk(ChunkPosition position) const
   return found->second;
 }
 
-IBlock* World::GetBlock(WorldPosition position) const
+Block* World::GetBlock(WorldPosition position) const
 {
   ChunkPosition cpos;
   BlockPosition bpos;

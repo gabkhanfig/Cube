@@ -5,6 +5,7 @@
 #include "../WorldTransform.h"
 #include "BlockTextureAtlas.h"
 #include "../../Graphics/Geometry/ChunkMesh.h"
+#include "../Chunk/ChunkDataTypes.h"
 
 /* Required macro for all blocks. Sets its class data and name. Also sets everything after this back to private. */
 #define BLOCK_BODY(blockClass, blockName) \
@@ -26,17 +27,6 @@ static BlockClass* GetStaticClass() { \
 virtual inline BlockClass* GetClass() const { \
 	return blockClass::GetStaticClass(); \
 } \
-virtual inline void Destroy() override { \
-	OnDestroy(); \
-	if (blockClass::ShouldCreateNewBlock()) delete this; \
-} \
-private:
-
-/* Macro to allow this block to create new versions of itself for chunks. 
-If this is not set, the default functionality of using the global block instance will be used. */
-#define NEW_BLOCK() \
-public: \
-static bool ShouldCreateNewBlock() { return true; } \
 private:
 
 #define CUBE_MESH(texture) \
@@ -47,7 +37,7 @@ private:
 
 class Chunk;
 
-class IBlock
+class Block
 {
 public:
 
@@ -62,8 +52,6 @@ public:
 		custom
 	};
 
-	static bool ShouldCreateNewBlock() { return false; }
-
 	/* Get the name of a block. See BLOCK_BODY() macro. */
 	virtual inline GlobalString GetName() const = 0;
 
@@ -71,13 +59,21 @@ public:
 	virtual inline BlockClass* GetClass() const = 0;
 
 	/* Ensure setting whatever references to this block to be nullptr, or removed entirely. Prefer this to operator delete for blocks. */
-	virtual inline void Destroy() = 0;
+	void Destroy();
 	
 	/* Create the mesh data for the block, adding to the Chunk's mesh. Must be multithreading safe. 
 	DEVELOPER NOTE!!!! Block's are responsible for their own mesh offsets within the chunk. */
 	virtual void AddBlockMeshToChunkMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const;
 
 	virtual EMeshTransparency GetFaceTransparency(BlockFacing face) const { return EMeshTransparency::solid; }
+
+	BlockLight GetLight() const { return light; }
+	BlockFacing GetFacing() const { return facing; }
+
+	/* Set the lighting value of this block. */
+	void SetLight(BlockLight newLight);
+	/* Set the facing value of this block. */
+	void SetFacing(BlockFacing newFacing);
 
 protected:
 
@@ -93,5 +89,10 @@ protected:
 	void CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const;
 
 	bool CanDrawFace(WorldPosition position, BlockFacing face) const;
+
+protected:
+
+	BlockLight light;
+	BlockFacing facing;
 
 };
