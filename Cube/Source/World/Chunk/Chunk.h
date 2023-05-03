@@ -14,7 +14,7 @@ class Chunk
 private:
 
 	/* Array of chunk blocks. */
-	ChunkBlock* blocks;
+	Block** blocks;
 
 	ChunkPosition position;
 

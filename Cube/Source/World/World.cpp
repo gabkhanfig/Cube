@@ -101,17 +101,18 @@ Block* World::GetBlock(WorldPosition position) const
   position.ToChunkAndBlock(&cpos, &bpos);
   const Chunk* chunk = GetChunk(cpos);
   if (chunk == nullptr) return nullptr;
-  return chunk->ChunkBlockAt(bpos)->GetBlock();
+  return chunk->GetBlock(bpos);
 }
 
 ChunkBlock* World::ChunkBlockAt(WorldPosition position) const
 {
-  ChunkPosition cpos;
-  BlockPosition bpos;
-  position.ToChunkAndBlock(&cpos, &bpos);
-  const Chunk* chunk = GetChunk(cpos);
-  if (chunk == nullptr) return nullptr; 
-  return chunk->ChunkBlockAt(bpos);
+  //ChunkPosition cpos;
+  //BlockPosition bpos;
+  //position.ToChunkAndBlock(&cpos, &bpos);
+  //const Chunk* chunk = GetChunk(cpos);
+  //if (chunk == nullptr) return nullptr; 
+  //return chunk->ChunkBlockAt(bpos);
+  return nullptr;
 }
 
 bool World::DoesChunkExist(ChunkPosition position) const
