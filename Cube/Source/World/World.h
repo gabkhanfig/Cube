@@ -46,6 +46,8 @@ private:
 
 	void CreateChunkRenderer();
 
+	void RenderLoop();
+
 private:
 
 	Player* player;
