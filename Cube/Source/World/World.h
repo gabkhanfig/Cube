@@ -29,9 +29,6 @@ public:
 	/* Get a block at a specific world position. Returns nullptr if the chunk the block would be in doesn't exist. */
 	Block* GetBlock(WorldPosition position) const;
 
-	/* Get a chunk's block data at a specific world position. Returns nullptr if the chunk the block would be in doesn't exist. */
-	ChunkBlock* ChunkBlockAt(WorldPosition position) const;
-
 	/* Checks if a chunk is loaded. */
 	bool DoesChunkExist(ChunkPosition position) const;
 

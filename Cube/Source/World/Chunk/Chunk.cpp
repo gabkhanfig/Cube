@@ -34,14 +34,6 @@ Block* Chunk::GetBlock(BlockPosition position) const
 	return blocks[blockIndex];
 }
 
-ChunkBlock* Chunk::ChunkBlockAt(BlockPosition position) const
-{
-	//const int blockIndex = position.index;
-	//checkm(blockIndex < CHUNK_SIZE, "block index must be within CHUNK_SIZE");
-	//return &blocks[blockIndex];
-	return nullptr;
-}
-
 void Chunk::FillChunkWithBlock(GlobalString blockName)
 {
 	BlockClass* blockClass = BlockFactory::GetBlockClass(blockName);

@@ -35,34 +35,3 @@ struct BlockLight
 		);
 	}
 };
-
-struct ChunkBlock
-{
-private:
-
-	Block* block;
-	BlockLight light;
-	BlockFacing facing;
-
-public:
-
-	ChunkBlock();
-
-	~ChunkBlock();
-
-	/* CAUTION!!! If the intent is to destroy this block, call DestroyBlock(). */
-	Block* GetBlock() const { return block; }
-	BlockLight GetLight() const { return light; }
-	BlockFacing GetFacing() const { return facing; }
-
-	/* Destroys the block currently stored and replaces it with the newBlock. */
-	void ReplaceBlock(Block* newBlock);
-	/* Destroys the block currently stored and sets it to air. */
-	void DestroyBlock();
-	/* Set the lighting value of this block. */
-	void SetLight(BlockLight newLight);
-	/* Set the facing value of this block. */
-	void SetFacing(BlockFacing newFacing);
-
-
-};

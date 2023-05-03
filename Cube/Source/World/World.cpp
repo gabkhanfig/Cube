@@ -104,17 +104,6 @@ Block* World::GetBlock(WorldPosition position) const
   return chunk->GetBlock(bpos);
 }
 
-ChunkBlock* World::ChunkBlockAt(WorldPosition position) const
-{
-  //ChunkPosition cpos;
-  //BlockPosition bpos;
-  //position.ToChunkAndBlock(&cpos, &bpos);
-  //const Chunk* chunk = GetChunk(cpos);
-  //if (chunk == nullptr) return nullptr; 
-  //return chunk->ChunkBlockAt(bpos);
-  return nullptr;
-}
-
 bool World::DoesChunkExist(ChunkPosition position) const
 {
   return chunks.contains(position);

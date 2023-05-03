@@ -37,9 +37,6 @@ public:
 	/* Get a block at a specific relative position within the chunk. */
 	Block* GetBlock(BlockPosition position) const;
 
-	/* Get a reference to a block and it's chunk data at a specific relative position within the chunk. */
-	ChunkBlock* ChunkBlockAt(BlockPosition position) const;
-
 	/* Fill the chunk with a specified block. */
 	void FillChunkWithBlock(GlobalString blockName);
 
