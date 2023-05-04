@@ -60,11 +60,11 @@ Engine::Engine() :
 	}
 }
 
-void Engine::InitializeOpenGL(Window* _window, glm::vec4 clearColor)
+void Engine::InitializeOpenGL(Window* _window, glm::vec3 clearColor)
 {
 	gladLoadGL();
 	glViewport(0, 0, _window->GetWidth(), _window->GetHeight());
-	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+	glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.f);
 	glEnable(GL_DEPTH_TEST | GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(MessageCallback, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -79,7 +79,7 @@ void Engine::Start()
 	engine = new Engine();
 	UserInput::SetCallbacks();
 
-	const glm::vec4 clearColor = glm::vec4(0.1, 0.1, 0.1, 1.0);
+	const glm::vec3 clearColor = glm::vec3(0.2, 0.55, 0.8);
 	if (!engine->useRenderThread) {
 		InitializeOpenGL(engine->window, clearColor);
 	}

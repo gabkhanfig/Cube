@@ -44,6 +44,7 @@ void ChunkRenderComponent::MultithreadRecreateMeshes(const ChunkRenderer* chunkR
 	for (ChunkRenderComponent* component : components) {
 		auto func = std::bind(&ChunkRenderComponent::RecreateMesh, component, chunkRenderer->GetChunkMesh(component->GetChunk()));
 		threadPool->AddFunctionToQueue(func);
+		//component->RecreateMesh(chunkRenderer->GetChunkMesh(component->GetChunk()));
 	}
 
 	threadPool->ExecuteQueue();

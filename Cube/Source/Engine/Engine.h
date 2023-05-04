@@ -39,7 +39,7 @@ private:
 
 	Engine();
 
-	static void InitializeOpenGL(Window* _window, glm::vec4 clearColor);
+	static void InitializeOpenGL(Window* _window, glm::vec3 clearColor);
 
 private:
 

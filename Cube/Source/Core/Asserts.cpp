@@ -7,5 +7,6 @@ void _CheckImplementation(bool condition, const string& message, const char* fil
 		<< message
 		<< "\nFile: " << file
 		<< "\nLine: " << line;
-	abort();
+	DebugBreak();
+	//abort();
 }

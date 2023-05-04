@@ -31,6 +31,7 @@ World* GetWorld()
 World::World()
 {
   player = new Player();
+  player->SetLocation({ 0, 33, 0 });
   if (!engine->IsUsingRenderThread()) {
     CreateChunkRenderer();
   }
@@ -45,10 +46,12 @@ World::World()
 
 void World::BeginWorld()
 {
-  const int c = 7;
-  for (int x = 0; x < 6; x++) {
-    for (int y = 0; y < 1; y++) {
-      for (int z = 0; z < 1; z++) {
+  const int renderDistance = 2;
+  const int lower = -1;
+
+  for (int x = lower; x < renderDistance; x++) {
+    for (int y = lower; y < renderDistance; y++) {
+      for (int z = lower; z < renderDistance; z++) {
         Chunk* chunk = new Chunk({ x, y, z });
         chunk->FillChunkWithBlock("stoneBlock");
         chunks.insert({ chunk->GetPosition(), chunk });

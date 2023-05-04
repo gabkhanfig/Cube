@@ -62,32 +62,32 @@ struct BlockPosition
 {
 	int index;
 
-	constexpr BlockPosition(int x, int y, int z)
+	BlockPosition(int x, int y, int z)
 	{
-		//checkm(x >= 0 && x < CHUNK_LENGTH, "BlockPosition x must be between 0 and CHUNK_LENGTH");
-		//checkm(y >= 0 && y < CHUNK_LENGTH, "BlockPosition y must be between 0 and CHUNK_LENGTH");
-		//checkm(z >= 0 && z < CHUNK_LENGTH, "BlockPosition z must be between 0 and CHUNK_LENGTH");
+		checkm(x >= 0 && x < CHUNK_LENGTH, "BlockPosition x must be between 0 and CHUNK_LENGTH");
+		checkm(y >= 0 && y < CHUNK_LENGTH, "BlockPosition y must be between 0 and CHUNK_LENGTH");
+		checkm(z >= 0 && z < CHUNK_LENGTH, "BlockPosition z must be between 0 and CHUNK_LENGTH");
 		index = x + (z * CHUNK_LENGTH) + (y * CHUNK_LENGTH * CHUNK_LENGTH);
 	}
 
-	constexpr BlockPosition(int _index = 0) {
+	BlockPosition(int _index = 0) {
 		//checkm(_index >= 0 && _index < CHUNK_SIZE, "BlockPosition index mumst be between 0 and CHUNK_SIZE");
 		index = _index;
 	}
 
-	forceinline constexpr bool operator == (BlockPosition other) const {
+	forceinline bool operator == (BlockPosition other) const {
 		return index == other.index;
 	}
 
-	forceinline constexpr int X() const {
+	forceinline int X() const {
 		return index % CHUNK_LENGTH;
 	}
 
-	forceinline constexpr int Y() const {
+	forceinline int Y() const {
 		return index / (CHUNK_LENGTH * CHUNK_LENGTH);
 	}
 
-	forceinline constexpr int Z() const {
+	forceinline int Z() const {
 		return (index % (CHUNK_LENGTH * CHUNK_LENGTH)) / CHUNK_LENGTH;
 	}
 };
@@ -105,15 +105,15 @@ struct WorldPosition
 	int y;
 	int z;
 
-	constexpr WorldPosition(int _x = 0, int _y = 0, int _z = 0)
+	WorldPosition(int _x = 0, int _y = 0, int _z = 0)
 		: x(_x), y(_y), z(_z)
 	{}
 
-	constexpr WorldPosition(glm::dvec3 pos)
+	WorldPosition(glm::dvec3 pos)
 		: x(pos.x), y(pos.y), z(pos.z)
 	{}
 
-	static constexpr WorldPosition FromChunkAndBlock(ChunkPosition chunk, BlockPosition block) {
+	static WorldPosition FromChunkAndBlock(ChunkPosition chunk, BlockPosition block) {
 		WorldPosition wp{
 			chunk.x * CHUNK_LENGTH + block.X(),
 			chunk.y * CHUNK_LENGTH + block.Y(),
@@ -122,7 +122,7 @@ struct WorldPosition
 		return wp;
 	}
 
-	constexpr void ToChunkAndBlock(ChunkPosition* outChunk, BlockPosition* outBlock) const {
+	void ToChunkAndBlock(ChunkPosition* outChunk, BlockPosition* outBlock) const {
 		const ChunkPosition cpos = ToChunkPosition();
 		if (outChunk) *outChunk = cpos;
 		if (outBlock) {
@@ -134,15 +134,15 @@ struct WorldPosition
 		
 	}
 
-	constexpr ChunkPosition ToChunkPosition() const {
+	ChunkPosition ToChunkPosition() const {
 		ChunkPosition pos;
-		pos.x = (x / CHUNK_LENGTH) - (1 * (x < 0));
-		pos.y = (y / CHUNK_LENGTH) - (1 * (y < 0));
-		pos.z = (z / CHUNK_LENGTH) - (1 * (z < 0));
+		pos.x = floor(double(x) / CHUNK_LENGTH);
+		pos.y = floor(double(y) / CHUNK_LENGTH);
+		pos.z = floor(double(z) / CHUNK_LENGTH);
 		return pos;
 	}
 
-	constexpr BlockPosition ToBlockPosition() const {
+	BlockPosition ToBlockPosition() const {
 		const ChunkPosition cpos = ToChunkPosition();
 		return BlockPosition(
 			x - (cpos.x * CHUNK_LENGTH),
@@ -150,11 +150,11 @@ struct WorldPosition
 			z - (cpos.z * CHUNK_LENGTH));
 	}
 
-	forceinline constexpr bool operator == (WorldPosition other) const {
+	forceinline bool operator == (WorldPosition other) const {
 		return x == other.x && y == other.y && z == other.z;
 	}
 
-	constexpr WorldPosition Adjacent(BlockFacing adjacentDirection) const {
+	WorldPosition Adjacent(BlockFacing adjacentDirection) const {
 		switch (adjacentDirection.facing) {
 		case BlockFacing::Direction::Dir_Down:
 			return WorldPosition(x, y - 1, z);
