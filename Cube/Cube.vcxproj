@@ -185,9 +185,6 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\Graphics\Geometry\ChunkMesh.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\DrawIndirectBufferObject.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\IndexBufferObject.cpp" />
-    <ClCompile Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIndirect.cpp" />
-    <ClCompile Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIbo.cpp" />
-    <ClCompile Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleVbo.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\ShaderBufferObject.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\VertexArrayObject.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\VertexBufferLayout.cpp" />
@@ -224,8 +221,6 @@ GenerateFiles.bat</Command>
     <None Include="Resources\Shaders\Basic.vert" />
     <None Include="Resources\Shaders\Chunk.frag" />
     <None Include="Resources\Shaders\Chunk.vert" />
-    <None Include="Resources\Shaders\ChunkMultidraw.frag" />
-    <None Include="Resources\Shaders\ChunkMultidraw.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\Files.txt" />
@@ -248,9 +243,6 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\DrawIndirectBufferObject.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\IndexBufferObject.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleBuffer.h" />
-    <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIndirect.h" />
-    <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIbo.h" />
-    <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleVbo.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\ShaderBufferObject.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\VertexArrayObject.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\VertexBufferLayout.h" />

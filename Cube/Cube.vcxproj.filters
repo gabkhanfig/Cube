@@ -135,16 +135,7 @@
     <ClCompile Include="Source\Core\Utils\Benchmark.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleVbo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIbo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\DrawIndirectBufferObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIndirect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Asserts.cpp">
@@ -160,8 +151,6 @@
     </None>
     <None Include="Resources\Shaders\Chunk.vert" />
     <None Include="Resources\Shaders\Chunk.frag" />
-    <None Include="Resources\Shaders\ChunkMultidraw.frag" />
-    <None Include="Resources\Shaders\ChunkMultidraw.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\Files.txt" />
@@ -302,12 +291,6 @@
     <ClInclude Include="Source\Core\Utils\Benchmark.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleVbo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIbo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\World\Raycast.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -315,9 +298,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\DrawIndirectBufferObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleIndirect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleBuffer.h">
