@@ -21,6 +21,7 @@
 #include "Render/ChunkRenderer.h"
 #include <chrono>
 #include "../Engine/Engine.h"
+#include "Terrain/TerrainGenerator.h"
 
 World* GetWorld()
 {
@@ -42,18 +43,21 @@ World::World()
     renderThread->Execute();
     while (!renderThread->IsReady());
   }
+
+  terrainGenerator = new TerrainGenerator();
 }
 
 void World::BeginWorld()
 {
   const int renderDistance = 2;
-  const int lower = -1;
+  const int lower = -2;
 
   for (int x = lower; x < renderDistance; x++) {
     for (int y = lower; y < renderDistance; y++) {
       for (int z = lower; z < renderDistance; z++) {
         Chunk* chunk = new Chunk({ x, y, z });
-        chunk->FillChunkWithBlock("stoneBlock");
+        chunk->GenerateTerrain(terrainGenerator);
+        //chunk->FillChunkWithBlock("stoneBlock");
         chunks.insert({ chunk->GetPosition(), chunk });
       }
     }
@@ -135,12 +139,13 @@ void World::CreateChunkRenderer()
 
 void World::RenderLoop()
 {
+  const bool usingRenderThread = engine->IsUsingRenderThread();
   // Render Loop
-  if (!engine->IsUsingRenderThread()) {
-    Renderer::Clear();
-    //DrawWorld();
-    return;
-  }
+  //if (!engine->IsUsingRenderThread()) {
+  //  Renderer::Clear();
+  //  //DrawWorld();
+  //  return;
+  //}
 
   // 1. Get all of the chunks, including LOD chunks that should be drawn.
   darray<Chunk*> chunksToDraw;
@@ -150,7 +155,10 @@ void World::RenderLoop()
   }
   // 2. Wait until previous render execution is finished.
   gk::Thread* renderThread = engine->GetRenderThread();
-  while (!renderThread->IsReady());
+  if (usingRenderThread) {
+    while (!renderThread->IsReady());
+  }
+  
   // 3. Remove any chunks that shouldn't be drawn from the ChunkRenderer's drawChunks map.
 
   // 4. From the chunks to be drawn, find which ones need to be remeshed.
@@ -160,11 +168,15 @@ void World::RenderLoop()
   // 6. Store player position data, camera mvp matrix, and any other data that may change while drawing is occurring within the ChunkRenderer.
   chunkRenderer->StoreModifyDrawCallData();
   // 7. Execute whole world draw task on the render thread.
-  auto func = std::bind(&ChunkRenderer::DrawAllChunksAndPrepareNext, chunkRenderer);
-  renderThread->BindFunction(func);
-  renderThread->Execute();
-  while (!renderThread->IsReady());
-  //chunkRenderer->OtherThreadDrawTest();
+  if (!usingRenderThread) {
+    chunkRenderer->DrawAllChunksAndPrepareNext();
+  }
+  else {
+    auto func = std::bind(&ChunkRenderer::DrawAllChunksAndPrepareNext, chunkRenderer);
+    renderThread->BindFunction(func);
+    renderThread->Execute();
+    while (!renderThread->IsReady());
+  }
   // 8. Copy all of the chunks mesh data within a single VBO and IBO using offsets within them. Will potentially need to reallocate the buffers.
 
   // 9. Iterate through each chunk, drawing it's data using the ChunkRenderMeshData.

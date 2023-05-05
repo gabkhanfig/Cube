@@ -8,6 +8,7 @@ class ChunkRenderComponent;
 class VertexArrayObject;
 class Shader;
 class ChunkRenderer;
+class TerrainGenerator;
 
 class Chunk
 {
@@ -39,6 +40,8 @@ public:
 
 	/* Fill the chunk with a specified block. */
 	void FillChunkWithBlock(GlobalString blockName);
+
+	void GenerateTerrain(TerrainGenerator* terrainGenerator);
 
 	forceinline ChunkPosition GetPosition() const { return position; }
 

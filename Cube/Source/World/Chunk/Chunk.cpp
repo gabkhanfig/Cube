@@ -3,6 +3,7 @@
 #include "../Block/Block.h"
 #include "../Block/BlockTypes/Air/AirBlock.h"
 #include "ChunkRenderComponent.h"
+#include "../Terrain/TerrainGenerator.h"
 
 Chunk::Chunk(ChunkPosition inPosition)
 	: wasChunkModifiedThisTick(false), position(inPosition)
@@ -47,6 +48,20 @@ void Chunk::FillChunkWithBlock(GlobalString blockName)
 		}
 		blocks[i] = block;
 		//blocks[i].ReplaceBlock(block);
+	}
+}
+
+void Chunk::GenerateTerrain(TerrainGenerator* terrainGenerator)
+{
+	const WorldPosition initialPos = WorldPosition::FromChunkAndBlock(position, BlockPosition());
+	int index = 0;
+	for (int y = 0; y < CHUNK_LENGTH; y++) {
+		for (int z = 0; z < CHUNK_LENGTH; z++) {
+			for (int x = 0; x < CHUNK_LENGTH; x++) {
+				blocks[index] = terrainGenerator->CreateBlockForWorldPosition(WorldPosition(initialPos.x + x, initialPos.y + y, initialPos.z + z));
+				index++;
+			}
+		}
 	}
 }
 
