@@ -65,7 +65,9 @@ void Engine::InitializeOpenGL(Window* _window, glm::vec3 clearColor)
 	gladLoadGL();
 	glViewport(0, 0, _window->GetWidth(), _window->GetHeight());
 	glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.f);
-	glEnable(GL_DEPTH_TEST | GL_DEBUG_OUTPUT);
+	glEnable(GL_DEPTH_TEST | GL_DEBUG_OUTPUT); 
+	glDepthFunc(GL_LESS);
+	glDepthMask(GL_TRUE);
 	glDebugMessageCallback(MessageCallback, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

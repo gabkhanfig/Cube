@@ -13,6 +13,7 @@ void Window::InitializeGLFW()
 		abort();
 
 	isGlfwInitialized = true;
+	//glfwWindowHint(GLFW_DEPTH_BITS, 24);
 }
 
 void Window::PollEvents()

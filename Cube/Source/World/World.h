@@ -10,6 +10,7 @@ class VertexArrayObject;
 class Chunk;
 class ChunkRenderer;
 class Block;
+class TerrainGenerator;
 
 class World
 {
@@ -52,6 +53,8 @@ private:
 	ChunkRenderer* chunkRenderer;
 
 	HashMap<ChunkPosition, Chunk*> chunks;
+
+	TerrainGenerator* terrainGenerator;
 
 };
 
