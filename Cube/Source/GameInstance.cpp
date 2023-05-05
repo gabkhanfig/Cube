@@ -15,7 +15,8 @@ void _CubeGameInstanceTickCallback(float deltaTime)
 GameInstance::GameInstance()
   : world(nullptr)
 {
-  threadPool = new gk::ThreadPool(gk::ThreadPool::SystemThreadCount() - 1);
+  workerThreadsNum = gk::ThreadPool::SystemThreadCount() - 1;
+  threadPool = new gk::ThreadPool(workerThreadsNum);
 }
 
 void GameInstance::Init()

@@ -18,13 +18,18 @@ public:
 
 	forceinline World* GetWorld() const { return world; }
 
+	forceinline int GetWorkerThreadsNum() const { return workerThreadsNum; }
+
 	forceinline gk::ThreadPool* GetThreadPool() const { return threadPool; }
 
 private:
 
 	World* world;
 
+	int workerThreadsNum;
+
 	gk::ThreadPool* threadPool;
+
 };
 
 /**/
