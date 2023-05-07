@@ -63,16 +63,6 @@ void World::BeginWorld()
     }
   }
 
-  if (!engine->IsUsingRenderThread()) {
-    chunkRenderer->AllocateMeshesForChunks(chunks);
-  }
-  else {
-    gk::Thread* renderThread = engine->GetRenderThread();
-    auto func = std::bind(&ChunkRenderer::AllocateMeshesForChunks, chunkRenderer, chunks);
-    renderThread->BindFunction(func);
-    renderThread->Execute();
-    while (!renderThread->IsReady());
-  }
   darray<ChunkRenderComponent*> chunkRenderComponents;
   darray<Chunk*> remeshedChunks;
   for (auto& chunkPair : chunks) {
@@ -169,10 +159,10 @@ void World::RenderLoop()
   chunkRenderer->StoreModifyDrawCallData();
   // 7. Execute whole world draw task on the render thread.
   if (!usingRenderThread) {
-    chunkRenderer->DrawAllChunksAndPrepareNext();
+    chunkRenderer->DrawAllChunksAndPrepareNext(chunksToDraw);
   }
   else {
-    auto func = std::bind(&ChunkRenderer::DrawAllChunksAndPrepareNext, chunkRenderer);
+    auto func = std::bind(&ChunkRenderer::DrawAllChunksAndPrepareNext, chunkRenderer, chunksToDraw);
     renderThread->BindFunction(func);
     renderThread->Execute();
     while (!renderThread->IsReady());

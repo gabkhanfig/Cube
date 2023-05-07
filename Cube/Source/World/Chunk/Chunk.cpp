@@ -65,9 +65,3 @@ void Chunk::GenerateTerrain(TerrainGenerator* terrainGenerator)
 	}
 }
 
-void Chunk::RecreateMesh() const
-{
-	ChunkMesh* mesh = renderComponent->GetMesh();
-	renderComponent->RecreateMesh(mesh);
-}
-

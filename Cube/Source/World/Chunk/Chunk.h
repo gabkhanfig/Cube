@@ -17,7 +17,7 @@ private:
 	/* Array of chunk blocks. */
 	Block** blocks;
 
-	ChunkPosition position;
+	const ChunkPosition position;
 
 	/**/
 	ChunkRenderComponent* renderComponent;
@@ -44,8 +44,6 @@ public:
 	void GenerateTerrain(TerrainGenerator* terrainGenerator);
 
 	forceinline ChunkPosition GetPosition() const { return position; }
-
-	void RecreateMesh() const;
 
 	ChunkRenderComponent* GetRenderComponent() const { return renderComponent; }
 

@@ -24,14 +24,6 @@ ChunkRenderer::ChunkRenderer()
   vao->SetFormatLayout(BlockQuad::GetQuadsVertexBufferLayout());
 }
 
-glm::vec3 ChunkRenderer::GetOffsetForChunkDraw(const Chunk* chunk) const
-{
-  const glm::dvec3 playerLocation = GetWorld()->GetPlayer()->GetLocation();
-  const ChunkPosition _cPos = chunk->GetPosition();
-  const glm::dvec3 chunkLocation = glm::dvec3(_cPos.x * CHUNK_LENGTH, _cPos.y * CHUNK_LENGTH, _cPos.z * CHUNK_LENGTH);
-  return glm::vec3(double(chunkLocation.x - playerLocation.x), double(chunkLocation.y - playerLocation.y), double(chunkLocation.z - playerLocation.z));
-}
-
 void ChunkRenderer::SetShaderChunkOffset(glm::vec3 chunkOffset)
 {
   shader->SetUniform3f(chunkOffsetUniform, chunkOffset);
@@ -67,31 +59,7 @@ void ChunkRenderer::StoreModifyDrawCallData()
   modifyDrawData.cameraMVP = Camera::GetActiveCamera()->GetMvpMatrix();
 }
 
-ChunkMesh* ChunkRenderer::GetChunkMesh(Chunk* chunk) const
-{
-  auto found = buffers.find(chunk);
-  check(found != buffers.end());
-  return found->second.mesh;
-}
-
-void ChunkRenderer::AllocateMeshesForChunks(const HashMap<ChunkPosition, Chunk*>& chunks)
-{
-  for (const auto& chunkPair : chunks) {
-    AllocateMeshForChunk(chunkPair.second);
-  }
-}
-
-void ChunkRenderer::AllocateMeshForChunk(Chunk* chunk)
-{
-  if (buffers.contains(chunk)) return;
-  ChunkBuffers cbuffers;
-  cbuffers.vbos = new PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>();
-  cbuffers.ibos = new PersistentMappedTripleBuffer<IndexBufferObject, uint32>();
-  cbuffers.mesh = new ChunkMesh();
-  buffers.insert({ chunk, cbuffers });
-}
-
-void ChunkRenderer::DrawAllChunksAndPrepareNext()
+void ChunkRenderer::DrawAllChunksAndPrepareNext(const darray<Chunk*>& chunksToDrawNextFrame)
 {
   const DrawCallData& boundDrawData = drawCalls[boundDrawCallId]; 
   PerformBoundDrawCalls();
@@ -104,15 +72,13 @@ void ChunkRenderer::DrawAllChunksAndPrepareNext()
 
   // Copy the remeshed chunks to their OpenGL buffers.
   for (Chunk* chunk : remeshedChunks) {
-    auto found = buffers.find(chunk);
-    check(found != buffers.end());
+    ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
 
-    ChunkBuffers& cbuffers = found->second; 
-    ChunkMesh* mesh = cbuffers.mesh;
+    ChunkMesh* mesh = renderComponent->GetMesh();
     if (mesh->GetQuadCount() == 0) continue;
 
-    auto cvbos = cbuffers.vbos;
-    auto cibos = cbuffers.ibos;
+    auto cvbos = renderComponent->GetVbos();
+    auto cibos = renderComponent->GetIbos();
 
     if (cvbos->GetCapacity() < mesh->GetQuadCount()) {
       cvbos->Reserve(mesh->GetQuadCount() * 1.5);
@@ -129,22 +95,13 @@ void ChunkRenderer::DrawAllChunksAndPrepareNext()
 
     cvbos->SwapNextBuffer();
     cibos->SwapNextBuffer();
-
-    cbuffers.positionOffset = GetChunkShaderPositionOffset(modifyDrawData.playerPos, chunk);
   }
   remeshedChunks.Empty();
 
   // Prepare the draw calls for the next frame.
   frameChunkDrawCalls.Empty();
-  for (const auto& bufferPair : buffers) {
-    const ChunkBuffers cbuffers = bufferPair.second;
-
-    ChunkDrawCall drawCall;
-    drawCall.chunk = bufferPair.first;
-    drawCall.vbos = cbuffers.vbos;
-    drawCall.ibos = cbuffers.ibos;
-    drawCall.positionOffset = cbuffers.positionOffset;
-    frameChunkDrawCalls.Add(drawCall);
+  for (Chunk* chunk : chunksToDrawNextFrame) {
+    frameChunkDrawCalls.Add(chunk);
   }
 
   SwapNextBuffers();
@@ -166,21 +123,20 @@ void ChunkRenderer::PerformBoundDrawCalls()
   SetShaderCameraMVP(boundDrawData.cameraMVP);
 
   for (int i = 0; i < frameChunkDrawCalls.Size(); i++) {
-    const ChunkDrawCall& drawCall = frameChunkDrawCalls[i];
-    DrawChunk(drawCall);
+    DrawChunk(frameChunkDrawCalls[i]);
   }
 
   engine->SwapGlfwBuffers();
 }
 
-void ChunkRenderer::DrawChunk(const ChunkDrawCall& drawCall)
+void ChunkRenderer::DrawChunk(const Chunk* drawChunk)
 {
-  VertexBufferObject* vbo = drawCall.vbos->GetBoundBuffer();
-  IndexBufferObject* ibo = drawCall.ibos->GetBoundBuffer();
+  VertexBufferObject* vbo = drawChunk->GetRenderComponent()->GetVbos()->GetBoundBuffer();
+  IndexBufferObject* ibo = drawChunk->GetRenderComponent()->GetIbos()->GetBoundBuffer();
   if (vbo == nullptr || ibo == nullptr) return;
 
   BindBlocksVertexBufferObject(vbo);
-  SetShaderChunkOffset(drawCall.positionOffset);
+  SetShaderChunkOffset(GetChunkShaderPositionOffset(drawCalls[boundDrawCallId].playerPos, drawChunk));
   Renderer::DrawVboTriangles(vbo, ibo);
 }
 

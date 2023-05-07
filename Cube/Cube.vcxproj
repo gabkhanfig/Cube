@@ -280,6 +280,8 @@ GenerateFiles.bat</Command>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\16x16wood.png" />
+    <Image Include="Resources\Textures\InvalidTexture.png" />
+    <Image Include="Resources\Textures\StoneBlock.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

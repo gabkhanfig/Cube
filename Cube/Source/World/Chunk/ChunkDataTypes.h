@@ -11,7 +11,6 @@ struct BlockLight
 	uint8 g;
 	uint8 b;
 
-
 	constexpr BlockLight()
 		: r(255), g(255), b(255)
 	{}

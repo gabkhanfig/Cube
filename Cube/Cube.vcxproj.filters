@@ -314,5 +314,11 @@
     <Image Include="Resources\Textures\16x16wood.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Resources\Textures\InvalidTexture.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\Textures\StoneBlock.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -24,21 +24,11 @@ class ChunkRenderer
 		PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* vbos;
 		PersistentMappedTripleBuffer<IndexBufferObject, uint32>* ibos;
 		ChunkMesh* mesh;
-		glm::vec3 positionOffset;
-	};
-
-	struct ChunkDrawCall {
-		Chunk* chunk;
-		PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* vbos;
-		PersistentMappedTripleBuffer<IndexBufferObject, uint32>* ibos;
-		glm::vec3 positionOffset;
 	};
 
 public:
 
 	ChunkRenderer();
-
-	glm::vec3 GetOffsetForChunkDraw(const Chunk* chunk) const;
 
 	void SetShaderChunkOffset(glm::vec3 chunkOffset);
 
@@ -52,14 +42,7 @@ public:
 
 	void StoreModifyDrawCallData();
 
-	ChunkMesh* GetChunkMesh(Chunk* chunk) const;
-
-	/* Will create new mesh objects for the provided chunks in the meshes map. */
-	void AllocateMeshesForChunks(const HashMap<ChunkPosition, Chunk*>& chunks);
-	/* Will create a mesh object for the provided chunk in the meshes map. */
-	void AllocateMeshForChunk(Chunk* chunk);
-
-	void DrawAllChunksAndPrepareNext();
+	void DrawAllChunksAndPrepareNext(const darray<Chunk*>& chunksToDrawNextFrame);
 
 	void SetRemeshedChunks(const darray<Chunk*> newRemeshedChunks);
 
@@ -67,7 +50,7 @@ private:
 
 	void PerformBoundDrawCalls();
 
-	void DrawChunk(const ChunkDrawCall& drawCall);
+	void DrawChunk(const Chunk* drawChunk);
 
 	glm::vec3 GetChunkShaderPositionOffset(const glm::dvec3 playerPos, const Chunk* chunk);
 
@@ -87,8 +70,7 @@ private:
 	int boundDrawCallId;
 	int modifyDrawCallId;
 
-
 	darray<Chunk*> remeshedChunks;
 
-	darray<ChunkDrawCall> frameChunkDrawCalls;
+	darray<Chunk*> frameChunkDrawCalls;
 };

@@ -14,13 +14,20 @@
 ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
 	: chunk(chunkOwner)
 {
+	mesh = new ChunkMesh();
+	vbos = new PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>();
+	ibos = new PersistentMappedTripleBuffer<IndexBufferObject, uint32>();
 }
 
 ChunkRenderComponent::~ChunkRenderComponent()
 {
+	delete mesh;
+	// Potentially will need to delete buffers using render thread
+	delete vbos;
+	delete ibos;
 }
 
-void ChunkRenderComponent::RecreateMesh(ChunkMesh* mesh)
+void ChunkRenderComponent::RecreateMesh()
 {
 	mesh->Empty();
 	const GlobalString airName = AirBlock::GetStaticName();
@@ -42,15 +49,10 @@ void ChunkRenderComponent::MultithreadRecreateMeshes(const ChunkRenderer* chunkR
 	cubeLog(string("Multithread - recreating ") + string::FromInt(components.Size()) + string(" chunk meshes"));
 	gk::ThreadPool* threadPool = GetGameInstance()->GetThreadPool();
 	for (ChunkRenderComponent* component : components) {
-		auto func = std::bind(&ChunkRenderComponent::RecreateMesh, component, chunkRenderer->GetChunkMesh(component->GetChunk()));
+		auto func = std::bind(&ChunkRenderComponent::RecreateMesh, component);
 		threadPool->AddFunctionToQueue(func);
 		//component->RecreateMesh(chunkRenderer->GetChunkMesh(component->GetChunk()));
 	}
 
 	threadPool->ExecuteQueue();
-}
-
-ChunkMesh* ChunkRenderComponent::GetMesh() const
-{
-	return GetWorld()->GetChunkRenderer()->GetChunkMesh(chunk);
 }
