@@ -43,13 +43,22 @@ void Block::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition pos
     BlockTextureAtlas::GetTextureCoord(allSideTexture, {0, 1})
   };
 
-  const glm::vec3 c000{ 0, 0, 0 };
-  const glm::vec3 c100{ 1, 0, 0 };
-  const glm::vec3 c010{ 0, 1, 0 };
-  const glm::vec3 c110{ 1, 1, 0 };
-  const glm::vec3 c001{ 0, 0, 1 };
-  const glm::vec3 c101{ 1, 0, 1 };
-  const glm::vec3 c011{ 0, 1, 1 };
+  //const glm::vec3 c000{ 0, 0, 0 };
+  //const glm::vec3 c100{ 1, 0, 0 };
+  //const glm::vec3 c010{ 0, 1, 0 };
+  //const glm::vec3 c110{ 1, 1, 0 };
+  //const glm::vec3 c001{ 0, 0, 1 };
+  //const glm::vec3 c101{ 1, 0, 1 };
+  //const glm::vec3 c011{ 0, 1, 1 };
+  //const glm::vec3 c111{ 1, 1, 1 };
+
+  const glm::vec3 c000{ 1, 1, 1 };
+  const glm::vec3 c100{ 1, 1, 1 };
+  const glm::vec3 c010{ 1, 1, 1 };
+  const glm::vec3 c110{ 1, 1, 1 };
+  const glm::vec3 c001{ 1, 1, 1 };
+  const glm::vec3 c101{ 1, 1, 1 };
+  const glm::vec3 c011{ 1, 1, 1 };
   const glm::vec3 c111{ 1, 1, 1 };
 
   const glm::vec3 bottomPos[4] = {

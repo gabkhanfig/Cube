@@ -23,6 +23,8 @@ uniform vec3 u_chunkOffset;
 out vec2 v_out_texCoord;
 // Interpolated color coordinates.
 out vec3 v_out_color;
+// Color scale value depending on quad normal
+out float v_out_normalColorScale;
 
 #define SUBVOXEL_COUNT 16.0
 
@@ -31,14 +33,23 @@ out vec3 v_out_color;
 #define BYTE_3_BITMASK 0xFF0000
 #define BYTE_4_BITMASK 0xFF000000
 
+float ScaleColorByNormal(vec3 normal) 
+{
+#define X_SCALE(x) ((1 - abs(normal.y)) * ((1 - abs(x)) * 0.8))
+#define Y_SCALE(y) (((y + 1.f) / 8) + 0.75)
+#define Z_SCALE(z) ((1 - abs(normal.y)) * ((1 - abs(z)) * 0.9))
+
+	return max(max(X_SCALE(normal.x), Y_SCALE(normal.y)), Z_SCALE(normal.x));
+}
+
 void main()
 {
 	gl_Position = u_cameraMVP * vec4(v_in_position + u_chunkOffset, 1.0);
 
-	//v_out_vertCoord = v_in_position;
-	//v_out_fragCoord = v_in_position;
 	v_out_texCoord = v_in_texCoord;
 	v_out_color = v_in_color;
+
+	v_out_normalColorScale = ScaleColorByNormal(v_in_normal);
 })";
 
 // Generated from Chunk.frag.
@@ -54,6 +65,8 @@ constexpr const char* generated_Chunk_frag = R"(#version 460 core
 in vec2 v_out_texCoord;
 // Interpolated color coordinates.
 in vec3 v_out_color;
+// Color scale value depending on quad normal
+in float v_out_normalColorScale;
 
 uniform sampler2D u_Texture;
 
@@ -109,23 +122,8 @@ vec3 GetRelativeSubvoxelPosition(const vec3 _fragCoord, const vec3 _vertCoord)
 
 void main()
 {
-	//CubicColors cols;
-	//cols.c000 = vec3(0, 0, 0); // non-z
-	//cols.c100 = vec3(1, 0, 0); // non-z
-	//cols.c010 = vec3(0, 1, 0); // non-z
-	//cols.c110 = vec3(1, 1, 0); // non-z
-	//cols.c001 = vec3(0, 0, 1);
-	//cols.c101 = vec3(1, 0, 1);
-	//cols.c011 = vec3(0, 1, 1);
-	//cols.c111 = vec3(1, 1, 1);
-
-	//const vec3 subvoxel = GetRelativeSubvoxelPosition(v_out_fragCoord, v_out_vertCoord);
-	//const vec3 outColor = TrilinearInterpolationColor(subvoxel, cols);
 	const vec4 texColor = texture(u_Texture, v_out_texCoord);
-	FragColor = texColor * vec4(v_out_color, 1);
-	//FragColor = vec4(subvoxel, 1);
-	//FragColor = texColor;
-	//FragColor = vec4(vec3(outColor), 1);
+	FragColor = texColor * vec4(v_out_color, 1) * v_out_normalColorScale;
 })";
 
 // Generated from InvalidTexture.png. Use sizeof operator to get the amount of bytes.

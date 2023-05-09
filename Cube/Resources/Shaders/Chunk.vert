@@ -20,6 +20,8 @@ uniform vec3 u_chunkOffset;
 out vec2 v_out_texCoord;
 // Interpolated color coordinates.
 out vec3 v_out_color;
+// Color scale value depending on quad normal
+out float v_out_normalColorScale;
 
 #define SUBVOXEL_COUNT 16.0
 
@@ -28,12 +30,21 @@ out vec3 v_out_color;
 #define BYTE_3_BITMASK 0xFF0000
 #define BYTE_4_BITMASK 0xFF000000
 
+float ScaleColorByNormal(vec3 normal) 
+{
+#define X_SCALE(x) ((1 - abs(normal.y)) * ((1 - abs(x)) * 0.8))
+#define Y_SCALE(y) (((y + 1.f) / 8) + 0.75)
+#define Z_SCALE(z) ((1 - abs(normal.y)) * ((1 - abs(z)) * 0.9))
+
+	return max(max(X_SCALE(normal.x), Y_SCALE(normal.y)), Z_SCALE(normal.x));
+}
+
 void main()
 {
 	gl_Position = u_cameraMVP * vec4(v_in_position + u_chunkOffset, 1.0);
 
-	//v_out_vertCoord = v_in_position;
-	//v_out_fragCoord = v_in_position;
 	v_out_texCoord = v_in_texCoord;
 	v_out_color = v_in_color;
+
+	v_out_normalColorScale = ScaleColorByNormal(v_in_normal);
 }
