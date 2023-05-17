@@ -7,9 +7,9 @@
 Block* TerrainGenerator::CreateBlockForWorldPosition(WorldPosition pos) const
 {
 	if (pos.y == 0) {
-		return BlockFactory::GetBlockClass(AirBlock::GetStaticName())->GetBlock();
+		return BlockFactory::GetBlockClass(AirBlock::GetStaticName())->NewBlock();
 	}
 	else {
-		return BlockFactory::GetBlockClass("stoneBlock")->GetBlock();
+		return BlockFactory::GetBlockClass("stoneBlock")->NewBlock();
 	}
 }

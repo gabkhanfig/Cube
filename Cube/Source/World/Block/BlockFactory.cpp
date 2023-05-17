@@ -29,7 +29,7 @@ BlockClass::BlockClass()
 	: classRef(nullptr)
 {}
 
-Block* BlockClass::GetBlock()
+Block* BlockClass::NewBlock()
 {
 	Block* block = (Block*)classRef->NewObject();
 	checkm(block != nullptr, "Block Dependency GetBlock() must never return nullptr");
@@ -48,13 +48,13 @@ BlockClass* BlockFactory::GetBlockClass(GlobalString blockName)
 	return found->second;
 }
 
-Block* BlockFactory::GetAirBlock()
+Block* BlockFactory::NewAirBlock()
 {
 	static const GlobalString AirBlockName = "airBlock";
 #ifdef DEVELOPMENT
 	auto found = blockClasses.find(AirBlockName);
 	checkm(found != blockClasses.end(), "Air block must be mapped in the block factory.");
-	return found->second->GetBlock();
+	return found->second->NewBlock();
 #else
 	static IBlock* AirBlock = blockClasses.find(AirBlockName)->second->GetBlock();
 	return AirBlock;

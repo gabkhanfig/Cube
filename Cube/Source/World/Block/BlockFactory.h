@@ -31,7 +31,7 @@ public:
 	}
 
 	/* Either gets the default block object, or creates a new one depending on the block's requirements. */
-	Block* GetBlock();
+	Block* NewBlock();
 
 	GlobalString GetName() const { return name; }
 };
@@ -46,7 +46,7 @@ public:
 
 	static BlockClass* GetBlockClass(GlobalString blockName);
 
-	static Block* GetAirBlock();
+	static Block* NewAirBlock();
 
 };
 

@@ -10,7 +10,7 @@ glm::mat4 Camera::GetProjectionMatrix() const
 glm::mat4 Camera::GetViewMatrix() const
 {
 	constexpr glm::vec3 origin = { 0.f, 0.f, 0.f };
-	return glm::lookAt(position, position + forward, GetUpVector());
+	return glm::lookAt(origin, origin + forward, GetUpVector());
 }
 
 Camera::Camera()

@@ -13,7 +13,8 @@ Chunk::Chunk(ChunkPosition inPosition)
 
 	BlockClass* airBlockClass = BlockFactory::GetBlockClass(AirBlock::GetStaticName());
 	for (int i = 0; i < CHUNK_SIZE; i++) {
-		blocks[i] = airBlockClass->GetBlock();
+		//blocks[i] = airBlockClass->NewBlock();
+		blocks[i] = nullptr;
 	}
 }
 
@@ -42,7 +43,7 @@ void Chunk::FillChunkWithBlock(GlobalString blockName)
 {
 	BlockClass* blockClass = BlockFactory::GetBlockClass(blockName);
 	for (int i = 0; i < CHUNK_SIZE; i++) {
-		Block* block = blockClass->GetBlock();
+		Block* block = blockClass->NewBlock();
 		if (blocks[i]) {
 			blocks[i]->Destroy();
 		}
