@@ -37,6 +37,8 @@ private:
 
 class Chunk;
 
+/* Base class for all in-world blocks.
+DEVELOPER NOTE: sizeof(Block) will always be a multiple of 8 due to v-table pointer. Pack as much into this as possible. */
 class Block
 {
 public:

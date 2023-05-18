@@ -178,6 +178,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\Engine\Engine.cpp" />
     <ClCompile Include="Source\Engine\Input\InputMapping.cpp" />
     <ClCompile Include="Source\Engine\Input\UserInput.cpp" />
+    <ClCompile Include="Source\Engine\Object.cpp" />
     <ClCompile Include="Source\Engine\Tick\TickEngine.cpp" />
     <ClCompile Include="Source\Engine\Vendor\stb_image\stb_image.cpp" />
     <ClCompile Include="Source\Engine\Window\Window.cpp" />
@@ -236,6 +237,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\Engine\EngineCore.h" />
     <ClInclude Include="Source\Engine\Input\InputMapping.h" />
     <ClInclude Include="Source\Engine\Input\UserInput.h" />
+    <ClInclude Include="Source\Engine\Object.h" />
     <ClInclude Include="Source\Engine\Tick\TickEngine.h" />
     <ClInclude Include="Source\Engine\Vendor\stb_image\stb_image.h" />
     <ClInclude Include="Source\Engine\Window\Window.h" />

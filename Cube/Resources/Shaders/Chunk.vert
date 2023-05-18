@@ -39,13 +39,6 @@ float ScaleColorByNormal(vec3 normal)
 	return max(max(X_SCALE(normal.x), Y_SCALE(normal.y)), Z_SCALE(normal.x));
 }
 
-vec3 GetNormalFromPackedNormal(int packedNormal)
-{
-	return vec3(
-		float(0)
-	);
-}
-
 vec4 UnpackColor(uint packedColor) {
 	return vec4(
 		float(packedColor & 255U) / 255.f,

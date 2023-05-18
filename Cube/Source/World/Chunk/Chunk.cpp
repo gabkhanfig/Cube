@@ -48,7 +48,6 @@ void Chunk::FillChunkWithBlock(GlobalString blockName)
 			blocks[i]->Destroy();
 		}
 		blocks[i] = block;
-		//blocks[i].ReplaceBlock(block);
 	}
 }
 

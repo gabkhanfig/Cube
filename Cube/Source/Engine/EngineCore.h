@@ -5,5 +5,6 @@
 #include "../Core/Asserts.h"
 #include "../Core/Log/Logger.h"
 #include "../Core/Utils/Benchmark.h"
+#include "Object.h"
 
 typedef void (*_TickCallback) (float);
