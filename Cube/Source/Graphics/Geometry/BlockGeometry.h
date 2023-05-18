@@ -6,10 +6,36 @@
 /* Block vertex data to be sent to the GPU vertex shader. */
 struct BlockVertex
 {
+  /* Compressed normalized vertex normals with a mapped range of float -1 = uint8 0, float 1 = uint8 254. To be unpacked in gpu. */
+  struct PackedNormal
+  {
+    uint8 x; // When cast to 4 byte int, first byte (num & 255) is x
+    uint8 y; // When cast to 4 byte int, second byte (num >> 8 & 255) is y
+    uint8 z; // When cast to 4 byte int, third byte (num >> 16 & 255) is z
+    uint8 _padding;
+
+    static PackedNormal FromVec3(const glm::vec3 normal) {
+      PackedNormal pnorm;
+      pnorm.x = normal.x * 127 + 127;
+      pnorm.y = normal.y * 127 + 127;
+      pnorm.z = normal.z * 127 + 127;
+    }
+  };
+
+  struct PackedColor
+  {
+    uint8 r; // When cast to 4 byte int, first byte (num & 255) is r
+    uint8 b; // When cast to 4 byte int, second byte (num >> 8 & 255) is g
+    uint8 g; // When cast to 4 byte int, third byte (num >> 16 & 255) is b
+    uint8 _padding;
+
+    PackedColor(uint8 _r = 255, uint8 _g = 255, uint8 _b = 255) : r(_r), g(_b), b(_b) {}
+  };
+
   /* Relative chunk position of the block vertex. */
   glm::vec3 position;
 
-  /* Normal vector of this vertex. */
+  /* Normalized (-1 -> 1) normal-vector of this vertex. */
   glm::vec3 normal;
 
   /* Texture coordinates of this vertex. See BlockTextureAtlas::GetTextureCoord(). */

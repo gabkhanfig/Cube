@@ -121,6 +121,77 @@ void Block::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition pos
     c010, c110, c111, c011
   };
 
+  /*
+  const BlockVertex::PackedColor c000{ 255, 255, 255 };
+  const BlockVertex::PackedColor c100{ 255, 255, 255 };
+  const BlockVertex::PackedColor c010{ 255, 255, 255 };
+  const BlockVertex::PackedColor c110{ 255, 255, 255 };
+  const BlockVertex::PackedColor c001{ 255, 255, 255 };
+  const BlockVertex::PackedColor c101{ 255, 255, 255 };
+  const BlockVertex::PackedColor c011{ 255, 255, 255 };
+  const BlockVertex::PackedColor c111{ 255, 255, 255 };
+
+  const glm::vec3 bottomPos[4] = {
+   glm::vec3(0, 0, 0),
+   glm::vec3(0, 0, 1),
+   glm::vec3(1, 0, 1),
+   glm::vec3(1, 0, 0)
+  };
+  const BlockVertex::PackedColor bottomCols[4] = {
+    c000, c001, c101, c100
+  };
+
+  const glm::vec3 northPos[4] = {
+    glm::vec3(0, 0, 0),
+    glm::vec3(1, 0, 0),
+    glm::vec3(1, 1, 0),
+    glm::vec3(0, 1, 0)
+  };
+  const BlockVertex::PackedColor northCols[4] = {
+    c000, c100, c110, c010
+  };
+
+  const glm::vec3 eastPos[4] = {
+    glm::vec3(0, 0, 1),
+    glm::vec3(0, 0, 0),
+    glm::vec3(0, 1, 0),
+    glm::vec3(0, 1, 1)
+  };
+  const BlockVertex::PackedColor eastCols[4] = {
+    c001, c000, c010, c011
+  };
+
+  const glm::vec3 southPos[4] = {
+    glm::vec3(1, 0, 1),
+    glm::vec3(0, 0, 1),
+    glm::vec3(0, 1, 1),
+    glm::vec3(1, 1, 1)
+  };
+  const BlockVertex::PackedColor southCols[4] = {
+    c101, c001, c011, c111
+  };
+
+  const glm::vec3 westPos[4] = {
+    glm::vec3(1, 0, 0),
+    glm::vec3(1, 0, 1),
+    glm::vec3(1, 1, 1),
+    glm::vec3(1, 1, 0)
+  };
+  const BlockVertex::PackedColor westCols[4] = {
+    c100, c101, c111, c110
+  };
+
+  const glm::vec3 topPos[4] = {
+   glm::vec3(0, 1, 0),
+   glm::vec3(1, 1, 0),
+   glm::vec3(1, 1, 1),
+   glm::vec3(0, 1, 1)
+  };
+  const BlockVertex::PackedColor topCols[4] = {
+    c010, c110, c111, c011
+  };
+  */
+
   if (CanDrawFace(position, BlockFacing::Dir_Down)) {
     BlockQuad bottom = BlockQuad(bottomPos, texCoords, bottomCols);
     bottom.Shift(vertexOffset);

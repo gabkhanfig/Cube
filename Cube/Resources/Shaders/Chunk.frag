@@ -65,6 +65,14 @@ vec3 GetRelativeSubvoxelPosition(const vec3 _fragCoord, const vec3 _vertCoord)
 	return floor(_fragCoord * SUBVOXEL_COUNT) / SUBVOXEL_COUNT;
 }
 
+vec3 unpackColor(uint packedColor) {
+	return vec3(
+		float(packedColor & 255) / 255.f,
+		float(packedColor >> 8 & 255) / 255.f,
+		float(packedColor >> 16 & 255) / 255.f
+	);
+}
+
 void main()
 {
 	const vec4 texColor = texture(u_Texture, v_out_texCoord);

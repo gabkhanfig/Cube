@@ -42,6 +42,13 @@ float ScaleColorByNormal(vec3 normal)
 	return max(max(X_SCALE(normal.x), Y_SCALE(normal.y)), Z_SCALE(normal.x));
 }
 
+vec3 GetNormalFromPackedNormal(int packedNormal)
+{
+	return vec3(
+		float(0)
+	);
+}
+
 void main()
 {
 	gl_Position = u_cameraMVP * vec4(v_in_position + u_chunkOffset, 1.0);
@@ -118,6 +125,14 @@ vec3 GetRelativeSubvoxelPosition(const vec3 _fragCoord, const vec3 _vertCoord)
 	//const vec3 coord = floor(abs(_fragCoord * SUBVOXEL_COUNT - _vertCoord * SUBVOXEL_COUNT)) / SUBVOXEL_COUNT;
 	//return coord;// + _vertCoord;
 	return floor(_fragCoord * SUBVOXEL_COUNT) / SUBVOXEL_COUNT;
+}
+
+vec3 unpackColor(uint packedColor) {
+	return vec3(
+		float(packedColor & 255) / 255.f,
+		float(packedColor >> 8 & 255) / 255.f,
+		float(packedColor >> 16 & 255) / 255.f
+	);
 }
 
 void main()

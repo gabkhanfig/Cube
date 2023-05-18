@@ -39,6 +39,13 @@ float ScaleColorByNormal(vec3 normal)
 	return max(max(X_SCALE(normal.x), Y_SCALE(normal.y)), Z_SCALE(normal.x));
 }
 
+vec3 GetNormalFromPackedNormal(int packedNormal)
+{
+	return vec3(
+		float(0)
+	);
+}
+
 void main()
 {
 	gl_Position = u_cameraMVP * vec4(v_in_position + u_chunkOffset, 1.0);
