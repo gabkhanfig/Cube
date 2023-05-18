@@ -27,9 +27,9 @@ struct BlockVertex
     uint8 r; // When cast to 4 byte int, first byte (num & 255) is r
     uint8 b; // When cast to 4 byte int, second byte (num >> 8 & 255) is g
     uint8 g; // When cast to 4 byte int, third byte (num >> 16 & 255) is b
-    uint8 _padding;
+    uint8 a; // When cast to 4 byte int, third byte (num >> 24 & 255) is a
 
-    PackedColor(uint8 _r = 255, uint8 _g = 255, uint8 _b = 255) : r(_r), g(_b), b(_b) {}
+    PackedColor(uint8 _r = 255, uint8 _g = 255, uint8 _b = 255, uint8 _a = 255) : r(_r), g(_b), b(_b), a(_a) {}
   };
 
   /* Relative chunk position of the block vertex. */
@@ -42,14 +42,14 @@ struct BlockVertex
   glm::vec2 texCoord;
 
   /**/
-  glm::vec3 color;
+  PackedColor color;
 
   BlockVertex() = default;
 
   /* Requires an index buffer of { 0, 1, 2, 3, 0, 2 } for the color interpolation to work correctly.
   @param _positions: vertex position
   @param _colors: Bitmasks for the RGB colors of the four corners in the quad. */
-  BlockVertex(glm::vec3 _position, glm::vec3 _normal, glm::vec2 _texCoord, glm::vec3 _color)
+  BlockVertex(glm::vec3 _position, glm::vec3 _normal, glm::vec2 _texCoord, PackedColor _color)
     : position(_position), normal(_normal), texCoord(_texCoord), color(_color)
   {}
 
@@ -59,7 +59,7 @@ struct BlockVertex
   }
 };
 static_assert(sizeof(BlockVertex) ==
-  sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec3)
+  sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(BlockVertex::PackedColor)
   , "Block Vertex data is not tightly packed");
 
 /* Block quad vertex position ordering goes top right, top left, bottom left, bottom right. Bottom left is relative (0, 0) */
@@ -70,7 +70,7 @@ struct BlockQuad
   BlockQuad() = default;
 
   /* Quad of 4 vertices. Calculates the normal given the 4 positions. */
-  BlockQuad(const glm::vec3 positions[4], const glm::vec2 texCoords[4], const glm::vec3 colors[4])
+  BlockQuad(const glm::vec3 positions[4], const glm::vec2 texCoords[4], const BlockVertex::PackedColor colors[4])
   {
     const glm::vec3 normal = NormalFromQuadPoints(positions);
 

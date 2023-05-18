@@ -52,7 +52,7 @@ void Block::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition pos
   //const glm::vec3 c011{ 0, 1, 1 };
   //const glm::vec3 c111{ 1, 1, 1 };
 
-  const glm::vec3 c000{ 1, 1, 1 };
+  /*const glm::vec3 c000{1, 1, 1};
   const glm::vec3 c100{ 1, 1, 1 };
   const glm::vec3 c010{ 1, 1, 1 };
   const glm::vec3 c110{ 1, 1, 1 };
@@ -119,9 +119,9 @@ void Block::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition pos
   };
   const glm::vec3 topCols[4] = {
     c010, c110, c111, c011
-  };
+  };*/
 
-  /*
+  
   const BlockVertex::PackedColor c000{ 255, 255, 255 };
   const BlockVertex::PackedColor c100{ 255, 255, 255 };
   const BlockVertex::PackedColor c010{ 255, 255, 255 };
@@ -190,8 +190,7 @@ void Block::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition pos
   const BlockVertex::PackedColor topCols[4] = {
     c010, c110, c111, c011
   };
-  */
-
+  
   if (CanDrawFace(position, BlockFacing::Dir_Down)) {
     BlockQuad bottom = BlockQuad(bottomPos, texCoords, bottomCols);
     bottom.Shift(vertexOffset);

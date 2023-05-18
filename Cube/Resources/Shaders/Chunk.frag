@@ -9,7 +9,7 @@
 // Interpolated texture coordinates.
 in vec2 v_out_texCoord;
 // Interpolated color coordinates.
-in vec3 v_out_color;
+in vec4 v_out_color;
 // Color scale value depending on quad normal
 in float v_out_normalColorScale;
 
@@ -76,5 +76,5 @@ vec3 unpackColor(uint packedColor) {
 void main()
 {
 	const vec4 texColor = texture(u_Texture, v_out_texCoord);
-	FragColor = texColor * vec4(v_out_color, 1) * v_out_normalColorScale;
+	FragColor = texColor * v_out_color * v_out_normalColorScale;
 }

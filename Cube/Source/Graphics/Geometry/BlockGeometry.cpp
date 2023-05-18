@@ -38,7 +38,7 @@ static VertexBufferLayout QuadVBL() {
   layout.Push<float>(3);  // position
   layout.Push<float>(3);  // normal
   layout.Push<float>(2);  // texCoord
-  layout.Push<float>(3);  // color
+  layout.Push<uint32>(1); // color
   return layout;
 }
 

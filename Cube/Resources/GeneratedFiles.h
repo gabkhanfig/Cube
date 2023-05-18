@@ -8,7 +8,7 @@ constexpr const char* generated_Chunk_vert = R"(#version 460 core
 layout (location = 0) in vec3 v_in_position;
 layout (location = 1) in vec3 v_in_normal;
 layout (location = 2) in vec2 v_in_texCoord;
-layout (location = 3) in vec3 v_in_color;
+layout (location = 3) in uint v_in_packedColor;
 
 // Camera Model-View-Projection matrix.
 uniform mat4 u_cameraMVP;
@@ -22,7 +22,7 @@ uniform vec3 u_chunkOffset;
 // Interpolated texture coordinates.
 out vec2 v_out_texCoord;
 // Interpolated color coordinates.
-out vec3 v_out_color;
+out vec4 v_out_color;
 // Color scale value depending on quad normal
 out float v_out_normalColorScale;
 
@@ -49,12 +49,21 @@ vec3 GetNormalFromPackedNormal(int packedNormal)
 	);
 }
 
+vec4 UnpackColor(uint packedColor) {
+	return vec4(
+		float(packedColor & 255) / 255.f,
+		float(packedColor >> 8 & 255) / 255.f,
+		float(packedColor >> 16 & 255) / 255.f,
+		float(packedColor >> 24 & 255) / 255.f
+	);
+}
+
 void main()
 {
 	gl_Position = u_cameraMVP * vec4(v_in_position + u_chunkOffset, 1.0);
 
 	v_out_texCoord = v_in_texCoord;
-	v_out_color = v_in_color;
+	v_out_color = UnpackColor(v_in_packedColor);
 
 	v_out_normalColorScale = ScaleColorByNormal(v_in_normal);
 })";
@@ -71,7 +80,7 @@ constexpr const char* generated_Chunk_frag = R"(#version 460 core
 // Interpolated texture coordinates.
 in vec2 v_out_texCoord;
 // Interpolated color coordinates.
-in vec3 v_out_color;
+in vec4 v_out_color;
 // Color scale value depending on quad normal
 in float v_out_normalColorScale;
 
@@ -138,7 +147,7 @@ vec3 unpackColor(uint packedColor) {
 void main()
 {
 	const vec4 texColor = texture(u_Texture, v_out_texCoord);
-	FragColor = texColor * vec4(v_out_color, 1) * v_out_normalColorScale;
+	FragColor = texColor * v_out_color * v_out_normalColorScale;
 })";
 
 // Generated from InvalidTexture.png. Use sizeof operator to get the amount of bytes.
