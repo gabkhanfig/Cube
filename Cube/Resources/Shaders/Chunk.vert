@@ -3,7 +3,7 @@
 // https://sight.pages.ircad.fr/sight-doc/CodingStyle/src/07-glsl-style.html
 
 layout (location = 0) in vec3 v_in_position;
-layout (location = 1) in vec3 v_in_normal;
+layout (location = 1) in uint v_in_packedNormal;
 layout (location = 2) in vec2 v_in_texCoord;
 layout (location = 3) in uint v_in_packedColor;
 
@@ -48,10 +48,18 @@ vec3 GetNormalFromPackedNormal(int packedNormal)
 
 vec4 UnpackColor(uint packedColor) {
 	return vec4(
-		float(packedColor & 255) / 255.f,
-		float(packedColor >> 8 & 255) / 255.f,
-		float(packedColor >> 16 & 255) / 255.f,
-		float(packedColor >> 24 & 255) / 255.f
+		float(packedColor & 255U) / 255.f,
+		float(packedColor >> 8 & 255U) / 255.f,
+		float(packedColor >> 16 & 255U) / 255.f,
+		float(packedColor >> 24 & 255U) / 255.f
+	);
+}
+
+vec3 UnpackNormal(uint packedNormal) {
+	return vec3(
+		(float(packedNormal & 255U) - 127.f) / 127.f,
+		(float(packedNormal >> 8 & 255U) - 127.f) / 127.f,
+		(float(packedNormal >> 16 & 255U) - 127.f) / 127.f
 	);
 }
 
@@ -62,5 +70,5 @@ void main()
 	v_out_texCoord = v_in_texCoord;
 	v_out_color = UnpackColor(v_in_packedColor);
 
-	v_out_normalColorScale = ScaleColorByNormal(v_in_normal);
+	v_out_normalColorScale = ScaleColorByNormal(UnpackNormal(v_in_packedNormal));
 }
