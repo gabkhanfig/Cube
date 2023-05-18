@@ -19,8 +19,12 @@ public:
 		entity
 	};
 
-	
-
 	HitSuccess success;
+	Block* hitBlock;
+	glm::dvec3 position;
+	glm::dvec3 normal;
 
+	RaycastHitResult() :
+		success(HitSuccess::none),
+		hitBlock(nullptr) {}
 };

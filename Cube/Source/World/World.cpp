@@ -23,6 +23,7 @@
 #include "../Engine/Engine.h"
 #include "Terrain/TerrainGenerator.h"
 #include "Block/BlockTypes/Air/AirBlock.h"
+#include "Raycast.h"
 
 World* GetWorld()
 {
@@ -117,9 +118,11 @@ RaycastHitResult World::RaycastHit(const glm::dvec3 start, const glm::dvec3 end)
 {
   const GlobalString airName = AirBlock::GetStaticName();
 
-  glm::dvec3 pos = start;
-  const glm::dvec3 step = glm::sign(end);
-  const glm::dvec3 tDelta = step / end;
+  const glm::dvec3 rayDirection = glm::normalize(end - start);
+
+  glm::dvec3 pos = glm::floor(start);
+  const glm::dvec3 step = glm::sign(rayDirection);
+  const glm::dvec3 tDelta = step / rayDirection;
   const glm::dvec3 fr = glm::fract(start);
 
   glm::dvec3 tMax;
@@ -127,18 +130,22 @@ RaycastHitResult World::RaycastHit(const glm::dvec3 start, const glm::dvec3 end)
   tMax.y = tDelta.y * ((start.y > 0.0) ? (1.0 - fr.y) : fr.y);
   tMax.z = tDelta.z * ((start.z > 0.0) ? (1.0 - fr.z) : fr.z);
 
-  glm::dvec3 norm;
-  const int maxTrace = 1000;
+  glm::dvec3 norm = glm::vec3(0, -step.y, 0);
 
   // If the component start is greater than the component end, passing it would mean the current step position is less than the end, otherwise greater
 #define COMPONENT_PASSED(n) (start.n > end.n ? (pos.n - 1.0) < end.n : (pos.n + 1.0) > end.n)
 
-  while (!COMPONENT_PASSED(x) && !COMPONENT_PASSED(y) && !COMPONENT_PASSED(z)) {
+  RaycastHitResult result;
+
+  while (!COMPONENT_PASSED(x) || !COMPONENT_PASSED(y) || !COMPONENT_PASSED(z)) {
     const WorldPosition wp{ pos };
     Block* block = GetBlock(wp);
     if (block != nullptr && block->GetName() != airName) {
-      cubeLog(block->GetName().ToString());
-      return RaycastHitResult();
+      result.success = RaycastHitResult::HitSuccess::block;
+      result.hitBlock = block;
+      result.position = pos;
+      result.normal = norm;
+      return result;
     }
 
     if (tMax.x < tMax.y) {
@@ -168,10 +175,8 @@ RaycastHitResult World::RaycastHit(const glm::dvec3 start, const glm::dvec3 end)
 
   }
 
-
-  //if(start.x > end.x ? pos.x < end.x : pos.x > end.x)
-
-  return RaycastHitResult();
+  return result;
+#undef COMPONENT_PASSED
 }
 
 void World::DrawWorld()
