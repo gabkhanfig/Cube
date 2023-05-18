@@ -22,6 +22,7 @@
 #include <chrono>
 #include "../Engine/Engine.h"
 #include "Terrain/TerrainGenerator.h"
+#include "Block/BlockTypes/Air/AirBlock.h"
 
 World* GetWorld()
 {
@@ -78,7 +79,7 @@ void World::BeginWorld()
 void World::Tick(float deltaTime)
 {
   // Tick world
-
+  player->Tick(deltaTime);
   RenderLoop();
 }
 
@@ -109,6 +110,68 @@ bool World::DoesChunkExist(ChunkPosition position) const
 bool World::DoesBlockExist(WorldPosition position) const
 {
   return chunks.contains(position.ToChunkPosition());
+}
+
+
+RaycastHitResult World::RaycastHit(const glm::dvec3 start, const glm::dvec3 end)
+{
+  const GlobalString airName = AirBlock::GetStaticName();
+
+  glm::dvec3 pos = start;
+  const glm::dvec3 step = glm::sign(end);
+  const glm::dvec3 tDelta = step / end;
+  const glm::dvec3 fr = glm::fract(start);
+
+  glm::dvec3 tMax;
+  tMax.x = tDelta.x * ((start.x > 0.0) ? (1.0 - fr.x) : fr.x);
+  tMax.y = tDelta.y * ((start.y > 0.0) ? (1.0 - fr.y) : fr.y);
+  tMax.z = tDelta.z * ((start.z > 0.0) ? (1.0 - fr.z) : fr.z);
+
+  glm::dvec3 norm;
+  const int maxTrace = 1000;
+
+  // If the component start is greater than the component end, passing it would mean the current step position is less than the end, otherwise greater
+#define COMPONENT_PASSED(n) (start.n > end.n ? (pos.n - 1.0) < end.n : (pos.n + 1.0) > end.n)
+
+  while (!COMPONENT_PASSED(x) && !COMPONENT_PASSED(y) && !COMPONENT_PASSED(z)) {
+    const WorldPosition wp{ pos };
+    Block* block = GetBlock(wp);
+    if (block != nullptr && block->GetName() != airName) {
+      cubeLog(block->GetName().ToString());
+      return RaycastHitResult();
+    }
+
+    if (tMax.x < tMax.y) {
+      if (tMax.z < tMax.x) {
+        tMax.z += tDelta.z;
+        pos.z += step.z;
+        norm = glm::vec3(0, 0, -step.z);
+      }
+      else {
+        tMax.x += tDelta.x;
+        pos.x += step.x;
+        norm = glm::vec3(-step.x, 0, 0);
+      }
+    }
+    else {
+      if (tMax.z < tMax.y) {
+        tMax.z += tDelta.z;
+        pos.z += step.z;
+        norm = glm::vec3(0, 0, -step.z);
+      }
+      else {
+        tMax.y += tDelta.y;
+        pos.y += step.y;
+        norm = glm::vec3(0, -step.y, 0);
+      }
+    }
+
+  }
+
+
+  //if(start.x > end.x ? pos.x < end.x : pos.x > end.x)
+
+  return RaycastHitResult();
 }
 
 void World::DrawWorld()

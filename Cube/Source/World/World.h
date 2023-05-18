@@ -3,6 +3,7 @@
 #include "../Engine/EngineCore.h"
 #include "WorldTransform.h"
 #include "Chunk/ChunkDataTypes.h"
+#include "Raycast.h"
 
 class Player;
 class Shader;
@@ -37,6 +38,8 @@ public:
 	bool DoesBlockExist(WorldPosition position) const;
 
 	ChunkRenderer* GetChunkRenderer() const { return chunkRenderer; }
+
+	RaycastHitResult RaycastHit(const glm::dvec3 start, const glm::dvec3 end);
 
 private:
 
