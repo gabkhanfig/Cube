@@ -114,7 +114,7 @@ bool World::DoesBlockExist(WorldPosition position) const
 }
 
 
-RaycastHitResult World::RaycastHit(const glm::dvec3 start, const glm::dvec3 end)
+RaycastHitResult World::RaycastHit(const glm::dvec3 start, const glm::dvec3 end) const
 {
   const GlobalString airName = AirBlock::GetStaticName();
 

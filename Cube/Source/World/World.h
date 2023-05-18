@@ -39,7 +39,7 @@ public:
 
 	ChunkRenderer* GetChunkRenderer() const { return chunkRenderer; }
 
-	RaycastHitResult RaycastHit(const glm::dvec3 start, const glm::dvec3 end);
+	RaycastHitResult RaycastHit(const glm::dvec3 start, const glm::dvec3 end) const;
 
 private:
 
