@@ -38,6 +38,8 @@ public:
 	/* Get a block at a specific relative position within the chunk. */
 	Block* GetBlock(BlockPosition position) const;
 
+	void SetBlockAt(BlockPosition position, Block* block);
+
 	/* Fill the chunk with a specified block. */
 	void FillChunkWithBlock(GlobalString blockName);
 
@@ -46,6 +48,10 @@ public:
 	forceinline ChunkPosition GetPosition() const { return position; }
 
 	ChunkRenderComponent* GetRenderComponent() const { return renderComponent; }
+
+	bool ShouldBeRemeshed() const { return wasChunkModifiedThisTick; }
+
+	void SetShouldBeRemeshed(bool newShouldBeRemeshed) { wasChunkModifiedThisTick = newShouldBeRemeshed; }
 
 private:
 

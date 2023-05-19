@@ -31,6 +31,8 @@ public:
 	/* Get a block at a specific world position. Returns nullptr if the chunk the block would be in doesn't exist. */
 	Block* GetBlock(WorldPosition position) const;
 
+	bool SetBlockAt(WorldPosition position, Block* block);
+
 	/* Checks if a chunk is loaded. */
 	bool DoesChunkExist(ChunkPosition position) const;
 

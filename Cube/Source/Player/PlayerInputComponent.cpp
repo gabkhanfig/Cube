@@ -40,6 +40,9 @@ void PlayerInputComponent::Cursor(double xpos, double ypos)
 
 void PlayerInputComponent::Press(GlobalString button, InputMods mods)
 {
+	if (button == "LMB") {
+		player->TestPlaceBlock();
+	}
 }
 
 void PlayerInputComponent::Tick(float deltaTime)

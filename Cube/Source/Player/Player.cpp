@@ -22,7 +22,10 @@ void Player::Tick(float DeltaTime)
 
 	RaycastHitResult hitResult = GetWorld()->RaycastHit(location, location + forward * 1000.0);
 	if (hitResult.success == RaycastHitResult::HitSuccess::block) {
-		cubeLog(hitResult.hitBlock->GetName().ToString());
+		highlightedObject = hitResult;
+	}
+	else {
+		highlightedObject = RaycastHitResult();
 	}
 
 	//std::cout << "player forward vector: " << forward.x << ", " << forward.y << ", " << forward.z << '\n';
@@ -32,7 +35,13 @@ void Player::TestInput(InputMods mods)
 {
 }
 
-void Player::TestEmpty()
+void Player::TestPlaceBlock()
 {
-	cubeLog("empty called");
+	if (highlightedObject.success != RaycastHitResult::HitSuccess::block) {
+		return;
+	}
+	cubeLog("test plaace block");
+	Block* b = BlockFactory::GetBlockClass("stoneBlock")->NewBlock();
+	WorldPosition pos = { glm::dvec3(highlightedObject.position.x, highlightedObject.position.y + 1.0, highlightedObject.position.z) };
+	GetWorld()->SetBlockAt(pos, b);
 }

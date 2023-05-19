@@ -11,7 +11,7 @@ TickEngine::TickEngine(_TickCallback tickCallback)
 void TickEngine::RunEngineLoop()
 {
 	while (!engine->GetWindow()->ShouldWindowClose()) {
-		std::cout << "tickNum: " << tickNum << '\n';
+		//std::cout << "tickNum: " << tickNum << '\n';
 		tickNum++;
 		previous = current;
 		current = glfwGetTime();

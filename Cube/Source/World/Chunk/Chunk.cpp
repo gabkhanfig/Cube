@@ -26,7 +26,6 @@ Chunk::~Chunk()
 
 void Chunk::Tick(float deltaTime)
 {
-	wasChunkModifiedThisTick = false;
 }
 
 Block* Chunk::GetBlock(BlockPosition position) const
@@ -37,6 +36,14 @@ Block* Chunk::GetBlock(BlockPosition position) const
 	}
 	checkm(blockIndex < CHUNK_SIZE, "block index must be within CHUNK_SIZE");
 	return blocks[blockIndex];
+}
+
+void Chunk::SetBlockAt(BlockPosition position, Block* block)
+{
+	delete blocks[position.index];
+	blocks[position.index] = block;
+	SetShouldBeRemeshed(true);
+	cubeLog("chunk block set modified thingy");
 }
 
 void Chunk::FillChunkWithBlock(GlobalString blockName)

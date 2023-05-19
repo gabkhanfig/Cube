@@ -2,9 +2,11 @@
 
 #include "../Entity/Entity.h"
 #include "../Engine/Input/UserInput.h"
+#include "../World/Raycast.h"
 
 class Camera;
 class PlayerInputComponent;
+class Block;
 
 class Player : public Entity 
 {
@@ -13,6 +15,8 @@ private:
 	Camera* camera;
 
 	PlayerInputComponent* inputComponent;
+
+	RaycastHitResult highlightedObject;
 
 public:
 
@@ -24,8 +28,6 @@ public:
 
 	void TestInput(InputMods mods);
 
-	void TestEmpty();
-
-
+	void TestPlaceBlock();
 
 };

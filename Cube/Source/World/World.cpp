@@ -65,15 +65,13 @@ void World::BeginWorld()
     }
   }
 
-  darray<ChunkRenderComponent*> chunkRenderComponents;
   darray<Chunk*> remeshedChunks;
   for (auto& chunkPair : chunks) {
     Chunk* chunk = chunkPair.second;
-    chunkRenderComponents.Add(chunk->GetRenderComponent());
     remeshedChunks.Add(chunk);
     //chunk->GetRenderComponent()->RecreateMesh();
   }
-  ChunkRenderComponent::MultithreadRecreateMeshes(chunkRenderer, chunkRenderComponents);
+  ChunkRenderComponent::MultithreadRecreateMeshes(chunkRenderer, remeshedChunks);
   chunkRenderer->SetRemeshedChunks(remeshedChunks);
 }
 
@@ -81,6 +79,7 @@ void World::Tick(float deltaTime)
 {
   // Tick world
   player->Tick(deltaTime);
+
   RenderLoop();
 }
 
@@ -101,6 +100,17 @@ Block* World::GetBlock(WorldPosition position) const
   const Chunk* chunk = GetChunk(cpos);
   if (chunk == nullptr) return nullptr;
   return chunk->GetBlock(bpos);
+}
+
+bool World::SetBlockAt(WorldPosition position, Block* block)
+{
+  if (!DoesChunkExist(position.ToChunkPosition())) {
+    return false;
+  }
+
+  Chunk* chunk = GetChunk(position.ToChunkPosition());
+  chunk->SetBlockAt(position.ToBlockPosition(), block);
+  return true;
 }
 
 bool World::DoesChunkExist(ChunkPosition position) const
@@ -220,9 +230,19 @@ void World::RenderLoop()
   // 3. Remove any chunks that shouldn't be drawn from the ChunkRenderer's drawChunks map.
 
   // 4. From the chunks to be drawn, find which ones need to be remeshed.
-
+  darray<Chunk*> remeshedChunks;
+  for (Chunk* chunk : chunksToDraw) {
+    if (!chunk->ShouldBeRemeshed()) continue;
+    //cubeLog("chunk should be remeshed at: ");
+    //std::cout << chunk->GetPosition().x << ", " << chunk->GetPosition().y << ", " << chunk->GetPosition().z << '\n';
+    remeshedChunks.Add(chunk);
+  }
   // 5. Remesh each chunk, passing in the mapped ChunkRenderMeshData structure to each chunk render component.
-
+  if (remeshedChunks.Size() > 0) {
+    ChunkRenderComponent::MultithreadRecreateMeshes(chunkRenderer, remeshedChunks);
+    chunkRenderer->SetRemeshedChunks(remeshedChunks);
+  }
+  
   // 6. Store player position data, camera mvp matrix, and any other data that may change while drawing is occurring within the ChunkRenderer.
   chunkRenderer->StoreModifyDrawCallData();
   // 7. Execute whole world draw task on the render thread.

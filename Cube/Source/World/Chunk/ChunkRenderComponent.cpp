@@ -42,14 +42,14 @@ void ChunkRenderComponent::RecreateMesh()
 		const glm::vec3 vertexOffset{ blockPos.X(), blockPos.Y(), blockPos.Z() };
 		block->AddBlockMeshToChunkMesh(mesh, chunk, worldPos, vertexOffset);
 	}
+	chunk->SetShouldBeRemeshed(false);
 }
 
-void ChunkRenderComponent::MultithreadRecreateMeshes(const ChunkRenderer* chunkRenderer, const darray<ChunkRenderComponent*>& components)
+void ChunkRenderComponent::MultithreadRecreateMeshes(const ChunkRenderer* chunkRenderer, const darray<Chunk*>& chunks)
 {
-	cubeLog(string("Multithread - recreating ") + string::FromInt(components.Size()) + string(" chunk meshes"));
 	gk::ThreadPool* threadPool = GetGameInstance()->GetThreadPool();
-	for (ChunkRenderComponent* component : components) {
-		auto func = std::bind(&ChunkRenderComponent::RecreateMesh, component);
+	for (Chunk* chunk : chunks) {
+		auto func = std::bind(&ChunkRenderComponent::RecreateMesh, chunk->GetRenderComponent());
 		threadPool->AddFunctionToQueue(func);
 		//component->RecreateMesh(chunkRenderer->GetChunkMesh(component->GetChunk()));
 	}
