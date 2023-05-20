@@ -37,6 +37,10 @@ public:
 
 	forceinline glm::dvec3 GetForwardVector() const { return glm::dvec3(lookAt.x, lookAt.y, lookAt.z); }
 
-	forceinline glm::dvec3 GetRightVector() const { return glm::cross(GetForwardVector(), glm::dvec3(0, 1, 0)); }
+	forceinline glm::dvec3 GetRightVector() const { return glm::normalize(glm::cross(GetForwardVector(), glm::dvec3(0, 1, 0))); }
+
+	void AddForwardInput(double amount);
+	void AddRightInput(double amount);
+	void AddVerticalInput(double amount);
 
 };

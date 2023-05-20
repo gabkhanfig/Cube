@@ -5,6 +5,8 @@
 
 class Player;
 
+typedef void (Player::* PlayerInputCallback)(InputMods);
+
 class PlayerInputComponent : public InputComponent
 {
 private:
@@ -17,6 +19,10 @@ private:
 
 	float yaw;
 
+	HashMap<GlobalString, darray<PlayerInputCallback>*> pressCallbacks;
+
+	HashMap<GlobalString, darray<PlayerInputCallback>*> releaseCallbacks;
+
 public:
 
 	PlayerInputComponent();
@@ -27,11 +33,11 @@ public:
 
 	virtual void Press(GlobalString button, InputMods mods) override;
 
+	virtual void Release(GlobalString button, InputMods mods) override;
+
 	virtual void Tick(float deltaTime) override;
 
-	void AddPlayerForwardInput(float scale);
+	void BindPressCallback(GlobalString button, PlayerInputCallback callback);
 
-	void AddPlayerRightInput(float scale);
-
-	void AddPlayerVerticalInput(float scale);
+	void BindReleaseCallback(GlobalString button, PlayerInputCallback callback);
 };

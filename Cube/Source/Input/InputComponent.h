@@ -35,7 +35,5 @@ protected:
 
 	InputButton* GetInputButton(GlobalString button);
 
-
-
 };
 

@@ -40,62 +40,53 @@ void PlayerInputComponent::Cursor(double xpos, double ypos)
 
 void PlayerInputComponent::Press(GlobalString button, InputMods mods)
 {
-	if (button == "LMB") {
-		player->TestPlaceBlock();
+	auto found = pressCallbacks.find(button);
+	if (found != pressCallbacks.end()) {
+		for (int i = 0; i < found->second->Size(); i++) {
+			PlayerInputCallback callback = found->second->At(i);
+			(player->*callback)(mods);
+		}
+	}
+}
+
+void PlayerInputComponent::Release(GlobalString button, InputMods mods)
+{
+	auto found = releaseCallbacks.find(button);
+	if (found != releaseCallbacks.end()) {
+		for (int i = 0; i < found->second->Size(); i++) {
+			PlayerInputCallback callback = found->second->At(i);
+			(player->*callback)(mods);
+		}
 	}
 }
 
 void PlayerInputComponent::Tick(float deltaTime)
+{}
+
+void PlayerInputComponent::BindPressCallback(GlobalString button, PlayerInputCallback callback)
 {
-	static GlobalString WKey = "W";
-	static GlobalString AKey = "A";
-	static GlobalString SKey = "S";
-	static GlobalString DKey = "D";
-	static GlobalString SpaceKey = "Space";
-	static GlobalString CtrlKey = "Ctrl";
-
-	const float WKeyScale = CubeInput::GetButtonState(WKey).isHeld ? 1 : 0;
-	const float SKeyScale = CubeInput::GetButtonState(SKey).isHeld ? -1 : 0;
-	const float ForwardScale = WKeyScale + SKeyScale;
-	if (ForwardScale != 0) {
-		AddPlayerForwardInput(ForwardScale * deltaTime * 20);
+	auto found = pressCallbacks.find(button);
+	if (found != pressCallbacks.end()) {
+		checkm(!found->second->Contains(callback), "Binding the same player input press callback twice is not allowed");
+		found->second->Add(callback);
 	}
-
-	const float AKeyScale = CubeInput::GetButtonState(AKey).isHeld ? -1 : 0;
-	const float DKeyScale = CubeInput::GetButtonState(DKey).isHeld ? 1 : 0;
-	const float RightScale = AKeyScale + DKeyScale;
-	if (RightScale != 0) {
-		AddPlayerRightInput(RightScale * deltaTime * 20);
-	}
-
-	const float SpaceKeyScale = CubeInput::GetButtonState(SpaceKey).isHeld ? 1 : 0;
-	const float CtrlKeyScale = CubeInput::GetButtonState(CtrlKey).isHeld ? -1 : 0;
-	const float VerticalScale = SpaceKeyScale + CtrlKeyScale;
-	if (VerticalScale != 0) {
-		AddPlayerVerticalInput(VerticalScale * deltaTime * 20);
+	else {
+		darray<PlayerInputCallback>* callbacks = new darray<PlayerInputCallback>();
+		callbacks->Add(callback);
+		pressCallbacks.insert({ button, callbacks });
 	}
 }
 
-void PlayerInputComponent::AddPlayerForwardInput(float scale)
+void PlayerInputComponent::BindReleaseCallback(GlobalString button, PlayerInputCallback callback)
 {
-	glm::dvec3 location = player->GetLocation();
-	location += double(scale) * player->GetForwardVector();
-	player->SetLocation(location);
-	player->GetCamera()->SetPosition({ location.x, location.y, location.z });
-}
-
-void PlayerInputComponent::AddPlayerRightInput(float scale)
-{
-	glm::dvec3 location = player->GetLocation();
-	location += double(scale) * player->GetRightVector();
-	player->SetLocation(location);
-	player->GetCamera()->SetPosition({ location.x, location.y, location.z });
-}
-
-void PlayerInputComponent::AddPlayerVerticalInput(float scale)
-{
-	glm::dvec3 location = player->GetLocation();
-	location.y += scale;
-	player->SetLocation(location);
-	player->GetCamera()->SetPosition({ location.x, location.y, location.z });
+	auto found = releaseCallbacks.find(button);
+	if (found != releaseCallbacks.end()) {
+		checkm(!found->second->Contains(callback), "Binding the same player input release callback twice is not allowed");
+		found->second->Add(callback);
+	}
+	else {
+		darray<PlayerInputCallback>* callbacks = new darray<PlayerInputCallback>();
+		callbacks->Add(callback);
+		releaseCallbacks.insert({ button, callbacks });
+	}
 }
