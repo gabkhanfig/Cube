@@ -33,6 +33,9 @@ void _CheckImplementation(bool condition, const string& message, const char* fil
 /* Check with message assertion macro is disabled in non-development configuration. */
 #define checkm(condition, message)
 
+/* Check if pointer is non-null is disabled in non-development configuration. */
+#define checkNotNull(_prt)
+
 #endif
 
 //#undef _str
