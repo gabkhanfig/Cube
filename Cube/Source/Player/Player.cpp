@@ -9,6 +9,8 @@ Player::Player()
 	: forwardInputHeld(false), backwardInputHeld(false), rightInputHeld(false), leftInputHeld(false), upInputHeld(false), downInputHeld(false)
 {
 	camera = new Camera();
+	camera->SetForwardVectorReference(&rotation);
+
 	inputComponent = new PlayerInputComponent();
 
 	inputComponent->SetPlayer(this);
@@ -20,9 +22,7 @@ Player::Player()
 
 void Player::Tick(float deltaTime)
 {
-	glm::dvec3 forward{ lookAt.x, lookAt.y, lookAt.z };
-
-	RaycastHitResult hitResult = GetWorld()->RaycastHit(location, location + forward * 1000.0);
+	RaycastHitResult hitResult = GetWorld()->RaycastHit(location, location + GetRotation() * 1000.0);
 	if (hitResult.success == RaycastHitResult::HitSuccess::block) {
 		highlightedObject = hitResult;
 	}

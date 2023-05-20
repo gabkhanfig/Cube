@@ -13,11 +13,11 @@ private:
 
 	Player* player;
 
-	float sensitivity;
+	double sensitivity;
 
-	float pitch;
+	double pitch;
 
-	float yaw;
+	double yaw;
 
 	HashMap<GlobalString, darray<PlayerInputCallback>*> pressCallbacks;
 

@@ -17,25 +17,22 @@ void PlayerInputComponent::SetPlayer(Player* newPlayer)
 void PlayerInputComponent::Cursor(double xpos, double ypos)
 {
 	const glm::dvec2 previous = CubeInput::GetPreviousCursorPos(); 
-	const glm::vec2 offset = glm::vec2(xpos - previous.x, previous.y - ypos) * sensitivity;
+	const glm::dvec2 offset = glm::dvec2(xpos - previous.x, previous.y - ypos) * sensitivity;
 
 	yaw += offset.x;
 	pitch += offset.y;
-	if (pitch > 89.0f) {
-		pitch = 89.0f;
+	if (pitch > 89.0) {
+		pitch = 89.0;
 	}
-	else if (pitch < -89.0f) {
-		pitch = -89.0f;
+	else if (pitch < -89.0) {
+		pitch = -89.0;
 	}
-	glm::vec3 forward = {
+	glm::dvec3 forward = {
 		cos(glm::radians(yaw)) * cos(glm::radians(pitch)),
 		sin(glm::radians(pitch)),
 		sin(glm::radians(yaw)) * cos(glm::radians(pitch))
 	};
-	player->SetLookAt(forward);
-
-	// TODO make player automatically set the forward vector
-	player->GetCamera()->SetForwardVector(forward);
+	player->SetRotation(forward);
 }
 
 void PlayerInputComponent::Press(GlobalString button, InputMods mods)

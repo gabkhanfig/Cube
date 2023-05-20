@@ -12,13 +12,11 @@ private:
 
 	static Camera* activeCamera;
 
-	glm::vec3 forward;
-
-	glm::vec3 position;
+	glm::dvec3* forward;
 
 public:
 
-	forceinline glm::vec3 GetForward() const { return forward; }
+	forceinline const glm::dvec3 GetForward() const { return *forward; }
 
 private:
 
@@ -41,9 +39,7 @@ public:
 	glm::mat4 GetMvpMatrix() const;
 
 	static constexpr glm::vec3 GetUpVector() { return glm::vec3(0.0f, 1.0f, 0.0f); }
-	
-	void SetForwardVector(glm::vec3 update);
 
-	void SetPosition(glm::vec3 newPosition);
+	void SetForwardVectorReference(glm::dvec3* newForward) { forward = newForward; }
 
 };

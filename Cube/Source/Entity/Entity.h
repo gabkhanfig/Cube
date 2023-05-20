@@ -10,10 +10,7 @@ protected:
 	glm::dvec3 location;
 
 	/**/
-	glm::vec3 rotation;
-
-	/* The unit vector of where this entity is looking. */
-	glm::vec3 lookAt;
+	glm::dvec3 rotation;
 
 public:
 
@@ -25,19 +22,13 @@ public:
 
 	forceinline void SetLocation(const glm::dvec3 newLocation) { location = newLocation; }
 
-	forceinline glm::vec3 GetRotation() const { return rotation; }
+	forceinline glm::dvec3 GetRotation() const { return rotation; }
 
-	forceinline void SetRotation(const glm::vec3 newRotation) { rotation = newRotation; }
+	forceinline void SetRotation(const glm::dvec3 newRotation) { rotation = newRotation; }
 
-	/* Get the unit vector of where this entity is looking. */
-	forceinline glm::vec3 GetLookAt() const { return lookAt; }
+	forceinline glm::dvec3 GetForwardVector() const { return glm::normalize(glm::cross(GetRightVector(), glm::dvec3(0, -1, 0))); }
 
-	/* Set the unit vector of where this entity is looking. */
-	forceinline void SetLookAt(const glm::vec3 newLookAt) { lookAt = newLookAt; }
-
-	forceinline glm::dvec3 GetForwardVector() const { return glm::dvec3(lookAt.x, lookAt.y, lookAt.z); }
-
-	forceinline glm::dvec3 GetRightVector() const { return glm::normalize(glm::cross(GetForwardVector(), glm::dvec3(0, 1, 0))); }
+	forceinline glm::dvec3 GetRightVector() const { return glm::normalize(glm::cross(GetRotation(), glm::dvec3(0, 1, 0))); }
 
 	void AddForwardInput(double amount);
 	void AddRightInput(double amount);
