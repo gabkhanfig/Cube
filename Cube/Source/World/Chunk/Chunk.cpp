@@ -46,6 +46,13 @@ void Chunk::SetBlockAt(BlockPosition position, Block* block)
 	cubeLog("chunk block set modified thingy");
 }
 
+void Chunk::DestroyBlockAt(BlockPosition position)
+{
+	delete blocks[position.index];
+	blocks[position.index] = BlockFactory::NewAirBlock();
+	SetShouldBeRemeshed(true);
+}
+
 void Chunk::FillChunkWithBlock(GlobalString blockName)
 {
 	BlockClass* blockClass = BlockFactory::GetBlockClass(blockName);

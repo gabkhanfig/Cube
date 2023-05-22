@@ -65,7 +65,12 @@ void Player::InputUse(InputMods mods)
 
 void Player::InputAttack(InputMods mods)
 {
+	if (highlightedObject.success != RaycastHitResult::HitSuccess::block) {
+		return;
+	}
 	cubeLog("attack");
+	WorldPosition pos = { glm::dvec3(highlightedObject.position.x, highlightedObject.position.y, highlightedObject.position.z) };
+	GetWorld()->DestroyBlockAt(pos);
 }
 
 void Player::UpdatePositionFromInputs(float deltaTime)

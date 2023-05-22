@@ -40,6 +40,8 @@ public:
 
 	void SetBlockAt(BlockPosition position, Block* block);
 
+	void DestroyBlockAt(BlockPosition position);
+
 	/* Fill the chunk with a specified block. */
 	void FillChunkWithBlock(GlobalString blockName);
 

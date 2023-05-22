@@ -33,6 +33,9 @@ public:
 
 	bool SetBlockAt(WorldPosition position, Block* block);
 
+	/* Destroys the block at the given position, replacing it with air. */
+	void DestroyBlockAt(WorldPosition position);
+
 	/* Checks if a chunk is loaded. */
 	bool DoesChunkExist(ChunkPosition position) const;
 

@@ -113,6 +113,15 @@ bool World::SetBlockAt(WorldPosition position, Block* block)
   return true;
 }
 
+void World::DestroyBlockAt(WorldPosition position)
+{
+  if (!DoesChunkExist(position.ToChunkPosition())) {
+    return;
+  }
+  Chunk* chunk = GetChunk(position.ToChunkPosition());
+  chunk->DestroyBlockAt(position.ToBlockPosition());
+}
+
 bool World::DoesChunkExist(ChunkPosition position) const
 {
   return chunks.contains(position);
