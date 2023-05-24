@@ -61,7 +61,7 @@ void ChunkRenderer::StoreModifyDrawCallData()
 
 void ChunkRenderer::DrawAllChunksAndPrepareNext(const darray<Chunk*>& chunksToDrawNextFrame)
 {
-  const DrawCallData& boundDrawData = drawCalls[boundDrawCallId]; 
+  const DrawCallData& boundDrawData = drawCalls[boundDrawCallId];
   PerformBoundDrawCalls();
 
   DrawCallData& modifyDrawData = drawCalls[modifyDrawCallId];

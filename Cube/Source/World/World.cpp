@@ -233,7 +233,19 @@ void World::RenderLoop()
   // 2. Wait until previous render execution is finished.
   gk::Thread* renderThread = engine->GetRenderThread();
   if (usingRenderThread) {
+    auto startWait = std::chrono::high_resolution_clock::now();
+#ifdef DEVELOPMENT
+    while (!renderThread->IsReady()) {
+      std::chrono::steady_clock::time_point now = std::chrono::high_resolution_clock::now();
+      auto duration = now - startWait; 
+      if (std::chrono::duration_cast<std::chrono::seconds>(duration).count() > 5) {
+        cubeLog("stuck waiting for render thread");
+        DebugBreak();
+      }
+#else 
     while (!renderThread->IsReady());
+#endif
+    }
   }
   
   // 3. Remove any chunks that shouldn't be drawn from the ChunkRenderer's drawChunks map.
@@ -262,7 +274,7 @@ void World::RenderLoop()
     auto func = std::bind(&ChunkRenderer::DrawAllChunksAndPrepareNext, chunkRenderer, chunksToDraw);
     renderThread->BindFunction(func);
     renderThread->Execute();
-    while (!renderThread->IsReady());
+    //while (!renderThread->IsReady());
   }
   // 8. Copy all of the chunks mesh data within a single VBO and IBO using offsets within them. Will potentially need to reallocate the buffers.
 

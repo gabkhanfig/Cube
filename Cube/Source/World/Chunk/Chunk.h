@@ -23,7 +23,7 @@ private:
 	ChunkRenderComponent* renderComponent;
 
 	/**/
-	bool wasChunkModifiedThisTick;
+	bool shouldBeRemeshed;
 
 public:
 
@@ -51,9 +51,9 @@ public:
 
 	ChunkRenderComponent* GetRenderComponent() const { return renderComponent; }
 
-	bool ShouldBeRemeshed() const { return wasChunkModifiedThisTick; }
+	bool ShouldBeRemeshed() const { return shouldBeRemeshed; }
 
-	void SetShouldBeRemeshed(bool newShouldBeRemeshed) { wasChunkModifiedThisTick = newShouldBeRemeshed; }
+	void SetShouldBeRemeshed(bool newShouldBeRemeshed) { shouldBeRemeshed = newShouldBeRemeshed; }
 
 private:
 

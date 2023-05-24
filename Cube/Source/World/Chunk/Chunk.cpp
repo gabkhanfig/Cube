@@ -6,7 +6,7 @@
 #include "../Terrain/TerrainGenerator.h"
 
 Chunk::Chunk(ChunkPosition inPosition)
-	: wasChunkModifiedThisTick(false), position(inPosition)
+	: shouldBeRemeshed(false), position(inPosition)
 {
 	blocks = new Block*[CHUNK_SIZE];
 	renderComponent = new ChunkRenderComponent(this);
