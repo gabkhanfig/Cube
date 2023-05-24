@@ -57,7 +57,6 @@ void Player::InputUse(InputMods mods)
 	if (highlightedObject.success != RaycastHitResult::HitSuccess::block) {
 		return;
 	}
-	cubeLog("test plaace block");
 	Block* b = BlockFactory::GetBlockClass("stoneBlock")->NewBlock();
 	WorldPosition pos = { glm::dvec3(highlightedObject.position.x, highlightedObject.position.y + 1.0, highlightedObject.position.z) };
 	GetWorld()->SetBlockAt(pos, b);
@@ -68,7 +67,6 @@ void Player::InputAttack(InputMods mods)
 	if (highlightedObject.success != RaycastHitResult::HitSuccess::block) {
 		return;
 	}
-	cubeLog("attack");
 	WorldPosition pos = { glm::dvec3(highlightedObject.position.x, highlightedObject.position.y, highlightedObject.position.z) };
 	GetWorld()->DestroyBlockAt(pos);
 }

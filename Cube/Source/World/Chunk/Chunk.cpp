@@ -43,7 +43,6 @@ void Chunk::SetBlockAt(BlockPosition position, Block* block)
 	delete blocks[position.index];
 	blocks[position.index] = block;
 	SetShouldBeRemeshed(true);
-	cubeLog("chunk block set modified thingy");
 }
 
 void Chunk::DestroyBlockAt(BlockPosition position)
