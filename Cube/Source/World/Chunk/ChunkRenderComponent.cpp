@@ -12,7 +12,7 @@
 #include "../Block/BlockTypes/Air/AirBlock.h"
 
 ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
-	: chunk(chunkOwner)
+	: chunk(chunkOwner), emptyMesh(true)
 {
 	mesh = new ChunkMesh();
 	vbos = new PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>();
@@ -42,6 +42,7 @@ void ChunkRenderComponent::RecreateMesh()
 		const glm::vec3 vertexOffset{ blockPos.X(), blockPos.Y(), blockPos.Z() };
 		block->AddBlockMeshToChunkMesh(mesh, chunk, worldPos, vertexOffset);
 	}
+	emptyMesh = mesh->GetQuadCount() == 0;
 	chunk->SetShouldBeRemeshed(false);
 }
 

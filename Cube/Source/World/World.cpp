@@ -34,7 +34,7 @@ World* GetWorld()
 World::World()
 {
   player = new Player();
-  player->SetLocation({ 0, 33, 0 });
+  //player->SetLocation({ 0, 33, 0 });
   if (!engine->IsUsingRenderThread()) {
     CreateChunkRenderer();
   }
@@ -152,7 +152,7 @@ RaycastHitResult World::RaycastHit(const glm::dvec3 start, const glm::dvec3 end)
   glm::dvec3 norm = glm::vec3(0, -step.y, 0);
 
   // If the component start is greater than the component end, passing it would mean the current step position is less than the end, otherwise greater
-#define COMPONENT_PASSED(n) (start.n > end.n ? (pos.n - 1.0) < end.n : (pos.n + 1.0) > end.n)
+#define COMPONENT_PASSED(n) (start.n > end.n ? (pos.n - 0.5) < end.n : (pos.n + 0.5) > end.n)
 
   RaycastHitResult result;
 
@@ -225,10 +225,10 @@ void World::RenderLoop()
   //}
 
   // 1. Get all of the chunks, including LOD chunks that should be drawn.
-  darray<Chunk*> chunksToDraw;
+  darray<Chunk*> chunksToAttemptDraw;
   for (auto& chunkPair : chunks) {
     // Check if chunk can be drawn
-    chunksToDraw.Add(chunkPair.second);
+    chunksToAttemptDraw.Add(chunkPair.second);
   }
   // 2. Wait until previous render execution is finished.
   gk::Thread* renderThread = engine->GetRenderThread();
@@ -252,7 +252,7 @@ void World::RenderLoop()
 
   // 4. From the chunks to be drawn, find which ones need to be remeshed.
   darray<Chunk*> remeshedChunks;
-  for (Chunk* chunk : chunksToDraw) {
+  for (Chunk* chunk : chunksToAttemptDraw) {
     if (!chunk->ShouldBeRemeshed()) continue;
     //cubeLog("chunk should be remeshed at: ");
     //std::cout << chunk->GetPosition().x << ", " << chunk->GetPosition().y << ", " << chunk->GetPosition().z << '\n';
@@ -263,10 +263,16 @@ void World::RenderLoop()
     ChunkRenderComponent::MultithreadRecreateMeshes(chunkRenderer, remeshedChunks);
     chunkRenderer->SetRemeshedChunks(remeshedChunks);
   }
+
+  // 6. Filter out any empty chunks
+  darray<Chunk*> chunksToDraw;
+  for (Chunk* chunk : chunksToAttemptDraw) {
+    if (!chunk->GetRenderComponent()->IsMeshEmpty()) chunksToDraw.Add(chunk);
+  }
   
-  // 6. Store player position data, camera mvp matrix, and any other data that may change while drawing is occurring within the ChunkRenderer.
+  // 7. Store player position data, camera mvp matrix, and any other data that may change while drawing is occurring within the ChunkRenderer.
   chunkRenderer->StoreModifyDrawCallData();
-  // 7. Execute whole world draw task on the render thread.
+  // 8. Execute whole world draw task on the render thread.
   if (!usingRenderThread) {
     chunkRenderer->DrawAllChunksAndPrepareNext(chunksToDraw);
   }
@@ -276,9 +282,5 @@ void World::RenderLoop()
     renderThread->Execute();
     //while (!renderThread->IsReady());
   }
-  // 8. Copy all of the chunks mesh data within a single VBO and IBO using offsets within them. Will potentially need to reallocate the buffers.
-
-  // 9. Iterate through each chunk, drawing it's data using the ChunkRenderMeshData.
-
-  // 10. Swap buffers.
+  
 }

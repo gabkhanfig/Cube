@@ -61,6 +61,7 @@ void ChunkRenderer::StoreModifyDrawCallData()
 
 void ChunkRenderer::DrawAllChunksAndPrepareNext(const darray<Chunk*>& chunksToDrawNextFrame)
 {
+  // 8. Draw the chunks
   const DrawCallData& boundDrawData = drawCalls[boundDrawCallId];
   PerformBoundDrawCalls();
 
@@ -70,7 +71,7 @@ void ChunkRenderer::DrawAllChunksAndPrepareNext(const darray<Chunk*>& chunksToDr
   darray<uint32> indices;
   uint32 baseVertex = 0;
 
-  // Copy the remeshed chunks to their OpenGL buffers.
+  // 9. Copy the remeshed chunks to their OpenGL buffers.
   for (Chunk* chunk : remeshedChunks) {
     ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
 
@@ -98,12 +99,13 @@ void ChunkRenderer::DrawAllChunksAndPrepareNext(const darray<Chunk*>& chunksToDr
   }
   remeshedChunks.Empty();
 
-  // Prepare the draw calls for the next frame.
+  // 10. Prepare the draw calls for the next frame.
   frameChunkDrawCalls.Empty();
   for (Chunk* chunk : chunksToDrawNextFrame) {
     frameChunkDrawCalls.Add(chunk);
   }
 
+  // 11. Swap buffers
   SwapNextBuffers();
 }
 
@@ -134,6 +136,7 @@ void ChunkRenderer::DrawChunk(const Chunk* drawChunk)
   VertexBufferObject* vbo = drawChunk->GetRenderComponent()->GetVbos()->GetBoundBuffer();
   IndexBufferObject* ibo = drawChunk->GetRenderComponent()->GetIbos()->GetBoundBuffer();
   if (vbo == nullptr || ibo == nullptr) return;
+  if (ibo->GetIndexCount() == 0) return;
 
   BindBlocksVertexBufferObject(vbo);
   SetShaderChunkOffset(GetChunkShaderPositionOffset(drawCalls[boundDrawCallId].playerPos, drawChunk));

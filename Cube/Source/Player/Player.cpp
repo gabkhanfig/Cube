@@ -55,6 +55,7 @@ void Player::SetupInputBinds()
 void Player::InputUse(InputMods mods)
 {
 	if (highlightedObject.success != RaycastHitResult::HitSuccess::block) {
+		cubeLog("InputUse not looking at a block");
 		return;
 	}
 	Block* b = BlockFactory::GetBlockClass("stoneBlock")->NewBlock();
@@ -65,6 +66,7 @@ void Player::InputUse(InputMods mods)
 void Player::InputAttack(InputMods mods)
 {
 	if (highlightedObject.success != RaycastHitResult::HitSuccess::block) {
+		cubeLog("InputAttack not looking at a block");
 		return;
 	}
 	WorldPosition pos = { glm::dvec3(highlightedObject.position.x, highlightedObject.position.y, highlightedObject.position.z) };

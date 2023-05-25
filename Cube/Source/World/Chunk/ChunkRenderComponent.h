@@ -31,6 +31,8 @@ public:
 
 	ChunkMesh* GetMesh() const { return mesh; };
 
+	bool IsMeshEmpty() const { return emptyMesh; }
+
 	PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* GetVbos() const { return vbos; }
 
 	PersistentMappedTripleBuffer<IndexBufferObject, uint32>* GetIbos() const { return ibos; }
@@ -50,5 +52,7 @@ private:
 
 	/* Persistent Mapped Triple Index Buffer Objects for rendering. */
 	PersistentMappedTripleBuffer<IndexBufferObject, uint32>* ibos;
+
+	bool emptyMesh;
 
 };
