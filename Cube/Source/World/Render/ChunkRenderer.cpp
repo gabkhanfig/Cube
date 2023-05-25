@@ -82,10 +82,10 @@ void ChunkRenderer::DrawAllChunksAndPrepareNext(const darray<Chunk*>& chunksToDr
     auto cibos = renderComponent->GetIbos();
 
     if (cvbos->GetCapacity() < mesh->GetQuadCount()) {
-      cvbos->Reserve(mesh->GetQuadCount() * 1.5);
+      cvbos->Reserve(static_cast<int>(mesh->GetQuadCount() * 1.5));
     }
     if (cibos->GetCapacity() < mesh->GetIndexCount()) {
-      cibos->Reserve(mesh->GetIndexCount() * 1.5);
+      cibos->Reserve(static_cast<int>(mesh->GetIndexCount() * 1.5));
     }
 
     auto& mappedVbo = cvbos->GetModifyMapped();
@@ -124,7 +124,7 @@ void ChunkRenderer::PerformBoundDrawCalls()
   shader->Bind();
   SetShaderCameraMVP(boundDrawData.cameraMVP);
 
-  for (int i = 0; i < frameChunkDrawCalls.Size(); i++) {
+  for (ArrSizeT i = 0; i < frameChunkDrawCalls.Size(); i++) {
     DrawChunk(frameChunkDrawCalls[i]);
   }
 

@@ -15,6 +15,7 @@ ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
 	: chunk(chunkOwner), emptyMesh(true)
 {
 	mesh = new ChunkMesh();
+	// It's possible OpenGL won't like these being created on the primary thread. Investigate if so.
 	vbos = new PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>();
 	ibos = new PersistentMappedTripleBuffer<IndexBufferObject, uint32>();
 }

@@ -86,7 +86,7 @@ darray<uint32> ChunkMesh::GetIndices() const
   const uint32 quadCount = quads.Size();
 
   darray<uint32> outIndices;
-  for (int i = 0; i < quadCount; i++) {
+  for (uint32 i = 0; i < quadCount; i++) {
     outIndices.Add(indices[0] + (i * 4));
     outIndices.Add(indices[1] + (i * 4));
     outIndices.Add(indices[2] + (i * 4));

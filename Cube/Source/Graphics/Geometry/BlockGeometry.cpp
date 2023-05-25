@@ -15,7 +15,7 @@ IndexBufferObject* BlockQuad::CreateQuadsIndexBuffer(const uint32 quadCount)
 
   uint32 index = 0;
   uint32* quadIndices = new uint32[uint64(indexCount) * uint64(quadCount)];
-  for (int i = 0; i < quadCount; i++) {
+  for (uint32 i = 0; i < quadCount; i++) {
     quadIndices[index++] = (indices[0] + (i * 4));
     quadIndices[index++] = (indices[1] + (i * 4));
     quadIndices[index++] = (indices[2] + (i * 4));
@@ -58,7 +58,7 @@ const glm::vec3 BlockQuad::NormalFromQuadPoints(const glm::vec3 points[4])
   const glm::vec3 CD = points[3] - points[2];
   const glm::vec3 DA = points[0] - points[3];
 
-  constexpr float threshold = 0.01;
+  constexpr float threshold = 0.01f;
   
   const glm::vec3 ABcrossCD = glm::abs(glm::cross(AB, CD));
   const glm::vec3 BCcrossDA = glm::abs(glm::cross(BC, DA));

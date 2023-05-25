@@ -35,7 +35,7 @@ static BlockAtlasData MapAtlasData()
 	BlockAtlasData atlas;
 	atlas.atlasData = Texture2d::CreateTexture2dAtlas(images, bytes16x16png, imageWidth, imageHeight, bytesPerPixel);
 
-	int idIndex = 0;
+	uint32 idIndex = 0;
 	for (float y = 0; y < 1; y += 1.f / ((float)atlas.atlasData.width / (float)imageWidth)) {
 		for (float x = 0; x < 1; x += 1.f / ((float)atlas.atlasData.height / (float)imageWidth)) {
 			EBlockTexture id = EBlockTexture(0);

@@ -6,7 +6,7 @@
 struct GeneratedPng
 {
 	const uint8* bytes;
-	size_t bytesPerImage;
+	int bytesPerImage;
 };
 
 class Texture

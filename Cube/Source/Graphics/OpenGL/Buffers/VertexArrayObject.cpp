@@ -24,9 +24,9 @@ void VertexArrayObject::LinkVertexBufferObjectLayout(VertexBufferObject* vbo, co
 
 	darray<VertexBufferLayout::VertexBufferElement> elements = layout.GetElements();
 	const uint32 elementCount = elements.Size();
-	uint32 offset = 0;
+	uint64 offset = 0;
 
-	for (int i = 0; i < elementCount; i++) {
+	for (ArrSizeT i = 0; i < elementCount; i++) {
 		const VertexBufferLayout::VertexBufferElement& element = elements[i];
 		glEnableVertexAttribArray(i);
 		 

@@ -110,7 +110,7 @@ struct WorldPosition
 	{}
 
 	WorldPosition(glm::dvec3 pos)
-		: x(pos.x), y(pos.y), z(pos.z)
+		: x(static_cast<int>(pos.x)), y(static_cast<int>(pos.y)), z(static_cast<int>(pos.z))
 	{}
 
 	static WorldPosition FromChunkAndBlock(ChunkPosition chunk, BlockPosition block) {
@@ -136,9 +136,9 @@ struct WorldPosition
 
 	ChunkPosition ToChunkPosition() const {
 		ChunkPosition pos;
-		pos.x = floor(double(x) / CHUNK_LENGTH);
-		pos.y = floor(double(y) / CHUNK_LENGTH);
-		pos.z = floor(double(z) / CHUNK_LENGTH);
+		pos.x = static_cast<int>(floor(double(x) / CHUNK_LENGTH));
+		pos.y = static_cast<int>(floor(double(y) / CHUNK_LENGTH));
+		pos.z = static_cast<int>(floor(double(z) / CHUNK_LENGTH));
 		return pos;
 	}
 

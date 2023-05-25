@@ -19,7 +19,7 @@ Texture2dAtlasData Texture2d::CreateTexture2dAtlas(const darray<GeneratedPng>& i
 {
 	const int imageCount = images.Size();
 	const int imageByteCount = width * height * bitsPerPixel;
-	const int atlasWidth = ceil(sqrt(double(imageCount)));
+	const int atlasWidth = static_cast<int>(ceil(sqrt(double(imageCount))));
 	const int atlasHeight = atlasWidth;
 	const int atlasByteCount = atlasWidth * atlasHeight * imageByteCount;
 

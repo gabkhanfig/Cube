@@ -9,6 +9,9 @@ static GLenum ShaderTypeToGLShader(Shader::Type shaderType)
 		return GL_VERTEX_SHADER;
 	case Shader::Type::FragmentShader:
 		return GL_FRAGMENT_SHADER;
+	default:
+		DebugBreak();
+		return 0;
 	}
 }
 

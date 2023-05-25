@@ -53,7 +53,7 @@ darray<GlobalString> InputMapping::GetMappedInputs()
 {
 	static InputMapping::InputsInt_T strs = CreateDefaultInputs().inputStrings;
 	darray<GlobalString> mappedInputStrings;
-	mappedInputStrings.Reserve(strs.size());
+	mappedInputStrings.Reserve(static_cast<ArrSizeT>(strs.size()));
 	for (auto& str : strs) {
 		mappedInputStrings.Add(str.second);
 	}

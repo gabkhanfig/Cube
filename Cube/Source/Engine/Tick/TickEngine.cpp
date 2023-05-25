@@ -15,7 +15,7 @@ void TickEngine::RunEngineLoop()
 		tickNum++;
 		previous = current;
 		current = glfwGetTime();
-		deltaTime = current - previous;
+		deltaTime = static_cast<float>(current - previous);
 		UpdateFps();
 
 		callback(std::min(deltaTime, MAX_DELTA_TIME));
@@ -38,7 +38,7 @@ void TickEngine::UpdateFps()
 		fpsCounter = 0; 
 		string windowWithFps = engine->GetWindow()->GetTitle();
 		windowWithFps += "   FPS: ";
-		windowWithFps += string::FromInt(CurrentFps());
+		windowWithFps += string::FromInt(static_cast<int64>(CurrentFps()));
 		glfwSetWindowTitle(engine->GetWindow()->GetGlfwWindow(), windowWithFps.c_str());
 	}
 //#endif
