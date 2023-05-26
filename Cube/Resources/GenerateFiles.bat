@@ -1,1 +1,1 @@
-python GenerateFile.py GeneratedFiles Files.txt
+cube-compile-time-file-converter.exe Files.txt GeneratedFiles

@@ -4,6 +4,7 @@
 #include "Input/UserInput.h"
 #include "Window/Window.h"
 #include "Tick/TickEngine.h"
+#include "../Core/Utils/CompileTimeFiles.h"
 
 void GLAPIENTRY
 MessageCallback(GLenum source,
@@ -77,6 +78,8 @@ void Engine::InitializeOpenGL(Window* _window, glm::vec3 clearColor)
 
 void Engine::Start()
 {
+	CompileTimeFiles::LoadAllFiles();
+
 	Window::InitializeGLFW();
 	engine = new Engine();
 	UserInput::SetCallbacks();

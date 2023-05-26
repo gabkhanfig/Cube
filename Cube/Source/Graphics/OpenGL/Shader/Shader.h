@@ -29,7 +29,7 @@ private:
 public:
 
 	/* Construct a shader given strings containing vertex and fragment source code. */
-	Shader(const string& vertexString, const string& fragmentString);
+	Shader(const char* vertexString, const char* fragmentString);
 
 	~Shader();
 

@@ -87,9 +87,9 @@ uint32 Shader::GetUniformLocation(GlobalString uniformName)
 	return location;
 }
 
-Shader::Shader(const string& vertexString, const string& fragmentString)
+Shader::Shader(const char* vertexString, const char* fragmentString)
 {
-	shaderProgram = CreateShader(vertexString.CStr(), fragmentString.CStr());
+	shaderProgram = CreateShader(vertexString, fragmentString);
 	Bind();
 }
 

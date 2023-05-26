@@ -4,7 +4,6 @@
 #include "../../Graphics/OpenGL/Buffers/IndexBufferObject.h"
 #include "../../Graphics/OpenGL/Buffers/VertexArrayObject.h"
 #include "../../Graphics/OpenGL/Buffers/ShaderBufferObject.h"
-#include "../../../Resources/GeneratedFiles.h"
 #include "../../Graphics/Geometry/BlockGeometry.h"
 #include "../WorldTransform.h"
 #include "../World.h"
@@ -15,11 +14,12 @@
 #include "../../Graphics/OpenGL/Camera/Camera.h"
 #include <glad/glad.h>
 #include "../../Engine/Engine.h"
+#include "../../Core//Utils/CompileTimeFiles.h"
 
 ChunkRenderer::ChunkRenderer()
   : chunkOffsetUniform("u_chunkOffset"), cameraMvpUniform("u_cameraMVP"), boundDrawCallId(0), modifyDrawCallId(1)
 {
-  shader = new Shader(generated_Chunk_vert, generated_Chunk_frag);
+  shader = new Shader(CompileTimeFiles::GetTextFile("Chunk.vert")->contents, CompileTimeFiles::GetTextFile("Chunk.frag")->contents);
   vao = new VertexArrayObject();
   vao->SetFormatLayout(BlockQuad::GetQuadsVertexBufferLayout());
 }

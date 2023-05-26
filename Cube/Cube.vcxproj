@@ -172,9 +172,11 @@ GenerateFiles.bat</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />
+    <ClCompile Include="Resources\GeneratedFiles.cpp" />
     <ClCompile Include="Source\Core\Asserts.cpp" />
     <ClCompile Include="Source\Core\Log\Logger.cpp" />
     <ClCompile Include="Source\Core\Utils\Benchmark.cpp" />
+    <ClCompile Include="Source\Core\Utils\CompileTimeFiles.cpp" />
     <ClCompile Include="Source\Engine\Engine.cpp" />
     <ClCompile Include="Source\Engine\Input\InputMapping.cpp" />
     <ClCompile Include="Source\Engine\Input\UserInput.cpp" />
@@ -217,6 +219,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\World\WorldTransform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\cube-compile-time-file-converter.exe" />
     <None Include="Resources\GenerateFile.py" />
     <None Include="Resources\GenerateFiles.bat" />
     <None Include="Resources\Shaders\Basic.frag" />
@@ -233,6 +236,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\Core\EngineTypes.h" />
     <ClInclude Include="Source\Core\Log\Logger.h" />
     <ClInclude Include="Source\Core\Utils\Benchmark.h" />
+    <ClInclude Include="Source\Core\Utils\CompileTimeFiles.h" />
     <ClInclude Include="Source\Engine\Engine.h" />
     <ClInclude Include="Source\Engine\EngineCore.h" />
     <ClInclude Include="Source\Engine\Input\InputMapping.h" />

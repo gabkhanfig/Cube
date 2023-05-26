@@ -15,7 +15,7 @@ Texture2d::Texture2d(const unsigned char* imageBytes, int _width, int _height)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageBytes);
 }
 
-Texture2dAtlasData Texture2d::CreateTexture2dAtlas(const darray<GeneratedPng>& images, int bytesPerImageFile, int width, int height, int bitsPerPixel)
+Texture2dAtlasData Texture2d::CreateTexture2dAtlas(const darray<const CompileTimeFiles::Image*>& images, int bytesPerImageFile, int width, int height, int bitsPerPixel)
 {
 	const int imageCount = images.Size();
 	const int imageByteCount = width * height * bitsPerPixel;
@@ -37,15 +37,15 @@ Texture2dAtlasData Texture2d::CreateTexture2dAtlas(const darray<GeneratedPng>& i
 	uint8* start = buffer;
 
 	for (int i = 0; i < imageCount; i++) {
-		uint8* imageBuffer = LoadPngToBytes(images[i].bytes, images[i].bytesPerImage, bitsPerPixel);
+		const uint8* imageBuffer = images[i]->contents;
 		uint8* writeLocation = startLocations[i];
-		uint8* readLocation = imageBuffer;
+		const uint8* readLocation = imageBuffer;
 		for (int h = 0; h < height; h++) {
 			memcpy(writeLocation, readLocation, width * bitsPerPixel);
 			writeLocation += atlasWidth * width * bitsPerPixel;
 			readLocation += width * bitsPerPixel;
 		}
-		delete[] imageBuffer;
+		//delete[] imageBuffer;
 	}
 
 	Texture2dAtlasData atlasData;

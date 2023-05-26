@@ -1,16 +1,22 @@
 #include "BlockTextureAtlas.h"
-#include "../../Cube/Resources/GeneratedFiles.h"
 #include "../../Graphics/OpenGL/Texture/Texture2d.h"
+#include "../../Core/Utils/CompileTimeFiles.h"
+
+std::unordered_map<EBlockTexture, glm::vec2> BlockTextureAtlas::textureUVCoords;
+int BlockTextureAtlas::width;
+int BlockTextureAtlas::height;
+uint8* BlockTextureAtlas::textureBytes;
+float BlockTextureAtlas::offsetPerBlock;
 
 /* Generates pairs of const char* and BlockTexture ids. */
-static void GetTexturePairs(darray<GeneratedPng>& pngData, darray<EBlockTexture>& ids)
+static void GetTexturePairs(darray<const CompileTimeFiles::Image*>& pngData, darray<EBlockTexture>& ids)
 {
 #define pair(png, id) \
-pngData.Add({png, sizeof(png)}); \
+pngData.Add(png); \
 ids.Add(id) 
 
-	pair(generated_InvalidTexture_png, EBlockTexture::none);
-	pair(generated_StoneBlock_png, EBlockTexture::stone);
+	pair(CompileTimeFiles::GetImageFile("InvalidTexture.png"), EBlockTexture::none);
+	pair(CompileTimeFiles::GetImageFile("StoneBlock.png"), EBlockTexture::stone);
 }
 
 /* Simple container for block texture atlas data. */
@@ -28,7 +34,7 @@ static BlockAtlasData MapAtlasData()
 	constexpr int imageHeight = 16;
 	constexpr int bytesPerPixel = 4;
 
-	darray<GeneratedPng> images;
+	darray<const CompileTimeFiles::Image*> images;
 	darray<EBlockTexture> ids;
 	GetTexturePairs(images, ids);
 
@@ -48,19 +54,26 @@ static BlockAtlasData MapAtlasData()
 	}
 	return atlas;
 }
-
+/*
 const BlockAtlasData atlasData = MapAtlasData();
 
 std::unordered_map<EBlockTexture, glm::vec2> BlockTextureAtlas::textureUVCoords = atlasData.uvs;
 int BlockTextureAtlas::width = atlasData.atlasData.width;
 int BlockTextureAtlas::height = atlasData.atlasData.height;
 uint8* BlockTextureAtlas::textureBytes = atlasData.atlasData.bytes;
-float BlockTextureAtlas::offsetPerBlock = atlasData.atlasData.offset;
+float BlockTextureAtlas::offsetPerBlock = atlasData.atlasData.offset;*/
 
 Texture* BlockTextureAtlas::texture = nullptr;
 
 void BlockTextureAtlas::CreateBlockTextureAtlasObject()
 {
+	const BlockAtlasData atlasData = MapAtlasData();
+	textureUVCoords = atlasData.uvs;
+	width = atlasData.atlasData.width;
+	height = atlasData.atlasData.height;
+	textureBytes = atlasData.atlasData.bytes; 
+	offsetPerBlock = atlasData.atlasData.offset;
+
 	texture = new Texture2d(textureBytes, width, height);
 	delete[] textureBytes;
 	textureBytes = nullptr;

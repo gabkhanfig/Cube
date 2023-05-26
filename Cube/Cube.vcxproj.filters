@@ -147,6 +147,12 @@
     <ClCompile Include="Source\Engine\Object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Resources\GeneratedFiles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Utils\CompileTimeFiles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.vert" />
@@ -157,6 +163,7 @@
     </None>
     <None Include="Resources\Shaders\Chunk.vert" />
     <None Include="Resources\Shaders\Chunk.frag" />
+    <None Include="Resources\cube-compile-time-file-converter.exe" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\Files.txt" />
@@ -313,6 +320,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Utils\CompileTimeFiles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

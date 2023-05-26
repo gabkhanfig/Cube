@@ -8,7 +8,6 @@
 #include "../Graphics/OpenGL/Buffers/VertexArrayObject.h"
 #include "../Graphics/OpenGL/Buffers/ShaderBufferObject.h"
 #include "../Graphics/OpenGL/Buffers/DrawIndirectBufferObject.h"
-#include "../../Resources/GeneratedFiles.h"
 #include "../Graphics/Geometry/BlockGeometry.h"
 #include <glad/glad.h>
 #include "Block/BlockTextureAtlas.h"
