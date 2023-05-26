@@ -2,6 +2,8 @@
 #include "../../../Resources/GeneratedFiles.h"
 #include "../Asserts.h"
 
+// https://github.com/gabkhanfig/Cube-Compile-Time-File-Converter
+
 HashMap<GlobalString, const CompileTimeFiles::Text*> CompileTimeFiles::textFiles;
 HashMap<GlobalString, const CompileTimeFiles::Image*> CompileTimeFiles::imageFiles;
 
