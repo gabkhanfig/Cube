@@ -157,7 +157,6 @@
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.vert" />
     <None Include="Resources\Shaders\Basic.frag" />
-    <None Include="Resources\GenerateFile.py" />
     <None Include="Resources\GenerateFiles.bat">
       <Filter>Source Files</Filter>
     </None>

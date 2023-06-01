@@ -220,7 +220,6 @@ GenerateFiles.bat</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\cube-compile-time-file-converter.exe" />
-    <None Include="Resources\GenerateFile.py" />
     <None Include="Resources\GenerateFiles.bat" />
     <None Include="Resources\Shaders\Basic.frag" />
     <None Include="Resources\Shaders\Basic.vert" />
