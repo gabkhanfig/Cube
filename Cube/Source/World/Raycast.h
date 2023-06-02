@@ -27,4 +27,5 @@ public:
 	RaycastHitResult() :
 		success(HitSuccess::none),
 		hitBlock(nullptr) {}
+
 };

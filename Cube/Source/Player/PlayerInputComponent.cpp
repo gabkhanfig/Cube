@@ -21,11 +21,11 @@ void PlayerInputComponent::Cursor(double xpos, double ypos)
 
 	yaw += offset.x;
 	pitch += offset.y;
-	if (pitch > 89.9) {
-		pitch = 89.9;
+	if (pitch > 89.5) {
+		pitch = 89.5;
 	}
-	else if (pitch < -89.9) {
-		pitch = -89.9;
+	else if (pitch < -89.5) {
+		pitch = -89.5;
 	}
 	glm::dvec3 forward = {
 		cos(glm::radians(yaw)) * cos(glm::radians(pitch)),

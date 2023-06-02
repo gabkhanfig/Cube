@@ -131,31 +131,43 @@ bool World::DoesBlockExist(WorldPosition position) const
   return chunks.contains(position.ToChunkPosition());
 }
 
+static glm::dvec3 RaycastTDelta(glm::dvec3 start, glm::dvec3 end, glm::dvec3 step) {
+  return  glm::dvec3(
+    step.x != 0 ? std::min(step.x / (end.x - start.x), 1000000.0) : 1000000.0,
+    step.y != 0 ? std::min(step.y / (end.y - start.y), 1000000.0) : 1000000.0,
+    step.z != 0 ? std::min(step.z / (end.z - start.z), 1000000.0) : 1000000.0
+  );
+}
 
-RaycastHitResult World::RaycastHit(const glm::dvec3 start, const glm::dvec3 end) const
+static glm::dvec3 RaycastTMax(glm::dvec3 start, glm::dvec3 step, glm::dvec3 tDelta) {
+#define FRAC_NEGATIVE(n) (n - floor(n))
+#define FRAC_POSITIVE(n) (1.0 - n + floor(n))
+  glm::dvec3 tMax;
+  tMax.x = ((step.x > 0.0) ? tDelta.x * FRAC_POSITIVE(start.x) : tDelta.x * FRAC_NEGATIVE(start.x));
+  tMax.y = ((step.y > 0.0) ? tDelta.y * FRAC_POSITIVE(start.y) : tDelta.y * FRAC_NEGATIVE(start.y));
+  tMax.z = ((step.z > 0.0) ? tDelta.z * FRAC_POSITIVE(start.z) : tDelta.z * FRAC_NEGATIVE(start.z));
+  return tMax;
+}
+
+RaycastHitResult World::RaycastHit(glm::dvec3 start, glm::dvec3 end) const
 {
   const GlobalString airName = AirBlock::GetStaticName();
 
-  const glm::dvec3 rayDirection = glm::normalize(end - start);
+  const glm::dvec3 rayDirection = end - start;
+  const glm::dvec3 step = glm::sign(rayDirection);
+
+  const glm::dvec3 tDelta = RaycastTDelta(start, end, step);
+  glm::dvec3 tMax = RaycastTMax(start, step, tDelta);
 
   glm::dvec3 pos = glm::floor(start);
-  const glm::dvec3 step = glm::sign(rayDirection);
-  const glm::dvec3 tDelta = step / rayDirection;
-  const glm::dvec3 fr = glm::fract(start);
-
-  glm::dvec3 tMax;
-  tMax.x = tDelta.x * ((start.x > 0.0) ? (1.0 - fr.x) : fr.x);
-  tMax.y = tDelta.y * ((start.y > 0.0) ? (1.0 - fr.y) : fr.y);
-  tMax.z = tDelta.z * ((start.z > 0.0) ? (1.0 - fr.z) : fr.z);
-
   glm::dvec3 norm = glm::vec3(0, -step.y, 0);
 
   // If the component start is greater than the component end, passing it would mean the current step position is less than the end, otherwise greater
-#define COMPONENT_PASSED(n) (start.n > end.n ? (pos.n - 0.5) < end.n : (pos.n + 0.5) > end.n)
+#define COMPONENT_PASSED(n) (start.n > end.n ? (pos.n - 0.1) < end.n : (pos.n + 0.1) > end.n)
 
   RaycastHitResult result;
 
-  while (!COMPONENT_PASSED(x) || !COMPONENT_PASSED(y) || !COMPONENT_PASSED(z)) {
+  while (!COMPONENT_PASSED(x) && !COMPONENT_PASSED(y) && !COMPONENT_PASSED(z)) {
     const WorldPosition wp{ pos };
     Block* block = GetBlock(wp);
     if (block != nullptr && block->GetName() != airName) {

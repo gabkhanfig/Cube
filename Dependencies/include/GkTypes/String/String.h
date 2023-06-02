@@ -252,13 +252,13 @@ namespace gk
 		}
 
 		/* Create a new string with a character appended to this one. Does not modify this string. */
-		[[nodiscard]] constexpr string operator + (char c) const { return Concatenate(c); }
+		[[nodiscard]] friend constexpr string operator + (const string& lhs, char c) { return lhs.Concatenate(c); }
 
 		/* Create a new string with a character array appended to this one. Does not modify this string. */
-		[[nodiscard]] constexpr string operator + (const char* str) const { return Concatenate(str); }
+		[[nodiscard]] friend constexpr string operator + (const string& lhs, const char* str) { return lhs.Concatenate(str); }
 
 		/* Create a new string with a character appended to this one. Does not modify this string. */
-		[[nodiscard]] constexpr string operator + (const string& other) const { return Concatenate(other); }
+		[[nodiscard]] friend constexpr string operator + (const string& lhs, const string& other) { return lhs.Concatenate(other); }
 
 		/* Get character in the string by reference. */
 		[[nodiscard]] constexpr char& At(size_t index) {
@@ -336,6 +336,7 @@ namespace gk
 		/* Creates a string from a signed integer, including negative numbers which will have a '-' in front of the text.
 		Due to the size of the SSO_STRLEN buffer, the entire number can fit within it. */
 		[[nodiscard]] constexpr static string FromInt(long long num) {
+			if (num == 0) return "0";
 			constexpr const char* digits	= "9876543210123456789";
 			constexpr size_t zeroDigit		= 9;
 			constexpr size_t maxChars			= 21;
@@ -363,6 +364,7 @@ namespace gk
 
 		/* Creates a string from an unsigned integer. Due to the size of the SSO_STRLEN buffer, the entire number can fit within it. */
 		[[nodiscard]] constexpr static string FromUInt(size_t num) {
+			if (num == 0) return "0";
 			constexpr const char* digits = "9876543210123456789";
 			constexpr size_t zeroDigit = 9;
 			constexpr size_t maxChars = 21;
@@ -383,6 +385,62 @@ namespace gk
 			str.length = end - start;
 			return str;
 		}
+
+		[[nodiscard]] constexpr static string FromFloat(double num, const int precision = 5) {
+			if (num == 0) return "0.0";								// Zero
+			else if (num > DBL_MAX) return "inf";			// Positive Infinity
+			else if (num < -DBL_MAX) return "-inf";		// Negative Infinity
+			else if (num != num) return "nan";				// Not a Number
+
+			const bool isNegative = num < 0;
+
+			Internal_StripNegativeZero(num);
+
+			const long long whole = static_cast<long long>(num);
+			const string wholeString = (isNegative && whole == 0) ? "-0" : string::FromInt(whole);
+
+			num -= whole;
+			if (num == 0) return wholeString + ".0"; // Quick return if no fractional part
+			if (num < 0) num *= -1; // Make positive for fractional part
+			int extraFractionZeroes = 0;
+			for (int i = 0; i < precision; i++) {
+				num *= 10; 
+				if (num < 1) extraFractionZeroes += 1;
+			}
+			const long long fraction = static_cast<long long>(num);
+
+			const char decimal = '.';
+			string fractionZeroesString;
+			for (int i = 0; i < extraFractionZeroes; i++) {
+				fractionZeroesString.Append('0');
+			}
+			const string fractionalString = Internal_RemoveZeroesFromFractional(fraction);
+			return wholeString + decimal + fractionZeroesString + fractionalString;
+		}
+
+		/* Returns MAXUINT64 if it cannot find it */
+		[[nodiscard]] constexpr size_t Find(char c) const {
+			const char* data = CStr();
+			for (size_t i = 0; i < Len(); i++) {
+				if (data[i] == c) {
+					return i;
+				}
+			}
+			return MAXUINT64;
+		}
+
+		/* Creates a string from a custom data type. Example:
+		struct Example {
+			int a;
+			int b;
+		};
+		template<>
+		[[nodiscard]] constexpr static gk::string gk::string::From<Example>(const Example& value) {
+			return string::FromInt(value.a) + gk::string(", ") + gk::string::FromInt(value.b);
+		}
+		*/
+		template<typename T>
+		[[nodiscard]] constexpr static string From(const T& value) = delete;
 
 		/* 
 			std::string support 
@@ -498,7 +556,25 @@ namespace gk
 			rep.longStr.data = newData;
 			rep.longStr.capacity = newCapacity;
 			isLong = true;
+		} 
+
+		constexpr static string Internal_RemoveZeroesFromFractional(long long num) {
+			string str = string::FromInt(num);
+			const size_t foundZero = str.Find('0');
+			if (foundZero == MAXUINT64 || foundZero == 0) return str;
+			return str.Substring(0, foundZero);
 		}
+
+		__pragma(optimize("", off))
+		constexpr static void Internal_StripNegativeZero(double& inFloat)
+		{
+			// Taken from Unreal Engine
+			// This works for translating a negative zero into a positive zero,
+			// but if optimizations are enabled when compiling with -ffast-math
+			// or /fp:fast, the compiler can strip it out.
+			inFloat += 0.0;
+		}
+		__pragma(optimize("", on))
 
 	};
 
@@ -512,7 +588,6 @@ namespace std
 		size_t operator()(const gk::string& str) const {
 			return str.ComputeHash();
 		}
-
 	};
 }
 

@@ -22,7 +22,7 @@ Player::Player()
 
 void Player::Tick(float deltaTime)
 {
-	RaycastHitResult hitResult = GetWorld()->RaycastHit(location, location + GetRotation() * 1000.0);
+	RaycastHitResult hitResult = GetWorld()->RaycastHit(location, location + (GetRotation() * 1000.0));
 	if (hitResult.success == RaycastHitResult::HitSuccess::block) {
 		highlightedObject = hitResult;
 	}
@@ -69,7 +69,9 @@ void Player::InputAttack(InputMods mods)
 		cubeLog("InputAttack not looking at a block");
 		return;
 	}
+	cubeLog("Player Position: " + string::From(location));
 	WorldPosition pos = { glm::dvec3(highlightedObject.position.x, highlightedObject.position.y, highlightedObject.position.z) };
+	cubeLog("Block World Position: " + string::From(pos));
 	GetWorld()->DestroyBlockAt(pos);
 }
 
