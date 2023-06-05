@@ -11,7 +11,7 @@ void IObject::_InitializePendingDeleteArray()
 	objectsPendingDelete[nextTickDeleteIndex].Reserve(16);
 }
 
-void IObject::DeleteAllPendingKillObjects()
+void IObject::_DeleteAllPendingKillObjects()
 {
 	for (IObject* object : objectsPendingDelete[thisTickDeleteIndex]) {
 		delete object;
@@ -25,7 +25,7 @@ void IObject::DeleteAllPendingKillObjects()
 
 void IObject::Destroy()
 {
-	SetIsPendingDelete();
+	_SetIsPendingDelete();
 	objectsPendingDelete[nextTickDeleteIndex].Add(this);
 	OnDestroy();
 }

@@ -39,4 +39,6 @@ void GameInstance::Tick(float deltaTime)
 {
   CubeInput::Tick(deltaTime);
   world->Tick(deltaTime);
+
+  IObject::_DeleteAllPendingKillObjects();
 }

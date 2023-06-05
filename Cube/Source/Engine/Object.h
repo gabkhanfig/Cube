@@ -10,8 +10,10 @@ class IObject
 public:
 
 	static void _InitializePendingDeleteArray();
-	static void DeleteAllPendingKillObjects();
+	static void _DeleteAllPendingKillObjects();
 
+	/* Adds this object to get deleted at the end of the next tick, and upon calling IsValid on this, it will not be valid.
+	Override IObject::OnDestroy for custom behavior when Destroy() is called (not when delete is called). */
 	void Destroy();
 
 	virtual void OnDestroy();
@@ -19,7 +21,7 @@ public:
 	virtual bool IsPendingDelete() const = 0;
 
 	/* DO NOT CALL MANUALLY. */
-	virtual void SetIsPendingDelete() = 0;
+	virtual void _SetIsPendingDelete() = 0;
 
 private:
 

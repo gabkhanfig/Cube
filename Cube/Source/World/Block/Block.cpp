@@ -1,11 +1,11 @@
 #include "Block.h"
 #include "../World.h"
 
-void Block::Destroy()
-{
-  OnDestroy();
-  delete this;
-}
+//void Block::Destroy()
+//{
+//  OnDestroy();
+//  delete this;
+//}
 
 void Block::AddBlockMeshToChunkMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const
 {

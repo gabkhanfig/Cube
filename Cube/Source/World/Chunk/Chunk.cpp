@@ -40,14 +40,14 @@ Block* Chunk::GetBlock(BlockPosition position) const
 
 void Chunk::SetBlockAt(BlockPosition position, Block* block)
 {
-	delete blocks[position.index];
+	blocks[position.index]->Destroy();
 	blocks[position.index] = block;
 	SetShouldBeRemeshed(true);
 }
 
 void Chunk::DestroyBlockAt(BlockPosition position)
 {
-	delete blocks[position.index];
+	blocks[position.index]->Destroy();
 	blocks[position.index] = BlockFactory::NewAirBlock();
 	SetShouldBeRemeshed(true);
 }

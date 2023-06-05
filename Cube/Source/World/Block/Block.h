@@ -40,7 +40,7 @@ class Chunk;
 
 /* Base class for all in-world blocks.
 DEVELOPER NOTE: sizeof(Block) will always be a multiple of 8 due to v-table pointer. Pack as much into this as possible. */
-class Block
+class Block : public IObject
 {
 public:
 
@@ -60,9 +60,6 @@ public:
 
 	/* Get the class of a block. See BLOCK_BODY() macro. */
 	virtual inline BlockClass* GetClass() const = 0;
-
-	/* Ensure setting whatever references to this block to be nullptr, or removed entirely. Prefer this to operator delete for blocks. */
-	void Destroy();
 	
 	/* Create the mesh data for the block, adding to the Chunk's mesh. Must be multithreading safe. 
 	DEVELOPER NOTE!!!! Block's are responsible for their own mesh offsets within the chunk. */
@@ -71,12 +68,17 @@ public:
 	virtual EMeshTransparency GetFaceTransparency(BlockFacing face) const { return EMeshTransparency::solid; }
 
 	BlockLight GetLight() const { return light; }
-	BlockFacing GetFacing() const { return facing; }
-
-	/* Set the lighting value of this block. */
 	void SetLight(BlockLight newLight);
-	/* Set the facing value of this block. */
+
+	BlockFacing GetFacing() const { return facing; }
 	void SetFacing(BlockFacing newFacing);
+
+#pragma region IObject_Implementation
+
+	virtual bool IsPendingDelete() const final { return isPendingDelete; }
+	virtual void _SetIsPendingDelete() final { isPendingDelete = true; }
+
+#pragma endregion
 
 protected:
 
