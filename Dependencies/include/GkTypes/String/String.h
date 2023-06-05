@@ -185,7 +185,7 @@ namespace gk
 			const size_t len = Strlen(str);
 			const size_t minCapacity = length + len + 1;
 			if (!isLong) {
-				if ((minCapacity - 1) <= SSO_STRLEN) {
+				if (minCapacity <= SSO_STRLEN) {
 					Internal_CharCopy(&rep.sso.chars[length], str, len + 1);
 					length += len;
 					return *this;
@@ -206,7 +206,7 @@ namespace gk
 			const size_t minCapacity = length + len + 1;
 			const char* str = other.CStr();
 			if (!isLong) {
-				if ((minCapacity - 1) <= SSO_STRLEN) {
+				if (minCapacity <= SSO_STRLEN) {
 					Internal_CharCopy(&rep.sso.chars[length], str, len + 1);
 					length += len;
 					return *this;
@@ -310,7 +310,7 @@ namespace gk
 		@param endExclusive: The end index, which is not included. */
 		[[nodiscard]] constexpr string Substring(size_t startInclusive, size_t endExclusive) const {
 			const char* cstr = CStr();
-			return string(&cstr[startInclusive], &cstr[endExclusive - 1]);
+			return string(&cstr[startInclusive], &cstr[endExclusive]);
 		}
 
 		/* Creates a string from a boolean. If (bool)true, the string is "true", and if (bool)false, the string is "false". */
@@ -393,7 +393,6 @@ namespace gk
 			else if (num != num) return "nan";				// Not a Number
 
 			const bool isNegative = num < 0;
-
 			Internal_StripNegativeZero(num);
 
 			const long long whole = static_cast<long long>(num);
@@ -408,13 +407,14 @@ namespace gk
 				if (num < 1) extraFractionZeroes += 1;
 			}
 			const long long fraction = static_cast<long long>(num);
+			if (fraction == 0) return wholeString + ".0";
 
 			const char decimal = '.';
 			string fractionZeroesString;
 			for (int i = 0; i < extraFractionZeroes; i++) {
 				fractionZeroesString.Append('0');
 			}
-			const string fractionalString = Internal_RemoveZeroesFromFractional(fraction);
+			const string fractionalString = Internal_RemoveZeroesFromFractional(fraction, precision - extraFractionZeroes);
 			return wholeString + decimal + fractionZeroesString + fractionalString;
 		}
 
@@ -464,10 +464,10 @@ namespace gk
 
 			if (rep.longStr.data == nullptr) {
 				rep.longStr.data = new char[newCapacity];
-				rep.longStr.capacity = newCapacity;
 				return;
 			}
 
+			rep.longStr.capacity = newCapacity;
 			char* newData = new char[newCapacity];
 			Internal_CharCopy(newData, rep.longStr.data, length);
 			delete[] rep.longStr.data;
@@ -523,7 +523,7 @@ namespace gk
 
 		constexpr void Internal_ConstructRange(const char* _begin, const char* _end) {
 			const bool notNullTerminated = *_end != '\0';
-			length = (_end -_begin);
+			length = (_end - _begin);
 			isLong = length > SSO_STRLEN ? true : false;
 			if (isLong) {
 				rep.longStr = representation::longString();
@@ -558,11 +558,17 @@ namespace gk
 			isLong = true;
 		} 
 
-		constexpr static string Internal_RemoveZeroesFromFractional(long long num) {
+		constexpr static string Internal_RemoveZeroesFromFractional(long long num, int availableDigits) {
+			// should always have at least 1 available digit if it gets to this function.
 			string str = string::FromInt(num);
-			const size_t foundZero = str.Find('0');
-			if (foundZero == MAXUINT64 || foundZero == 0) return str;
-			return str.Substring(0, foundZero);
+			const char* data = str.CStr();
+			const size_t last = availableDigits > str.Len() - 1 ? str.Len() - 1 : availableDigits;
+			for (size_t i = last; i > 0; i--) {
+				if (data[i] != '0') {
+					return str.Substring(0, i + 1);
+				}
+			}
+			return str.Substring(0, last + 1);
 		}
 
 		__pragma(optimize("", off))

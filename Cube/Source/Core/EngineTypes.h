@@ -25,5 +25,5 @@ using HashMap = std::unordered_map<K, T>;
 
 template<>
 [[nodiscard]] constexpr static gk::string gk::string::From<glm::dvec3>(const glm::dvec3& value) {
-	return "x: " + gk::string::FromFloat(value.x) + ", y: " + gk::string::FromFloat(value.y) + ", z: " + gk::string::FromFloat(value.z);
+	return gk::string("x: " ) + gk::string::FromFloat(value.x) + gk::string(", y: ") + gk::string::FromFloat(value.y) + gk::string(", z: ") + gk::string::FromFloat(value.z);
 }
