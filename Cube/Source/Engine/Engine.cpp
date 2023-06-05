@@ -78,6 +78,8 @@ void Engine::InitializeOpenGL(Window* _window, glm::vec3 clearColor)
 
 void Engine::Start()
 {
+	IObject::_InitializePendingDeleteArray();
+
 	CompileTimeFiles::LoadAllFiles();
 
 	Window::InitializeGLFW();

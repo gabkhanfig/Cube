@@ -26,7 +26,7 @@ void Block::SetLight(BlockLight newLight)
 
 void Block::SetFacing(BlockFacing newFacing)
 {
-  facing = newFacing;
+  facing = newFacing.facing;
 }
 
 void Block::OnDestroy()

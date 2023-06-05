@@ -3,6 +3,7 @@
 #include "../Engine/EngineCore.h"
 #include "Chunk/ChunkData.h"
 
+/* Only requires 6 bits. */
 struct BlockFacing
 {
 public:

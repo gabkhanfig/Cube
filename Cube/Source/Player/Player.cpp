@@ -69,9 +69,7 @@ void Player::InputAttack(InputMods mods)
 		cubeLog("InputAttack not looking at a block");
 		return;
 	}
-	cubeLog("Player Position: " + string::From(location));
 	WorldPosition pos = { glm::dvec3(highlightedObject.position.x, highlightedObject.position.y, highlightedObject.position.z) };
-	cubeLog("Block World Position: " + string::From(pos));
 	GetWorld()->DestroyBlockAt(pos);
 }
 

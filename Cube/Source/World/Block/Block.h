@@ -6,6 +6,7 @@
 #include "BlockTextureAtlas.h"
 #include "../../Graphics/Geometry/ChunkMesh.h"
 #include "../Chunk/ChunkDataTypes.h"
+#include "../../Engine/Object.h"
 
 /* Required macro for all blocks. Sets its class data and name. Also sets everything after this back to private. */
 #define BLOCK_BODY(blockClass, blockName) \
@@ -43,12 +44,12 @@ class Block
 {
 public:
 
-	enum class EMeshType {
+	enum class EMeshType : uint8 {
 		cube,
 		custom
 	};
 
-	enum class EMeshTransparency {
+	enum class EMeshTransparency : uint8 {
 		solid, 
 		transparent,
 		custom
@@ -94,7 +95,18 @@ protected:
 
 protected:
 
+	/* The lighting of this block. */
 	BlockLight light;
-	BlockFacing facing;
+
+	/* The 6 facing direction of this block. Not necessarily rotation. Cast to BlockFacing. */
+	uint8 facing : 6;
+	
+	/* IObject pending delete flag. */
+	uint8 isPendingDelete : 1;
+
+	/* Remaining bit for potential future use. */
+	uint8 _unusedBit : 1;
+
+	// 4 bytes remaining for 16 byte padding.
 
 };

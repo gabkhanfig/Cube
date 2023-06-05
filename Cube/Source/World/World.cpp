@@ -160,7 +160,7 @@ RaycastHitResult World::RaycastHit(glm::dvec3 start, glm::dvec3 end) const
   glm::dvec3 tMax = RaycastTMax(start, step, tDelta);
 
   glm::dvec3 pos = glm::floor(start);
-  glm::dvec3 norm = glm::vec3(0, -step.y, 0);
+  glm::dvec3 norm = glm::vec3(0, 1, 0);
 
   // If the component start is greater than the component end, passing it would mean the current step position is less than the end, otherwise greater
 #define COMPONENT_PASSED(n) (start.n > end.n ? (pos.n - 0.1) < end.n : (pos.n + 0.1) > end.n)
