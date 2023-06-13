@@ -12,21 +12,24 @@ public:
 
 	enum class HitSuccess : uint8 {
 		/* Did not hit anything */ 
-		none,
+		None,
 		/* Hit a block */ 
-		block,
+		Block,
 		/* Hit an entity */ 
-		entity
+		Entity
 	};
 
 	RaycastHitResult() :
-		success(HitSuccess::none),
+		success(HitSuccess::None),
 		hitObject(nullptr),
 		position(0, 0, 0),
 		normal(0, 1, 0)
 	{}
 
+	/* Get the hit object as a block. Returns nullptr if it did not hit a block. */
 	Block* GetHitBlock() const;
+
+	/* Get the hit object as an entity. Returns nullptr if it did not hit an entity. */
 	Entity* GetHitEntity() const;
 
 public:

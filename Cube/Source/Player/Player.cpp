@@ -23,7 +23,7 @@ Player::Player()
 void Player::Tick(float deltaTime)
 {
 	RaycastHitResult hitResult = GetWorld()->RaycastHit(location, location + (GetRotation() * 1000.0));
-	if (hitResult.success == RaycastHitResult::HitSuccess::block) {
+	if (hitResult.success == RaycastHitResult::HitSuccess::Block) {
 		highlightedObject = hitResult;
 	}
 	else {
@@ -54,7 +54,7 @@ void Player::SetupInputBinds()
 
 void Player::InputUse(InputMods mods)
 {
-	if (highlightedObject.success != RaycastHitResult::HitSuccess::block) {
+	if (highlightedObject.success != RaycastHitResult::HitSuccess::Block) {
 		cubeLog("InputUse not looking at a block");
 		return;
 	}
@@ -65,7 +65,7 @@ void Player::InputUse(InputMods mods)
 
 void Player::InputAttack(InputMods mods)
 {
-	if (highlightedObject.success != RaycastHitResult::HitSuccess::block) {
+	if (highlightedObject.success != RaycastHitResult::HitSuccess::Block) {
 		cubeLog("InputAttack not looking at a block");
 		return;
 	}

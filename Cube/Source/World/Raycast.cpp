@@ -3,7 +3,7 @@
 
 Block* RaycastHitResult::GetHitBlock() const
 {
-  if (success == HitSuccess::block) {
+  if (success == HitSuccess::Block) {
     return (Block*)hitObject;
   }
   else {
@@ -13,7 +13,7 @@ Block* RaycastHitResult::GetHitBlock() const
 
 Entity* RaycastHitResult::GetHitEntity() const
 {
-  if (success == HitSuccess::entity) {
+  if (success == HitSuccess::Entity) {
     return (Entity*)hitObject;
   }
   else {
