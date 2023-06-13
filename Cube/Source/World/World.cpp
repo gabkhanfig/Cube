@@ -172,7 +172,7 @@ RaycastHitResult World::RaycastHit(glm::dvec3 start, glm::dvec3 end) const
     Block* block = GetBlock(wp);
     if (block != nullptr && block->GetName() != airName) {
       result.success = RaycastHitResult::HitSuccess::block;
-      result.hitBlock = block;
+      result.hitObject = block;
       result.position = pos;
       result.normal = norm;
       return result;

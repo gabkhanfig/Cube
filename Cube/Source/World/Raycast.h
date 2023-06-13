@@ -19,13 +19,21 @@ public:
 		entity
 	};
 
-	HitSuccess success;
-	Block* hitBlock;
-	glm::dvec3 position;
-	glm::dvec3 normal;
-
 	RaycastHitResult() :
 		success(HitSuccess::none),
-		hitBlock(nullptr) {}
+		hitObject(nullptr),
+		position(0, 0, 0),
+		normal(0, 1, 0)
+	{}
+
+	Block* GetHitBlock() const;
+	Entity* GetHitEntity() const;
+
+public:
+
+	HitSuccess success;
+	IObject* hitObject;
+	glm::dvec3 position;
+	glm::dvec3 normal;
 
 };
