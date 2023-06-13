@@ -217,6 +217,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\World\Chunk\Chunk.cpp" />
     <ClCompile Include="Source\World\Chunk\ChunkDataTypes.cpp" />
     <ClCompile Include="Source\World\Chunk\ChunkRenderComponent.cpp" />
+    <ClCompile Include="Source\World\Raycast.cpp" />
     <ClCompile Include="Source\World\Render\ChunkRenderer.cpp" />
     <ClCompile Include="Source\World\Terrain\TerrainGenerator.cpp" />
     <ClCompile Include="Source\World\World.cpp" />

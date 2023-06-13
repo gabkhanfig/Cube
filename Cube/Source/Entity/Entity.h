@@ -2,16 +2,8 @@
 
 #include "../Engine/EngineCore.h"
 
-class Entity
+class Entity : public IObject
 {
-protected:
-
-	/**/
-	glm::dvec3 location;
-
-	/**/
-	glm::dvec3 rotation;
-
 public:
 
 	Entity();
@@ -33,5 +25,24 @@ public:
 	void AddForwardInput(double amount);
 	void AddRightInput(double amount);
 	void AddVerticalInput(double amount);
+
+#pragma region IObject_Implementation
+
+	virtual bool IsPendingDelete() const final { return isPendingDelete; }
+	virtual void _SetIsPendingDelete() final { isPendingDelete = true; }
+
+#pragma endregion
+
+protected:
+
+	/**/
+	glm::dvec3 location;
+
+	/**/
+	glm::dvec3 rotation;
+
+private:
+
+	bool isPendingDelete;
 
 };

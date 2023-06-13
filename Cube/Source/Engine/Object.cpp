@@ -1,4 +1,5 @@
 #include "Object.h"
+#include "../Core/Log/Logger.h"
 
 darray<IObject*> IObject::objectsPendingDelete[2];
 uint8 IObject::thisTickDeleteIndex;
