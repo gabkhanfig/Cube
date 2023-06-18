@@ -9,6 +9,11 @@ void Entity::Tick(float DeltaTime)
 {
 }
 
+ChunkPosition Entity::GetChunkPosition()
+{
+	return WorldPosition(location).ToChunkPosition();
+}
+
 void Entity::AddForwardInput(double amount)
 {
 	const glm::dvec3 newLocation = location + amount * GetForwardVector();

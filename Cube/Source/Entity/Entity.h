@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Engine/EngineCore.h"
+#include "../World/WorldTransform.h"
 
 class Entity : public IObject
 {
@@ -21,6 +22,8 @@ public:
 	forceinline glm::dvec3 GetForwardVector() const { return glm::normalize(glm::cross(GetRightVector(), glm::dvec3(0, -1, 0))); }
 
 	forceinline glm::dvec3 GetRightVector() const { return glm::normalize(glm::cross(GetRotation(), glm::dvec3(0, 1, 0))); }
+
+	ChunkPosition GetChunkPosition();
 
 	void AddForwardInput(double amount);
 	void AddRightInput(double amount);
