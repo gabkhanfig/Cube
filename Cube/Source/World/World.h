@@ -48,8 +48,6 @@ public:
 
 private:
 
-	void DrawWorld();
-
 	void CreateChunkRenderer();
 
 	void RenderLoop();

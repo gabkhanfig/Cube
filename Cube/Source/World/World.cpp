@@ -213,17 +213,6 @@ RaycastHitResult World::RaycastHit(glm::dvec3 start, glm::dvec3 end) const
 #undef COMPONENT_PASSED
 }
 
-void World::DrawWorld()
-{
-  /* Render here */
-  //Renderer::Clear();
-
-  //chunkRenderer->DrawAllChunks(chunks);
-  //chunkRenderer->MultidrawIndirectAllChunks(chunks);
-
-  engine->SwapGlfwBuffers();
-}
-
 void World::CreateChunkRenderer()
 {
   chunkRenderer = new ChunkRenderer();
@@ -233,11 +222,6 @@ void World::RenderLoop()
 {
   const bool usingRenderThread = engine->IsUsingRenderThread();
   // Render Loop
-  //if (!engine->IsUsingRenderThread()) {
-  //  Renderer::Clear();
-  //  //DrawWorld();
-  //  return;
-  //}
 
   // 1. Get all of the chunks, including LOD chunks that should be drawn.
   darray<Chunk*> chunksToAttemptDraw;
