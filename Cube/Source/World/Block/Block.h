@@ -95,7 +95,7 @@ protected:
 
 	bool CanDrawFace(WorldPosition position, BlockFacing face) const;
 
-protected:
+private:
 
 	/* The lighting of this block. */
 	BlockLight light;
