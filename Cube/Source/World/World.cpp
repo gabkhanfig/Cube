@@ -50,26 +50,17 @@ World::World()
 
 void World::BeginWorld()
 {
-  const int renderDistance = 2;
-  const int lower = -2;
-
-  for (int x = lower; x < renderDistance; x++) {
-    for (int y = lower; y < renderDistance; y++) {
-      for (int z = lower; z < renderDistance; z++) {
-        Chunk* chunk = new Chunk({ x, y, z });
-        chunk->GenerateTerrain(terrainGenerator);
-        //chunk->FillChunkWithBlock("stoneBlock");
-        chunks.insert({ chunk->GetPosition(), chunk });
-      }
-    }
-  }
+  const int renderDistance = 5;
+  const darray<ChunkPosition> positionsInRenderDistance = ChunkPositionsWithinRenderDistance(ChunkPosition(0, 0, 0), renderDistance);
 
   darray<Chunk*> remeshedChunks;
-  for (auto& chunkPair : chunks) {
-    Chunk* chunk = chunkPair.second;
+  for (ChunkPosition position : positionsInRenderDistance) {
+    Chunk* chunk = new Chunk(position);
+    chunk->GenerateTerrain(terrainGenerator);
+    chunks.insert({ position, chunk });
     remeshedChunks.Add(chunk);
-    //chunk->GetRenderComponent()->RecreateMesh();
   }
+
   ChunkRenderComponent::MultithreadRecreateMeshes(chunkRenderer, remeshedChunks);
   chunkRenderer->SetRemeshedChunks(remeshedChunks);
 }
@@ -267,4 +258,33 @@ void World::RenderLoop()
     //while (!renderThread->IsReady());
   }
   
+}
+
+void World::DeleteDistantChunksAndLoadNearby(int renderDistance)
+{
+}
+
+darray<ChunkPosition> World::ChunkPositionsWithinRenderDistance(ChunkPosition center, int renderDistance)
+{
+  // TODO this function is a little lopsided. Figure out why and fix later. This is not critical
+  const ChunkPosition lower = ChunkPosition(center.x - renderDistance, center.y - renderDistance, center.z - renderDistance);
+  const ChunkPosition upper = ChunkPosition(center.x + renderDistance, center.y + renderDistance, center.z + renderDistance);
+
+  darray<ChunkPosition> positions;
+  for (int x = lower.x; x < upper.x; x++) {
+    for (int y = lower.y; y < upper.y; y++) {
+      for (int z = lower.z; z < upper.z; z++) {
+        int distanceBetween = static_cast<int>(sqrt(
+          double(x - center.x) * double(x - center.x)
+          + double(y - center.y) * double(y - center.y)
+          + double(z - center.z) * double(z - center.z)
+        ));
+        if (distanceBetween <= renderDistance) {
+          positions.Add(ChunkPosition(x, y, z));
+        }
+      }
+    }
+  }
+
+  return positions;
 }

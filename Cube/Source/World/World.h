@@ -52,6 +52,11 @@ private:
 
 	void RenderLoop();
 
+	/* Deletes chunks that are too far away, and  */
+	void DeleteDistantChunksAndLoadNearby(int renderDistance);
+
+	static darray<ChunkPosition> ChunkPositionsWithinRenderDistance(ChunkPosition center, int renderDistance);
+
 private:
 
 	Player* player;
