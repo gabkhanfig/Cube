@@ -3,6 +3,7 @@
 #include <GkTypes/GkTypesLib.h>
 #include <glm/glm.hpp>
 #include <unordered_map>
+#include <unordered_set>
 
 /**/
 template<uint8 BitCount>
@@ -20,6 +21,10 @@ typedef gk::GlobalString GlobalString;
 
 template<typename K, typename T>
 using HashMap = std::unordered_map<K, T>;
+
+template<typename T>
+using HashSet = std::unordered_set<T>;
+
 
 #define forceinline __forceinline
 
