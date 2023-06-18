@@ -38,5 +38,8 @@ public:
 
 	static uint8* LoadPngToBytes(const unsigned char* image, int size, int requiredBitsPerPixel);
 
+	static void FlipImageVertically(uint8* imageBytes, int width, int height, int bytesPerPixel);
+
+
 };
 
