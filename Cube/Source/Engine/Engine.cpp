@@ -35,6 +35,24 @@ void Engine::SwapGlfwBuffers()
 	window->SwapBuffers();
 }
 
+void Engine::WaitForRenderThread(int64 millisecondTimeout)
+{
+	auto startWait = std::chrono::high_resolution_clock::now();
+#ifdef DEVELOPMENT
+	while (!renderThread->IsReady()) {
+		std::chrono::steady_clock::time_point now = std::chrono::high_resolution_clock::now();
+		auto duration = now - startWait;
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(duration).count() > millisecondTimeout) {
+			cubeLog("Timed out waiting for render thread. Waited " + string::FromInt(millisecondTimeout) + "ms");
+			DebugBreak();
+		}
+#else 
+	while (!renderThread->IsReady());
+#endif
+	}
+}
+
+
 Engine::Engine() :
 	useRenderThread(true),
 	tick(nullptr)

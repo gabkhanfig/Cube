@@ -79,6 +79,10 @@ void World::Tick(float deltaTime)
   // Tick world
   player->Tick(deltaTime);
 
+
+  if (engine->IsUsingRenderThread()) {
+    engine->WaitForRenderThread(5000);
+  }
   RenderLoop();
 }
 
@@ -243,21 +247,6 @@ void World::RenderLoop()
   }
   // 2. Wait until previous render execution is finished.
   gk::Thread* renderThread = engine->GetRenderThread();
-  if (usingRenderThread) {
-    auto startWait = std::chrono::high_resolution_clock::now();
-#ifdef DEVELOPMENT
-    while (!renderThread->IsReady()) {
-      std::chrono::steady_clock::time_point now = std::chrono::high_resolution_clock::now();
-      auto duration = now - startWait; 
-      if (std::chrono::duration_cast<std::chrono::seconds>(duration).count() > 5) {
-        cubeLog("stuck waiting for render thread");
-        DebugBreak();
-      }
-#else 
-    while (!renderThread->IsReady());
-#endif
-    }
-  }
   
   // 3. Remove any chunks that shouldn't be drawn from the ChunkRenderer's drawChunks map.
 

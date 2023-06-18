@@ -35,6 +35,8 @@ public:
 
 	void SwapGlfwBuffers();
 
+	void WaitForRenderThread(int64 millisecondTimeout);
+
 private:
 
 	Engine();
