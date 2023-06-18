@@ -280,7 +280,6 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\World\Chunk\Chunk.h" />
     <ClInclude Include="Source\World\Chunk\ChunkRenderComponent.h" />
     <ClInclude Include="Source\World\Chunk\ChunkData.h" />
-    <ClInclude Include="Source\World\Chunk\ChunkSSBO.h" />
     <ClInclude Include="Source\World\Chunk\ChunkDataTypes.h" />
     <ClInclude Include="Source\World\Raycast.h" />
     <ClInclude Include="Source\World\Render\ChunkRenderer.h" />

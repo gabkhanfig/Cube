@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ChunkSSBO.h"
 #include "../../Graphics/Geometry/ChunkMesh.h"
 #include "../../Graphics/OpenGL/OpenGLStructures.h"
 #include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleBuffer.h"
