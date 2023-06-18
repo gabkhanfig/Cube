@@ -20,6 +20,7 @@ Chunk::Chunk(ChunkPosition inPosition)
 
 Chunk::~Chunk()
 {
+	DestroyAllBlocks();
 	delete[] blocks;
 	delete renderComponent;
 }
@@ -74,6 +75,16 @@ void Chunk::GenerateTerrain(TerrainGenerator* terrainGenerator)
 				blocks[index] = terrainGenerator->CreateBlockForWorldPosition(WorldPosition(initialPos.x + x, initialPos.y + y, initialPos.z + z));
 				index++;
 			}
+		}
+	}
+}
+
+void Chunk::DestroyAllBlocks()
+{
+	for (int i = 0; i < CHUNK_SIZE; i++) {
+		Block* block = blocks[i];
+		if (IsValid(block)) {
+			block->Destroy();
 		}
 	}
 }

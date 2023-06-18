@@ -57,6 +57,6 @@ public:
 
 private:
 
-
+	void DestroyAllBlocks();
 
 };
