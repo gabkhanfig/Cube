@@ -118,7 +118,10 @@ void ChunkRenderer::PerformBoundDrawCalls()
 {
   Renderer::Clear();
 
-  if (frameChunkDrawCalls.Size() == 0) return;
+  if (frameChunkDrawCalls.Size() == 0) {
+    engine->SwapGlfwBuffers();
+    return;
+  }
 
   const DrawCallData& boundDrawData = drawCalls[boundDrawCallId];
   shader->Bind();
@@ -141,6 +144,11 @@ void ChunkRenderer::DrawChunk(const Chunk* drawChunk)
   BindBlocksVertexBufferObject(vbo);
   SetShaderChunkOffset(GetChunkShaderPositionOffset(drawCalls[boundDrawCallId].playerPos, drawChunk));
   Renderer::DrawVboTriangles(vbo, ibo);
+}
+
+void ChunkRenderer::RemoveChunkFromFrameDraw(Chunk* chunk)
+{
+  frameChunkDrawCalls.RemoveFirst(chunk);
 }
 
 glm::vec3 ChunkRenderer::GetChunkShaderPositionOffset(const glm::dvec3 playerPos, const Chunk* chunk)

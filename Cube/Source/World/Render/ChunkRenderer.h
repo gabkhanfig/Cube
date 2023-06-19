@@ -46,6 +46,8 @@ public:
 
 	void SetRemeshedChunks(const darray<Chunk*> newRemeshedChunks);
 
+	void RemoveChunkFromFrameDraw(Chunk* chunk);
+
 private:
 
 	void PerformBoundDrawCalls();

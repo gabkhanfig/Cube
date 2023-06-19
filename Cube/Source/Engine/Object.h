@@ -33,5 +33,5 @@ private:
 };
 
 forceinline bool IsValid(IObject* object) {
-	object != nullptr && !object->IsPendingDelete();
+	return object != nullptr && !object->IsPendingDelete();
 }

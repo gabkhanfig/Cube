@@ -23,6 +23,7 @@
 #include "Terrain/TerrainGenerator.h"
 #include "Block/BlockTypes/Air/AirBlock.h"
 #include "Raycast.h"
+#include "../Settings/Settings.h"
 
 World* GetWorld()
 {
@@ -50,8 +51,7 @@ World::World()
 
 void World::BeginWorld()
 {
-  const int renderDistance = 5;
-  const darray<ChunkPosition> positionsInRenderDistance = ChunkPositionsWithinRenderDistance(ChunkPosition(0, 0, 0), renderDistance);
+  const darray<ChunkPosition> positionsInRenderDistance = ChunkPositionsWithinRenderDistance(ChunkPosition(0, 0, 0), GetSettings()->GetRenderDistance());
 
   darray<Chunk*> remeshedChunks;
   for (ChunkPosition position : positionsInRenderDistance) {
@@ -67,13 +67,22 @@ void World::BeginWorld()
 
 void World::Tick(float deltaTime)
 {
+  ChunkPosition oldPlayerChunkPos = player->GetChunkPosition();
+
   // Tick world
   player->Tick(deltaTime);
 
 
   if (engine->IsUsingRenderThread()) {
-    engine->WaitForRenderThread(5000);
+    const int timeoutMS = 5000;
+    engine->WaitForRenderThread(timeoutMS);
   }
+
+  if (player->GetChunkPosition() != oldPlayerChunkPos) {
+    DeleteDistantChunksAndLoadNearby(GetSettings()->GetRenderDistance());
+    cubeLog("player moved across chunk border");
+  }
+
   RenderLoop();
 }
 
@@ -229,8 +238,8 @@ void World::RenderLoop()
   darray<Chunk*> remeshedChunks;
   for (Chunk* chunk : chunksToAttemptDraw) {
     if (!chunk->ShouldBeRemeshed()) continue;
-    //cubeLog("chunk should be remeshed at: ");
-    //std::cout << chunk->GetPosition().x << ", " << chunk->GetPosition().y << ", " << chunk->GetPosition().z << '\n';
+    cubeLog("chunk should be remeshed at: ");
+    std::cout << chunk->GetPosition().x << ", " << chunk->GetPosition().y << ", " << chunk->GetPosition().z << '\n';
     remeshedChunks.Add(chunk);
   }
   // 5. Remesh each chunk, passing in the mapped ChunkRenderMeshData structure to each chunk render component.
@@ -262,6 +271,43 @@ void World::RenderLoop()
 
 void World::DeleteDistantChunksAndLoadNearby(int renderDistance)
 {
+  const darray<ChunkPosition> nearbyPositions = World::ChunkPositionsWithinRenderDistance(player->GetChunkPosition(), renderDistance);
+
+  HashSet<ChunkPosition> _nearbyPositionsSet;
+  HashSet<ChunkPosition> _chunksAlreadyExist;
+
+  for (const ChunkPosition& pos : nearbyPositions) { // Filter out all of the chunks that already exist, and put all of the nearby chunks into a set for fast access.
+    _nearbyPositionsSet.insert(pos);
+    if (DoesChunkExist(pos)) {
+      _chunksAlreadyExist.insert(pos);
+    }
+  }
+
+  darray<ChunkPosition> chunksToDelete;
+  for (auto& chunkPair : chunks) { // Find what chunks are not nearby
+    if (!_nearbyPositionsSet.contains(chunkPair.first)) {
+      delete chunkPair.second;
+      chunkRenderer->RemoveChunkFromFrameDraw(chunkPair.second);
+      chunksToDelete.Add(chunkPair.first);
+    }
+  }
+  for (const ChunkPosition& pos : chunksToDelete) { // Remove deleted chunks from hashmap
+    chunks.erase(pos);
+  }
+
+  darray<Chunk*> newChunks; // Create the new chunk objects
+  for (const ChunkPosition& pos : nearbyPositions) {
+    if (!DoesChunkExist(pos)) {
+      Chunk* chunk = new Chunk(pos);
+      newChunks.Add(chunk);
+      chunks.insert({ pos, chunk });
+    }
+  }
+
+  for (Chunk* chunk : newChunks) { // Set them to be remeshed. TODO multithreaded
+    chunk->GenerateTerrain(terrainGenerator);
+    chunk->SetShouldBeRemeshed(true);
+  }
 }
 
 darray<ChunkPosition> World::ChunkPositionsWithinRenderDistance(ChunkPosition center, int renderDistance)
