@@ -6,6 +6,7 @@
 #include "Input/CubeInput.h"
 #include "Engine/Input/InputMapping.h"
 #include "World/Block/BlockFactory.h"
+#include "Settings/Settings.h"
 
 void _CubeGameInstanceTickCallback(float deltaTime)
 {
@@ -15,7 +16,7 @@ void _CubeGameInstanceTickCallback(float deltaTime)
 GameInstance::GameInstance()
   : world(nullptr)
 {
-  workerThreadsNum = gk::ThreadPool::SystemThreadCount() - 1;
+  workerThreadsNum = GetSettings()->GetThreadPoolSize();
   threadPool = new gk::ThreadPool(workerThreadsNum);
 }
 
