@@ -238,8 +238,8 @@ void World::RenderLoop()
   darray<Chunk*> remeshedChunks;
   for (Chunk* chunk : chunksToAttemptDraw) {
     if (!chunk->ShouldBeRemeshed()) continue;
-    cubeLog("chunk should be remeshed at: ");
-    std::cout << chunk->GetPosition().x << ", " << chunk->GetPosition().y << ", " << chunk->GetPosition().z << '\n';
+    //cubeLog("chunk should be remeshed at: ");
+    //std::cout << chunk->GetPosition().x << ", " << chunk->GetPosition().y << ", " << chunk->GetPosition().z << '\n';
     remeshedChunks.Add(chunk);
   }
   // 5. Remesh each chunk, passing in the mapped ChunkRenderMeshData structure to each chunk render component.
@@ -304,10 +304,9 @@ void World::DeleteDistantChunksAndLoadNearby(int renderDistance)
     }
   }
 
-  for (Chunk* chunk : newChunks) { // Set them to be remeshed. TODO multithreaded
-    chunk->GenerateTerrain(terrainGenerator);
-    chunk->SetShouldBeRemeshed(true);
-  }
+  Benchmark b = Benchmark("multithread generate terrain");
+  Chunk::MultithreadGenerateTerrain(newChunks, GetGameInstance()->GetThreadPool(), terrainGenerator);
+  b.End(Benchmark::TimeUnit::ms);
 }
 
 darray<ChunkPosition> World::ChunkPositionsWithinRenderDistance(ChunkPosition center, int renderDistance)

@@ -79,6 +79,19 @@ void Chunk::GenerateTerrain(TerrainGenerator* terrainGenerator)
 	}
 }
 
+static void GenerateTerrainTask(Chunk* chunk, TerrainGenerator* terrainGenerator) {
+	chunk->GenerateTerrain(terrainGenerator);
+	chunk->SetShouldBeRemeshed(true);
+}
+
+void Chunk::MultithreadGenerateTerrain(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool, TerrainGenerator* terrainGenerator)
+{
+	for (Chunk* chunk : chunks) {
+		threadPool->AddFunctionToQueue(std::bind(GenerateTerrainTask, chunk, terrainGenerator));
+	}
+	threadPool->ExecuteQueue();
+}
+
 void Chunk::DestroyAllBlocks()
 {
 	for (int i = 0; i < CHUNK_SIZE; i++) {

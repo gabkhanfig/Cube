@@ -45,6 +45,7 @@ public:
 	/* Fill the chunk with a specified block. */
 	void FillChunkWithBlock(GlobalString blockName);
 
+	/* Must be thread-safe. */
 	void GenerateTerrain(TerrainGenerator* terrainGenerator);
 
 	forceinline ChunkPosition GetPosition() const { return position; }
@@ -54,6 +55,8 @@ public:
 	bool ShouldBeRemeshed() const { return shouldBeRemeshed; }
 
 	void SetShouldBeRemeshed(bool newShouldBeRemeshed) { shouldBeRemeshed = newShouldBeRemeshed; }
+
+	static void MultithreadGenerateTerrain(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool, TerrainGenerator* terrainGenerator);
 
 private:
 
