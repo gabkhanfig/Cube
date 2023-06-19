@@ -304,9 +304,7 @@ void World::DeleteDistantChunksAndLoadNearby(int renderDistance)
     }
   }
 
-  Benchmark b = Benchmark("multithread generate terrain");
   Chunk::MultithreadGenerateTerrain(newChunks, GetGameInstance()->GetThreadPool(), terrainGenerator);
-  b.End(Benchmark::TimeUnit::ms);
 }
 
 darray<ChunkPosition> World::ChunkPositionsWithinRenderDistance(ChunkPosition center, int renderDistance)
