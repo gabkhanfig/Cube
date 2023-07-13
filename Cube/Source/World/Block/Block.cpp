@@ -245,7 +245,7 @@ bool Block::CanDrawFace(WorldPosition position, BlockFacing face) const
     // TODO: Implement something for custom mesh transparency idk
     return true;
   default:
-    checkm(false, "Unreachable code block. Mesh transparency type must be one of the enum class values within IBlcok::EMeshTransparency");
+    gk_assertm(false, "Unreachable code block. Mesh transparency type must be one of the enum class values within IBlcok::EMeshTransparency");
     return true;
   }
 }

@@ -29,7 +29,7 @@ void Window::TerminateGLFW()
 Window::Window(int inWidth, int inHeight, String inTitle, GLFWmonitor* inMonitor)
 	: width(inWidth), height(inHeight), title(inTitle), monitor(inMonitor)
 {
-	checkm(isGlfwInitialized, "GLFW must be initialized before creating a window. Call Window::Initialize().");
+	gk_assertm(isGlfwInitialized, "GLFW must be initialized before creating a window. Call Window::Initialize().");
 
 	window = glfwCreateWindow(width, height, title.CStr(), monitor, nullptr);
 	if (!window) {

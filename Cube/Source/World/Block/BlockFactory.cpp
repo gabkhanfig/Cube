@@ -32,7 +32,7 @@ BlockClass::BlockClass()
 Block* BlockClass::NewBlock()
 {
 	Block* block = (Block*)classRef->NewObject();
-	checkm(block != nullptr, "Block Dependency GetBlock() must never return nullptr");
+	gk_assertm(block != nullptr, "Block Dependency GetBlock() must never return nullptr");
 	return block;
 }
 
@@ -53,7 +53,7 @@ Block* BlockFactory::NewAirBlock()
 	static const GlobalString AirBlockName = "airBlock";
 #ifdef DEVELOPMENT
 	auto found = blockClasses.find(AirBlockName);
-	checkm(found != blockClasses.end(), "Air block must be mapped in the block factory.");
+	gk_assertm(found != blockClasses.end(), "Air block must be mapped in the block factory.");
 	return found->second->NewBlock();
 #else
 	static IBlock* AirBlock = blockClasses.find(AirBlockName)->second->GetBlock();

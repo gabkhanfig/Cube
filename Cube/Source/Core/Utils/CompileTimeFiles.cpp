@@ -1,6 +1,5 @@
 #include "CompileTimeFiles.h"
 #include "../../../Resources/GeneratedFiles.h"
-#include "../Asserts.h"
 
 // https://github.com/gabkhanfig/Cube-Compile-Time-File-Converter
 
@@ -19,27 +18,27 @@ void CompileTimeFiles::LoadAllFiles()
 const CompileTimeFiles::Text* CompileTimeFiles::GetTextFile(GlobalString fileName)
 {
 	auto found = textFiles.find(fileName);
-	checkm(found != textFiles.end(), "Unable to find compile time text file");
+	gk_assertm(found != textFiles.end(), "Unable to find compile time text file");
 	return found->second;
 }
 
 const CompileTimeFiles::Image* CompileTimeFiles::GetImageFile(GlobalString fileName)
 {
 	auto found = imageFiles.find(fileName);
-	checkm(found != imageFiles.end(), "Unable to find compile time text file");
+	gk_assertm(found != imageFiles.end(), "Unable to find compile time text file");
 	return found->second;
 }
 
 void CompileTimeFiles::LoadTextFile(GlobalString fileName, const char* contents)
 {
 	CompileTimeFiles::Text* text = new CompileTimeFiles::Text(contents);
-	check(!textFiles.contains(fileName));
+	gk_assert(!textFiles.contains(fileName));
 	textFiles.insert({ fileName, text });
 }
 
 void CompileTimeFiles::LoadImageFile(GlobalString fileName, uint8* contents, uint32 width, uint32 height, uint32 totalBytes)
 {
 	CompileTimeFiles::Image* image = new CompileTimeFiles::Image(contents, width, height, totalBytes);
-	check(!imageFiles.contains(fileName));
+	gk_assert(!imageFiles.contains(fileName));
 	imageFiles.insert({ fileName, image });
 }

@@ -27,7 +27,7 @@
 
 World* GetWorld()
 {
-  checkm(GetGameInstance()->GetWorld() != nullptr, "The world cannot be nullptr");
+  gk_assertm(GetGameInstance()->GetWorld() != nullptr, "The world cannot be nullptr");
   return GetGameInstance()->GetWorld();
 }
 

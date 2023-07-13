@@ -30,12 +30,12 @@ IndexBufferObject::~IndexBufferObject()
 
 IndexBufferObject* IndexBufferObject::CreatePersistentMapped(uint32 capacity, void** mappedBufferOut)
 {
-	checkm(mappedBufferOut, "mappedBufferOut must be a non-null pointer to copy the mapped buffer to");
+	gk_assertm(mappedBufferOut, "mappedBufferOut must be a non-null pointer to copy the mapped buffer to");
 	IndexBufferObject* ibo = new IndexBufferObject();
 	GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
 	glBufferStorage(GL_ELEMENT_ARRAY_BUFFER, capacity, 0, mapFlags);
 	void* bufferRange = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, capacity, mapFlags);
-	checkm(bufferRange, "glMapBufferRange returned nullptr");
+	gk_assertm(bufferRange, "glMapBufferRange returned nullptr");
 	*mappedBufferOut = bufferRange;
 	return ibo;
 }

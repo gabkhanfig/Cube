@@ -35,7 +35,7 @@ Block* Chunk::GetBlock(BlockPosition position) const
 	if (blockIndex > CHUNK_SIZE) {
 		std::cout << blockIndex << std::endl;
 	}
-	checkm(blockIndex < CHUNK_SIZE, "block index must be within CHUNK_SIZE");
+	gk_assertm(blockIndex < CHUNK_SIZE, "block index must be within CHUNK_SIZE");
 	return blocks[blockIndex];
 }
 

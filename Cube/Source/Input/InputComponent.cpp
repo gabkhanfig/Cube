@@ -20,14 +20,14 @@ InputComponent::~InputComponent()
 void InputComponent::Press(GlobalString button, InputMods mods)
 {
 	//InputButton* inputButton = GetInputButton(button);
-	//checkm(inputButton != nullptr, "Button on press was nullptr in input component");
+	//gk_assertm(inputButton != nullptr, "Button on press was nullptr in input component");
 	//inputButton->Press(mods);
 }
 
 void InputComponent::Release(GlobalString button, InputMods mods)
 {
 	//InputButton* inputButton = GetInputButton(button);
-	//checkm(inputButton != nullptr, "Button on release was nullptr in input component");
+	//gk_assertm(inputButton != nullptr, "Button on release was nullptr in input component");
 	//inputButton->Release(mods);
 }
 

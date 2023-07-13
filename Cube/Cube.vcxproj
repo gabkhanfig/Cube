@@ -177,7 +177,6 @@ GenerateFiles.bat</Command>
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="Resources\GeneratedFiles.cpp" />
-    <ClCompile Include="Source\Core\Asserts.cpp" />
     <ClCompile Include="Source\Core\Log\Logger.cpp" />
     <ClCompile Include="Source\Core\Utils\Benchmark.cpp" />
     <ClCompile Include="Source\Core\Utils\CompileTimeFiles.cpp" />
@@ -236,7 +235,6 @@ GenerateFiles.bat</Command>
     <Text Include="Resources\Files.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Core\Asserts.h" />
     <ClInclude Include="Source\Core\Development.h" />
     <ClInclude Include="Source\Core\EngineTypes.h" />
     <ClInclude Include="Source\Core\Log\Logger.h" />

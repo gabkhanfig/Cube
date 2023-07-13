@@ -64,7 +64,7 @@ void PlayerInputComponent::BindPressCallback(GlobalString button, PlayerInputCal
 {
 	auto found = pressCallbacks.find(button);
 	if (found != pressCallbacks.end()) {
-		checkm(!found->second->Contains(callback), "Binding the same player input press callback twice is not allowed");
+		gk_assertm(!found->second->Contains(callback), "Binding the same player input press callback twice is not allowed");
 		found->second->Add(callback);
 	}
 	else {
@@ -78,7 +78,7 @@ void PlayerInputComponent::BindReleaseCallback(GlobalString button, PlayerInputC
 {
 	auto found = releaseCallbacks.find(button);
 	if (found != releaseCallbacks.end()) {
-		checkm(!found->second->Contains(callback), "Binding the same player input release callback twice is not allowed");
+		gk_assertm(!found->second->Contains(callback), "Binding the same player input release callback twice is not allowed");
 		found->second->Add(callback);
 	}
 	else {

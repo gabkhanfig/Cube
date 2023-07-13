@@ -138,9 +138,6 @@
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\DrawIndirectBufferObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Asserts.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\World\Terrain\TerrainGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -295,9 +292,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Development.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Asserts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\World\Render\ChunkRenderer.h">

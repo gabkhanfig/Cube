@@ -12,12 +12,12 @@ DrawIndirectBufferObject* DrawIndirectBufferObject::Create(DrawElementsIndirectC
 
 DrawIndirectBufferObject* DrawIndirectBufferObject::CreatePersistentMapped(uint32 commandCapacity, DrawElementsIndirectCommand** mappedBufferOut)
 {
-	checkm(mappedBufferOut, "mappedBufferOut must be a non-null pointer to copy the mapped buffer to"); 
+	gk_assertm(mappedBufferOut, "mappedBufferOut must be a non-null pointer to copy the mapped buffer to"); 
 	DrawIndirectBufferObject* dbo = new DrawIndirectBufferObject();
 	GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
 	glBufferStorage(GL_DRAW_INDIRECT_BUFFER, sizeof(DrawElementsIndirectCommand) * commandCapacity, 0, mapFlags);
 	DrawElementsIndirectCommand* bufferRange = (DrawElementsIndirectCommand*)glMapBufferRange(GL_DRAW_INDIRECT_BUFFER, 0, sizeof(DrawElementsIndirectCommand) * commandCapacity, mapFlags);
-	checkm(bufferRange, "glMapBufferRange returned nullptr");
+	gk_assertm(bufferRange, "glMapBufferRange returned nullptr");
 	*mappedBufferOut = bufferRange;
 	return dbo;
 }

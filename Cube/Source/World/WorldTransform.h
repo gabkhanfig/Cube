@@ -65,14 +65,14 @@ struct BlockPosition
 
 	BlockPosition(int x, int y, int z)
 	{
-		checkm(x >= 0 && x < CHUNK_LENGTH, "BlockPosition x must be between 0 and CHUNK_LENGTH");
-		checkm(y >= 0 && y < CHUNK_LENGTH, "BlockPosition y must be between 0 and CHUNK_LENGTH");
-		checkm(z >= 0 && z < CHUNK_LENGTH, "BlockPosition z must be between 0 and CHUNK_LENGTH");
+		gk_assertm(x >= 0 && x < CHUNK_LENGTH, "BlockPosition x must be between 0 and CHUNK_LENGTH");
+		gk_assertm(y >= 0 && y < CHUNK_LENGTH, "BlockPosition y must be between 0 and CHUNK_LENGTH");
+		gk_assertm(z >= 0 && z < CHUNK_LENGTH, "BlockPosition z must be between 0 and CHUNK_LENGTH");
 		index = x + (z * CHUNK_LENGTH) + (y * CHUNK_LENGTH * CHUNK_LENGTH);
 	}
 
 	BlockPosition(int _index = 0) {
-		//checkm(_index >= 0 && _index < CHUNK_SIZE, "BlockPosition index mumst be between 0 and CHUNK_SIZE");
+		//gk_assertm(_index >= 0 && _index < CHUNK_SIZE, "BlockPosition index mumst be between 0 and CHUNK_SIZE");
 		index = _index;
 	}
 
@@ -170,7 +170,7 @@ struct WorldPosition
 		case BlockFacing::Direction::Dir_West:
 			return WorldPosition(x + 1, y, z);
 		default:
-			checkm(false, "Unreachable code block. BlockFacing face must only be one of the 6 cube faces");
+			gk_assertm(false, "Unreachable code block. BlockFacing face must only be one of the 6 cube faces");
 			return *this;
 		}
 	}
