@@ -6,7 +6,7 @@
 #include "EngineTypes.h"
 #include "Development.h"
 
-void _CheckImplementation(bool condition, const string& message, const char* file, int line);
+void _CheckImplementation(bool condition, const String& message, const char* file, int line);
 
 #define _str(s) #s
 
@@ -19,7 +19,7 @@ void _CheckImplementation(bool condition, const string& message, const char* fil
 /* Check a runtime condition, throwing an assertion with a message if it fails. 
 @param condition: Condition to check. Expected to be true.
 @param message: The message to display if the assertion fails. */
-#define checkm(condition, message) _CheckImplementation(condition, string(_str(condition)) + " \"" + message + "\"", __FILE__, __LINE__)
+#define checkm(condition, message) _CheckImplementation(condition, String(_str(condition)) + " \"" + message + "\"", __FILE__, __LINE__)
 
 
 

@@ -14,7 +14,7 @@ template<typename T>
 using darray = gk::darray<T>;
 
 /**/
-typedef gk::string string;
+typedef gk::String String;
 
 /**/
 typedef gk::GlobalString GlobalString;
@@ -29,6 +29,6 @@ using HashSet = std::unordered_set<T>;
 #define forceinline __forceinline
 
 template<>
-[[nodiscard]] constexpr static gk::string gk::string::From<glm::dvec3>(const glm::dvec3& value) {
-	return gk::string("x: " ) + gk::string::FromFloat(value.x) + gk::string(", y: ") + gk::string::FromFloat(value.y) + gk::string(", z: ") + gk::string::FromFloat(value.z);
+[[nodiscard]] inline static gk::String gk::String::From<glm::dvec3>(const glm::dvec3& value) {
+	return gk::String("x: " ) + gk::String::FromFloat(value.x) + gk::String(", y: ") + gk::String::FromFloat(value.y) + gk::String(", z: ") + gk::String::FromFloat(value.z);
 }

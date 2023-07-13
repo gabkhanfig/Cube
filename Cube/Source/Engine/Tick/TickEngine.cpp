@@ -36,10 +36,10 @@ void TickEngine::UpdateFps()
 	fpsCounter += deltaTime;
 	if (fpsCounter >= fpsCounterUpdateInterval) {
 		fpsCounter = 0; 
-		string windowWithFps = engine->GetWindow()->GetTitle();
+		String windowWithFps = engine->GetWindow()->GetTitle();
 		windowWithFps += "   FPS: ";
-		windowWithFps += string::FromInt(static_cast<int64>(CurrentFps()));
-		glfwSetWindowTitle(engine->GetWindow()->GetGlfwWindow(), windowWithFps.c_str());
+		windowWithFps += String::FromInt(static_cast<int64>(CurrentFps()));
+		glfwSetWindowTitle(engine->GetWindow()->GetGlfwWindow(), windowWithFps.CStr());
 	}
 //#endif
 }

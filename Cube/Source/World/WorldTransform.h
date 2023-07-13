@@ -216,6 +216,6 @@ namespace std
 }
 
 template<>
-[[nodiscard]] inline static gk::string gk::string::From<WorldPosition>(const WorldPosition& value) {
-	return "x: " + gk::string::FromInt(value.x) + ", y: " + gk::string::FromInt(value.y) + ", z: " + gk::string::FromInt(value.z);
+[[nodiscard]] inline static gk::String gk::String::From<WorldPosition>(const WorldPosition& value) {
+	return "x: " + gk::String::FromInt(value.x) + ", y: " + gk::String::FromInt(value.y) + ", z: " + gk::String::FromInt(value.z);
 }

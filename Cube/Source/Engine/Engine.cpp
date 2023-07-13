@@ -43,7 +43,7 @@ void Engine::WaitForRenderThread(int64 millisecondTimeout)
 		std::chrono::steady_clock::time_point now = std::chrono::high_resolution_clock::now();
 		auto duration = now - startWait;
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(duration).count() > millisecondTimeout) {
-			cubeLog("Timed out waiting for render thread. Waited " + string::FromInt(millisecondTimeout) + "ms");
+			cubeLog("Timed out waiting for render thread. Waited " + String::FromInt(millisecondTimeout) + "ms");
 			DebugBreak();
 		}
 #else 

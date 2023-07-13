@@ -30,7 +30,7 @@ uint32 Shader::LoadShader(Shader::Type shaderType, const char* shaderSource)
 	char infoLog[512];
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 	if (success == GL_FALSE) {
-		string shaderType;
+		String shaderType;
 		switch (openGLShaderType) {
 		case GL_VERTEX_SHADER:
 			shaderType = "Vertex";

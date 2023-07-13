@@ -11,7 +11,7 @@ class Window
 private:
 
 	/* Title of the window. */
-	string title;
+	String title;
 
 	/* Set to null for windowed mode. */
 	GLFWmonitor* monitor;
@@ -41,7 +41,7 @@ public:
 	@param inHeight: Window height.
 	@param inTitle: Window title.
 	@param inMonitor: Monitor to use. Use nullptr for windowed mode. */
-	Window(int inWidth, int inHeight, string inTitle, GLFWmonitor* inMonitor = nullptr);
+	Window(int inWidth, int inHeight, String inTitle, GLFWmonitor* inMonitor = nullptr);
 
 	/* Swap the front and back buffers of this window. */
 	void SwapBuffers();
@@ -55,7 +55,7 @@ public:
 	void Close();
 
 	/* Get the title of the window. */
-	forceinline string GetTitle() const { return title; }
+	forceinline String GetTitle() const { return title; }
 
 	/* Get the monitor this window is using. Can be nullptr for windowed mode. */
 	forceinline GLFWmonitor* GetGlfwMonitor() const { return monitor; }
