@@ -132,9 +132,6 @@
     <ClCompile Include="Source\World\Render\ChunkRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\Utils\Benchmark.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\DrawIndirectBufferObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -295,9 +292,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\World\Render\ChunkRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\Utils\Benchmark.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\World\Raycast.h">
