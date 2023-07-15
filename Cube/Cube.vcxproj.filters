@@ -153,6 +153,9 @@
     <ClCompile Include="Source\Settings\Settings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\World\Chunk\BuriedChunkBlocks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.vert" />
@@ -316,6 +319,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Settings\Settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\World\Chunk\BuriedChunkBlocks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
