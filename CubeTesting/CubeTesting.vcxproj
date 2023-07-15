@@ -32,6 +32,18 @@
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Users\Admin\Documents\Code\Cube\Dependencies\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>C:\Users\Admin\Documents\Code\Cube\Dependencies\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\Users\Admin\Documents\Code\Cube\Dependencies\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>C:\Users\Admin\Documents\Code\Cube\Dependencies\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="Benchmarks\Benchmark.h" />
     <ClInclude Include="CubeTest.h" />

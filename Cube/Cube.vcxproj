@@ -71,19 +71,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\Admin\Documents\Code\GkTypesLib\GkTypesLib;C:\Users\Admin\Documents\Code\Cube\Dependencies\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Admin\Documents\Code\Cube\Dependencies\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Admin\Documents\Code\Cube\Dependencies\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Users\Admin\Documents\Code\GkTypesLib\GkTypesLib;C:\Users\Admin\Documents\Code\Cube\Dependencies\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Admin\Documents\Code\Cube\Dependencies\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Admin\Documents\Code\Cube\Dependencies\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\Admin\Documents\Code\GkTypesLib\GkTypesLib;C:\Users\Admin\Documents\Code\Cube\Dependencies\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Admin\Documents\Code\Cube\Dependencies\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Admin\Documents\Code\Cube\Dependencies\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\Admin\Documents\Code\GkTypesLib\GkTypesLib;C:\Users\Admin\Documents\Code\Cube\Dependencies\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Admin\Documents\Code\Cube\Dependencies\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Admin\Documents\Code\Cube\Dependencies\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
