@@ -222,17 +222,6 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\World\Terrain\TerrainGenerator.cpp" />
     <ClCompile Include="Source\World\World.cpp" />
     <ClCompile Include="Source\World\WorldTransform.cpp" />
-    <ClCompile Include="Testing\GoogleTestSource\gtest-all.cc" />
-    <ClCompile Include="Testing\GoogleTestSource\gtest-assertion-result.cc" />
-    <ClCompile Include="Testing\GoogleTestSource\gtest-death-test.cc" />
-    <ClCompile Include="Testing\GoogleTestSource\gtest-filepath.cc" />
-    <ClCompile Include="Testing\GoogleTestSource\gtest-matchers.cc" />
-    <ClCompile Include="Testing\GoogleTestSource\gtest-port.cc" />
-    <ClCompile Include="Testing\GoogleTestSource\gtest-printers.cc" />
-    <ClCompile Include="Testing\GoogleTestSource\gtest-test-part.cc" />
-    <ClCompile Include="Testing\GoogleTestSource\gtest-typed-test.cc" />
-    <ClCompile Include="Testing\GoogleTestSource\gtest.cc" />
-    <ClCompile Include="Testing\GoogleTestSource\gtest_main.cc" />
     <ClCompile Include="Testing\World\Chunk\BuriedChunkBlocksTests.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -242,6 +231,7 @@ GenerateFiles.bat</Command>
     <None Include="Resources\Shaders\Basic.vert" />
     <None Include="Resources\Shaders\Chunk.frag" />
     <None Include="Resources\Shaders\Chunk.vert" />
+    <None Include="Testing\GoogleTest\gtest\internal\custom\README.md" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\Files.txt" />
@@ -300,6 +290,30 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\World\WorldTransform.h" />
     <ClInclude Include="Testing\CubeTest.h" />
     <ClInclude Include="Testing\GoogleTestSource\gtest-internal-inl.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-assertion-result.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-death-test.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-matchers.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-message.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-param-test.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-printers.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-spi.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-test-part.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-typed-test.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest_pred_impl.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest_prod.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\custom\gtest-port.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\custom\gtest-printers.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\custom\gtest.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\gtest-death-test-internal.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\gtest-filepath.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\gtest-internal.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\gtest-param-util.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\gtest-port-arch.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\gtest-port.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\gtest-string.h" />
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\gtest-type-util.h" />
+    <ClInclude Include="Testing\GoogleTest\src\gtest-internal-inl.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\16x16wood.png" />

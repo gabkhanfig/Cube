@@ -192,6 +192,39 @@
     <ClCompile Include="Testing\World\Chunk\BuriedChunkBlocksTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\src\gtest.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\src\gtest_main.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\src\gtest-all.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\src\gtest-assertion-result.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\src\gtest-death-test.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\src\gtest-filepath.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\src\gtest-matchers.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\src\gtest-port.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\src\gtest-printers.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\src\gtest-test-part.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\src\gtest-typed-test.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.vert" />
@@ -202,6 +235,7 @@
     <None Include="Resources\Shaders\Chunk.vert" />
     <None Include="Resources\Shaders\Chunk.frag" />
     <None Include="Resources\cube-compile-time-file-converter.exe" />
+    <None Include="Testing\GoogleTest\gtest\internal\custom\README.md" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\Files.txt" />
@@ -364,6 +398,78 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Testing\CubeTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-typed-test.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-test-part.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-spi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-printers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-param-test.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-message.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-matchers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-death-test.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest-assertion-result.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest_prod.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\gtest_pred_impl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\custom\gtest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\custom\gtest-port.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\custom\gtest-printers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\gtest-death-test-internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\gtest-filepath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\gtest-internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\gtest-param-util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\gtest-port.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\gtest-port-arch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\gtest-string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\gtest\internal\gtest-type-util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testing\GoogleTest\src\gtest-internal-inl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
