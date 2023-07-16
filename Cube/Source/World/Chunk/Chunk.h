@@ -58,6 +58,8 @@ public:
 
 	static void MultithreadGenerateTerrain(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool, TerrainGenerator* terrainGenerator);
 
+	inline const Block** GetBlocks() const { return blocks; }
+
 private:
 
 	void DestroyAllBlocks();
