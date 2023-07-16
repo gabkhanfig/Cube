@@ -8,6 +8,11 @@ BuriedChunkBlocks::BuriedChunkBlocks()
 	Reset();
 }
 
+BuriedChunkBlocks::BuriedChunkBlocks(const BuriedChunkBlocks& copy)
+{
+	memcpy(_bitmask, copy._bitmask, sizeof(BuriedChunkBlocks::_bitmask));
+}
+
 const uint64* BuriedChunkBlocks::GetBitmaskAsIntArray() const
 {
 	return reinterpret_cast<const uint64*>(_bitmask->m256i_u64);
@@ -36,9 +41,20 @@ void BuriedChunkBlocks::Reset()
 
 bool BuriedChunkBlocks::AreAllBlocksBuried() const
 {
-	const uint64 allBitsSet[4] = { ~0 };
+	const uint64 allBitsSet[4] = { ~0, ~0, ~0, ~0 };
 	const __m256i setBitmask = _mm256_loadu_epi64(allBitsSet);
 	return
 		_mm256_cmpeq_epi64_mask(_bitmask[0], setBitmask) == 15
 		&& _mm256_cmpeq_epi64_mask(_bitmask[1], setBitmask) == 15;
+}
+
+void BuriedChunkBlocks::operator=(const BuriedChunkBlocks& other)
+{
+	memcpy(_bitmask, other._bitmask, sizeof(BuriedChunkBlocks::_bitmask));
+}
+
+bool BuriedChunkBlocks::operator==(const BuriedChunkBlocks& other) const
+{
+	return _mm256_cmpeq_epi64_mask(_bitmask[0], other._bitmask[0]) == 15
+		&& _mm256_cmpeq_epi64_mask(_bitmask[1], other._bitmask[1]) == 15;
 }

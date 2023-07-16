@@ -9,6 +9,8 @@ struct BuriedChunkBlocks {
 
 	BuriedChunkBlocks();
 
+	BuriedChunkBlocks(const BuriedChunkBlocks& copy);
+
 	/* Returns a pointer to the start of an 8 element array. */
 	[[nodiscard]] const uint64* GetBitmaskAsIntArray() const;
 
@@ -19,5 +21,9 @@ struct BuriedChunkBlocks {
 	void Reset();
 
 	[[nodiscard]] bool AreAllBlocksBuried() const;
+
+	void operator = (const BuriedChunkBlocks& other);
+
+	[[nodiscard]] bool operator == (const BuriedChunkBlocks& other) const;
 
 };
