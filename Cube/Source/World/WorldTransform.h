@@ -216,6 +216,16 @@ namespace std
 }
 
 template<>
+[[nodiscard]] inline static gk::String gk::String::From<ChunkPosition>(const ChunkPosition& value) {
+	return "x: " + gk::String::FromInt(value.x) + ", y: " + gk::String::FromInt(value.y) + ", z: " + gk::String::FromInt(value.z);
+}
+
+template<>
+[[nodiscard]] inline static gk::String gk::String::From<BlockPosition>(const BlockPosition& value) {
+	return "x: " + gk::String::FromInt(value.X()) + ", y: " + gk::String::FromInt(value.Y()) + ", z: " + gk::String::FromInt(value.Z());
+}
+
+template<>
 [[nodiscard]] inline static gk::String gk::String::From<WorldPosition>(const WorldPosition& value) {
 	return "x: " + gk::String::FromInt(value.x) + ", y: " + gk::String::FromInt(value.y) + ", z: " + gk::String::FromInt(value.z);
 }
