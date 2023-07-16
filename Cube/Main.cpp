@@ -29,15 +29,6 @@ int main(int argc, char** argv)
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 #else
-  //BuriedChunkBlocks b;
-  //const uint64* arr = b.GetBitmaskAsIntArray();
-  //for (int i = 0; i < 8; i++) {
-  //  if (arr[i] != 0)
-  //    std::cout << "index: " << i << " is not set to 0" << std::endl;
-  //}
-  //std::cout << "done" << std::endl;
-
-
   settings = new Settings();
   Engine::Start();
   gameInstance = new GameInstance();
