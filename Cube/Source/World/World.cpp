@@ -62,7 +62,7 @@ void World::BeginWorld()
   }
 
   //ChunkRenderComponent::MultithreadBitmaskRecreateMeshesTest(remeshedChunks, GetGameInstance()->GetThreadPool());
-  ChunkRenderComponent::MultithreadRecreateMeshes(remeshedChunks, GetGameInstance()->GetThreadPool());
+  ChunkRenderComponent::MultithreadRecreateMeshes(remeshedChunks, engine->GetThreadPool());
   chunkRenderer->SetRemeshedChunks(remeshedChunks);
 }
 
@@ -245,7 +245,7 @@ void World::RenderLoop()
   }
   // 5. Remesh each chunk, passing in the mapped ChunkRenderMeshData structure to each chunk render component.
   if (remeshedChunks.Size() > 0) {
-    ChunkRenderComponent::MultithreadRecreateMeshes(remeshedChunks, GetGameInstance()->GetThreadPool());
+    ChunkRenderComponent::MultithreadRecreateMeshes(remeshedChunks, engine->GetThreadPool());
     chunkRenderer->SetRemeshedChunks(remeshedChunks);
   }
 
@@ -305,7 +305,7 @@ void World::DeleteDistantChunksAndLoadNearby(int renderDistance)
     }
   }
 
-  Chunk::MultithreadGenerateTerrain(newChunks, GetGameInstance()->GetThreadPool(), terrainGenerator);
+  Chunk::MultithreadGenerateTerrain(newChunks, engine->GetThreadPool(), terrainGenerator);
 }
 
 darray<ChunkPosition> World::ChunkPositionsWithinRenderDistance(ChunkPosition center, int renderDistance)

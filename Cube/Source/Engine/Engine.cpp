@@ -23,6 +23,16 @@ MessageCallback(GLenum source,
 constexpr int windowWidth = 960;
 constexpr int windowHeight = 540;
 
+EngineInitializationParams::EngineInitializationParams()
+	: gameInstance(nullptr),
+	threadPoolNum(gk::ThreadPool::SystemThreadCount() - 2),
+	resolution(windowWidth, windowHeight)
+{
+	gk_assertm(threadPoolNum >= 2, "Thread pool must have at least 2 threads. threadPoolNum: " << threadPoolNum);
+	gk_assertm(resolution.x > 0, "Window resolution width must be greater than 0. resolution width: " << resolution.x);
+	gk_assertm(resolution.y > 0, "Window resolution height must be greater than 0. resolution height: " << resolution.y);
+}
+
 Engine* engine;
 
 float Engine::GetDeltaTime() const
@@ -52,10 +62,10 @@ void Engine::WaitForRenderThread(int64 millisecondTimeout)
 	}
 }
 
-
 Engine::Engine() :
 	useRenderThread(true),
-	tick(nullptr)
+	tick(nullptr),
+	threadPool(new gk::ThreadPool(gk::ThreadPool::SystemThreadCount() - 2))
 {
 	input = new UserInput();
 #ifdef DEVELOPMENT
@@ -121,3 +131,5 @@ void Engine::Run(_TickCallback tickCallback)
 	engine->tick->RunEngineLoop();
 	Window::TerminateGLFW();
 }
+
+
