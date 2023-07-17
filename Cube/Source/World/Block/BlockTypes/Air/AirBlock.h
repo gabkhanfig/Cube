@@ -8,5 +8,7 @@ class AirBlock : public Block
 
 	virtual EMeshType GetMeshType() const override { return EMeshType::custom; }
 
-	virtual EMeshTransparency GetFaceTransparency(BlockFacing face) const { return EMeshTransparency::transparent; }
+	virtual ETransparency GetFaceTransparency(BlockFacing face) const { return ETransparency::transparent; }
+
+	virtual EBuriedTransparency GetBuriedTransparency() const { return EBuriedTransparency::transparent; }
 };

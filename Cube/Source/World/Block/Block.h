@@ -7,6 +7,8 @@
 #include "../../Graphics/Geometry/ChunkMesh.h"
 #include "../Chunk/ChunkDataTypes.h"
 #include "../../Engine/Object.h"
+#include "../Chunk/MappedAdjacentChunks.h"
+#include "../Chunk/BuriedChunkBlocks.h"
 
 /* Required macro for all blocks. Sets its class data and name. Also sets everything after this back to private. */
 #define BLOCK_BODY(blockClass, blockName) \
@@ -49,10 +51,15 @@ public:
 		custom
 	};
 
-	enum class EMeshTransparency : uint8 {
+	enum class ETransparency : uint8 {
 		solid, 
 		transparent,
 		custom
+	};
+
+	enum class EBuriedTransparency : bool {
+		solid,
+		transparent
 	};
 
 	/* Get the name of a block. See BLOCK_BODY() macro. */
@@ -65,13 +72,19 @@ public:
 	DEVELOPER NOTE!!!! Block's are responsible for their own mesh offsets within the chunk. */
 	virtual void AddBlockMeshToChunkMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const;
 
-	virtual EMeshTransparency GetFaceTransparency(BlockFacing face) const { return EMeshTransparency::solid; }
+	virtual void AddBlockMeshToChunkMeshBitmaskTest(
+		ChunkMesh* chunkMesh, const Chunk* chunk, const WorldPosition position, const glm::vec3 vertexOffset, const MappedAdjacentAndBuriedChunks& adjacentChunks) const;
+
+	virtual ETransparency GetFaceTransparency(BlockFacing face) const { return ETransparency::solid; }
+	virtual EBuriedTransparency GetBuriedTransparency() const { return EBuriedTransparency::solid; }
 
 	BlockLight GetLight() const { return light; }
 	void SetLight(BlockLight newLight);
 
 	BlockFacing GetFacing() const { return facing; }
 	void SetFacing(BlockFacing newFacing);
+
+	bool IsBuried(const MappedAdjacentChunks& adjacentChunks, WorldPosition blockPosition) const;
 
 #pragma region IObject_Implementation
 
@@ -94,6 +107,8 @@ protected:
 	void CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition position, glm::vec3 vertexOffset) const;
 
 	bool CanDrawFace(WorldPosition position, BlockFacing face) const;
+
+	bool CanDrawFace(const MappedAdjacentAndBuriedChunks& adjacentChunks, WorldPosition position, BlockFacing face) const;
 
 private:
 

@@ -3,6 +3,9 @@
 #include "../../Graphics/Geometry/ChunkMesh.h"
 #include "../../Graphics/OpenGL/OpenGLStructures.h"
 #include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleBuffer.h"
+#include "../WorldTransform.h"
+#include "BuriedChunkBlocks.h"
+#include "MappedAdjacentChunks.h"
 
 class VertexBufferObject;
 class IndexBufferObject;
@@ -11,10 +14,14 @@ class VertexArrayObject;
 class Shader;
 class Chunk;
 class ChunkRenderer;
+class World;
+class Block;
 
 class ChunkRenderComponent
 {
 public:
+
+	
 
 	ChunkRenderComponent(Chunk* chunkOwner);
 
@@ -24,7 +31,8 @@ public:
 	void RecreateMesh();
 
 	/* See RecreateMesh() */
-	static void MultithreadRecreateMeshes(const ChunkRenderer* chunkRenderer, const darray<Chunk*>& chunks);
+	static void MultithreadRecreateMeshes(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool);
+
 
 	Chunk* GetChunk() const { return chunk; }
 
@@ -35,6 +43,15 @@ public:
 	PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* GetVbos() const { return vbos; }
 
 	PersistentMappedTripleBuffer<IndexBufferObject, uint32>* GetIbos() const { return ibos; }
+
+	BuriedChunkBlocks GetBuriedBlocksBitmask() const { return buriedBitmask; }
+
+
+
+	// Test for bitmasking
+	void CalculateBuriedBitmask();
+
+	void RecreateMeshUsingBuriedBitmaskAndAdjacentTest();
 
 private:
 
@@ -53,5 +70,8 @@ private:
 	PersistentMappedTripleBuffer<IndexBufferObject, uint32>* ibos;
 
 	bool emptyMesh;
+
+	// Test for bitmasking
+	BuriedChunkBlocks buriedBitmask;
 
 };

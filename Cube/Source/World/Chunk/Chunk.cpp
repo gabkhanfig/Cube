@@ -32,10 +32,7 @@ void Chunk::Tick(float deltaTime)
 Block* Chunk::GetBlock(BlockPosition position) const
 {
 	const int blockIndex = position.index;
-	if (blockIndex > CHUNK_SIZE) {
-		std::cout << blockIndex << std::endl;
-	}
-	gk_assertm(blockIndex < CHUNK_SIZE, "block index must be within CHUNK_SIZE");
+	gk_assertm(blockIndex < CHUNK_SIZE, "block index must be within CHUNK_SIZE\nblock index:" << blockIndex << "\nCHUNK_SIZE: " << 512);
 	return blocks[blockIndex];
 }
 

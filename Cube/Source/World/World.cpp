@@ -51,7 +51,7 @@ World::World()
 
 void World::BeginWorld()
 {
-  const darray<ChunkPosition> positionsInRenderDistance = ChunkPositionsWithinRenderDistance(ChunkPosition(0, 0, 0), GetSettings()->GetRenderDistance());
+  const darray<ChunkPosition> positionsInRenderDistance = ChunkPositionsWithinRenderDistance(ChunkPosition(0, -3, 0), GetSettings()->GetRenderDistance());
 
   darray<Chunk*> remeshedChunks;
   for (ChunkPosition position : positionsInRenderDistance) {
@@ -61,7 +61,8 @@ void World::BeginWorld()
     remeshedChunks.Add(chunk);
   }
 
-  ChunkRenderComponent::MultithreadRecreateMeshes(chunkRenderer, remeshedChunks);
+  //ChunkRenderComponent::MultithreadBitmaskRecreateMeshesTest(remeshedChunks, GetGameInstance()->GetThreadPool());
+  ChunkRenderComponent::MultithreadRecreateMeshes(remeshedChunks, GetGameInstance()->GetThreadPool());
   chunkRenderer->SetRemeshedChunks(remeshedChunks);
 }
 
@@ -78,10 +79,10 @@ void World::Tick(float deltaTime)
     engine->WaitForRenderThread(timeoutMS);
   }
 
-  if (player->GetChunkPosition() != oldPlayerChunkPos) {
-    DeleteDistantChunksAndLoadNearby(GetSettings()->GetRenderDistance());
-    cubeLog("player moved across chunk border");
-  }
+  //if (player->GetChunkPosition() != oldPlayerChunkPos) {
+  //  DeleteDistantChunksAndLoadNearby(GetSettings()->GetRenderDistance());
+  //  cubeLog("player moved across chunk border... player position: " + String::From(player->GetChunkPosition()));
+  //}
 
   RenderLoop();
 }
@@ -244,7 +245,7 @@ void World::RenderLoop()
   }
   // 5. Remesh each chunk, passing in the mapped ChunkRenderMeshData structure to each chunk render component.
   if (remeshedChunks.Size() > 0) {
-    ChunkRenderComponent::MultithreadRecreateMeshes(chunkRenderer, remeshedChunks);
+    ChunkRenderComponent::MultithreadRecreateMeshes(remeshedChunks, GetGameInstance()->GetThreadPool());
     chunkRenderer->SetRemeshedChunks(remeshedChunks);
   }
 
