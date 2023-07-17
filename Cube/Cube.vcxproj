@@ -217,6 +217,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\World\Chunk\Chunk.cpp" />
     <ClCompile Include="Source\World\Chunk\ChunkDataTypes.cpp" />
     <ClCompile Include="Source\World\Chunk\ChunkRenderComponent.cpp" />
+    <ClCompile Include="Source\World\Chunk\MappedAdjacentChunks.cpp" />
     <ClCompile Include="Source\World\Raycast.cpp" />
     <ClCompile Include="Source\World\Render\ChunkRenderer.cpp" />
     <ClCompile Include="Source\World\Terrain\TerrainGenerator.cpp" />
@@ -294,6 +295,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\World\Chunk\ChunkRenderComponent.h" />
     <ClInclude Include="Source\World\Chunk\ChunkData.h" />
     <ClInclude Include="Source\World\Chunk\ChunkDataTypes.h" />
+    <ClInclude Include="Source\World\Chunk\MappedAdjacentChunks.h" />
     <ClInclude Include="Source\World\Raycast.h" />
     <ClInclude Include="Source\World\Render\ChunkRenderer.h" />
     <ClInclude Include="Source\World\Terrain\TerrainGenerator.h" />
