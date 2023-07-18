@@ -404,6 +404,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Testing\UnitTests\GoogleTest\gtest_main.cc" />
     <ClCompile Include="Testing\UnitTests\World\Chunk\BuriedChunkBlocksTests.cpp" />
     <ClCompile Include="Testing\UnitTests\World\WorldTransform\BlockFacingTests.cpp" />
+    <ClCompile Include="Testing\UnitTests\World\WorldTransform\BlockPositionTests.cpp" />
     <ClCompile Include="Testing\UnitTests\World\WorldTransform\ChunkPositionTests.cpp" />
   </ItemGroup>
   <ItemGroup>
