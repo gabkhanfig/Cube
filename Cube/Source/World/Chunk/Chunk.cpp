@@ -64,7 +64,7 @@ void Chunk::FillChunkWithBlock(GlobalString blockName)
 
 void Chunk::GenerateTerrain(TerrainGenerator* terrainGenerator)
 {
-	const WorldPosition initialPos = WorldPosition::FromChunkAndBlock(position, BlockPosition());
+	const WorldPosition initialPos = WorldPosition(position, BlockPosition());
 	int index = 0;
 	for (int y = 0; y < CHUNK_LENGTH; y++) {
 		for (int z = 0; z < CHUNK_LENGTH; z++) {

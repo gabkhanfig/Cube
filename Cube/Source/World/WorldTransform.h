@@ -157,14 +157,9 @@ struct WorldPosition
 		: x(static_cast<int>(pos.x)), y(static_cast<int>(pos.y)), z(static_cast<int>(pos.z))
 	{}
 
-	static WorldPosition FromChunkAndBlock(ChunkPosition chunk, BlockPosition block) {
-		WorldPosition wp{
-			chunk.x * CHUNK_LENGTH + block.X(),
-			chunk.y * CHUNK_LENGTH + block.Y(),
-			chunk.z * CHUNK_LENGTH + block.Z()
-		};
-		return wp;
-	}
+	WorldPosition(ChunkPosition chunk, BlockPosition block) 
+		: x(chunk.x* CHUNK_LENGTH + block.X()), y(chunk.y* CHUNK_LENGTH + block.Y()), z(chunk.z* CHUNK_LENGTH + block.Z())
+	{}
 
 	ChunkPosition ToChunkPosition() const {
 		ChunkPosition pos;
