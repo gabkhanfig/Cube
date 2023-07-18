@@ -20,16 +20,32 @@ public:
 
 	uint8 facing;
 
-	constexpr BlockFacing(uint8 _facing = uint8(BlockFacing::Direction::Dir_Down))
+	BlockFacing(uint8 _facing = uint8(BlockFacing::Direction::Dir_Down))
 		: facing(_facing)
 	{}
 
-	constexpr BlockFacing(BlockFacing::Direction direction)
+	BlockFacing(BlockFacing::Direction direction)
 		: facing(direction)
 	{}
 
+	BlockFacing(const BlockFacing& other) 
+		: facing(other.facing)
+	{}
+
+	void operator = (const uint8 bitmask) {
+		facing = bitmask;
+	}
+
+	void operator = (const BlockFacing other) {
+		facing = other.facing;
+	}
+
+	bool IsFacing(uint8 direction) const {
+		return facing & direction;
+	}
+
 	/* Get the opposite direction of this facing. */
-	constexpr BlockFacing Opposite() const {
+	BlockFacing Opposite() const {
 		const uint8 allDirectionBits = 0b00111111;
 		uint8 oppositeBits = 0;
 		if (facing & Dir_Down) oppositeBits |= Dir_Up;
@@ -40,7 +56,6 @@ public:
 		if (facing & Dir_West) oppositeBits |= Dir_East;
 		return BlockFacing(oppositeBits);
 	}
-
 };
 
 struct ChunkPosition
