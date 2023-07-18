@@ -64,19 +64,39 @@ struct ChunkPosition
 	int y;
 	int z;
 
-	constexpr ChunkPosition(int _x = 0, int _y = 0, int _z = 0)
+	ChunkPosition(int _x = 0, int _y = 0, int _z = 0)
 		: x(_x), y(_y), z(_z)
 	{}
 
-	forceinline constexpr bool operator == (ChunkPosition other) const	{
+	ChunkPosition(const ChunkPosition& other) 
+		: x(other.x), y(other.y), z(other.z)
+	{}
+
+	void operator = (const ChunkPosition& other) {
+		x = other.x;
+		y = other.y;
+		z = other.z;
+	}
+
+	bool operator == (const ChunkPosition& other) const	{
 		return x == other.x && y == other.y && z == other.z;
 	}
 
 };
 
+/*  
+x has a factor of 1
+z has a factor of CHUNK_LENGTH
+y has a factor of CHUNK_LENGTH ^ 2
+*/
 struct BlockPosition
 {
 	int index;
+
+	BlockPosition(int _index = 0) {
+		gk_assertm(_index >= 0 && _index < CHUNK_SIZE, "BlockPosition index must be between 0 and CHUNK_SIZE\nindex: " << _index);
+		index = _index;
+	}
 
 	BlockPosition(int x, int y, int z)
 	{
@@ -86,8 +106,16 @@ struct BlockPosition
 		index = x + (z * CHUNK_LENGTH) + (y * CHUNK_LENGTH * CHUNK_LENGTH);
 	}
 
-	BlockPosition(int _index = 0) {
-		//gk_assertm(_index >= 0 && _index < CHUNK_SIZE, "BlockPosition index mumst be between 0 and CHUNK_SIZE");
+	BlockPosition(const BlockPosition& other) 
+		: index(other.index)
+	{}
+
+	void operator = (const BlockPosition other) {
+		index = other.index;
+	}
+
+	void operator = (const int _index) {
+		gk_assertm(_index >= 0 && _index < CHUNK_SIZE, "BlockPosition index must be between 0 and CHUNK_SIZE\nindex: " << _index);
 		index = _index;
 	}
 
