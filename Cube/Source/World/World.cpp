@@ -98,12 +98,9 @@ Chunk* World::GetChunk(ChunkPosition position) const
 
 Block* World::GetBlock(WorldPosition position) const
 {
-  ChunkPosition cpos;
-  BlockPosition bpos;
-  position.ToChunkAndBlock(&cpos, &bpos);
-  const Chunk* chunk = GetChunk(cpos);
+  const Chunk* chunk = GetChunk(position.ToChunkPosition());
   if (chunk == nullptr) return nullptr;
-  return chunk->GetBlock(bpos);
+  return chunk->GetBlock(position.ToBlockPosition());
 }
 
 bool World::SetBlockAt(WorldPosition position, Block* block)

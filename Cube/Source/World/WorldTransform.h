@@ -166,18 +166,6 @@ struct WorldPosition
 		return wp;
 	}
 
-	void ToChunkAndBlock(ChunkPosition* outChunk, BlockPosition* outBlock) const {
-		const ChunkPosition cpos = ToChunkPosition();
-		if (outChunk) *outChunk = cpos;
-		if (outBlock) {
-			*outBlock = BlockPosition(
-			x - (cpos.x * CHUNK_LENGTH),
-			y - (cpos.y * CHUNK_LENGTH),
-			z - (cpos.z * CHUNK_LENGTH));
-		}
-		
-	}
-
 	ChunkPosition ToChunkPosition() const {
 		ChunkPosition pos;
 		pos.x = static_cast<int>(floor(double(x) / CHUNK_LENGTH));
