@@ -30,6 +30,8 @@
 //
 // The Google C++ Testing and Mocking Framework (Google Test)
 
+#if WITH_TESTS
+
 #include "gtest/gtest-test-part.h"
 
 #include "gtest/internal/gtest-port.h"
@@ -103,3 +105,5 @@ void HasNewFatalFailureHelper::ReportTestPartResult(
 }  // namespace internal
 
 }  // namespace testing
+
+#endif

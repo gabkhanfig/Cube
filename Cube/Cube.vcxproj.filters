@@ -195,6 +195,39 @@
     <ClCompile Include="Source\World\Chunk\MappedAdjacentChunks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\gtest.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\gtest_main.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\gtest-all.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\gtest-assertion-result.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\gtest-death-test.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\gtest-filepath.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\gtest-matchers.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\gtest-port.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\gtest-printers.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\gtest-test-part.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Testing\GoogleTest\gtest-typed-test.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.vert" />
@@ -445,7 +478,7 @@
     <ClInclude Include="Source\World\Chunk\MappedAdjacentChunks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Testing\RunTests.h">
+    <ClInclude Include="Testing\GoogleTest\gtest-internal-inl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

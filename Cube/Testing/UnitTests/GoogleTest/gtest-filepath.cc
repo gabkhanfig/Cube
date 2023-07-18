@@ -27,6 +27,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#if WITH_TESTS
+
 #include "gtest/internal/gtest-filepath.h"
 
 #include <stdlib.h>
@@ -408,3 +410,5 @@ void FilePath::Normalize() {
 }  // namespace testing
 
 #endif  // GTEST_HAS_FILE_SYSTEM
+
+#endif

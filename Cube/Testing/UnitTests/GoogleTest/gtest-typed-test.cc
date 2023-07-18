@@ -27,6 +27,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#if WITH_TESTS
+
 #include "gtest/gtest-typed-test.h"
 
 #include "gtest/gtest.h"
@@ -102,3 +104,5 @@ const char* TypedTestSuitePState::VerifyRegisteredTestNames(
 
 }  // namespace internal
 }  // namespace testing
+
+#endif

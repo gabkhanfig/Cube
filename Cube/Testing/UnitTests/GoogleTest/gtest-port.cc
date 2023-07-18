@@ -27,6 +27,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#if WITH_TESTS
+
 #include "gtest/internal/gtest-port.h"
 
 #include <limits.h>
@@ -1392,3 +1394,5 @@ const char* StringFromGTestEnv(const char* flag, const char* default_value) {
 
 }  // namespace internal
 }  // namespace testing
+
+#endif

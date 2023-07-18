@@ -32,6 +32,8 @@
 // This file implements just enough of the matcher interface to allow
 // EXPECT_DEATH and friends to accept a matcher argument.
 
+#if WITH_TESTS
+
 #include "gtest/gtest-matchers.h"
 
 #include <string>
@@ -96,3 +98,5 @@ Matcher<internal::StringView>::Matcher(internal::StringView s) {
 #endif  // GTEST_INTERNAL_HAS_STRING_VIEW
 
 }  // namespace testing
+
+#endif

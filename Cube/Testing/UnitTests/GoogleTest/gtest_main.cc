@@ -1,4 +1,4 @@
-// Copyright 2005, Google Inc.
+// Copyright 2006, Google Inc.
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -27,51 +27,43 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// The Google C++ Testing and Mocking Framework (Google Test)
-//
-// This file defines the AssertionResult type.
+#if WITH_TESTS
 
-#include "gtest/gtest-assertion-result.h"
+#include <cstdio>
 
-#include <string>
-#include <utility>
+#include "gtest/gtest.h"
 
-#include "gtest/gtest-message.h"
+#if GTEST_OS_ESP8266 || GTEST_OS_ESP32
+// Arduino-like platforms: program entry points are setup/loop instead of main.
 
-namespace testing {
+#if GTEST_OS_ESP8266
+extern "C" {
+#endif
 
-// AssertionResult constructors.
-// Used in EXPECT_TRUE/FALSE(assertion_result).
-AssertionResult::AssertionResult(const AssertionResult& other)
-    : success_(other.success_),
-      message_(other.message_.get() != nullptr
-                   ? new ::std::string(*other.message_)
-                   : static_cast< ::std::string*>(nullptr)) {}
+void setup() { testing::InitGoogleTest(); }
 
-// Swaps two AssertionResults.
-void AssertionResult::swap(AssertionResult& other) {
-  using std::swap;
-  swap(success_, other.success_);
-  swap(message_, other.message_);
+void loop() { RUN_ALL_TESTS(); }
+
+#if GTEST_OS_ESP8266
 }
+#endif
 
-// Returns the assertion's negation. Used with EXPECT/ASSERT_FALSE.
-AssertionResult AssertionResult::operator!() const {
-  AssertionResult negation(!success_);
-  if (message_.get() != nullptr) negation << *message_;
-  return negation;
+#elif GTEST_OS_QURT
+// QuRT: program entry point is main, but argc/argv are unusable.
+
+GTEST_API_ int main() {
+  printf("Running main() from %s\n", __FILE__);
+  testing::InitGoogleTest();
+  return RUN_ALL_TESTS();
 }
+#else
+// Normal platforms: program entry point is main, argc/argv are initialized.
 
-// Makes a successful assertion result.
-AssertionResult AssertionSuccess() { return AssertionResult(true); }
+//GTEST_API_ int main(int argc, char **argv) {
+//  printf("Running main() from %s\n", __FILE__);
+//  testing::InitGoogleTest(&argc, argv);
+//  return RUN_ALL_TESTS();
+//}
+#endif
 
-// Makes a failed assertion result.
-AssertionResult AssertionFailure() { return AssertionResult(false); }
-
-// Makes a failed assertion result with the given failure message.
-// Deprecated; use AssertionFailure() << message.
-AssertionResult AssertionFailure(const Message& message) {
-  return AssertionFailure() << message;
-}
-
-}  // namespace testing
+#endif

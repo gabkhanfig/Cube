@@ -30,6 +30,8 @@
 //
 // This file implements death tests.
 
+#if WITH_TESTS
+
 #include "gtest/gtest-death-test.h"
 
 #include <functional>
@@ -1618,3 +1620,5 @@ InternalRunDeathTestFlag* ParseInternalRunDeathTestFlag() {
 #endif  // GTEST_HAS_DEATH_TEST
 
 }  // namespace testing
+
+#endif

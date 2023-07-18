@@ -30,6 +30,8 @@
 //
 // The Google C++ Testing and Mocking Framework (Google Test)
 
+#if WITH_TESTS
+
 #include "gtest/gtest.h"
 
 #include <ctype.h>
@@ -6842,3 +6844,5 @@ ScopedTrace::~ScopedTrace() GTEST_LOCK_EXCLUDED_(&UnitTest::mutex_) {
 }
 
 }  // namespace testing
+
+#endif

@@ -40,6 +40,8 @@
 // or void PrintTo(const Foo&, ::std::ostream*) in the namespace that
 // defines Foo.
 
+#if WITH_TESTS
+
 #include "gtest/gtest-printers.h"
 
 #include <stdio.h>
@@ -551,3 +553,5 @@ void PrintWideStringTo(const ::std::wstring& s, ostream* os) {
 }  // namespace internal
 
 }  // namespace testing
+
+#endif
