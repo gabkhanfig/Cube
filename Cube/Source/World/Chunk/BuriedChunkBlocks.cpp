@@ -41,7 +41,7 @@ void BuriedChunkBlocks::Reset()
 
 bool BuriedChunkBlocks::AreAllBlocksBuried() const
 {
-	const uint64 allBitsSet[4] = { ~0, ~0, ~0, ~0 };
+	const uint64 allBitsSet[4] = { ~0ULL, ~0ULL, ~0ULL, ~0ULL };
 	const __m256i setBitmask = _mm256_loadu_epi64(allBitsSet);
 	return
 		_mm256_cmpeq_epi64_mask(_bitmask[0], setBitmask) == 15
