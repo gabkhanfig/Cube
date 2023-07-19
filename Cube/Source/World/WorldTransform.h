@@ -149,17 +149,35 @@ struct WorldPosition
 	int y;
 	int z;
 
-	WorldPosition(int _x = 0, int _y = 0, int _z = 0)
+	WorldPosition()
+		: x(0), y(0), z(0)
+	{}
+
+	WorldPosition(int _x, int _y, int _z)
 		: x(_x), y(_y), z(_z)
+	{}
+
+	WorldPosition(const WorldPosition& other)
+		: x(other.x), y(other.y), z(other.z)
 	{}
 
 	WorldPosition(glm::dvec3 pos)
 		: x(static_cast<int>(pos.x)), y(static_cast<int>(pos.y)), z(static_cast<int>(pos.z))
 	{}
 
-	WorldPosition(ChunkPosition chunk, BlockPosition block) 
+	WorldPosition(const ChunkPosition& chunk, const BlockPosition block) 
 		: x(chunk.x* CHUNK_LENGTH + block.X()), y(chunk.y* CHUNK_LENGTH + block.Y()), z(chunk.z* CHUNK_LENGTH + block.Z())
 	{}
+
+	void operator = (const WorldPosition& other) {
+		x = other.x;
+		y = other.y;
+		z = other.z;
+	}
+
+	forceinline bool operator == (const WorldPosition& other) const {
+		return x == other.x && y == other.y && z == other.z;
+	}
 
 	ChunkPosition ToChunkPosition() const {
 		ChunkPosition pos;
@@ -175,10 +193,6 @@ struct WorldPosition
 			x - (cpos.x * CHUNK_LENGTH),
 			y - (cpos.y * CHUNK_LENGTH),
 			z - (cpos.z * CHUNK_LENGTH));
-	}
-
-	forceinline bool operator == (WorldPosition other) const {
-		return x == other.x && y == other.y && z == other.z;
 	}
 
 	WorldPosition Adjacent(BlockFacing adjacentDirection) const {
