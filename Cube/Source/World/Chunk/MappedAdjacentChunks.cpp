@@ -95,6 +95,7 @@ const Chunk* MappedAdjacentAndBuriedChunks::GetChunk(const ChunkPosition positio
 {
 	const int index = GetMappedAdjacentOffsetIndex(position, _startPos);
 	const Chunk* chunk = _chunks[index];
+	if (chunk == nullptr) return nullptr;
 	gk_assertm(chunk->GetPosition() == position,
 		"Chunk position does not match the position of the function argument\nchunk position: " << String::From(chunk->GetPosition()) << "\narg position: " << String::From(position));
 	return chunk;

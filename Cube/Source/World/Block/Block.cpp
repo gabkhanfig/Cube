@@ -390,7 +390,7 @@ bool Block::CanDrawFace(WorldPosition position, BlockFacing face) const
 bool Block::CanDrawFace(const MappedAdjacentAndBuriedChunks& adjacentChunks, WorldPosition position, BlockFacing face) const
 {
   const WorldPosition adjacentPosition = position.Adjacent(face);
-  const Chunk* chunkWithBlock = adjacentChunks.GetChunk(position.ToChunkPosition());
+  const Chunk* chunkWithBlock = adjacentChunks.GetChunk(adjacentPosition.ToChunkPosition());
   if (chunkWithBlock == nullptr) return DRAW_FACE_IF_NULL_ADJACENT;
 
   const Block* adjacentBlock = chunkWithBlock->GetBlock(adjacentPosition.ToBlockPosition());

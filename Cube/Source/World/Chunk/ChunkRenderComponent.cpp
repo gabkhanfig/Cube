@@ -54,7 +54,7 @@ void ChunkRenderComponent::MultithreadRecreateMeshes(const darray<Chunk*>& chunk
 {
 	gk_assertNotNull(threadPool);
 	gk_assert(threadPool->AllThreadsReady());
-#if true
+#if false
 	for (Chunk* chunk : chunks) {
 		auto func = std::bind(&ChunkRenderComponent::RecreateMesh, chunk->GetRenderComponent());
 		threadPool->AddFunctionToQueue(func);
@@ -69,9 +69,10 @@ void ChunkRenderComponent::MultithreadRecreateMeshes(const darray<Chunk*>& chunk
 	threadPool->ExecuteQueue();
 	for (Chunk* chunk : chunks) {
 		auto func = std::bind(&ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest, chunk->GetRenderComponent());
-		threadPool->AddFunctionToQueue(func);
+		func();
+		//threadPool->AddFunctionToQueue(func);
 	}
-	threadPool->ExecuteQueue();
+	//threadPool->ExecuteQueue();
 #endif
 }
 
