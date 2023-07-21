@@ -100,9 +100,9 @@ struct BlockPosition
 
 	BlockPosition(int x, int y, int z)
 	{
-		gk_assertm(x >= 0 && x < CHUNK_LENGTH, "BlockPosition x must be between 0 and CHUNK_LENGTH");
-		gk_assertm(y >= 0 && y < CHUNK_LENGTH, "BlockPosition y must be between 0 and CHUNK_LENGTH");
-		gk_assertm(z >= 0 && z < CHUNK_LENGTH, "BlockPosition z must be between 0 and CHUNK_LENGTH");
+		gk_assertm(x >= 0 && x < CHUNK_LENGTH, "BlockPosition x must be between 0 and CHUNK_LENGTH. x: " << x);
+		gk_assertm(y >= 0 && y < CHUNK_LENGTH, "BlockPosition y must be between 0 and CHUNK_LENGTH. y: " << y);
+		gk_assertm(z >= 0 && z < CHUNK_LENGTH, "BlockPosition z must be between 0 and CHUNK_LENGTH. z: " << z);
 		index = x + (z * CHUNK_LENGTH) + (y * CHUNK_LENGTH * CHUNK_LENGTH);
 	}
 
@@ -166,7 +166,7 @@ struct WorldPosition
 	{}
 
 	WorldPosition(const ChunkPosition& chunk, const BlockPosition block) 
-		: x(chunk.x* CHUNK_LENGTH + block.X()), y(chunk.y* CHUNK_LENGTH + block.Y()), z(chunk.z* CHUNK_LENGTH + block.Z())
+		: x(chunk.x * CHUNK_LENGTH + block.X()), y(chunk.y * CHUNK_LENGTH + block.Y()), z(chunk.z * CHUNK_LENGTH + block.Z())
 	{}
 
 	void operator = (const WorldPosition& other) {
@@ -188,11 +188,11 @@ struct WorldPosition
 	}
 
 	BlockPosition ToBlockPosition() const {
-		const ChunkPosition cpos = ToChunkPosition();
-		return BlockPosition(
-			x - (cpos.x * CHUNK_LENGTH),
-			y - (cpos.y * CHUNK_LENGTH),
-			z - (cpos.z * CHUNK_LENGTH));
+		return BlockPosition( // Positive modulo
+			(x % CHUNK_LENGTH + CHUNK_LENGTH) % CHUNK_LENGTH,
+			(y % CHUNK_LENGTH + CHUNK_LENGTH) % CHUNK_LENGTH,
+			(z % CHUNK_LENGTH + CHUNK_LENGTH) % CHUNK_LENGTH
+		);
 	}
 
 	WorldPosition Adjacent(BlockFacing adjacentDirection) const {
