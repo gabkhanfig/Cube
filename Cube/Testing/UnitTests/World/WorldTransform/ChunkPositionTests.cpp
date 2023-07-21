@@ -12,7 +12,7 @@ namespace UnitTests
 		EXPECT_EQ(pos.z, 0);
 	}
 
-	TEST(ChunkPositionTest, ConstructValues) {
+	TEST(ChunkPositionTest, ConstructXYZ) {
 		ChunkPosition pos{ 1, -5, 200 };
 		EXPECT_EQ(pos.x, 1);
 		EXPECT_EQ(pos.y, -5);
