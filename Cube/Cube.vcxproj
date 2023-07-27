@@ -406,6 +406,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Testing\UnitTests\World\WorldTransform\BlockFacingTests.cpp" />
     <ClCompile Include="Testing\UnitTests\World\WorldTransform\BlockPositionTests.cpp" />
     <ClCompile Include="Testing\UnitTests\World\WorldTransform\ChunkPositionTests.cpp" />
+    <ClCompile Include="Testing\UnitTests\World\WorldTransform\WorldPositionTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\cube-compile-time-file-converter.exe" />
