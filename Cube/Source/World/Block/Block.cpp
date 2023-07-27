@@ -48,12 +48,14 @@ bool Block::IsBuried(const MappedAdjacentChunks& adjacentChunks, WorldPosition b
     || southBlock == nullptr
     || westBlock == nullptr) return false;
 
-  return upBlock->GetBuriedTransparency() == EBuriedTransparency::transparent // If any adjacent blocks are transparent, its not buried
+  if(upBlock->GetBuriedTransparency() == EBuriedTransparency::transparent // If any adjacent blocks are transparent, its not buried
     || downBlock->GetBuriedTransparency() == EBuriedTransparency::transparent
     || northBlock->GetBuriedTransparency() == EBuriedTransparency::transparent
     || eastBlock->GetBuriedTransparency() == EBuriedTransparency::transparent
     || southBlock->GetBuriedTransparency() == EBuriedTransparency::transparent
-    || westBlock->GetBuriedTransparency() == EBuriedTransparency::transparent;
+    || westBlock->GetBuriedTransparency() == EBuriedTransparency::transparent) return false;
+
+  return true;
 }
 
 void Block::AddBlockMeshToChunkMeshBitmaskTest(ChunkMesh* chunkMesh, const Chunk* chunk, const WorldPosition position, const glm::vec3 vertexOffset, const MappedAdjacentAndBuriedChunks& adjacentChunks) const
