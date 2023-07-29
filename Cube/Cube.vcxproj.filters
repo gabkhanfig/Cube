@@ -207,6 +207,9 @@
     <ClCompile Include="Testing\UnitTests\World\WorldTransform\WorldPositionTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Testing\UnitTests\Geometry\PackedTypes\PackedNormalTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.vert" />
@@ -458,6 +461,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Testing\UnitTests\GoogleTest\gtest-internal-inl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Geometry\PackedTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

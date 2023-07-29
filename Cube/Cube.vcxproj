@@ -391,6 +391,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\World\Terrain\TerrainGenerator.cpp" />
     <ClCompile Include="Source\World\World.cpp" />
     <ClCompile Include="Source\World\WorldTransform.cpp" />
+    <ClCompile Include="Testing\UnitTests\Geometry\PackedTypes\PackedNormalTests.cpp" />
     <ClCompile Include="Testing\UnitTests\GoogleTest\gtest-all.cc" />
     <ClCompile Include="Testing\UnitTests\GoogleTest\gtest-assertion-result.cc" />
     <ClCompile Include="Testing\UnitTests\GoogleTest\gtest-death-test.cc" />
@@ -435,6 +436,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\Engine\Window\Window.h" />
     <ClInclude Include="Source\Graphics\Geometry\BlockGeometry.h" />
     <ClInclude Include="Source\Graphics\Geometry\ChunkMesh.h" />
+    <ClInclude Include="Source\Graphics\Geometry\PackedTypes.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\DrawIndirectBufferObject.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\IndexBufferObject.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleBuffer.h" />
