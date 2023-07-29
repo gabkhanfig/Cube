@@ -54,13 +54,13 @@ struct BlockVertex
   glm::vec3 position;
 
   /* Normalized (-1 -> 1) normal-vector of this vertex. */
-  PackedNormal normal;
+  BlockVertex::PackedNormal normal;
 
   /* Texture coordinates of this vertex. See BlockTextureAtlas::GetTextureCoord(). */
   glm::vec2 texCoord;
 
   /**/
-  PackedColor color;
+  BlockVertex::PackedColor color;
 
   BlockVertex() = default;
 
