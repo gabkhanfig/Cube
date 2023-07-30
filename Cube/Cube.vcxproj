@@ -391,6 +391,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\World\Terrain\TerrainGenerator.cpp" />
     <ClCompile Include="Source\World\World.cpp" />
     <ClCompile Include="Source\World\WorldTransform.cpp" />
+    <ClCompile Include="Testing\UnitTests\Geometry\PackedTypes\PackedBlockOffsetPositionTests.cpp" />
     <ClCompile Include="Testing\UnitTests\Geometry\PackedTypes\PackedNormalTests.cpp" />
     <ClCompile Include="Testing\UnitTests\GoogleTest\gtest-all.cc" />
     <ClCompile Include="Testing\UnitTests\GoogleTest\gtest-assertion-result.cc" />
