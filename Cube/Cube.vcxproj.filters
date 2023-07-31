@@ -224,6 +224,8 @@
     <None Include="Resources\Shaders\Chunk.frag" />
     <None Include="Resources\cube-compile-time-file-converter.exe" />
     <None Include="Testing\GoogleTest\gtest\internal\custom\README.md" />
+    <None Include="Resources\Shaders\Block.vert" />
+    <None Include="Resources\Shaders\Block.frag" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\Files.txt" />

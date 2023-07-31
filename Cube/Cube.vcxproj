@@ -415,6 +415,8 @@ GenerateFiles.bat</Command>
     <None Include="Resources\GenerateFiles.bat" />
     <None Include="Resources\Shaders\Basic.frag" />
     <None Include="Resources\Shaders\Basic.vert" />
+    <None Include="Resources\Shaders\Block.frag" />
+    <None Include="Resources\Shaders\Block.vert" />
     <None Include="Resources\Shaders\Chunk.frag" />
     <None Include="Resources\Shaders\Chunk.vert" />
     <None Include="Testing\GoogleTest\gtest\internal\custom\README.md" />
