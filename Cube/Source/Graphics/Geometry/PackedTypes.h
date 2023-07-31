@@ -12,7 +12,6 @@ The 9th bit represents whether it's to be shifted into the adjacent chunk with a
 The 10th bit represents whether it's to be shifted into the adjacent chunk with a positive offset.
 Can represent sub-block-pixels of 16 (16x16 textures / models).
 NOTE: only works if chunk length is 8. */
-
 struct PackedBlockOffsetPosition
 {
 	static_assert(CHUNK_LENGTH == 8);
