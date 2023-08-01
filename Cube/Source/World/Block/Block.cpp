@@ -59,6 +59,13 @@ bool Block::IsBuried(const MappedAdjacentChunks& adjacentChunks, WorldPosition b
   return true;
 }
 
+static void FillPackedPositionBuffer(PackedBlockOffsetPosition* buffer, const glm::vec3 positions[4], const glm::vec3 vertexOffset) {
+  buffer[0] = PackedBlockOffsetPosition::Pack(positions[0] + vertexOffset);
+  buffer[1] = PackedBlockOffsetPosition::Pack(positions[1] + vertexOffset);
+  buffer[2] = PackedBlockOffsetPosition::Pack(positions[2] + vertexOffset);
+  buffer[3] = PackedBlockOffsetPosition::Pack(positions[3] + vertexOffset);
+}
+
 void Block::AddBlockMeshToChunkMeshBitmaskTest(ChunkMesh* chunkMesh, const Chunk* chunk, const WorldPosition position, const glm::vec3 vertexOffset, const MappedAdjacentAndBuriedChunks& adjacentChunks) const
 {
   const EBlockTexture allSideTexture = GetAllSidedTexture();
@@ -68,14 +75,14 @@ void Block::AddBlockMeshToChunkMeshBitmaskTest(ChunkMesh* chunkMesh, const Chunk
     BlockTextureAtlas::GetTextureCoord(allSideTexture, {1, 1}),
     BlockTextureAtlas::GetTextureCoord(allSideTexture, {0, 1})
   };
-  const BlockVertex::PackedColor c000{ 255, 255, 255 };
-  const BlockVertex::PackedColor c100{ 255, 255, 255 };
-  const BlockVertex::PackedColor c010{ 255, 255, 255 };
-  const BlockVertex::PackedColor c110{ 255, 255, 255 };
-  const BlockVertex::PackedColor c001{ 255, 255, 255 };
-  const BlockVertex::PackedColor c101{ 255, 255, 255 };
-  const BlockVertex::PackedColor c011{ 255, 255, 255 };
-  const BlockVertex::PackedColor c111{ 255, 255, 255 };
+  const PackedColor c000{ 255, 255, 255 };
+  const PackedColor c100{ 255, 255, 255 };
+  const PackedColor c010{ 255, 255, 255 };
+  const PackedColor c110{ 255, 255, 255 };
+  const PackedColor c001{ 255, 255, 255 };
+  const PackedColor c101{ 255, 255, 255 };
+  const PackedColor c011{ 255, 255, 255 };
+  const PackedColor c111{ 255, 255, 255 };
 
   const glm::vec3 bottomPos[4] = {
    glm::vec3(0, 0, 0),
@@ -83,7 +90,7 @@ void Block::AddBlockMeshToChunkMeshBitmaskTest(ChunkMesh* chunkMesh, const Chunk
    glm::vec3(1, 0, 1),
    glm::vec3(1, 0, 0)
   };
-  const BlockVertex::PackedColor bottomCols[4] = {
+  const PackedColor bottomCols[4] = {
     c000, c001, c101, c100
   };
 
@@ -93,7 +100,7 @@ void Block::AddBlockMeshToChunkMeshBitmaskTest(ChunkMesh* chunkMesh, const Chunk
     glm::vec3(1, 1, 0),
     glm::vec3(0, 1, 0)
   };
-  const BlockVertex::PackedColor northCols[4] = {
+  const PackedColor northCols[4] = {
     c000, c100, c110, c010
   };
 
@@ -103,7 +110,7 @@ void Block::AddBlockMeshToChunkMeshBitmaskTest(ChunkMesh* chunkMesh, const Chunk
     glm::vec3(0, 1, 0),
     glm::vec3(0, 1, 1)
   };
-  const BlockVertex::PackedColor eastCols[4] = {
+  const PackedColor eastCols[4] = {
     c001, c000, c010, c011
   };
 
@@ -113,7 +120,7 @@ void Block::AddBlockMeshToChunkMeshBitmaskTest(ChunkMesh* chunkMesh, const Chunk
     glm::vec3(0, 1, 1),
     glm::vec3(1, 1, 1)
   };
-  const BlockVertex::PackedColor southCols[4] = {
+  const PackedColor southCols[4] = {
     c101, c001, c011, c111
   };
 
@@ -123,7 +130,7 @@ void Block::AddBlockMeshToChunkMeshBitmaskTest(ChunkMesh* chunkMesh, const Chunk
     glm::vec3(1, 1, 1),
     glm::vec3(1, 1, 0)
   };
-  const BlockVertex::PackedColor westCols[4] = {
+  const PackedColor westCols[4] = {
     c100, c101, c111, c110
   };
 
@@ -133,38 +140,41 @@ void Block::AddBlockMeshToChunkMeshBitmaskTest(ChunkMesh* chunkMesh, const Chunk
    glm::vec3(1, 1, 1),
    glm::vec3(0, 1, 1)
   };
-  const BlockVertex::PackedColor topCols[4] = {
+  const PackedColor topCols[4] = {
     c010, c110, c111, c011
   };
 
+
+  PackedBlockOffsetPosition packedPositionBuffer[4];
+
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_Down)) {
-    BlockQuad bottom = BlockQuad(bottomPos, texCoords, bottomCols);
-    bottom.Shift(vertexOffset);
+    FillPackedPositionBuffer(packedPositionBuffer, bottomPos, vertexOffset);
+    BlockQuad bottom = BlockQuad(packedPositionBuffer, texCoords, bottomCols);
     chunkMesh->AddQuad(bottom);
   }
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_North)) {
-    BlockQuad north = BlockQuad(northPos, texCoords, northCols);
-    north.Shift(vertexOffset);
+    FillPackedPositionBuffer(packedPositionBuffer, northPos, vertexOffset);
+    BlockQuad north = BlockQuad(packedPositionBuffer, texCoords, northCols);
     chunkMesh->AddQuad(north);
   }
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_East)) {
-    BlockQuad east = BlockQuad(eastPos, texCoords, eastCols);
-    east.Shift(vertexOffset);
+    FillPackedPositionBuffer(packedPositionBuffer, eastPos, vertexOffset);
+    BlockQuad east = BlockQuad(packedPositionBuffer, texCoords, eastCols);
     chunkMesh->AddQuad(east);
   }
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_South)) {
-    BlockQuad south = BlockQuad(southPos, texCoords, southCols);
-    south.Shift(vertexOffset);
+    FillPackedPositionBuffer(packedPositionBuffer, southPos, vertexOffset);
+    BlockQuad south = BlockQuad(packedPositionBuffer, texCoords, southCols);
     chunkMesh->AddQuad(south);
   }
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_West)) {
-    BlockQuad west = BlockQuad(westPos, texCoords, westCols);
-    west.Shift(vertexOffset);
+    FillPackedPositionBuffer(packedPositionBuffer, westPos, vertexOffset);
+    BlockQuad west = BlockQuad(packedPositionBuffer, texCoords, westCols);
     chunkMesh->AddQuad(west);
   }
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_Up)) {
-    BlockQuad top = BlockQuad(topPos, texCoords, topCols);
-    top.Shift(vertexOffset);
+    FillPackedPositionBuffer(packedPositionBuffer, topPos, vertexOffset);
+    BlockQuad top = BlockQuad(packedPositionBuffer, texCoords, topCols);
     chunkMesh->AddQuad(top);
   }
 }
@@ -261,7 +271,7 @@ void Block::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition pos
     c010, c110, c111, c011
   };*/
 
-  
+  /*
   const BlockVertex::PackedColor c000{ 255, 255, 255 };
   const BlockVertex::PackedColor c100{ 255, 255, 255 };
   const BlockVertex::PackedColor c010{ 255, 255, 255 };
@@ -360,7 +370,7 @@ void Block::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition pos
     BlockQuad top = BlockQuad(topPos, texCoords, topCols);
     top.Shift(vertexOffset);
     chunkMesh->AddQuad(top);
-  }
+  }*/
   
 }
 

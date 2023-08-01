@@ -58,7 +58,7 @@ private:
 
 private:
 
-	Shader* shader;
+	Shader* blockShader;
 
 	VertexArrayObject* vao;
 

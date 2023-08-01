@@ -83,3 +83,22 @@ struct PackedNormal
 		return glm::vec3(x, y, z);
 	}
 };
+
+struct PackedColor
+{
+	uint8 r; // When cast to 4 byte int, first byte (num & 255) is r
+	uint8 g; // When cast to 4 byte int, second byte (num >> 8 & 255) is g
+	uint8 b; // When cast to 4 byte int, third byte (num >> 16 & 255) is b
+	uint8 a; // When cast to 4 byte int, third byte (num >> 24 & 255) is a
+
+	PackedColor(uint8 _r = 255, uint8 _g = 255, uint8 _b = 255, uint8 _a = 255) : r(_r), g(_b), b(_b), a(_a) {}
+
+	glm::vec4 Unpack() {
+		return glm::vec4(
+			float(r) / 255.f,
+			float(g) / 255.f,
+			float(b) / 255.f,
+			float(a) / 255.f
+		);
+	}
+};

@@ -19,24 +19,25 @@
 ChunkRenderer::ChunkRenderer()
   : chunkOffsetUniform("u_chunkOffset"), cameraMvpUniform("u_cameraMVP"), boundDrawCallId(0), modifyDrawCallId(1)
 {
-  shader = new Shader(CompileTimeFiles::GetTextFile("Chunk.vert")->contents, CompileTimeFiles::GetTextFile("Chunk.frag")->contents);
+  //shader = new Shader(CompileTimeFiles::GetTextFile("Chunk.vert")->contents, CompileTimeFiles::GetTextFile("Chunk.frag")->contents);
+  blockShader = new Shader(CompileTimeFiles::GetTextFile("Block.vert")->contents, CompileTimeFiles::GetTextFile("Block.frag")->contents);
   vao = new VertexArrayObject();
   vao->SetFormatLayout(BlockQuad::GetQuadsVertexBufferLayout());
 }
 
 void ChunkRenderer::SetShaderChunkOffset(glm::vec3 chunkOffset)
 {
-  shader->SetUniform3f(chunkOffsetUniform, chunkOffset);
+  blockShader->SetUniform3f(chunkOffsetUniform, chunkOffset);
 }
 
 void ChunkRenderer::SetShaderCameraMVP(const glm::mat4& cameraMVP)
 {
-  shader->SetUniformMat4f(cameraMvpUniform, cameraMVP);
+  blockShader->SetUniformMat4f(cameraMvpUniform, cameraMVP);
 }
 
 void ChunkRenderer::Bind()
 {
-  shader->Bind();
+  blockShader->Bind();
   vao->Bind();
 }
 
@@ -124,7 +125,7 @@ void ChunkRenderer::PerformBoundDrawCalls()
   }
 
   const DrawCallData& boundDrawData = drawCalls[boundDrawCallId];
-  shader->Bind();
+  blockShader->Bind();
   SetShaderCameraMVP(boundDrawData.cameraMVP);
 
   for (ArrSizeT i = 0; i < frameChunkDrawCalls.Size(); i++) {

@@ -35,7 +35,7 @@ VertexBufferObject* BlockQuad::CreateQuadsVertexBufferObject(const BlockQuad* qu
 
 static VertexBufferLayout QuadVBL() {
   VertexBufferLayout layout;
-  layout.Push<float>(3);  // position
+  layout.Push<uint32>(1);  // position
   layout.Push<uint32>(1); // packed normal
   layout.Push<float>(2);  // texCoord
   layout.Push<uint32>(1); // packed color
