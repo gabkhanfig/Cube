@@ -37,7 +37,9 @@ public:
 	void Bind();
 
 	/* Unbind this shader (or whatever shader happens to be bound technically). */
-	void Unbind();
+	void Unbind(); 
+	
+	bool IsBound() const;
 
 	/* Set shader uniform of 1 float. */
 	void SetUniform1f(GlobalString uniform, float value);
@@ -65,5 +67,9 @@ public:
 
 	/* Set shader uniform of a 4N matrix of floats. */
 	void SetUniformMat4f(GlobalString uniform, const glm::mat4& value);
+
+private:
+
+	static uint32 boundId;
 
 };

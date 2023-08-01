@@ -2,6 +2,8 @@
 #include <glad/glad.h>
 #include <GkTypes/File/FileLoader.h>
 
+uint32 Shader::boundId = 0;
+
 static GLenum ShaderTypeToGLShader(Shader::Type shaderType) 
 {
 	switch (shaderType) {
@@ -100,12 +102,19 @@ Shader::~Shader()
 
 void Shader::Bind()
 {
+	if (IsBound()) return;
 	glUseProgram(shaderProgram);
+	boundId = shaderProgram;
 }
 
 void Shader::Unbind()
 {
 	glUseProgram(0);
+}
+
+bool Shader::IsBound() const
+{
+	return boundId == shaderProgram;
 }
 
 void Shader::SetUniform1f(GlobalString uniform, float value)
