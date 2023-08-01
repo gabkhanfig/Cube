@@ -10,6 +10,8 @@ void CompileTimeFiles::LoadAllFiles()
 {
 	LoadTextFile("Chunk.vert", generated_Chunk_vert);
 	LoadTextFile("Chunk.frag", generated_Chunk_frag);
+	LoadTextFile("Block.vert", generated_Block_vert);
+	LoadTextFile("Block.frag", generated_Block_frag);
 
 	LoadImageFile("InvalidTexture.png", generated_InvalidTexture_png, generated_InvalidTexture_png_width, generated_InvalidTexture_png_height, generated_InvalidTexture_png_total_bytes);
 	LoadImageFile("StoneBlock.png", generated_StoneBlock_png, generated_StoneBlock_png_width, generated_StoneBlock_png_height, generated_StoneBlock_png_total_bytes);
