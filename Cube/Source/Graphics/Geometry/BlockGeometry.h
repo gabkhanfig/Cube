@@ -65,13 +65,5 @@ struct BlockQuad
 
   static const glm::vec3 NormalFromQuadPoints(const glm::vec3 points[4]);
 
-  ///* Shifts the 4 vertices by a given amount. */
-  //forceinline void Shift(glm::vec3 shiftAmount) {
-  //  vertices[0].Shift(shiftAmount);
-  //  vertices[1].Shift(shiftAmount);
-  //  vertices[2].Shift(shiftAmount);
-  //  vertices[3].Shift(shiftAmount);
-  //}
-
 };
 static_assert(sizeof(BlockQuad) == sizeof(BlockVertex) * 4, "Block quad byte size must be equal to 4x BlockVertex");
