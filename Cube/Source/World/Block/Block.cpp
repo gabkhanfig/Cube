@@ -35,19 +35,32 @@ bool Block::IsBuried(const MappedAdjacentChunks& adjacentChunks, WorldPosition b
 {
   if (GetBuriedTransparency() == EBuriedTransparency::transparent) return false; // If the block itself is transparent, its not buried
 
-  const Block* upBlock = adjacentChunks.GetBlock(blockPosition.Adjacent(BlockFacing::Dir_Up));
-  const Block* downBlock = adjacentChunks.GetBlock(blockPosition.Adjacent(BlockFacing::Dir_Down));
-  const Block* northBlock = adjacentChunks.GetBlock(blockPosition.Adjacent(BlockFacing::Dir_North));
-  const Block* eastBlock = adjacentChunks.GetBlock(blockPosition.Adjacent(BlockFacing::Dir_East));
-  const Block* southBlock = adjacentChunks.GetBlock(blockPosition.Adjacent(BlockFacing::Dir_South));
-  const Block* westBlock = adjacentChunks.GetBlock(blockPosition.Adjacent(BlockFacing::Dir_West));
+  const WorldPosition adjacentUp = blockPosition.Adjacent(BlockFacing::Dir_Up);
+  const WorldPosition adjacentDown = blockPosition.Adjacent(BlockFacing::Dir_Down);
+  const WorldPosition adjacentNorth = blockPosition.Adjacent(BlockFacing::Dir_North);
+  const WorldPosition adjacentEast = blockPosition.Adjacent(BlockFacing::Dir_East);
+  const WorldPosition adjacentSouth = blockPosition.Adjacent(BlockFacing::Dir_South);
+  const WorldPosition adjacentWest = blockPosition.Adjacent(BlockFacing::Dir_West);
 
-  if (upBlock == nullptr
-    || downBlock == nullptr
-    || northBlock == nullptr
-    || eastBlock == nullptr
-    || southBlock == nullptr
-    || westBlock == nullptr) return false;
+  const Chunk* upChunk = adjacentChunks.GetChunk(adjacentUp.ToChunkPosition());
+  if (upChunk == nullptr) return false;
+  const Chunk* downChunk = adjacentChunks.GetChunk(adjacentDown.ToChunkPosition());
+  if (downChunk == nullptr) return false;
+  const Chunk* northChunk = adjacentChunks.GetChunk(adjacentNorth.ToChunkPosition());
+  if (northChunk == nullptr) return false;
+  const Chunk* eastChunk = adjacentChunks.GetChunk(adjacentEast.ToChunkPosition());
+  if (eastChunk == nullptr) return false;
+  const Chunk* southChunk = adjacentChunks.GetChunk(adjacentSouth.ToChunkPosition());
+  if (southChunk == nullptr) return false;
+  const Chunk* westChunk = adjacentChunks.GetChunk(adjacentWest.ToChunkPosition());
+  if (westChunk == nullptr) return false;
+
+  const Block* upBlock = upChunk->GetBlock(adjacentUp.ToBlockPosition());
+  const Block* downBlock = downChunk->GetBlock(adjacentDown.ToBlockPosition());
+  const Block* northBlock = northChunk->GetBlock(adjacentNorth.ToBlockPosition());
+  const Block* eastBlock = eastChunk->GetBlock(adjacentEast.ToBlockPosition());
+  const Block* southBlock = southChunk->GetBlock(adjacentSouth.ToBlockPosition());
+  const Block* westBlock = westChunk->GetBlock(adjacentWest.ToBlockPosition());
 
   if(upBlock->GetBuriedTransparency() == EBuriedTransparency::transparent // If any adjacent blocks are transparent, its not buried
     || downBlock->GetBuriedTransparency() == EBuriedTransparency::transparent
@@ -193,23 +206,14 @@ void Block::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition pos
     BlockTextureAtlas::GetTextureCoord(allSideTexture, {0, 1})
   };
 
-  //const glm::vec3 c000{ 0, 0, 0 };
-  //const glm::vec3 c100{ 1, 0, 0 };
-  //const glm::vec3 c010{ 0, 1, 0 };
-  //const glm::vec3 c110{ 1, 1, 0 };
-  //const glm::vec3 c001{ 0, 0, 1 };
-  //const glm::vec3 c101{ 1, 0, 1 };
-  //const glm::vec3 c011{ 0, 1, 1 };
-  //const glm::vec3 c111{ 1, 1, 1 };
-
-  /*const glm::vec3 c000{1, 1, 1};
-  const glm::vec3 c100{ 1, 1, 1 };
-  const glm::vec3 c010{ 1, 1, 1 };
-  const glm::vec3 c110{ 1, 1, 1 };
-  const glm::vec3 c001{ 1, 1, 1 };
-  const glm::vec3 c101{ 1, 1, 1 };
-  const glm::vec3 c011{ 1, 1, 1 };
-  const glm::vec3 c111{ 1, 1, 1 };
+  const PackedColor c000{ 255, 255, 255 };
+  const PackedColor c100{ 255, 255, 255 };
+  const PackedColor c010{ 255, 255, 255 };
+  const PackedColor c110{ 255, 255, 255 };
+  const PackedColor c001{ 255, 255, 255 };
+  const PackedColor c101{ 255, 255, 255 };
+  const PackedColor c011{ 255, 255, 255 };
+  const PackedColor c111{ 255, 255, 255 };
 
   const glm::vec3 bottomPos[4] = {
    glm::vec3(0, 0, 0),
@@ -217,7 +221,7 @@ void Block::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition pos
    glm::vec3(1, 0, 1),
    glm::vec3(1, 0, 0)
   };
-  const glm::vec3 bottomCols[4] = {
+  const PackedColor bottomCols[4] = {
     c000, c001, c101, c100
   };
 
@@ -227,7 +231,7 @@ void Block::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition pos
     glm::vec3(1, 1, 0),
     glm::vec3(0, 1, 0)
   };
-  const glm::vec3 northCols[4] = {
+  const PackedColor northCols[4] = {
     c000, c100, c110, c010
   };
 
@@ -237,7 +241,7 @@ void Block::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition pos
     glm::vec3(0, 1, 0),
     glm::vec3(0, 1, 1)
   };
-  const glm::vec3 eastCols[4] = {
+  const PackedColor eastCols[4] = {
     c001, c000, c010, c011
   };
 
@@ -247,7 +251,7 @@ void Block::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition pos
     glm::vec3(0, 1, 1),
     glm::vec3(1, 1, 1)
   };
-  const glm::vec3 southCols[4] = {
+  const PackedColor southCols[4] = {
     c101, c001, c011, c111
   };
 
@@ -257,7 +261,7 @@ void Block::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition pos
     glm::vec3(1, 1, 1),
     glm::vec3(1, 1, 0)
   };
-  const glm::vec3 westCols[4] = {
+  const PackedColor westCols[4] = {
     c100, c101, c111, c110
   };
 
@@ -267,110 +271,42 @@ void Block::CreateCubeMesh(ChunkMesh* chunkMesh, Chunk* chunk, WorldPosition pos
    glm::vec3(1, 1, 1),
    glm::vec3(0, 1, 1)
   };
-  const glm::vec3 topCols[4] = {
-    c010, c110, c111, c011
-  };*/
-
-  /*
-  const BlockVertex::PackedColor c000{ 255, 255, 255 };
-  const BlockVertex::PackedColor c100{ 255, 255, 255 };
-  const BlockVertex::PackedColor c010{ 255, 255, 255 };
-  const BlockVertex::PackedColor c110{ 255, 255, 255 };
-  const BlockVertex::PackedColor c001{ 255, 255, 255 };
-  const BlockVertex::PackedColor c101{ 255, 255, 255 };
-  const BlockVertex::PackedColor c011{ 255, 255, 255 };
-  const BlockVertex::PackedColor c111{ 255, 255, 255 };
-
-  const glm::vec3 bottomPos[4] = {
-   glm::vec3(0, 0, 0),
-   glm::vec3(0, 0, 1),
-   glm::vec3(1, 0, 1),
-   glm::vec3(1, 0, 0)
-  };
-  const BlockVertex::PackedColor bottomCols[4] = {
-    c000, c001, c101, c100
-  };
-
-  const glm::vec3 northPos[4] = {
-    glm::vec3(0, 0, 0),
-    glm::vec3(1, 0, 0),
-    glm::vec3(1, 1, 0),
-    glm::vec3(0, 1, 0)
-  };
-  const BlockVertex::PackedColor northCols[4] = {
-    c000, c100, c110, c010
-  };
-
-  const glm::vec3 eastPos[4] = {
-    glm::vec3(0, 0, 1),
-    glm::vec3(0, 0, 0),
-    glm::vec3(0, 1, 0),
-    glm::vec3(0, 1, 1)
-  };
-  const BlockVertex::PackedColor eastCols[4] = {
-    c001, c000, c010, c011
-  };
-
-  const glm::vec3 southPos[4] = {
-    glm::vec3(1, 0, 1),
-    glm::vec3(0, 0, 1),
-    glm::vec3(0, 1, 1),
-    glm::vec3(1, 1, 1)
-  };
-  const BlockVertex::PackedColor southCols[4] = {
-    c101, c001, c011, c111
-  };
-
-  const glm::vec3 westPos[4] = {
-    glm::vec3(1, 0, 0),
-    glm::vec3(1, 0, 1),
-    glm::vec3(1, 1, 1),
-    glm::vec3(1, 1, 0)
-  };
-  const BlockVertex::PackedColor westCols[4] = {
-    c100, c101, c111, c110
-  };
-
-  const glm::vec3 topPos[4] = {
-   glm::vec3(0, 1, 0),
-   glm::vec3(1, 1, 0),
-   glm::vec3(1, 1, 1),
-   glm::vec3(0, 1, 1)
-  };
-  const BlockVertex::PackedColor topCols[4] = {
+  const PackedColor topCols[4] = {
     c010, c110, c111, c011
   };
+
+  PackedBlockOffsetPosition packedPositionBuffer[4];
   
   if (CanDrawFace(position, BlockFacing::Dir_Down)) {
-    BlockQuad bottom = BlockQuad(bottomPos, texCoords, bottomCols);
-    bottom.Shift(vertexOffset);
+    FillPackedPositionBuffer(packedPositionBuffer, bottomPos, vertexOffset);
+    const BlockQuad bottom = BlockQuad(packedPositionBuffer, texCoords, bottomCols);
     chunkMesh->AddQuad(bottom);
   }
   if (CanDrawFace(position, BlockFacing::Dir_North)) {
-    BlockQuad north = BlockQuad(northPos, texCoords, northCols);
-    north.Shift(vertexOffset);
+    FillPackedPositionBuffer(packedPositionBuffer, northPos, vertexOffset);
+    const BlockQuad north = BlockQuad(packedPositionBuffer, texCoords, northCols);
     chunkMesh->AddQuad(north);
   }
   if (CanDrawFace(position, BlockFacing::Dir_East)) {
-    BlockQuad east = BlockQuad(eastPos, texCoords, eastCols);
-    east.Shift(vertexOffset);
+    FillPackedPositionBuffer(packedPositionBuffer, eastPos, vertexOffset);
+    const BlockQuad east = BlockQuad(packedPositionBuffer, texCoords, eastCols);
     chunkMesh->AddQuad(east);
   }
   if (CanDrawFace(position, BlockFacing::Dir_South)) {
-    BlockQuad south = BlockQuad(southPos, texCoords, southCols);
-    south.Shift(vertexOffset);
+    FillPackedPositionBuffer(packedPositionBuffer, southPos, vertexOffset);
+    const BlockQuad south = BlockQuad(packedPositionBuffer, texCoords, southCols);
     chunkMesh->AddQuad(south);
   }
   if (CanDrawFace(position, BlockFacing::Dir_West)) {
-    BlockQuad west = BlockQuad(westPos, texCoords, westCols);
-    west.Shift(vertexOffset);
+    FillPackedPositionBuffer(packedPositionBuffer, westPos, vertexOffset);
+    const BlockQuad west = BlockQuad(packedPositionBuffer, texCoords, westCols);
     chunkMesh->AddQuad(west);
   }
   if (CanDrawFace(position, BlockFacing::Dir_Up)) {
-    BlockQuad top = BlockQuad(topPos, texCoords, topCols);
-    top.Shift(vertexOffset);
+    FillPackedPositionBuffer(packedPositionBuffer, topPos, vertexOffset);
+    const BlockQuad top = BlockQuad(packedPositionBuffer, texCoords, topCols);
     chunkMesh->AddQuad(top);
-  }*/
+  }
   
 }
 
