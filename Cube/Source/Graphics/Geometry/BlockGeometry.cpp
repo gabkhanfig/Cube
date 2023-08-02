@@ -53,7 +53,7 @@ const glm::vec3 BlockQuad::NormalFromQuadPoints(const glm::vec3 points[4])
   const glm::vec3 AB = points[1] - points[0];
   const glm::vec3 BC = points[2] - points[1];
 
-#ifdef DEVELOPMENT
+#ifdef CUBE_DEVELOPMENT
 
   const glm::vec3 CD = points[3] - points[2];
   const glm::vec3 DA = points[0] - points[3];
