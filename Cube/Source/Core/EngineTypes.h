@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef CUBE_DEVELOPMENT
+#define GK_CHECK false
+#endif
+
 #include <GkTypes/GkTypesLib.h>
 #include <glm/glm.hpp>
 #include <unordered_map>

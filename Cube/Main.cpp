@@ -25,7 +25,7 @@ Settings* GetSettings() {
 
 int main(int argc, char** argv)
 {
-#if WITH_TESTS
+#if RUN_TESTS
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 #else
