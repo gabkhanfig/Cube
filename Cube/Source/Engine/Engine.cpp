@@ -48,7 +48,7 @@ void Engine::SwapGlfwBuffers()
 void Engine::WaitForRenderThread(int64 millisecondTimeout)
 {
 	auto startWait = std::chrono::high_resolution_clock::now();
-#ifdef DEVELOPMENT
+#ifdef CUBE_DEVELOPMENT
 	while (!renderThread->IsReady()) {
 		std::chrono::steady_clock::time_point now = std::chrono::high_resolution_clock::now();
 		auto duration = now - startWait;
@@ -68,7 +68,7 @@ Engine::Engine() :
 	threadPool(new gk::ThreadPool(gk::ThreadPool::SystemThreadCount() - 2))
 {
 	input = new UserInput();
-#ifdef DEVELOPMENT
+#ifdef CUBE_DEVELOPMENT
 	const char* windowTitle = "Cube [Development Build]";
 #else
 	const char* windowTitle = "Cube";

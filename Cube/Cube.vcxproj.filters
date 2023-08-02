@@ -351,9 +351,6 @@
     <ClInclude Include="Source\Core\EngineTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Development.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\World\Render\ChunkRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>

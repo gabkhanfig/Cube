@@ -51,7 +51,7 @@ BlockClass* BlockFactory::GetBlockClass(GlobalString blockName)
 Block* BlockFactory::NewAirBlock()
 {
 	static const GlobalString AirBlockName = "airBlock";
-#ifdef DEVELOPMENT
+#ifdef CUBE_DEVELOPMENT
 	auto found = blockClasses.find(AirBlockName);
 	gk_assertm(found != blockClasses.end(), "Air block must be mapped in the block factory.");
 	return found->second->NewBlock();
