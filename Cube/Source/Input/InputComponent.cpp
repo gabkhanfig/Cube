@@ -6,7 +6,7 @@
 InputComponent::InputComponent()
 {
 	//static const darray<GlobalString> cubeUsedInputs = InputMapping::GetMappedInputs();
-	//for (ArrSizeT i = 0; i < cubeUsedInputs.Size(); i++) {
+	//for (uint32 i = 0; i < cubeUsedInputs.Size(); i++) {
 	//	GlobalString str = cubeUsedInputs[i];
 	//	buttons.insert({ str, new InputButton(str) });
 	//}

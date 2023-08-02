@@ -7,7 +7,7 @@
 static std::unordered_map<GlobalString, InputButtonState> MakeButtonStates() {
 	std::unordered_map<GlobalString, InputButtonState> buttonStates;
 	const darray<GlobalString> mappedInputs = InputMapping::GetMappedInputs();
-	for (ArrSizeT i = 0; i < mappedInputs.Size(); i++) {
+	for (uint32 i = 0; i < mappedInputs.Size(); i++) {
 		buttonStates.insert({ mappedInputs[i], InputButtonState() });
 	}
 	return buttonStates;
@@ -31,7 +31,7 @@ void CubeInput::ButtonInputCallback(GlobalString button, EInputAction action, In
 		}
 	}
 	
-	for (ArrSizeT i = 0; i < activeInputComponents.Size(); i++) {
+	for (uint32 i = 0; i < activeInputComponents.Size(); i++) {
 		if (action == EInputAction::Press) {
 			activeInputComponents[i]->Press(button, mods);
 		}
@@ -46,7 +46,7 @@ void CubeInput::ButtonInputCallback(GlobalString button, EInputAction action, In
 
 void CubeInput::CursorPositionCallback(double xpos, double ypos)
 {
-	for (ArrSizeT i = 0; i < activeInputComponents.Size(); i++) {
+	for (uint32 i = 0; i < activeInputComponents.Size(); i++) {
 		activeInputComponents[i]->Cursor(xpos, ypos);
 	}
 	previousCursorPos = glm::dvec2(xpos, ypos);
@@ -60,7 +60,7 @@ void CubeInput::SetupGameCallbacks()
 
 void CubeInput::Tick(float deltaTime)
 {
-	for (ArrSizeT i = 0; i < activeInputComponents.Size(); i++) {
+	for (uint32 i = 0; i < activeInputComponents.Size(); i++) {
 		activeInputComponents[i]->Tick(deltaTime);
 	}
 	for (auto& pair : buttonStates) {

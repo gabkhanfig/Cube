@@ -39,7 +39,7 @@ void PlayerInputComponent::Press(GlobalString button, InputMods mods)
 {
 	auto found = pressCallbacks.find(button);
 	if (found != pressCallbacks.end()) {
-		for (ArrSizeT i = 0; i < found->second->Size(); i++) {
+		for (uint32 i = 0; i < found->second->Size(); i++) {
 			PlayerInputCallback callback = found->second->At(i);
 			(player->*callback)(mods);
 		}
@@ -50,7 +50,7 @@ void PlayerInputComponent::Release(GlobalString button, InputMods mods)
 {
 	auto found = releaseCallbacks.find(button);
 	if (found != releaseCallbacks.end()) {
-		for (ArrSizeT i = 0; i < found->second->Size(); i++) {
+		for (uint32 i = 0; i < found->second->Size(); i++) {
 			PlayerInputCallback callback = found->second->At(i);
 			(player->*callback)(mods);
 		}
