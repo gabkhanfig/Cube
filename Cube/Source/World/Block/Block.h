@@ -84,7 +84,7 @@ public:
 	BlockFacing GetFacing() const { return facing; }
 	void SetFacing(BlockFacing newFacing);
 
-	bool IsBuried(const MappedAdjacentChunks& adjacentChunks, WorldPosition blockPosition) const;
+	bool IsBuried(const Chunk* owningChunk, const MappedAdjacentChunks& adjacentChunks, WorldPosition worldPosition, BlockPosition blockPos) const;
 
 #pragma region IObject_Implementation
 

@@ -31,16 +31,39 @@ void Block::SetFacing(BlockFacing newFacing)
   facing = newFacing.facing;
 }
 
-bool Block::IsBuried(const MappedAdjacentChunks& adjacentChunks, WorldPosition blockPosition) const
+bool Block::IsBuried(const Chunk* owningChunk, const MappedAdjacentChunks& adjacentChunks, WorldPosition worldPosition, BlockPosition blockPos) const
 {
   if (!isSolid) return false; // If the block itself is not solid transparent, its not buried
 
-  const WorldPosition adjacentUp = blockPosition.Adjacent(BlockFacing::Dir_Up);
-  const WorldPosition adjacentDown = blockPosition.Adjacent(BlockFacing::Dir_Down);
-  const WorldPosition adjacentNorth = blockPosition.Adjacent(BlockFacing::Dir_North);
-  const WorldPosition adjacentEast = blockPosition.Adjacent(BlockFacing::Dir_East);
-  const WorldPosition adjacentSouth = blockPosition.Adjacent(BlockFacing::Dir_South);
-  const WorldPosition adjacentWest = blockPosition.Adjacent(BlockFacing::Dir_West);
+  if (!blockPos.IsOnChunkEdge()) { // If not on edge, just check within chunk.
+    const BlockPosition blockAdjacentUp = BlockPosition(blockPos.X(), blockPos.Y() + 1, blockPos.Z());
+    const BlockPosition blockAdjacentDown = BlockPosition(blockPos.X(), blockPos.Y() - 1, blockPos.Z());
+    const BlockPosition blockAdjacentNorth = BlockPosition(blockPos.X(), blockPos.Y(), blockPos.Z() - 1);
+    const BlockPosition blockAdjacentEast = BlockPosition(blockPos.X() - 1, blockPos.Y(), blockPos.Z());
+    const BlockPosition blockAdjacentSouth = BlockPosition(blockPos.X(), blockPos.Y(), blockPos.Z() + 1);
+    const BlockPosition blockAdjacentWest = BlockPosition(blockPos.X() + 1, blockPos.Y(), blockPos.Z());
+    if (!owningChunk->GetBlock(blockAdjacentUp)->isSolid
+      || !owningChunk->GetBlock(blockAdjacentDown)->isSolid
+      || !owningChunk->GetBlock(blockAdjacentNorth)->isSolid
+      || !owningChunk->GetBlock(blockAdjacentEast)->isSolid
+      || !owningChunk->GetBlock(blockAdjacentSouth)->isSolid
+      || !owningChunk->GetBlock(blockAdjacentWest)->isSolid
+      ) return false;
+    return true;
+  }
+
+  //const WorldPosition adjacentUp = blockPosition.Adjacent(BlockFacing::Dir_Up);
+  //const WorldPosition adjacentDown = blockPosition.Adjacent(BlockFacing::Dir_Down);
+  //const WorldPosition adjacentNorth = blockPosition.Adjacent(BlockFacing::Dir_North);
+  //const WorldPosition adjacentEast = blockPosition.Adjacent(BlockFacing::Dir_East);
+  //const WorldPosition adjacentSouth = blockPosition.Adjacent(BlockFacing::Dir_South);
+  //const WorldPosition adjacentWest = blockPosition.Adjacent(BlockFacing::Dir_West);
+  const WorldPosition adjacentUp = WorldPosition(worldPosition.x, worldPosition.y + 1, worldPosition.z);
+  const WorldPosition adjacentDown = WorldPosition(worldPosition.x, worldPosition.y - 1, worldPosition.z);
+  const WorldPosition adjacentNorth = WorldPosition(worldPosition.x, worldPosition.y, worldPosition.z - 1);
+  const WorldPosition adjacentEast = WorldPosition(worldPosition.x - 1, worldPosition.y, worldPosition.z);
+  const WorldPosition adjacentSouth = WorldPosition(worldPosition.x, worldPosition.y, worldPosition.z + 1);
+  const WorldPosition adjacentWest = WorldPosition(worldPosition.x + 1, worldPosition.y, worldPosition.z);
 
   const Chunk* upChunk = adjacentChunks.GetChunk(adjacentUp.ToChunkPosition());
   if (upChunk == nullptr) return false;

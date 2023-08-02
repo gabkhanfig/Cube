@@ -44,14 +44,15 @@ void ChunkRenderComponent::RecreateMesh()
 		block->AddBlockMeshToChunkMesh(mesh, chunk, worldPos, vertexOffset);
 	}
 	emptyMesh = mesh->GetQuadCount() == 0;
-	if (emptyMesh) {
-		cubeLog("Empty chunk mesh for chunk " + String::From(chunk->GetPosition()));
-	}
+	//if (emptyMesh) {
+	//	cubeLog("Empty chunk mesh for chunk " + String::From(chunk->GetPosition()));
+	//}
 	chunk->SetShouldBeRemeshed(false);
 }
 
 void ChunkRenderComponent::MultithreadRecreateMeshes(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool)
 {
+	//cubeLog("Remeshing " + String::FromUint(chunks.Size()) + " chunks");
 	gk_assertNotNull(threadPool);
 	gk_assert(threadPool->AllThreadsReady());
 #if false
@@ -67,12 +68,13 @@ void ChunkRenderComponent::MultithreadRecreateMeshes(const darray<Chunk*>& chunk
 		threadPool->AddFunctionToQueue(func);
 	}
 	threadPool->ExecuteQueue();
+
 	for (Chunk* chunk : chunks) {
 		auto func = std::bind(&ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest, chunk->GetRenderComponent());
-		func();
-		//threadPool->AddFunctionToQueue(func);
+		//func();
+		threadPool->AddFunctionToQueue(func);
 	}
-	//threadPool->ExecuteQueue();
+	threadPool->ExecuteQueue();
 #endif
 }
 
@@ -85,7 +87,8 @@ void ChunkRenderComponent::CalculateBuriedBitmask()
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		const BlockPosition blockPos = i;
 		const WorldPosition worldPos = WorldPosition(chunkPos, blockPos);
-		const bool isBlockBuried = adjacentChunks.GetBlock(worldPos)->IsBuried(adjacentChunks, worldPos);
+		const bool isBlockBuried = chunk->GetBlock(blockPos)->IsBuried(chunk, adjacentChunks, worldPos, blockPos);
+		//const bool isBlockBuried = adjacentChunks.GetBlock(worldPos)->IsBuried(chunk, adjacentChunks, worldPos);
 		buriedBitmask.SetBlockBuriedState(blockPos, isBlockBuried);
 	}
 }
@@ -93,6 +96,13 @@ void ChunkRenderComponent::CalculateBuriedBitmask()
 void ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest()
 {
 	mesh->Empty();
+
+	if (buriedBitmask.AreAllBlocksBuried()) {
+		emptyMesh = true;
+		chunk->SetShouldBeRemeshed(false);
+		return;
+	}
+
 	const ChunkPosition chunkPos = chunk->GetPosition();
 	const MappedAdjacentAndBuriedChunks adjacentChunks = MappedAdjacentAndBuriedChunks::Create(GetWorld(), chunkPos);
 	const GlobalString airName = AirBlock::GetStaticName();
@@ -108,9 +118,9 @@ void ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest()
 		block->AddBlockMeshToChunkMeshBitmaskTest(mesh, chunk, worldPos, vertexOffset, adjacentChunks);
 	}
 	emptyMesh = mesh->GetQuadCount() == 0;
-	if (emptyMesh) {
-		cubeLog("Empty chunk mesh for chunk " + String::From(chunk->GetPosition()));
-	}
+	//if (emptyMesh) {
+	//	cubeLog("Empty chunk mesh for chunk " + String::From(chunk->GetPosition()));
+	//}
 	chunk->SetShouldBeRemeshed(false);
 }
 

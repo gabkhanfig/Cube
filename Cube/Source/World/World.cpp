@@ -61,8 +61,7 @@ void World::BeginWorld()
     remeshedChunks.Add(chunk);
   }
 
-  //ChunkRenderComponent::MultithreadBitmaskRecreateMeshesTest(remeshedChunks, GetGameInstance()->GetThreadPool());
-  ChunkRenderComponent::MultithreadRecreateMeshes(remeshedChunks, engine->GetThreadPool());
+  ChunkRenderComponent::MultithreadRecreateMeshes(remeshedChunks, engine->GetThreadPool());  
   chunkRenderer->SetRemeshedChunks(remeshedChunks);
 }
 
