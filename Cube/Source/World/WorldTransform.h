@@ -196,23 +196,28 @@ struct WorldPosition
 	}
 
 	WorldPosition Adjacent(BlockFacing adjacentDirection) const {
-		switch (adjacentDirection.facing) {
-		case BlockFacing::Direction::Dir_Down:
-			return WorldPosition(x, y - 1, z);
-		case BlockFacing::Direction::Dir_Up:
-			return WorldPosition(x, y + 1, z);
-		case BlockFacing::Direction::Dir_North:
-			return WorldPosition(x, y, z - 1);
-		case BlockFacing::Direction::Dir_South:
-			return WorldPosition(x, y, z + 1);
-		case BlockFacing::Direction::Dir_East:
-			return WorldPosition(x - 1, y, z);
-		case BlockFacing::Direction::Dir_West:
-			return WorldPosition(x + 1, y, z);
-		default:
-			gk_assertm(false, "Unreachable code block. BlockFacing face must only be one of the 6 cube faces");
-			return *this;
-		}
+		int xOffset = (-1 * int(adjacentDirection.IsFacing(BlockFacing::Dir_East))) + (int(adjacentDirection.IsFacing(BlockFacing::Dir_West)));
+		int yOffset = (-1 * int(adjacentDirection.IsFacing(BlockFacing::Dir_Down))) + (int(adjacentDirection.IsFacing(BlockFacing::Dir_Up)));
+		int zOffset = (-1 * int(adjacentDirection.IsFacing(BlockFacing::Dir_North))) + (int(adjacentDirection.IsFacing(BlockFacing::Dir_South)));
+		return WorldPosition(x + xOffset, y + yOffset, z + zOffset);
+
+		//switch (adjacentDirection.facing) {
+		//case BlockFacing::Direction::Dir_Down:
+		//	return WorldPosition(x, y - 1, z);
+		//case BlockFacing::Direction::Dir_Up:
+		//	return WorldPosition(x, y + 1, z);
+		//case BlockFacing::Direction::Dir_North:
+		//	return WorldPosition(x, y, z - 1);
+		//case BlockFacing::Direction::Dir_South:
+		//	return WorldPosition(x, y, z + 1);
+		//case BlockFacing::Direction::Dir_East:
+		//	return WorldPosition(x - 1, y, z);
+		//case BlockFacing::Direction::Dir_West:
+		//	return WorldPosition(x + 1, y, z);
+		//default:
+		//	gk_assertm(false, "Unreachable code block. BlockFacing face must only be one of the 6 cube faces");
+		//	return *this;
+		//}
 	}
 };
 
