@@ -78,6 +78,11 @@ void ChunkMesh::AddQuad(const BlockQuad& quad)
   quads.Add(quad);
 }
 
+const BlockQuad* ChunkMesh::GetQuadsData() const
+{
+  return quads.Data();
+}
+
 darray<uint32> ChunkMesh::GetIndices() const
 {
   constexpr uint32 indices[6] = {

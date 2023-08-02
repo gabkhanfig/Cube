@@ -7,10 +7,6 @@ class IndexBufferObject;
 
 class ChunkMesh
 {
-private:
-
-	darray<BlockQuad> quads;
-
 public:
 
 	ChunkMesh();
@@ -29,9 +25,7 @@ public:
 
 	void AddQuad(const BlockQuad& quad);
 
-	darray<BlockQuad>& GetQuads() { return quads; }
-
-	const darray<BlockQuad>& GetQuads() const { return quads; }
+	const BlockQuad* GetQuadsData() const;
 
 	darray<uint32> GetIndices() const;
 
@@ -41,6 +35,10 @@ public:
 
 	/* Pointer needs to be manually freed/deleted. */
 	static uint32* CreateQuadIndices(const uint32 quadCount);
+
+private:
+
+	darray<BlockQuad> quads;
 
 };
 
