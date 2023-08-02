@@ -35,26 +35,10 @@ const MappedAdjacentChunks MappedAdjacentChunks::Create(const World* world, cons
 const Chunk* MappedAdjacentChunks::GetChunk(const ChunkPosition position) const
 {
 	const int index = GetMappedAdjacentOffsetIndex(position, _startPos);
-	const Chunk* chunk = _chunks[index];
-	if (chunk == nullptr) return nullptr;
-	//if (chunk->GetPosition() != position) {
-	//	std::cout << "_startPos: " << String::From(_startPos) << std::endl;
-	//	std::cout << "arg chunk position: " << String::From(position) << std::endl;
-	//	std::cout << "index: " << index << std::endl;
-	//	std::cout << "found chunk position: " << String::From(chunk->GetPosition()) << std::endl;
-	//	for (int i = 0; i < 27; i++) {
-	//		if (_chunks[i] == nullptr) continue;
-	//		if (_chunks[i]->GetPosition() == position) {
-	//			std::cout << "the correct index should be: " << i << std::endl;
-	//			break;
-	//		}
-	//	}
-	//	//std::cout << "Chunk position does not match the position of the function argument\nchunk position: " << String::From(chunk->GetPosition()) << "\narg position: " << String::From(position) << std::endl;
-	//	DebugBreak();
-	//}
-	gk_assertm(chunk->GetPosition() == position,
-		"Chunk position does not match the position of the function argument\nchunk position: " << String::From(chunk->GetPosition()) << "\narg position: " << String::From(position));
-	return chunk;
+	return _chunks[index];
+	//if (chunk == nullptr) return nullptr;
+	//gk_assertm(chunk->GetPosition() == position,
+		//"Chunk position does not match the position of the function argument\nchunk position: " << String::From(chunk->GetPosition()) << "\narg position: " << String::From(position));
 }
 
 const Block* MappedAdjacentChunks::GetBlock(const WorldPosition position) const
