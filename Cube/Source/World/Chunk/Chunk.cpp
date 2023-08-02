@@ -8,7 +8,7 @@
 Chunk::Chunk(ChunkPosition inPosition)
 	: shouldBeRemeshed(false), position(inPosition)
 {
-	blocks = new Block*[CHUNK_SIZE];
+	//blocks = new Block*[CHUNK_SIZE];
 	renderComponent = new ChunkRenderComponent(this);
 
 	BlockClass* airBlockClass = BlockFactory::GetBlockClass(AirBlock::GetStaticName());
@@ -21,7 +21,7 @@ Chunk::Chunk(ChunkPosition inPosition)
 Chunk::~Chunk()
 {
 	DestroyAllBlocks();
-	delete[] blocks;
+	//delete[] blocks;
 	delete renderComponent;
 }
 
@@ -32,7 +32,7 @@ void Chunk::Tick(float deltaTime)
 Block* Chunk::GetBlock(BlockPosition position) const
 {
 	const int blockIndex = position.index;
-	gk_assertm(blockIndex < CHUNK_SIZE, "block index must be within CHUNK_SIZE\nblock index:" << blockIndex << "\nCHUNK_SIZE: " << 512);
+	//gk_assertm(blockIndex < CHUNK_SIZE, "block index must be within CHUNK_SIZE\nblock index:" << blockIndex << "\nCHUNK_SIZE: " << 512);
 	return blocks[blockIndex];
 }
 

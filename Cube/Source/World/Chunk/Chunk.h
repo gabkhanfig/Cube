@@ -12,19 +12,6 @@ class TerrainGenerator;
 
 class Chunk
 {
-private:
-
-	/* Array of chunk blocks. */
-	Block** blocks;
-
-	const ChunkPosition position;
-
-	/**/
-	ChunkRenderComponent* renderComponent;
-
-	/**/
-	bool shouldBeRemeshed;
-
 public:
 
 	/* Fills the entire chunk with air. */
@@ -58,10 +45,21 @@ public:
 
 	static void MultithreadGenerateTerrain(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool, TerrainGenerator* terrainGenerator);
 
-	inline Block** GetBlocks() const { return blocks; }
-
 private:
 
 	void DestroyAllBlocks();
+
+private:
+
+	const ChunkPosition position;
+
+	/**/
+	ChunkRenderComponent* renderComponent;
+
+	/**/
+	bool shouldBeRemeshed;
+
+	/* Array of chunk blocks. */
+	Block* blocks[CHUNK_SIZE];
 
 };
