@@ -149,32 +149,32 @@ void Block::AddBlockMeshToChunkMeshBitmaskTest(ChunkMesh* chunkMesh, const Chunk
 
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_Down)) {
     FillPackedPositionBuffer(packedPositionBuffer, bottomPos, vertexOffset);
-    BlockQuad bottom = BlockQuad(packedPositionBuffer, texCoords, bottomCols);
+    const BlockQuad bottom = BlockQuad(packedPositionBuffer, texCoords, bottomCols);
     chunkMesh->AddQuad(bottom);
   }
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_North)) {
     FillPackedPositionBuffer(packedPositionBuffer, northPos, vertexOffset);
-    BlockQuad north = BlockQuad(packedPositionBuffer, texCoords, northCols);
+    const BlockQuad north = BlockQuad(packedPositionBuffer, texCoords, northCols);
     chunkMesh->AddQuad(north);
   }
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_East)) {
     FillPackedPositionBuffer(packedPositionBuffer, eastPos, vertexOffset);
-    BlockQuad east = BlockQuad(packedPositionBuffer, texCoords, eastCols);
+    const BlockQuad east = BlockQuad(packedPositionBuffer, texCoords, eastCols);
     chunkMesh->AddQuad(east);
   }
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_South)) {
     FillPackedPositionBuffer(packedPositionBuffer, southPos, vertexOffset);
-    BlockQuad south = BlockQuad(packedPositionBuffer, texCoords, southCols);
+    const BlockQuad south = BlockQuad(packedPositionBuffer, texCoords, southCols);
     chunkMesh->AddQuad(south);
   }
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_West)) {
     FillPackedPositionBuffer(packedPositionBuffer, westPos, vertexOffset);
-    BlockQuad west = BlockQuad(packedPositionBuffer, texCoords, westCols);
+    const BlockQuad west = BlockQuad(packedPositionBuffer, texCoords, westCols);
     chunkMesh->AddQuad(west);
   }
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_Up)) {
     FillPackedPositionBuffer(packedPositionBuffer, topPos, vertexOffset);
-    BlockQuad top = BlockQuad(packedPositionBuffer, texCoords, topCols);
+    const BlockQuad top = BlockQuad(packedPositionBuffer, texCoords, topCols);
     chunkMesh->AddQuad(top);
   }
 }

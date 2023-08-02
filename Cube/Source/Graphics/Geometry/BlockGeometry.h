@@ -21,9 +21,7 @@ struct BlockVertex
 
   BlockVertex() = default;
 
-  /* Requires an index buffer of { 0, 1, 2, 3, 0, 2 } for the color interpolation to work correctly.
-  @param _positions: vertex position
-  @param _colors: Bitmasks for the RGB colors of the four corners in the quad. */
+  /* Requires an index buffer of { 0, 1, 2, 3, 0, 2 } for the color interpolation to work correctly. */
   BlockVertex(PackedBlockOffsetPosition _position, PackedNormal _normal, glm::vec2 _texCoord, PackedColor _color)
     : position(_position), normal(_normal), texCoord(_texCoord), color(_color)
   {}
