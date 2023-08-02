@@ -110,7 +110,7 @@ protected:
 
 	bool CanDrawFace(const MappedAdjacentAndBuriedChunks& adjacentChunks, WorldPosition position, BlockFacing face) const;
 
-private:
+protected:
 
 	/* The lighting of this block. */
 	BlockLight light;
@@ -122,7 +122,7 @@ private:
 	uint8 isPendingDelete : 1;
 
 	/* Remaining bit for potential future use. */
-	uint8 _unusedBit : 1;
+	uint8 isSolid : 1;
 
 	// 4 bytes remaining for 16 byte padding.
 

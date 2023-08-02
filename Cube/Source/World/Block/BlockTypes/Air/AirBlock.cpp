@@ -4,3 +4,8 @@
 //{
 //	return BlockMesh();
 //}
+
+AirBlock::AirBlock()
+{
+	isSolid = false;
+}

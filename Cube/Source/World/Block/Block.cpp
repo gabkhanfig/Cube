@@ -33,7 +33,7 @@ void Block::SetFacing(BlockFacing newFacing)
 
 bool Block::IsBuried(const MappedAdjacentChunks& adjacentChunks, WorldPosition blockPosition) const
 {
-  if (GetBuriedTransparency() == EBuriedTransparency::transparent) return false; // If the block itself is transparent, its not buried
+  if (!isSolid) return false; // If the block itself is not solid transparent, its not buried
 
   const WorldPosition adjacentUp = blockPosition.Adjacent(BlockFacing::Dir_Up);
   const WorldPosition adjacentDown = blockPosition.Adjacent(BlockFacing::Dir_Down);
@@ -62,12 +62,12 @@ bool Block::IsBuried(const MappedAdjacentChunks& adjacentChunks, WorldPosition b
   const Block* southBlock = southChunk->GetBlock(adjacentSouth.ToBlockPosition());
   const Block* westBlock = westChunk->GetBlock(adjacentWest.ToBlockPosition());
 
-  if(upBlock->GetBuriedTransparency() == EBuriedTransparency::transparent // If any adjacent blocks are transparent, its not buried
-    || downBlock->GetBuriedTransparency() == EBuriedTransparency::transparent
-    || northBlock->GetBuriedTransparency() == EBuriedTransparency::transparent
-    || eastBlock->GetBuriedTransparency() == EBuriedTransparency::transparent
-    || southBlock->GetBuriedTransparency() == EBuriedTransparency::transparent
-    || westBlock->GetBuriedTransparency() == EBuriedTransparency::transparent) return false;
+  if(!upBlock->isSolid // If any adjacent blocks are transparent, its not buried
+    || !downBlock->isSolid
+    || !northBlock->isSolid
+    || !eastBlock->isSolid
+    || !southBlock->isSolid
+    || !westBlock->isSolid) return false;
 
   return true;
 }
