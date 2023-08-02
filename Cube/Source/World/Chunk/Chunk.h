@@ -23,7 +23,7 @@ public:
 	void Tick(float deltaTime);
 
 	/* Get a block at a specific relative position within the chunk. */
-	Block* GetBlock(BlockPosition position) const;
+	forceinline Block* GetBlock(BlockPosition position) const { return blocks[position.index]; }
 
 	void SetBlockAt(BlockPosition position, Block* block);
 
