@@ -56,10 +56,10 @@ void Engine::WaitForRenderThread(int64 millisecondTimeout)
 			cubeLog("Timed out waiting for render thread. Waited " + String::FromInt(millisecondTimeout) + "ms");
 			DebugBreak();
 		}
+	}
 #else 
 	while (!renderThread->IsReady());
 #endif
-	}
 }
 
 Engine::Engine() :

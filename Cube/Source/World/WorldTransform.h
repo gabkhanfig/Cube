@@ -3,6 +3,11 @@
 #include "../Engine/EngineCore.h"
 #include "Chunk/ChunkData.h"
 
+inline int floor_int_div(int a, int b) {
+	int d = a / b;
+	return d * b == a ? d : d - ((a < 0) ^ (b < 0));
+}
+
 /* Only requires 6 bits. */
 struct BlockFacing
 {
@@ -136,6 +141,8 @@ struct BlockPosition
 	}
 };
 
+
+
 /* World position of a block. 
 Down = -y,
 Up = +y,
@@ -180,11 +187,16 @@ struct WorldPosition
 	}
 
 	ChunkPosition ToChunkPosition() const {
-		ChunkPosition pos;
-		pos.x = static_cast<int>(floor(double(x) / CHUNK_LENGTH));
-		pos.y = static_cast<int>(floor(double(y) / CHUNK_LENGTH));
-		pos.z = static_cast<int>(floor(double(z) / CHUNK_LENGTH));
-		return pos;
+		//return ChunkPosition(
+		//	static_cast<int>(floor(double(x) / CHUNK_LENGTH)),
+		//	static_cast<int>(floor(double(y) / CHUNK_LENGTH)),
+		//	static_cast<int>(floor(double(z) / CHUNK_LENGTH))
+		//);
+		return ChunkPosition(
+			floor_int_div(x, CHUNK_LENGTH),
+			floor_int_div(y, CHUNK_LENGTH),
+			floor_int_div(z, CHUNK_LENGTH)
+		);
 	}
 
 	BlockPosition ToBlockPosition() const {
@@ -195,10 +207,10 @@ struct WorldPosition
 		);
 	}
 
-	WorldPosition Adjacent(BlockFacing adjacentDirection) const {
-		int xOffset = (-1 * int(adjacentDirection.IsFacing(BlockFacing::Dir_East))) + (int(adjacentDirection.IsFacing(BlockFacing::Dir_West)));
-		int yOffset = (-1 * int(adjacentDirection.IsFacing(BlockFacing::Dir_Down))) + (int(adjacentDirection.IsFacing(BlockFacing::Dir_Up)));
-		int zOffset = (-1 * int(adjacentDirection.IsFacing(BlockFacing::Dir_North))) + (int(adjacentDirection.IsFacing(BlockFacing::Dir_South)));
+	forceinline WorldPosition Adjacent(BlockFacing adjacentDirection) const {
+		const int xOffset = (-1 * int(adjacentDirection.IsFacing(BlockFacing::Dir_East))) + (int(adjacentDirection.IsFacing(BlockFacing::Dir_West)));
+		const int yOffset = (-1 * int(adjacentDirection.IsFacing(BlockFacing::Dir_Down))) + (int(adjacentDirection.IsFacing(BlockFacing::Dir_Up)));
+		const int zOffset = (-1 * int(adjacentDirection.IsFacing(BlockFacing::Dir_North))) + (int(adjacentDirection.IsFacing(BlockFacing::Dir_South)));
 		return WorldPosition(x + xOffset, y + yOffset, z + zOffset);
 
 		//switch (adjacentDirection.facing) {

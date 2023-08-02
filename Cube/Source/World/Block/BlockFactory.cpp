@@ -56,7 +56,7 @@ Block* BlockFactory::NewAirBlock()
 	gk_assertm(found != blockClasses.end(), "Air block must be mapped in the block factory.");
 	return found->second->NewBlock();
 #else
-	static IBlock* AirBlock = blockClasses.find(AirBlockName)->second->GetBlock();
+	static Block* AirBlock = AirBlock::GetStaticClass()->NewBlock();
 	return AirBlock;
 #endif
 }
