@@ -180,6 +180,23 @@ namespace UnitTests
 		b.SetBlockBuriedState(BlockPosition(511), true);
 		EXPECT_NE(a, b);
 	}
+
+	TEST(BuriedChunkBlocksTest, FirstSetBlockIndex) {
+		BuriedChunkBlocks a;
+		a.SetBlockBuriedState(BlockPosition(5), true);
+		EXPECT_EQ(a.FirstSetBlockIndex().Get(), 5);
+
+		BuriedChunkBlocks b;
+		b.SetBlockBuriedState(BlockPosition(67), true);
+		EXPECT_EQ(b.FirstSetBlockIndex().Get(), 67);
+
+		BuriedChunkBlocks c;
+		c.SetBlockBuriedState(BlockPosition(300), true);
+		EXPECT_EQ(c.FirstSetBlockIndex().Get(), 300);
+
+		BuriedChunkBlocks d;
+		EXPECT_FALSE(d.FirstSetBlockIndex().IsValidIndex());
+	}
 }
 
 #endif
