@@ -197,6 +197,12 @@ namespace UnitTests
 		ChunkBlocksBitmask d;
 		EXPECT_FALSE(d.FirstSetBlockIndex().IsValidIndex());
 	}
+
+	TEST(ChunkBlocksBitmaskTest, SetAllFlags) {
+		ChunkBlocksBitmask a;
+		a.SetAllFlags();
+		EXPECT_TRUE(a.AreAllBlocksSet());
+	}
 }
 
 #endif
