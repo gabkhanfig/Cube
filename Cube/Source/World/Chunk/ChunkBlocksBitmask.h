@@ -3,7 +3,8 @@
 #include "../../Engine/EngineCore.h"
 #include "../WorldTransform.h"
 
-struct BuriedChunkBlocks {
+/* 512 bit bitmask able to store flags for an entire chunk of blocks. */
+struct ChunkBlocksBitmask {
 
 	struct OptionalIndex {
 		OptionalIndex() : _index(MAXINT32) {}
@@ -25,26 +26,27 @@ struct BuriedChunkBlocks {
 
 	__m256i _bitmask[2];
 
-	BuriedChunkBlocks();
+	ChunkBlocksBitmask();
 
-	BuriedChunkBlocks(const BuriedChunkBlocks& copy);
+	ChunkBlocksBitmask(const ChunkBlocksBitmask& copy);
 
 	/* Returns a pointer to the start of an 8 element array. */
 	[[nodiscard]] const uint64* GetBitmaskAsIntArray() const;
 
-	[[nodiscard]] bool IsBlockBuried(const BlockPosition pos) const;
+	[[nodiscard]] bool GetFlag(const BlockPosition pos) const;
 
-	void SetBlockBuriedState(const BlockPosition pos, const bool isBuried);
+	void SetFlag(const BlockPosition pos, const bool flag);
 
 	void Reset();
 
-	[[nodiscard]] bool AreAllBlocksBuried() const;
+	[[nodiscard]] bool AreAllBlocksSet() const;
 
-	void operator = (const BuriedChunkBlocks& other);
+	void operator = (const ChunkBlocksBitmask& other);
 
-	[[nodiscard]] bool operator == (const BuriedChunkBlocks& other) const;
+	[[nodiscard]] bool operator == (const ChunkBlocksBitmask& other) const;
 
-	/* Don't need to call OptionalIndex::IsValidIndex() if you've already checked AreAllBlocksBuried(). */
+	/* Finds the first set block index within the bitmask using AVX2.
+	Don't need to call OptionalIndex::IsValidIndex() if you've already checked AreAllBlocksBuried(). */
 	[[nodiscard]] OptionalIndex FirstSetBlockIndex() const;
 
 };

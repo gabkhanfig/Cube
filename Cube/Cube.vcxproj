@@ -381,7 +381,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\World\Block\Block.cpp" />
     <ClCompile Include="Source\World\Block\BlockFactory.cpp" />
     <ClCompile Include="Source\World\Block\BlockTextureAtlas.cpp" />
-    <ClCompile Include="Source\World\Chunk\BuriedChunkBlocks.cpp" />
+    <ClCompile Include="Source\World\Chunk\ChunkBlocksBitmask.cpp" />
     <ClCompile Include="Source\World\Chunk\Chunk.cpp" />
     <ClCompile Include="Source\World\Chunk\ChunkDataTypes.cpp" />
     <ClCompile Include="Source\World\Chunk\ChunkRenderComponent.cpp" />
@@ -404,7 +404,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Testing\UnitTests\GoogleTest\gtest-typed-test.cc" />
     <ClCompile Include="Testing\UnitTests\GoogleTest\gtest.cc" />
     <ClCompile Include="Testing\UnitTests\GoogleTest\gtest_main.cc" />
-    <ClCompile Include="Testing\UnitTests\World\Chunk\BuriedChunkBlocksTests.cpp" />
+    <ClCompile Include="Testing\UnitTests\World\Chunk\ChunkBlocksBitmaskTests.cpp" />
     <ClCompile Include="Testing\UnitTests\World\WorldTransform\BlockFacingTests.cpp" />
     <ClCompile Include="Testing\UnitTests\World\WorldTransform\BlockPositionTests.cpp" />
     <ClCompile Include="Testing\UnitTests\World\WorldTransform\ChunkPositionTests.cpp" />
@@ -467,7 +467,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\World\Block\Block.h" />
     <ClInclude Include="Source\World\Block\BlockFactory.h" />
     <ClInclude Include="Source\World\Block\BlockTextureAtlas.h" />
-    <ClInclude Include="Source\World\Chunk\BuriedChunkBlocks.h" />
+    <ClInclude Include="Source\World\Chunk\ChunkBlocksBitmask.h" />
     <ClInclude Include="Source\World\Chunk\Chunk.h" />
     <ClInclude Include="Source\World\Chunk\ChunkRenderComponent.h" />
     <ClInclude Include="Source\World\Chunk\ChunkData.h" />

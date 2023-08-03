@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../WorldTransform.h"
-#include "BuriedChunkBlocks.h"
+#include "ChunkBlocksBitmask.h"
 
 class World;
 class Chunk;
@@ -35,7 +35,7 @@ struct MappedAdjacentAndBuriedChunks
 
 private:
 
-	BuriedChunkBlocks _buriedBitmasks[27];
+	ChunkBlocksBitmask _buriedBitmasks[27];
 
 	const Chunk* _chunks[27];
 	// Bottom left

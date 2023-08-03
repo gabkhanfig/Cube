@@ -89,7 +89,7 @@ void ChunkRenderComponent::CalculateBuriedBitmask()
 		const WorldPosition worldPos = WorldPosition(chunkPos, blockPos);
 		const bool isBlockBuried = chunk->GetBlock(blockPos)->IsBuried(chunk, adjacentChunks, worldPos, blockPos);
 		//const bool isBlockBuried = adjacentChunks.GetBlock(worldPos)->IsBuried(chunk, adjacentChunks, worldPos);
-		buriedBitmask.SetBlockBuriedState(blockPos, isBlockBuried);
+		buriedBitmask.SetFlag(blockPos, isBlockBuried);
 	}
 }
 
@@ -97,7 +97,7 @@ void ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest()
 {
 	mesh->Empty();
 
-	if (buriedBitmask.AreAllBlocksBuried()) {
+	if (buriedBitmask.AreAllBlocksSet()) {
 		emptyMesh = true;
 		chunk->SetShouldBeRemeshed(false);
 		return;
@@ -111,7 +111,7 @@ void ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest()
 		const BlockPosition blockPos = i;
 		const Block* block = chunk->GetBlock(blockPos);
 
-		if (block->GetName() == airName || buriedBitmask.IsBlockBuried(blockPos)) continue;
+		if (block->GetName() == airName || buriedBitmask.GetFlag(blockPos)) continue;
 
 		const WorldPosition worldPos = WorldPosition(chunkPos, blockPos);
 		const glm::vec3 vertexOffset{ blockPos.X(), blockPos.Y(), blockPos.Z() };

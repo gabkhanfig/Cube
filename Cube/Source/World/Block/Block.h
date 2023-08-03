@@ -8,7 +8,7 @@
 #include "../Chunk/ChunkDataTypes.h"
 #include "../../Engine/Object.h"
 #include "../Chunk/MappedAdjacentChunks.h"
-#include "../Chunk/BuriedChunkBlocks.h"
+#include "../Chunk/ChunkBlocksBitmask.h"
 
 /* Required macro for all blocks. Sets its class data and name. Also sets everything after this back to private. */
 #define BLOCK_BODY(blockClass, blockName) \

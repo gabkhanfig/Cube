@@ -1,24 +1,24 @@
-#include "BuriedChunkBlocks.h"
+#include "ChunkBlocksBitmask.h"
 #include "Chunk.h"
 
-static_assert(sizeof(BuriedChunkBlocks) * 8 == CHUNK_SIZE, "Buried Chunk Blocks must occupy as many bits as a chunk occupies blocks. See CHUNK_SIZE macro");
+static_assert(sizeof(ChunkBlocksBitmask) * 8 == CHUNK_SIZE, "Buried Chunk Blocks must occupy as many bits as a chunk occupies blocks. See CHUNK_SIZE macro");
 
-BuriedChunkBlocks::BuriedChunkBlocks()
+ChunkBlocksBitmask::ChunkBlocksBitmask()
 {
 	Reset();
 }
 
-BuriedChunkBlocks::BuriedChunkBlocks(const BuriedChunkBlocks& copy)
+ChunkBlocksBitmask::ChunkBlocksBitmask(const ChunkBlocksBitmask& copy)
 {
-	memcpy(_bitmask, copy._bitmask, sizeof(BuriedChunkBlocks::_bitmask));
+	memcpy(_bitmask, copy._bitmask, sizeof(ChunkBlocksBitmask::_bitmask));
 }
 
-const uint64* BuriedChunkBlocks::GetBitmaskAsIntArray() const
+const uint64* ChunkBlocksBitmask::GetBitmaskAsIntArray() const
 {
 	return reinterpret_cast<const uint64*>(_bitmask->m256i_u64);
 }
 
-bool BuriedChunkBlocks::IsBlockBuried(const BlockPosition pos) const
+bool ChunkBlocksBitmask::GetFlag(const BlockPosition pos) const
 {
 	const int arrayIndex = pos.index / 64;
 	const int element = pos.index % 64;
@@ -26,20 +26,20 @@ bool BuriedChunkBlocks::IsBlockBuried(const BlockPosition pos) const
 	return array[arrayIndex] >> element & 1ULL;
 }
 
-void BuriedChunkBlocks::SetBlockBuriedState(const BlockPosition pos, const bool isBuried)
+void ChunkBlocksBitmask::SetFlag(const BlockPosition pos, const bool flag)
 {
 	const int arrayIndex = pos.index / 64;
 	const int element = pos.index % 64;
 	uint64* array = reinterpret_cast<uint64*>(_bitmask->m256i_u64);
-	array[arrayIndex] ^= (-(static_cast<int64>(isBuried)) ^ array[arrayIndex]) & 1ULL << element;
+	array[arrayIndex] ^= (-(static_cast<int64>(flag)) ^ array[arrayIndex]) & 1ULL << element;
 }
 
-void BuriedChunkBlocks::Reset()
+void ChunkBlocksBitmask::Reset()
 {
-	memset(_bitmask, 0, sizeof(BuriedChunkBlocks::_bitmask));
+	memset(_bitmask, 0, sizeof(ChunkBlocksBitmask::_bitmask));
 }
 
-bool BuriedChunkBlocks::AreAllBlocksBuried() const
+bool ChunkBlocksBitmask::AreAllBlocksSet() const
 {
 	const uint64 allBitsSet[4] = { ~0ULL, ~0ULL, ~0ULL, ~0ULL };
 	const __m256i setBitmask = _mm256_loadu_epi64(allBitsSet);
@@ -48,12 +48,12 @@ bool BuriedChunkBlocks::AreAllBlocksBuried() const
 		&& _mm256_cmpeq_epi64_mask(_bitmask[1], setBitmask) == 15;
 }
 
-void BuriedChunkBlocks::operator=(const BuriedChunkBlocks& other)
+void ChunkBlocksBitmask::operator=(const ChunkBlocksBitmask& other)
 {
-	memcpy(_bitmask, other._bitmask, sizeof(BuriedChunkBlocks::_bitmask));
+	memcpy(_bitmask, other._bitmask, sizeof(ChunkBlocksBitmask::_bitmask));
 }
 
-bool BuriedChunkBlocks::operator==(const BuriedChunkBlocks& other) const
+bool ChunkBlocksBitmask::operator==(const ChunkBlocksBitmask& other) const
 {
 	return _mm256_cmpeq_epi64_mask(_bitmask[0], other._bitmask[0]) == 15
 		&& _mm256_cmpeq_epi64_mask(_bitmask[1], other._bitmask[1]) == 15;
@@ -61,7 +61,7 @@ bool BuriedChunkBlocks::operator==(const BuriedChunkBlocks& other) const
 
 #pragma intrinsic(_BitScanForward)
 
-BuriedChunkBlocks::OptionalIndex BuriedChunkBlocks::FirstSetBlockIndex() const
+ChunkBlocksBitmask::OptionalIndex ChunkBlocksBitmask::FirstSetBlockIndex() const
 {
 	const uint64 notSet[4] = { 64, 64, 64, 64 };
 	const __m256i notSetVector = _mm256_loadu_epi64(notSet); // Pre-load vector with all epi64 elements set to 64 for comparison checks later.

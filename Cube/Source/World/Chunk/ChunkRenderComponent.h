@@ -4,7 +4,7 @@
 #include "../../Graphics/OpenGL/OpenGLStructures.h"
 #include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleBuffer.h"
 #include "../WorldTransform.h"
-#include "BuriedChunkBlocks.h"
+#include "ChunkBlocksBitmask.h"
 #include "MappedAdjacentChunks.h"
 
 class VertexBufferObject;
@@ -44,7 +44,7 @@ public:
 
 	PersistentMappedTripleBuffer<IndexBufferObject, uint32>* GetIbos() const { return ibos; }
 
-	BuriedChunkBlocks GetBuriedBlocksBitmask() const { return buriedBitmask; }
+	ChunkBlocksBitmask GetBuriedBlocksBitmask() const { return buriedBitmask; }
 
 
 
@@ -72,6 +72,6 @@ private:
 	bool emptyMesh;
 
 	// Test for bitmasking
-	BuriedChunkBlocks buriedBitmask;
+	ChunkBlocksBitmask buriedBitmask;
 
 };

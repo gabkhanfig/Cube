@@ -8,8 +8,6 @@
 #include "Source/GameInstance.h"
 #include "Source/Settings/Settings.h"
 
-#include "Source/World/Chunk/BuriedChunkBlocks.h"
-
 #include "Testing/CubeTest.h"
 
 GameInstance* gameInstance;
