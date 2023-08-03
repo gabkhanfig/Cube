@@ -427,6 +427,7 @@ GenerateFiles.bat</Command>
   <ItemGroup>
     <ClInclude Include="Source\Core\EngineTypes.h" />
     <ClInclude Include="Source\Core\Log\Logger.h" />
+    <ClInclude Include="Source\Core\Utils\Benchmark.h" />
     <ClInclude Include="Source\Core\Utils\CompileTimeFiles.h" />
     <ClInclude Include="Source\Engine\Engine.h" />
     <ClInclude Include="Source\Engine\EngineCore.h" />
