@@ -107,7 +107,7 @@ void ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest()
 	const MappedAdjacentAndBuriedChunks adjacentChunks = MappedAdjacentAndBuriedChunks::Create(GetWorld(), chunkPos);
 	const GlobalString airName = AirBlock::GetStaticName();
 
-	for (int i = 0; i < CHUNK_SIZE; i++) {
+	for (int i = buriedBitmask.FirstSetBlockIndex().Get(); i < CHUNK_SIZE; i++) {
 		const BlockPosition blockPos = i;
 		const Block* block = chunk->GetBlock(blockPos);
 
