@@ -15,4 +15,6 @@ public:
 	virtual ETransparency GetFaceTransparency(BlockFacing face) const { return ETransparency::transparent; }
 
 	virtual EBuriedTransparency GetBuriedTransparency() const { return EBuriedTransparency::transparent; }
+
+	virtual BlockFacing GetSolidSides() const override { return BlockFacing(0); }
 };

@@ -77,6 +77,7 @@ public:
 
 	virtual ETransparency GetFaceTransparency(BlockFacing face) const { return ETransparency::solid; }
 	virtual EBuriedTransparency GetBuriedTransparency() const { return EBuriedTransparency::solid; }
+	virtual BlockFacing GetSolidSides() const { return BlockFacing::Dir_Down | BlockFacing::Dir_Up | BlockFacing::Dir_North | BlockFacing::Dir_East | BlockFacing::Dir_South | BlockFacing::Dir_West; }
 
 	BlockLight GetLight() const { return light; }
 	void SetLight(BlockLight newLight);
@@ -85,6 +86,8 @@ public:
 	void SetFacing(BlockFacing newFacing);
 
 	bool IsBuried(const Chunk* owningChunk, const MappedAdjacentChunks& adjacentChunks, WorldPosition worldPosition, BlockPosition blockPos) const;
+
+	forceinline bool IsSolid() const { return isSolid; }
 
 #pragma region IObject_Implementation
 
