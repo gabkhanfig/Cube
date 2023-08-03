@@ -41,6 +41,8 @@ struct ChunkBlocksBitmask {
 
 	[[nodiscard]] bool AreAllBlocksSet() const;
 
+	void SetAllFlags();
+
 	void operator = (const ChunkBlocksBitmask& other);
 
 	[[nodiscard]] bool operator == (const ChunkBlocksBitmask& other) const;

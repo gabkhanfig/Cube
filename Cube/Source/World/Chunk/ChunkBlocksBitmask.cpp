@@ -48,6 +48,11 @@ bool ChunkBlocksBitmask::AreAllBlocksSet() const
 		&& _mm256_cmpeq_epi64_mask(_bitmask[1], setBitmask) == 15;
 }
 
+void ChunkBlocksBitmask::SetAllFlags()
+{
+	memset(_bitmask, 255, sizeof(ChunkBlocksBitmask::_bitmask));
+}
+
 void ChunkBlocksBitmask::operator=(const ChunkBlocksBitmask& other)
 {
 	memcpy(_bitmask, other._bitmask, sizeof(ChunkBlocksBitmask::_bitmask));
