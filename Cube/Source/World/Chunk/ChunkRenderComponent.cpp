@@ -88,7 +88,6 @@ void ChunkRenderComponent::MultithreadRecreateMeshes(const darray<Chunk*>& chunk
 void ChunkRenderComponent::CalculateBuriedBitmask()
 {
 	buriedBitmask.Reset();
-	//memset(blockSolidFaces, 0, CHUNK_SIZE);
 	const ChunkPosition chunkPos = chunk->GetPosition();
 	const MappedAdjacentChunks adjacentChunks = MappedAdjacentChunks::Create(GetWorld(), chunkPos);
 
@@ -98,7 +97,6 @@ void ChunkRenderComponent::CalculateBuriedBitmask()
 		const Block* block = chunk->GetBlock(blockPos);
 		const bool isBlockBuried = block->IsBuried(chunk, adjacentChunks, worldPos, blockPos);
 		buriedBitmask.SetFlag(blockPos, isBlockBuried);
-		//blockSolidFaces[i] = block->GetSolidSides();
 	}
 }
 
@@ -106,7 +104,7 @@ void ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest()
 {
 	mesh->Empty();
 
-	if (buriedBitmask.AreAllBlocksSet()) {
+	if (buriedBitmask.AreAllBlocksSet()) { // All blocks are buried
 		emptyMesh = true;
 		chunk->SetShouldBeRemeshed(false);
 		return;
@@ -116,7 +114,7 @@ void ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest()
 	const MappedAdjacentAndBuriedChunks adjacentChunks = MappedAdjacentAndBuriedChunks::Create(GetWorld(), chunkPos);
 	const GlobalString airName = AirBlock::GetStaticName();
 
-	for (int i = buriedBitmask.FirstSetBlockIndex().Get(); i < CHUNK_SIZE; i++) {
+	for (int i = 0; i < CHUNK_SIZE; i++) {
 		const BlockPosition blockPos = i;
 		const Block* block = chunk->GetBlock(blockPos);
 

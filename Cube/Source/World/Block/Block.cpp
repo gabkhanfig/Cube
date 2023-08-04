@@ -179,40 +179,40 @@ void Block::AddBlockMeshToChunkMeshBitmaskTest(ChunkMesh* chunkMesh, const Chunk
 
   PackedBlockOffsetPosition packedPositionBuffer[4];
 
-  const BlockPosition blockPos = position.ToBlockPosition();
-  if (!blockPos.IsOnChunkEdge()) {
-    if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_Down)) {
-      FillPackedPositionBuffer(packedPositionBuffer, bottomPos, vertexOffset);
-      const BlockQuad bottom = BlockQuad(packedPositionBuffer, texCoords, bottomCols);
-      chunkMesh->AddQuad(bottom);
-    }
-    if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_North)) {
-      FillPackedPositionBuffer(packedPositionBuffer, northPos, vertexOffset);
-      const BlockQuad north = BlockQuad(packedPositionBuffer, texCoords, northCols);
-      chunkMesh->AddQuad(north);
-    }
-    if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_East)) {
-      FillPackedPositionBuffer(packedPositionBuffer, eastPos, vertexOffset);
-      const BlockQuad east = BlockQuad(packedPositionBuffer, texCoords, eastCols);
-      chunkMesh->AddQuad(east);
-    }
-    if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_South)) {
-      FillPackedPositionBuffer(packedPositionBuffer, southPos, vertexOffset);
-      const BlockQuad south = BlockQuad(packedPositionBuffer, texCoords, southCols);
-      chunkMesh->AddQuad(south);
-    }
-    if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_West)) {
-      FillPackedPositionBuffer(packedPositionBuffer, westPos, vertexOffset);
-      const BlockQuad west = BlockQuad(packedPositionBuffer, texCoords, westCols);
-      chunkMesh->AddQuad(west);
-    }
-    if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_Up)) {
-      FillPackedPositionBuffer(packedPositionBuffer, topPos, vertexOffset);
-      const BlockQuad top = BlockQuad(packedPositionBuffer, texCoords, topCols);
-      chunkMesh->AddQuad(top);
-    }
-    return;
-  }
+  //const BlockPosition blockPos = position.ToBlockPosition();
+  //if (!blockPos.IsOnChunkEdge()) {
+  //  if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_Down)) {
+  //    FillPackedPositionBuffer(packedPositionBuffer, bottomPos, vertexOffset);
+  //    const BlockQuad bottom = BlockQuad(packedPositionBuffer, texCoords, bottomCols);
+  //    chunkMesh->AddQuad(bottom);
+  //  }
+  //  if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_North)) {
+  //    FillPackedPositionBuffer(packedPositionBuffer, northPos, vertexOffset);
+  //    const BlockQuad north = BlockQuad(packedPositionBuffer, texCoords, northCols);
+  //    chunkMesh->AddQuad(north);
+  //  }
+  //  if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_East)) {
+  //    FillPackedPositionBuffer(packedPositionBuffer, eastPos, vertexOffset);
+  //    const BlockQuad east = BlockQuad(packedPositionBuffer, texCoords, eastCols);
+  //    chunkMesh->AddQuad(east);
+  //  }
+  //  if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_South)) {
+  //    FillPackedPositionBuffer(packedPositionBuffer, southPos, vertexOffset);
+  //    const BlockQuad south = BlockQuad(packedPositionBuffer, texCoords, southCols);
+  //    chunkMesh->AddQuad(south);
+  //  }
+  //  if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_West)) {
+  //    FillPackedPositionBuffer(packedPositionBuffer, westPos, vertexOffset);
+  //    const BlockQuad west = BlockQuad(packedPositionBuffer, texCoords, westCols);
+  //    chunkMesh->AddQuad(west);
+  //  }
+  //  if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_Up)) {
+  //    FillPackedPositionBuffer(packedPositionBuffer, topPos, vertexOffset);
+  //    const BlockQuad top = BlockQuad(packedPositionBuffer, texCoords, topCols);
+  //    chunkMesh->AddQuad(top);
+  //  }
+  //  return;
+  //}
 
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_Down)) {
     FillPackedPositionBuffer(packedPositionBuffer, bottomPos, vertexOffset);
