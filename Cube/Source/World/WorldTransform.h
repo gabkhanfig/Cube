@@ -25,7 +25,11 @@ public:
 
 	uint8 facing;
 
-	BlockFacing(uint8 _facing = uint8(BlockFacing::Direction::Dir_Down))
+	BlockFacing()
+		: facing(0)
+	{}
+
+	BlockFacing(uint8 _facing)
 		: facing(_facing)
 	{}
 
@@ -48,17 +52,16 @@ public:
 	bool IsFacing(uint8 direction) const {
 		return facing & direction;
 	}
-
+	 
 	/* Get the opposite direction of this facing. */
 	BlockFacing Opposite() const {
-		const uint8 allDirectionBits = 0b00111111;
 		uint8 oppositeBits = 0;
-		if (facing & Dir_Down) oppositeBits |= Dir_Up;
-		if (facing & Dir_Up) oppositeBits |= Dir_Down;
-		if (facing & Dir_North) oppositeBits |= Dir_South;
-		if (facing & Dir_South) oppositeBits |= Dir_North;
-		if (facing & Dir_East) oppositeBits |= Dir_West;
-		if (facing & Dir_West) oppositeBits |= Dir_East;
+		oppositeBits |= (facing & Dir_Down) << 1;
+		oppositeBits |= (facing & Dir_Up) >> 1;
+		oppositeBits |= (facing & Dir_North) << 1;
+		oppositeBits |= (facing & Dir_South) >> 1;
+		oppositeBits |= (facing & Dir_East) << 1;
+		oppositeBits |= (facing & Dir_West) >> 1;
 		return BlockFacing(oppositeBits);
 	}
 };
