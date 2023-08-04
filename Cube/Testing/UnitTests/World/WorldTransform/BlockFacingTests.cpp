@@ -32,7 +32,7 @@ namespace UnitTests
 
 	TEST(BlockFacingTest, AssignmentOperatorBitmask) {
 		BlockFacing b;
-		EXPECT_EQ(b.facing, BlockFacing::Dir_Down);
+		EXPECT_EQ(b.facing, 0);
 		b = BlockFacing::Dir_North | BlockFacing::Dir_East;
 		EXPECT_TRUE(b.IsFacing(BlockFacing::Dir_North));
 		EXPECT_TRUE(b.IsFacing(BlockFacing::Dir_East));
@@ -41,7 +41,7 @@ namespace UnitTests
 
 	TEST(BlockFacingTest, AssignmentOperatorOther) {
 		BlockFacing b;
-		EXPECT_EQ(b.facing, BlockFacing::Dir_Down);
+		EXPECT_EQ(b.facing, 0);
 		BlockFacing other = BlockFacing::Dir_North | BlockFacing::Dir_East;
 		b = other;
 		EXPECT_TRUE(b.IsFacing(BlockFacing::Dir_North));
