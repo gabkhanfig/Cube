@@ -82,6 +82,38 @@ ChunkBlocksBitmask::OptionalIndex ChunkBlocksBitmask::FirstSetBlockIndex() const
 	unsigned long toCheck;
 	if(_BitScanForward(&toCheck, mask1 | (mask2 << 4)) == 0) return OptionalIndex(); // If none of the bits are set from the comparison, return an optional index with an invalid index.
 	return OptionalIndex((63 - asArray[toCheck]) + ((toCheck) * 64)); // Otherwise, return the index.
+}
 
+#pragma intrinsic(_BitScanForward64)
 
+ChunkBlocksBitmask::OptionalIndex ChunkBlocksBitmask::FirstNonSetBlockIndex() const
+{
+	const uint64* asArray = GetBitmaskAsIntArray();
+	int step = 0;
+	for (int i = 0; i < 8; i++) {
+		unsigned long toCheck;
+		if (_BitScanForward64(&toCheck, ~asArray[i]) == 0) {
+			step += 64;
+			continue;
+		}
+		return toCheck + step;
+	}
+	return OptionalIndex();
+	
+
+	//const __m256i allBitsSetVec = _mm256_set1_epi64x(~0ULL);
+	//const __m256i notSetVector = _mm256_set1_epi64x(64);
+
+	//const __m256i results[2] = {
+	//	_mm256_lzcnt_epi64(_mm256_andnot_epi64(_bitmask[0], allBitsSetVec)),
+	//	_mm256_lzcnt_epi64(_mm256_andnot_epi64(_bitmask[1], allBitsSetVec))
+	//};
+	//
+	//const uint64* asArray = reinterpret_cast<const uint64*>(results);
+
+	//const uint8 mask1 = _mm256_cmpneq_epi64_mask(results[0], notSetVector); // Compare not equal mask, for if any epi64 elements arent equal to 64 (thus have a set bit).
+	//const uint8 mask2 = _mm256_cmpneq_epi64_mask(results[1], notSetVector);
+	//unsigned long toCheck;
+	//if (_BitScanForward(&toCheck, mask1 | (mask2 << 4)) == 0) return OptionalIndex(); // If none of the bits are set from the comparison, return an optional index with an invalid index.
+	//return OptionalIndex((63 - asArray[toCheck]) + ((toCheck) * 64)); // Otherwise, return the index.
 }

@@ -51,4 +51,6 @@ struct ChunkBlocksBitmask {
 	Don't need to call OptionalIndex::IsValidIndex() if you've already checked AreAllBlocksBuried(). */
 	[[nodiscard]] OptionalIndex FirstSetBlockIndex() const;
 
+	[[nodiscard]] OptionalIndex FirstNonSetBlockIndex() const;
+
 };
