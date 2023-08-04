@@ -36,6 +36,8 @@ public:
 	/* Pointer needs to be manually freed/deleted. */
 	static uint32* CreateQuadIndices(const uint32 quadCount);
 
+	void Reserve(uint32 capacity);
+
 private:
 
 	darray<BlockQuad> quads;

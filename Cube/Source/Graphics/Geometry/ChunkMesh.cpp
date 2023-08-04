@@ -125,3 +125,8 @@ uint32* ChunkMesh::CreateQuadIndices(const uint32 quadCount)
   }
   return quadIndices;
 }
+
+void ChunkMesh::Reserve(uint32 capacity)
+{
+  quads.Reserve(capacity);
+}
