@@ -113,6 +113,8 @@ protected:
 
 	bool CanDrawFace(const MappedAdjacentAndBuriedChunks& adjacentChunks, WorldPosition position, BlockFacing face) const;
 
+	bool CanDrawFaceWithinChunk(const Chunk* chunk, const WorldPosition position, const BlockFacing face) const;
+
 protected:
 
 	/* The lighting of this block. */

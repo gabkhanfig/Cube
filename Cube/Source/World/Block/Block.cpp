@@ -1,6 +1,7 @@
 #include "Block.h"
 #include "../World.h"
 #include "../Chunk/Chunk.h"
+#include "../Chunk/ChunkRenderComponent.h"
 #include "../WorldTransform.h"
 
 //void Block::Destroy()
@@ -42,6 +43,7 @@ bool Block::IsBuried(const Chunk* owningChunk, const MappedAdjacentChunks& adjac
     const BlockPosition blockAdjacentEast = BlockPosition(blockPos.X() - 1, blockPos.Y(), blockPos.Z());
     const BlockPosition blockAdjacentSouth = BlockPosition(blockPos.X(), blockPos.Y(), blockPos.Z() + 1);
     const BlockPosition blockAdjacentWest = BlockPosition(blockPos.X() + 1, blockPos.Y(), blockPos.Z());
+
     if (!owningChunk->GetBlock(blockAdjacentUp)->isSolid
       || !owningChunk->GetBlock(blockAdjacentDown)->isSolid
       || !owningChunk->GetBlock(blockAdjacentNorth)->isSolid
@@ -52,12 +54,6 @@ bool Block::IsBuried(const Chunk* owningChunk, const MappedAdjacentChunks& adjac
     return true;
   }
 
-  //const WorldPosition adjacentUp = blockPosition.Adjacent(BlockFacing::Dir_Up);
-  //const WorldPosition adjacentDown = blockPosition.Adjacent(BlockFacing::Dir_Down);
-  //const WorldPosition adjacentNorth = blockPosition.Adjacent(BlockFacing::Dir_North);
-  //const WorldPosition adjacentEast = blockPosition.Adjacent(BlockFacing::Dir_East);
-  //const WorldPosition adjacentSouth = blockPosition.Adjacent(BlockFacing::Dir_South);
-  //const WorldPosition adjacentWest = blockPosition.Adjacent(BlockFacing::Dir_West);
   const WorldPosition adjacentUp = WorldPosition(worldPosition.x, worldPosition.y + 1, worldPosition.z);
   const WorldPosition adjacentDown = WorldPosition(worldPosition.x, worldPosition.y - 1, worldPosition.z);
   const WorldPosition adjacentNorth = WorldPosition(worldPosition.x, worldPosition.y, worldPosition.z - 1);
@@ -182,6 +178,41 @@ void Block::AddBlockMeshToChunkMeshBitmaskTest(ChunkMesh* chunkMesh, const Chunk
 
 
   PackedBlockOffsetPosition packedPositionBuffer[4];
+
+  const BlockPosition blockPos = position.ToBlockPosition();
+  if (!blockPos.IsOnChunkEdge()) {
+    if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_Down)) {
+      FillPackedPositionBuffer(packedPositionBuffer, bottomPos, vertexOffset);
+      const BlockQuad bottom = BlockQuad(packedPositionBuffer, texCoords, bottomCols);
+      chunkMesh->AddQuad(bottom);
+    }
+    if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_North)) {
+      FillPackedPositionBuffer(packedPositionBuffer, northPos, vertexOffset);
+      const BlockQuad north = BlockQuad(packedPositionBuffer, texCoords, northCols);
+      chunkMesh->AddQuad(north);
+    }
+    if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_East)) {
+      FillPackedPositionBuffer(packedPositionBuffer, eastPos, vertexOffset);
+      const BlockQuad east = BlockQuad(packedPositionBuffer, texCoords, eastCols);
+      chunkMesh->AddQuad(east);
+    }
+    if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_South)) {
+      FillPackedPositionBuffer(packedPositionBuffer, southPos, vertexOffset);
+      const BlockQuad south = BlockQuad(packedPositionBuffer, texCoords, southCols);
+      chunkMesh->AddQuad(south);
+    }
+    if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_West)) {
+      FillPackedPositionBuffer(packedPositionBuffer, westPos, vertexOffset);
+      const BlockQuad west = BlockQuad(packedPositionBuffer, texCoords, westCols);
+      chunkMesh->AddQuad(west);
+    }
+    if (CanDrawFaceWithinChunk(chunk, position, BlockFacing::Dir_Up)) {
+      FillPackedPositionBuffer(packedPositionBuffer, topPos, vertexOffset);
+      const BlockQuad top = BlockQuad(packedPositionBuffer, texCoords, topCols);
+      chunkMesh->AddQuad(top);
+    }
+    return;
+  }
 
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_Down)) {
     FillPackedPositionBuffer(packedPositionBuffer, bottomPos, vertexOffset);
@@ -366,6 +397,7 @@ bool Block::CanDrawFace(const MappedAdjacentAndBuriedChunks& adjacentChunks, Wor
   if (chunkWithBlock == nullptr) return DRAW_FACE_IF_NULL_ADJACENT;
 
   const Block* adjacentBlock = chunkWithBlock->GetBlock(adjacentPosition.ToBlockPosition());
+  //return adjacentBlock->solidSides.IsFacing(face.Opposite().facing);
   //const Block* adjacentBlock = GetWorld()->GetBlock(adjacentPosition);
   //if (adjacentBlock == nullptr) {
   //  return DRAW_FACE_IF_NULL_ADJACENT;
@@ -382,6 +414,27 @@ bool Block::CanDrawFace(const MappedAdjacentAndBuriedChunks& adjacentChunks, Wor
   default:
     gk_assertm(false, "Unreachable code block. Mesh transparency type must be one of the enum class values within Block::ETransparency");
     return true;
+  }
+}
+
+bool Block::CanDrawFaceWithinChunk(const Chunk* chunk, const WorldPosition position, const BlockFacing face) const
+{
+  const BlockPosition adjacentBlockPosition = position.Adjacent(face).ToBlockPosition();
+  const Block* adjacentBlock = chunk->GetBlock(adjacentBlockPosition); 
+  //return adjacentBlock->solidSides.IsFacing(face.Opposite().facing);
+
+  const ETransparency adjacentTransparency = adjacentBlock->GetFaceTransparency(face.Opposite());
+  switch (adjacentTransparency) {
+  case Block::ETransparency::solid:
+    return false;
+  case Block::ETransparency::transparent:
+    return true;
+  case Block::ETransparency::custom:
+    // TODO: Implement something for custom mesh transparency idk
+    return true;
+  default:
+    gk_assertm(false, "Unreachable code block. Mesh transparency type must be one of the enum class values within Block::ETransparency");
+    return false;
   }
 }
 

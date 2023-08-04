@@ -46,8 +46,6 @@ public:
 
 	ChunkBlocksBitmask GetBuriedBlocksBitmask() const { return buriedBitmask; }
 
-
-
 	// Test for bitmasking
 	void CalculateBuriedBitmask();
 

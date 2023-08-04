@@ -63,6 +63,12 @@ void ChunkRenderComponent::MultithreadRecreateMeshes(const darray<Chunk*>& chunk
 	}
 	threadPool->ExecuteQueue();
 #else
+	//for (Chunk* chunk : chunks) {
+	//	auto func = std::bind(&ChunkRenderComponent::CalculateSolidBitmask, chunk->GetRenderComponent());
+	//	threadPool->AddFunctionToQueue(func);
+	//}
+	//threadPool->ExecuteQueue();
+
 	for (Chunk* chunk : chunks) {
 		auto func = std::bind(&ChunkRenderComponent::CalculateBuriedBitmask, chunk->GetRenderComponent());
 		threadPool->AddFunctionToQueue(func);
@@ -75,21 +81,24 @@ void ChunkRenderComponent::MultithreadRecreateMeshes(const darray<Chunk*>& chunk
 		threadPool->AddFunctionToQueue(func);
 	}
 	threadPool->ExecuteQueue();
+	
 #endif
 }
 
 void ChunkRenderComponent::CalculateBuriedBitmask()
 {
 	buriedBitmask.Reset();
+	//memset(blockSolidFaces, 0, CHUNK_SIZE);
 	const ChunkPosition chunkPos = chunk->GetPosition();
 	const MappedAdjacentChunks adjacentChunks = MappedAdjacentChunks::Create(GetWorld(), chunkPos);
 
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		const BlockPosition blockPos = i;
 		const WorldPosition worldPos = WorldPosition(chunkPos, blockPos);
-		const bool isBlockBuried = chunk->GetBlock(blockPos)->IsBuried(chunk, adjacentChunks, worldPos, blockPos);
-		//const bool isBlockBuried = adjacentChunks.GetBlock(worldPos)->IsBuried(chunk, adjacentChunks, worldPos);
+		const Block* block = chunk->GetBlock(blockPos);
+		const bool isBlockBuried = block->IsBuried(chunk, adjacentChunks, worldPos, blockPos);
 		buriedBitmask.SetFlag(blockPos, isBlockBuried);
+		//blockSolidFaces[i] = block->GetSolidSides();
 	}
 }
 
