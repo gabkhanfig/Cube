@@ -7,7 +7,7 @@ namespace UnitTests
 {
 	TEST(BlockFacingTest, Construct) {
 		BlockFacing b;
-		EXPECT_EQ(b.facing, BlockFacing::Dir_Down);
+		EXPECT_EQ(b.facing, 0);
 	}
 
 	TEST(BlockFacingTest, ConstructWithDirection) {
