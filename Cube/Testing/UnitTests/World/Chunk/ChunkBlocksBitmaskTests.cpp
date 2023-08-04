@@ -203,6 +203,23 @@ namespace UnitTests
 		a.SetAllFlags();
 		EXPECT_TRUE(a.AreAllBlocksSet());
 	}
+
+	TEST(ChunkBlocksBitmaskTest, FirstNotSetBlockIndex) {
+		ChunkBlocksBitmask a;
+		a.SetFlag(BlockPosition(5), true);
+		EXPECT_EQ(a.FirstNonSetBlockIndex().Get(), 0);
+
+		ChunkBlocksBitmask b;
+		b.SetFlag(BlockPosition(0), true);
+		b.SetFlag(BlockPosition(1), true);
+		EXPECT_EQ(b.FirstNonSetBlockIndex().Get(), 2);
+
+		ChunkBlocksBitmask c;
+		for (int i = 0; i <= 200; i++) {
+			c.SetFlag(i, true);
+		}
+		EXPECT_EQ(c.FirstNonSetBlockIndex().Get(), 201);
+	}
 }
 
 #endif
