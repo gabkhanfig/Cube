@@ -3,7 +3,7 @@
 #include "PlayerInputComponent.h"
 #include "../World/World.h"
 #include "../World/Chunk/Chunk.h"
-#include "../World/Block/Block.h"
+#include "../World/Block/BlockFactory.h"
 
 Player::Player()
 	: forwardInputHeld(false), backwardInputHeld(false), rightInputHeld(false), leftInputHeld(false), upInputHeld(false), downInputHeld(false)
@@ -58,7 +58,7 @@ void Player::InputUse(InputMods mods)
 		cubeLog("InputUse not looking at a block");
 		return;
 	}
-	Block* b = BlockFactory::GetBlockClass("stoneBlock")->NewBlock();
+	Block b = BlockFactory::CreateBlock("stone");
 	WorldPosition pos = { glm::dvec3(highlightedObject.position.x, highlightedObject.position.y + 1.0, highlightedObject.position.z) };
 	GetWorld()->SetBlockAt(pos, b);
 }

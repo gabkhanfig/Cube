@@ -81,7 +81,7 @@ ChunkBlocksBitmask::OptionalIndex ChunkBlocksBitmask::FirstSetBlockIndex() const
 	const uint8 mask2 = _mm256_cmpneq_epi64_mask(results[1], notSetVector);
 	unsigned long toCheck;
 	if(_BitScanForward(&toCheck, mask1 | (mask2 << 4)) == 0) return OptionalIndex(); // If none of the bits are set from the comparison, return an optional index with an invalid index.
-	return OptionalIndex((63 - asArray[toCheck]) + ((toCheck) * 64)); // Otherwise, return the index.
+	return OptionalIndex(static_cast<int>((63 - asArray[toCheck]) + ((toCheck) * 64))); // Otherwise, return the index.
 }
 
 #pragma intrinsic(_BitScanForward64)

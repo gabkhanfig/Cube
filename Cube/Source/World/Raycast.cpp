@@ -1,5 +1,4 @@
 #include "Raycast.h"
-#include "Block/Block.h"
 
 Block* RaycastHitResult::GetHitBlock() const
 {

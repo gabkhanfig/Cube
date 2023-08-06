@@ -103,14 +103,21 @@ Chunk* World::GetChunk(ChunkPosition position) const
   return found->second;
 }
 
-Block* World::GetBlock(WorldPosition position) const
+Block* World::GetBlock(WorldPosition position)
+{
+  Chunk* chunk = GetChunk(position.ToChunkPosition());
+  if (chunk == nullptr) return nullptr;
+  return chunk->GetBlock(position.ToBlockPosition());
+}
+
+const Block* World::GetBlock(WorldPosition position) const
 {
   const Chunk* chunk = GetChunk(position.ToChunkPosition());
   if (chunk == nullptr) return nullptr;
   return chunk->GetBlock(position.ToBlockPosition());
 }
 
-bool World::SetBlockAt(WorldPosition position, Block* block)
+bool World::SetBlockAt(WorldPosition position, const Block& block)
 {
   if (!DoesChunkExist(position.ToChunkPosition())) {
     return false;
@@ -160,7 +167,7 @@ static glm::dvec3 RaycastTMax(glm::dvec3 start, glm::dvec3 step, glm::dvec3 tDel
 
 RaycastHitResult World::RaycastHit(glm::dvec3 start, glm::dvec3 end) const
 {
-  const GlobalString airName = AirBlock::GetStaticName();
+  const GlobalString airName = "air";
 
   const glm::dvec3 rayDirection = end - start;
   const glm::dvec3 step = glm::sign(rayDirection);
@@ -178,10 +185,12 @@ RaycastHitResult World::RaycastHit(glm::dvec3 start, glm::dvec3 end) const
 
   while (!COMPONENT_PASSED(x) && !COMPONENT_PASSED(y) && !COMPONENT_PASSED(z)) {
     const WorldPosition wp{ pos };
-    Block* block = GetBlock(wp);
+    const Block* block = GetBlock(wp);
     if (block != nullptr && block->GetName() != airName) {
       result.success = RaycastHitResult::HitSuccess::Block;
-      result.hitObject = block;
+      result.hitChunk = GetChunk(wp.ToChunkPosition());
+      result.hitBpos = wp.ToBlockPosition();
+      result.hitObject = nullptr;
       result.position = pos;
       result.normal = norm;
       return result;

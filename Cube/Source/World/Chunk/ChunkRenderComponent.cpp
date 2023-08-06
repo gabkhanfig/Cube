@@ -31,7 +31,7 @@ ChunkRenderComponent::~ChunkRenderComponent()
 void ChunkRenderComponent::RecreateMesh()
 {
 	mesh->Empty();
-	const GlobalString airName = AirBlock::GetStaticName();
+	const GlobalString airName = "air";
 
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		const BlockPosition blockPos = i;
@@ -41,7 +41,7 @@ void ChunkRenderComponent::RecreateMesh()
 
 		const WorldPosition worldPos = WorldPosition(chunk->GetPosition(), blockPos);
 		const glm::vec3 vertexOffset{ blockPos.X(), blockPos.Y(), blockPos.Z() };
-		block->AddBlockMeshToChunkMesh(mesh, chunk, worldPos, vertexOffset);
+		//block->AddBlockMeshToChunkMesh(mesh, chunk, worldPos, vertexOffset);
 	}
 	emptyMesh = mesh->GetQuadCount() == 0;
 	//if (emptyMesh) {
@@ -112,7 +112,7 @@ void ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest()
 
 	const ChunkPosition chunkPos = chunk->GetPosition();
 	const MappedAdjacentAndBuriedChunks adjacentChunks = MappedAdjacentAndBuriedChunks::Create(GetWorld(), chunkPos);
-	const GlobalString airName = AirBlock::GetStaticName();
+	const GlobalString airName = "air";
 
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		const BlockPosition blockPos = i;
@@ -122,7 +122,8 @@ void ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest()
 
 		const WorldPosition worldPos = WorldPosition(chunkPos, blockPos);
 		const glm::vec3 vertexOffset{ blockPos.X(), blockPos.Y(), blockPos.Z() };
-		block->AddBlockMeshToChunkMeshBitmaskTest(mesh, chunk, worldPos, vertexOffset, adjacentChunks);
+		block->ConstructMesh(mesh, chunk, worldPos, vertexOffset, adjacentChunks);
+		//block->AddBlockMeshToChunkMeshBitmaskTest(mesh, chunk, worldPos, vertexOffset, adjacentChunks);
 	}
 	emptyMesh = mesh->GetQuadCount() == 0;
 	//if (emptyMesh) {

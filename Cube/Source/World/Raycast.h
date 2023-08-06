@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../Engine/EngineCore.h"
+#include "Block/Block.h"
 
-class Block;
 class Entity;
 class World;
 
@@ -32,11 +32,15 @@ public:
 	/* Get the hit object as an entity. Returns nullptr if it did not hit an entity. */
 	Entity* GetHitEntity() const;
 
+	
+
 public:
 
 	HitSuccess success;
 	IObject* hitObject;
 	glm::dvec3 position;
 	glm::dvec3 normal;
+	Chunk* hitChunk;
+	BlockPosition hitBpos;
 
 };

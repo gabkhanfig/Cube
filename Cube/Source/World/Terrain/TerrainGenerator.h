@@ -2,12 +2,11 @@
 
 #include "../../Engine/EngineCore.h"
 #include "../WorldTransform.h"
-
-class Block;
+#include "../Block/Block.h"
 
 class TerrainGenerator
 {
 public:
 
-	Block* CreateBlockForWorldPosition(WorldPosition pos) const;
+	Block CreateBlockForWorldPosition(WorldPosition pos) const;
 };

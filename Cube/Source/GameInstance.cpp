@@ -8,6 +8,8 @@
 #include "World/Block/BlockFactory.h"
 #include "Settings/Settings.h"
 
+#include "World/Block/BlockClass.h"
+
 void _CubeGameInstanceTickCallback(float deltaTime)
 {
   GetGameInstance()->Tick(deltaTime);
@@ -30,6 +32,9 @@ void GameInstance::Init()
     while (!renderThread->IsReady());
   }
   CubeInput::SetupGameCallbacks();
+
+  LoadAllBlocks();
+
   world = new World();
   world->BeginWorld();
 }
@@ -40,4 +45,11 @@ void GameInstance::Tick(float deltaTime)
   world->Tick(deltaTime);
 
   IObject::_DeleteAllPendingKillObjects();
+}
+
+void GameInstance::LoadAllBlocks()
+{
+  //cubeLog("loading all blocks");
+  BlockFactory::AddBlock<AirBlockClass>();
+  BlockFactory::AddBlock<StoneBlockClass>();
 }

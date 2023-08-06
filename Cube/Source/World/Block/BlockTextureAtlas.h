@@ -11,7 +11,7 @@ enum class EBlockTexture
 class Texture;
 
 /* Texture atlas for blocks. Loaded with application. See CreateBlockTextureAtlasObject() for actually creating the opengl texture object. */
-class BlockTextureAtlas
+struct BlockTextureAtlas
 {
 	static std::unordered_map<EBlockTexture, glm::vec2> textureUVCoords;
 

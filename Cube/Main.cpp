@@ -2,8 +2,6 @@
 #include "Source/Engine/Engine.h"
 #include <GLFW/glfw3.h>
 
-#include "Source/World/Block/Block.h"
-#include "Source/World/Block/BlockTextureAtlas.h"
 #include "Source/Player/Player.h"
 #include "Source/GameInstance.h"
 #include "Source/Settings/Settings.h"

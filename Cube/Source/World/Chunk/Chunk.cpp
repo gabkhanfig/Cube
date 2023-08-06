@@ -11,11 +11,11 @@ Chunk::Chunk(ChunkPosition inPosition)
 	//blocks = new Block*[CHUNK_SIZE];
 	renderComponent = new ChunkRenderComponent(this);
 
-	BlockClass* airBlockClass = BlockFactory::GetBlockClass(AirBlock::GetStaticName());
-	for (int i = 0; i < CHUNK_SIZE; i++) {
-		//blocks[i] = airBlockClass->NewBlock();
-		blocks[i] = nullptr;
-	}
+	//BlockClass* airBlockClass = BlockFactory::GetBlockClass(AirBlock::GetStaticName());
+	//for (int i = 0; i < CHUNK_SIZE; i++) {
+	//	//blocks[i] = airBlockClass->NewBlock();
+	//	blocks[i] = nullptr;
+	//}
 }
 
 Chunk::~Chunk()
@@ -29,29 +29,25 @@ void Chunk::Tick(float deltaTime)
 {
 }
 
-void Chunk::SetBlockAt(BlockPosition position, Block* block)
+void Chunk::SetBlockAt(BlockPosition position, const Block& block)
 {
-	blocks[position.index]->Destroy();
+	blocks[position.index].Destroy();
 	blocks[position.index] = block;
 	SetShouldBeRemeshed(true);
 }
 
 void Chunk::DestroyBlockAt(BlockPosition position)
 {
-	blocks[position.index]->Destroy();
-	blocks[position.index] = BlockFactory::NewAirBlock();
+	blocks[position.index].Destroy();
+	blocks[position.index] = BlockFactory::CreateAirBlock();
 	SetShouldBeRemeshed(true);
 }
 
 void Chunk::FillChunkWithBlock(GlobalString blockName)
 {
-	BlockClass* blockClass = BlockFactory::GetBlockClass(blockName);
 	for (int i = 0; i < CHUNK_SIZE; i++) {
-		Block* block = blockClass->NewBlock();
-		if (blocks[i]) {
-			blocks[i]->Destroy();
-		}
-		blocks[i] = block;
+		blocks[i].Destroy();
+		blocks[i] = BlockFactory::CreateBlock(blockName);
 	}
 }
 
@@ -84,11 +80,12 @@ void Chunk::MultithreadGenerateTerrain(const darray<Chunk*>& chunks, gk::ThreadP
 
 void Chunk::DestroyAllBlocks()
 {
-	for (int i = 0; i < CHUNK_SIZE; i++) {
-		Block* block = blocks[i];
-		if (IsValid(block)) {
-			block->Destroy();
-		}
-	}
+	cubeLog("todo... Chunk::DestroyAllBlocks()");
+	//for (int i = 0; i < CHUNK_SIZE; i++) {
+	//	Block* block = blocks[i];
+	//	if (IsValid(block)) {
+	//		block->Destroy();
+	//	}
+	//}
 }
 

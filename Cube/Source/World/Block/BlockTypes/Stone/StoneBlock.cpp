@@ -1,6 +1,6 @@
 #include "StoneBlock.h"
 
-StoneBlock::StoneBlock()
-{
-	isSolid = true;
-}
+//StoneBlock::StoneBlock()
+//{
+//	isSolid = true;
+//}

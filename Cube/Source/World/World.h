@@ -10,7 +10,7 @@ class Shader;
 class VertexArrayObject;
 class Chunk;
 class ChunkRenderer;
-class Block;
+struct Block;
 class TerrainGenerator;
 
 class World
@@ -29,9 +29,12 @@ public:
 	Chunk* GetChunk(ChunkPosition position) const;
 
 	/* Get a block at a specific world position. Returns nullptr if the chunk the block would be in doesn't exist. */
-	Block* GetBlock(WorldPosition position) const;
+	Block* GetBlock(WorldPosition position);
 
-	bool SetBlockAt(WorldPosition position, Block* block);
+	/* Get a block at a specific world position. Returns nullptr if the chunk the block would be in doesn't exist. */
+	const Block* GetBlock(WorldPosition position) const;
+
+	bool SetBlockAt(WorldPosition position, const Block& block);
 
 	/* Destroys the block at the given position, replacing it with air. */
 	void DestroyBlockAt(WorldPosition position);

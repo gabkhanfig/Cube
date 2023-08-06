@@ -6,6 +6,7 @@
 #include "../WorldTransform.h"
 #include "ChunkBlocksBitmask.h"
 #include "MappedAdjacentChunks.h"
+#include "../Block/Block.h"
 
 class VertexBufferObject;
 class IndexBufferObject;
@@ -15,7 +16,6 @@ class Shader;
 class Chunk;
 class ChunkRenderer;
 class World;
-class Block;
 
 class ChunkRenderComponent
 {

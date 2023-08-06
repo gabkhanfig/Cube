@@ -3,7 +3,7 @@
 #include "ChunkData.h"
 #include "../WorldTransform.h"
 
-class Block;
+struct Block;
 
 struct BlockLight
 {

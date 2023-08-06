@@ -3,10 +3,10 @@
 #include "../Entity/Entity.h"
 #include "../Engine/Input/UserInput.h"
 #include "../World/Raycast.h"
+#include "../World/Block/Block.h"
 
 class Camera;
 class PlayerInputComponent;
-class Block;
 
 class Player : public Entity 
 {

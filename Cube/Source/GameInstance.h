@@ -18,6 +18,8 @@ public:
 
 	forceinline World* GetWorld() const { return world; }
 
+	void LoadAllBlocks();
+
 private:
 
 	World* world;

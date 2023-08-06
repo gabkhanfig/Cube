@@ -5,7 +5,7 @@
 //	return BlockMesh();
 //}
 
-AirBlock::AirBlock()
-{
-	isSolid = false;
-}
+//AirBlock::AirBlock()
+//{
+//	isSolid = false;
+//}

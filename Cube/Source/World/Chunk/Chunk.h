@@ -1,9 +1,9 @@
 #pragma once
 
 #include "ChunkDataTypes.h"
+#include "../Block/Block.h"
 //#include "ChunkRenderComponent.h"
 
-class Block;
 class ChunkRenderComponent;
 class VertexArrayObject;
 class Shader;
@@ -23,9 +23,11 @@ public:
 	void Tick(float deltaTime);
 
 	/* Get a block at a specific relative position within the chunk. */
-	forceinline Block* GetBlock(BlockPosition position) const { return blocks[position.index]; }
+	forceinline Block* GetBlock(BlockPosition position) { return &(blocks[position.index]); }
 
-	void SetBlockAt(BlockPosition position, Block* block);
+	forceinline const Block* GetBlock(BlockPosition position) const {return &(blocks[position.index]); }
+
+	void SetBlockAt(BlockPosition position, const Block& block);
 
 	void DestroyBlockAt(BlockPosition position);
 
@@ -60,6 +62,7 @@ private:
 	bool shouldBeRemeshed;
 
 	/* Array of chunk blocks. */
-	Block* blocks[CHUNK_SIZE];
+	//Block* blocks[CHUNK_SIZE];
+	Block blocks[CHUNK_SIZE];
 
 };

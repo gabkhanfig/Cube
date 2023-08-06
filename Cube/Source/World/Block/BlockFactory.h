@@ -1,52 +1,49 @@
 #pragma once
 
 #include "../../Engine/EngineCore.h"
+#include "BlockClass.h"
+#include "Block.h"
 
-class Block;
 class Chunk;
+struct BlockVTable;
 
-class BlockClass
+struct BlockFactory
 {
-private:
-
-	/**/
-	GlobalString name;
-	
-	/**/
-	gk::ClassRef* classRef;
-
 public:
 
-	BlockClass();
+	template<typename T> 
+		requires (std::is_base_of<IBlockClass, T>::value)
+	static void AddBlock() {
+		const IBlockClass* blockClass = new T();
+		const BlockVTable* vTable = blockClass->NewBlockVTable();
 
-	template<typename B>
-		requires (std::is_base_of<Block, B>::value)
-	static BlockClass* CreateBlockDependency() 
-	{
-		BlockClass* blockDep = new BlockClass();
-		blockDep->name = B::GetStaticName();
-		blockDep->classRef = B::_GetStaticClassRef();
+#if CUBE_DEVELOPMENT
+		AssertValidateVTable(blockClass->GetBlockName(), vTable);
+#endif
 
-		return blockDep;
+		BlockCreatorPair* pair = new BlockCreatorPair();
+		pair->blockClass = blockClass;
+		pair->vTable = vTable;
+		blockClasses.insert({ blockClass->GetBlockName(), pair });
+
+		if constexpr (std::is_same_v<T, AirBlockClass>) {
+			airFactory = pair;
+		}
 	}
 
-	/* Either gets the default block object, or creates a new one depending on the block's requirements. */
-	Block* NewBlock();
+	static bool IsValidBlock(const GlobalString blockName);
 
-	GlobalString GetName() const { return name; }
-};
+	static Block CreateBlock(const GlobalString blockName);
 
-class BlockFactory
-{
+	static Block CreateAirBlock();
+
 private:
 
-	static std::unordered_map<GlobalString, BlockClass*> blockClasses;
+	static void AssertValidateVTable(GlobalString blockName, const BlockVTable* vTable);
 
-public:
+private:
 
-	static BlockClass* GetBlockClass(GlobalString blockName);
-
-	static Block* NewAirBlock();
+	static std::unordered_map<GlobalString, const BlockCreatorPair*> blockClasses;
+	static const BlockCreatorPair* airFactory;
 
 };
-

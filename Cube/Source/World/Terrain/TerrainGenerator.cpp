@@ -1,12 +1,11 @@
 #include "TerrainGenerator.h"
-#include "../Block/Block.h"
 #include "../Chunk/Chunk.h"
 #include "../World.h"
-#include "../Block/BlockTypes/Air/AirBlock.h"
+#include "../Block/BlockFactory.h"
 
-Block* TerrainGenerator::CreateBlockForWorldPosition(WorldPosition pos) const
+Block TerrainGenerator::CreateBlockForWorldPosition(WorldPosition pos) const
 {
-	return BlockFactory::GetBlockClass("stoneBlock")->NewBlock();
+	return BlockFactory::CreateBlock("stone");
 	//if (pos.y >= 0) {
 	//	return BlockFactory::GetBlockClass(AirBlock::GetStaticName())->NewBlock();
 	//}

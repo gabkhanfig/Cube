@@ -5,7 +5,7 @@
 
 class World;
 class Chunk;
-class Block;
+struct Block;
 
 struct MappedAdjacentChunks 
 {

@@ -1,62 +1,45 @@
 #include "BlockFactory.h"
-#include "Block.h"
 
-#include "BlockTypes/Stone/StoneBlock.h"
-#include "BlockTypes/Air/AirBlock.h"
+//#include "BlockTypes/Stone/StoneBlock.h"
+//#include "BlockTypes/Air/AirBlock.h"
 
-template<typename B>
-	requires (std::is_base_of<Block, B>::value)
-static void AddBlockToMap(std::unordered_map<GlobalString, BlockClass*>* map) {
-	BlockClass* block = B::GetStaticClass();
-	map->insert({ block->GetName(), block });
+//std::unordered_map<GlobalString, BlockClass*> BlockFactory::blockClasses = MapBlockClasses();
+
+std::unordered_map<GlobalString, const BlockCreatorPair*> BlockFactory::blockClasses; 
+const BlockCreatorPair* BlockFactory::airFactory = nullptr;
+
+bool BlockFactory::IsValidBlock(GlobalString blockName)
+{
+	return blockClasses.contains(blockName);
 }
 
-static std::unordered_map<GlobalString, BlockClass*> MapBlockClasses() 
+Block BlockFactory::CreateBlock(const GlobalString blockName)
 {
-	std::unordered_map<GlobalString, BlockClass*> classes;
-
-#define block(blockClass) AddBlockToMap<blockClass>(&classes)
-
-	block(AirBlock);
-	block(StoneBlock);
-
-#undef block
-
-	return classes;
-}
-
-BlockClass::BlockClass()
-	: classRef(nullptr)
-{}
-
-Block* BlockClass::NewBlock()
-{
-	Block* block = (Block*)classRef->NewObject();
-	gk_assertm(block != nullptr, "Block Dependency GetBlock() must never return nullptr");
+	gk_assertm(BlockFactory::IsValidBlock(blockName), "Block \"" << blockName << "\" is not a valid block name");
+	const auto found = blockClasses.find(blockName);
+	const BlockCreatorPair* creator = found->second;
+	Block block = creator->blockClass->ClassDefaultBlock();
+	gk_assertm(block.vTable == nullptr, "Block's vtable from IBlockClass::ClassDefaultBlock() must not be set. Was set for block: " << blockName);
+	block.vTable = creator->vTable;
 	return block;
 }
 
-std::unordered_map<GlobalString, BlockClass*> BlockFactory::blockClasses = MapBlockClasses();
-
-BlockClass* BlockFactory::GetBlockClass(GlobalString blockName)
+Block BlockFactory::CreateAirBlock()
 {
-	auto found = blockClasses.find(blockName);
-	if (found == blockClasses.end()) {
-		std::cout << "Unable to find block class for block: " << blockName.ToString() << '\n';
-		return nullptr;
-	}
-	return found->second;
+	gk_assertNotNull(airFactory);
+	Block air = airFactory->blockClass->ClassDefaultBlock();
+	gk_assertm(air.vTable == nullptr, "Air block's vtable from AirBlockClass::ClassDefaultBlock() must not be set.");
+	air.vTable = airFactory->vTable;
+	return air;
 }
 
-Block* BlockFactory::NewAirBlock()
+void BlockFactory::AssertValidateVTable(GlobalString blockName, const BlockVTable* vTable)
 {
-	static const GlobalString AirBlockName = "airBlock";
-#ifdef CUBE_DEVELOPMENT
-	auto found = blockClasses.find(AirBlockName);
-	gk_assertm(found != blockClasses.end(), "Air block must be mapped in the block factory.");
-	return found->second->NewBlock();
-#else
-	static Block* AirBlock = AirBlock::GetStaticClass()->NewBlock();
-	return AirBlock;
-#endif
+	gk_assertm(vTable->blockName != GlobalString(), "Block vTable name must be set. Failed on block: " << blockName);
+	gk_assertm(vTable->blockName == blockName, "Block vTable name must match block's name. Failed on block: " << blockName);
+	gk_assertm(vTable->meshFunc != nullptr, "Block vTable mesh function must be set. Failed on block: " << blockName);
+	gk_assertm(vTable->getFaceTexture != nullptr, "Block vTable get face texture function must be set. Failed on block: " << blockName);
 }
+
+
+
