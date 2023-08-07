@@ -17,7 +17,7 @@ class IBlockClass;
 //public:\
 //static GlobalString GetStaticName() {return name;}
 
-struct BlockCreatorPair
+struct BlockConstructionPair
 {
 	const IBlockClass* blockClass;
 	const BlockVTable* vTable;

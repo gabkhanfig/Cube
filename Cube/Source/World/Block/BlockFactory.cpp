@@ -5,8 +5,8 @@
 
 //std::unordered_map<GlobalString, BlockClass*> BlockFactory::blockClasses = MapBlockClasses();
 
-std::unordered_map<GlobalString, const BlockCreatorPair*> BlockFactory::blockClasses; 
-const BlockCreatorPair* BlockFactory::airFactory = nullptr;
+std::unordered_map<GlobalString, const BlockConstructionPair*> BlockFactory::blockClasses; 
+const BlockConstructionPair* BlockFactory::airFactory = nullptr;
 
 bool BlockFactory::IsValidBlock(GlobalString blockName)
 {
@@ -17,7 +17,7 @@ Block BlockFactory::CreateBlock(const GlobalString blockName)
 {
 	gk_assertm(BlockFactory::IsValidBlock(blockName), "Block \"" << blockName << "\" is not a valid block name");
 	const auto found = blockClasses.find(blockName);
-	const BlockCreatorPair* creator = found->second;
+	const BlockConstructionPair* creator = found->second;
 	Block block = creator->blockClass->ClassDefaultBlock();
 	gk_assertm(block.vTable == nullptr, "Block's vtable from IBlockClass::ClassDefaultBlock() must not be set. Was set for block: " << blockName);
 	block.vTable = creator->vTable;

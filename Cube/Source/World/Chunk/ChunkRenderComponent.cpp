@@ -52,7 +52,7 @@ void ChunkRenderComponent::RecreateMesh()
 
 void ChunkRenderComponent::MultithreadRecreateMeshes(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool)
 {
-	//cubeLog("Remeshing " + String::FromUint(chunks.Size()) + " chunks");
+	cubeLog("Remeshing " + String::FromUint(chunks.Size()) + " chunks\n" + String::From(chunks.Size() * CHUNK_SIZE) + " blocks");
 	gk_assertNotNull(threadPool);
 	gk_assert(threadPool->AllThreadsReady());
 #if false

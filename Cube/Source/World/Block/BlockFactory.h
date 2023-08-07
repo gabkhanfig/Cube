@@ -21,7 +21,7 @@ public:
 		AssertValidateVTable(blockClass->GetBlockName(), vTable);
 #endif
 
-		BlockCreatorPair* pair = new BlockCreatorPair();
+		BlockConstructionPair* pair = new BlockConstructionPair();
 		pair->blockClass = blockClass;
 		pair->vTable = vTable;
 		blockClasses.insert({ blockClass->GetBlockName(), pair });
@@ -43,7 +43,7 @@ private:
 
 private:
 
-	static std::unordered_map<GlobalString, const BlockCreatorPair*> blockClasses;
-	static const BlockCreatorPair* airFactory;
+	static std::unordered_map<GlobalString, const BlockConstructionPair*> blockClasses;
+	static const BlockConstructionPair* airFactory;
 
 };
