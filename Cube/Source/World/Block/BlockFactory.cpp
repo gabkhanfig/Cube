@@ -8,14 +8,14 @@
 std::unordered_map<GlobalString, const BlockConstructionPair*> BlockFactory::blockClasses; 
 const BlockConstructionPair* BlockFactory::airFactory = nullptr;
 
-bool BlockFactory::IsValidBlock(GlobalString blockName)
+bool BlockFactory::IsValidBlockName(GlobalString blockName)
 {
 	return blockClasses.contains(blockName);
 }
 
 Block BlockFactory::CreateBlock(const GlobalString blockName)
 {
-	gk_assertm(BlockFactory::IsValidBlock(blockName), "Block \"" << blockName << "\" is not a valid block name");
+	gk_assertm(BlockFactory::IsValidBlockName(blockName), "Block \"" << blockName << "\" is not a valid block name");
 	const auto found = blockClasses.find(blockName);
 	const BlockConstructionPair* creator = found->second;
 	Block block = creator->blockClass->ClassDefaultBlock();

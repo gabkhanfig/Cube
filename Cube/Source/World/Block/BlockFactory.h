@@ -31,7 +31,7 @@ public:
 		}
 	}
 
-	static bool IsValidBlock(const GlobalString blockName);
+	static bool IsValidBlockName(const GlobalString blockName);
 
 	static Block CreateBlock(const GlobalString blockName);
 
