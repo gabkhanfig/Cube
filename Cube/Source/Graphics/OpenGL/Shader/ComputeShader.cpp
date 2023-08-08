@@ -24,3 +24,29 @@ void ComputeShader::Dispatch(uint32 numGroupsX, uint32 numGroupsY, uint32 numGro
 	glDispatchCompute(numGroupsX, numGroupsY, numGroupsZ);
 	glMemoryBarrier(GL_ALL_BARRIER_BITS);
 }
+
+glm::ivec3 ComputeShader::GetMaxWorkGroupsPerComputeShader()
+{
+	int workGroupCount[3];
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &workGroupCount[0]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &workGroupCount[1]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &workGroupCount[2]);
+	return glm::ivec3(workGroupCount[0], workGroupCount[1], workGroupCount[2]);
+}
+
+glm::ivec3 ComputeShader::GetMaxWorkGroupSizes()
+{
+	int workGroupSizes[3];
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &workGroupSizes[0]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, &workGroupSizes[1]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, &workGroupSizes[2]);
+	return glm::ivec3(workGroupSizes[0], workGroupSizes[1], workGroupSizes[2]);
+
+}
+
+int ComputeShader::GetMaxInvocationsPerWorkGroup()
+{
+	int invocations;
+	glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &invocations);
+	return invocations;
+}
