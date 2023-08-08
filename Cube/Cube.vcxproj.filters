@@ -219,6 +219,12 @@
     <ClCompile Include="Source\World\Block\BlockClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\OpenGL\Shader\RasterShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\OpenGL\Shader\ComputeShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.vert" />
@@ -481,6 +487,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\World\Block\BlockClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\OpenGL\Shader\RasterShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\OpenGL\Shader\ComputeShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

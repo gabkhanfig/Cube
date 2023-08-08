@@ -2,24 +2,16 @@
 #include <glad/glad.h>
 #include <GkTypes/File/FileLoader.h>
 
+static_assert(static_cast<uint32>(ShaderType::Vertex) == GL_VERTEX_SHADER);
+static_assert(static_cast<uint32>(ShaderType::Fragment) == GL_FRAGMENT_SHADER);
+static_assert(static_cast<uint32>(ShaderType::Compute) == GL_COMPUTE_SHADER);
+static_assert(std::is_same_v<uint32, GLenum>);
+
 uint32 Shader::boundId = 0;
 
-static GLenum ShaderTypeToGLShader(Shader::Type shaderType) 
+uint32 Shader::LoadShader(ShaderType shaderType, const char* shaderSource)
 {
-	switch (shaderType) {
-	case Shader::Type::VertexShader:
-		return GL_VERTEX_SHADER;
-	case Shader::Type::FragmentShader:
-		return GL_FRAGMENT_SHADER;
-	default:
-		DebugBreak();
-		return 0;
-	}
-}
-
-uint32 Shader::LoadShader(Shader::Type shaderType, const char* shaderSource)
-{
-	const GLenum openGLShaderType = ShaderTypeToGLShader(shaderType);
+	const GLenum openGLShaderType = static_cast<GLenum>(shaderType);
 
 	// Create shader object of specified type and get a reference to it.
 	const uint32 shader = glCreateShader(openGLShaderType);
@@ -40,6 +32,9 @@ uint32 Shader::LoadShader(Shader::Type shaderType, const char* shaderSource)
 		case GL_FRAGMENT_SHADER:
 			shaderType = "Fragment";
 			break;
+		case GL_COMPUTE_SHADER:
+			shaderType = "Compute";
+			break;
 		default:
 			shaderType = "Unknown";
 			break;
@@ -53,27 +48,10 @@ uint32 Shader::LoadShader(Shader::Type shaderType, const char* shaderSource)
 	return shader;
 }
 
-uint32 Shader::CreateShader(const char* vertexSource, const char* fragmentSource)
+Shader::Shader()
 {
-	const uint32 vertexShader = LoadShader(Type::VertexShader, vertexSource);
-	const uint32 fragmentShader = LoadShader(Type::FragmentShader, fragmentSource);
-
-	// Create a shader program object and get a reference to it.
-	uint32 shaderProgram = glCreateProgram();
-	// Attach vertex shader to the shader program.
-	glAttachShader(shaderProgram, vertexShader);
-	// Attach fragment shader to the shader program.
-	glAttachShader(shaderProgram, fragmentShader);
-	// Link all of the shaders together into the shader program.
-	glLinkProgram(shaderProgram);
-
-	// Delete the shaders that have already been linked.
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-
-	return shaderProgram;
+	shaderProgram = -1;
 }
-
 uint32 Shader::GetUniformLocation(GlobalString uniformName)
 {
 	auto found = uniforms.find(uniformName);
@@ -87,12 +65,6 @@ uint32 Shader::GetUniformLocation(GlobalString uniformName)
 	}
 	uniforms.insert({ uniformName, location });
 	return location;
-}
-
-Shader::Shader(const char* vertexString, const char* fragmentString)
-{
-	shaderProgram = CreateShader(vertexString, fragmentString);
-	Bind();
 }
 
 Shader::~Shader()
@@ -119,45 +91,54 @@ bool Shader::IsBound() const
 
 void Shader::SetUniform1f(GlobalString uniform, float value)
 {
+	gk_assertm(IsBound(), "Cannot set shader uniform on a shader that is not bound");
 	glUniform1f(GetUniformLocation(uniform), value);
 }
 
 void Shader::SetUniform2f(GlobalString uniform, glm::vec2 value)
 {
+	gk_assertm(IsBound(), "Cannot set shader uniform on a shader that is not bound");
 	glUniform2f(GetUniformLocation(uniform), value.x, value.y);
 }
 
 void Shader::SetUniform3f(GlobalString uniform, glm::vec3 value)
 {
+	gk_assertm(IsBound(), "Cannot set shader uniform on a shader that is not bound");
 	glUniform3f(GetUniformLocation(uniform), value.x, value.y, value.z);
 }
 
 void Shader::SetUniform4f(GlobalString uniform, glm::vec4 value)
 {
+	gk_assertm(IsBound(), "Cannot set shader uniform on a shader that is not bound");
 	glUniform4f(GetUniformLocation(uniform), value.x, value.y, value.z, value.w);
 }
 
 void Shader::SetUniform1i(GlobalString uniform, int value)
 {
+	gk_assertm(IsBound(), "Cannot set shader uniform on a shader that is not bound");
 	glUniform1i(GetUniformLocation(uniform), value);
 }
 
 void Shader::SetUniform2i(GlobalString uniform, glm::ivec2 value)
 {
+	gk_assertm(IsBound(), "Cannot set shader uniform on a shader that is not bound");
 	glUniform2i(GetUniformLocation(uniform), value.x, value.y);
 }
 
 void Shader::SetUniform3i(GlobalString uniform, glm::ivec3 value)
 {
+	gk_assertm(IsBound(), "Cannot set shader uniform on a shader that is not bound");
 	glUniform3i(GetUniformLocation(uniform), value.x, value.y, value.z);
 }
 
 void Shader::SetUniform4i(GlobalString uniform, glm::ivec4 value)
 {
+	gk_assertm(IsBound(), "Cannot set shader uniform on a shader that is not bound");
 	glUniform4i(GetUniformLocation(uniform), value.x, value.y, value.z, value.w);
 }
 
 void Shader::SetUniformMat4f(GlobalString uniform, const glm::mat4& value)
 {
+	gk_assertm(IsBound(), "Cannot set shader uniform on a shader that is not bound");
 	glUniformMatrix4fv(GetUniformLocation(uniform), 1, GL_FALSE, &value[0][0]);
 }

@@ -1,5 +1,6 @@
 #include "ChunkRenderer.h"
-#include "../../Graphics/OpenGL/Shader/Shader.h"
+#include "../../Graphics/OpenGL/Shader/RasterShader.h"
+#include "../../Graphics/OpenGL/Shader/ComputeShader.h"
 #include "../../Graphics/OpenGL/Buffers/VertexBufferObject.h"
 #include "../../Graphics/OpenGL/Buffers/IndexBufferObject.h"
 #include "../../Graphics/OpenGL/Buffers/VertexArrayObject.h"
@@ -20,7 +21,7 @@ ChunkRenderer::ChunkRenderer()
   : chunkOffsetUniform("u_chunkOffset"), cameraMvpUniform("u_cameraMVP"), boundDrawCallId(0), modifyDrawCallId(1)
 {
   //shader = new Shader(CompileTimeFiles::GetTextFile("Chunk.vert")->contents, CompileTimeFiles::GetTextFile("Chunk.frag")->contents);
-  blockShader = new Shader(CompileTimeFiles::GetTextFile("Block.vert")->contents, CompileTimeFiles::GetTextFile("Block.frag")->contents);
+  blockShader = new RasterShader(CompileTimeFiles::GetTextFile("Block.vert")->contents, CompileTimeFiles::GetTextFile("Block.frag")->contents);
   vao = new VertexArrayObject();
   vao->SetFormatLayout(BlockQuad::GetQuadsVertexBufferLayout());
 }

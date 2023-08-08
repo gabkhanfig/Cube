@@ -2,34 +2,20 @@
 
 #include "../../../Engine/EngineCore.h"
 
+enum class ShaderType : uint32
+{
+	/* Same value as GL_VERTEX_SHADER */
+	Vertex = 0x8B31,
+	/* Same value as GL_FRAGMENT_SHADER */
+	Fragment = 0x8B30,
+	/* Same value as GL_COMPUTE_SHADER */
+	Compute = 0x91B9
+};
+
+/* See RasterShader and ComputeShader subclasses. */
 class Shader 
 {
 public:
-
-	enum class Type : uint8
-	{
-		VertexShader,
-		FragmentShader
-	};
-
-private:
-
-	uint32 shaderProgram;
-
-	std::unordered_map<GlobalString, uint32> uniforms;
-
-private:
-
-	static uint32 LoadShader(Shader::Type shaderType, const char* shaderSource);
-
-	static uint32 CreateShader(const char* vertexSource, const char* fragmentSource);
-
-	uint32 GetUniformLocation(GlobalString uniformName);
-
-public:
-
-	/* Construct a shader given strings containing vertex and fragment source code. */
-	Shader(const char* vertexString, const char* fragmentString);
 
 	~Shader();
 
@@ -67,6 +53,20 @@ public:
 
 	/* Set shader uniform of a 4N matrix of floats. */
 	void SetUniformMat4f(GlobalString uniform, const glm::mat4& value);
+
+protected:
+
+	static uint32 LoadShader(ShaderType shaderType, const char* shaderSource);
+
+	Shader();
+
+	uint32 GetUniformLocation(GlobalString uniformName);
+
+protected:
+
+	uint32 shaderProgram;
+
+	std::unordered_map<GlobalString, uint32> uniforms;
 
 private:
 

@@ -364,6 +364,8 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\VertexBufferObject.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Camera\Camera.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Render\Renderer.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\Shader\ComputeShader.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\Shader\RasterShader.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Shader\Shader.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Texture\Texture.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Texture\Texture2d.cpp" />
@@ -451,6 +453,8 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\VertexBufferObject.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Camera\Camera.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Render\Renderer.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Shader\ComputeShader.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Shader\RasterShader.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Shader\Shader.h" />
     <ClInclude Include="Source\Graphics\OpenGL\OpenGLStructures.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Texture\Texture.h" />

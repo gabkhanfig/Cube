@@ -8,6 +8,7 @@
 
 class Player;
 class Shader;
+class RasterShader;
 class VertexArrayObject;
 class Chunk;
 class VertexBufferObject;
@@ -58,7 +59,7 @@ private:
 
 private:
 
-	Shader* blockShader;
+	RasterShader* blockShader;
 
 	VertexArrayObject* vao;
 
