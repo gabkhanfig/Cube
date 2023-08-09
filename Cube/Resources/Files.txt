@@ -2,5 +2,8 @@ Shaders/Chunk.vert
 Shaders/Chunk.frag
 Shaders/Block.vert
 Shaders/Block.frag
+Shaders/BlockPathtrace.vert
+Shaders/BlockPathtrace.frag
+Shaders/BlockPathtrace.comp
 Textures/InvalidTexture.png
 Textures/StoneBlock.png

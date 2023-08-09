@@ -12,6 +12,15 @@ extern const char* generated_Block_vert;
 // Generated text file from Shaders/Block.frag
 extern const char* generated_Block_frag;
 
+// Generated text file from Shaders/BlockPathtrace.vert
+extern const char* generated_BlockPathtrace_vert;
+
+// Generated text file from Shaders/BlockPathtrace.frag
+extern const char* generated_BlockPathtrace_frag;
+
+// Generated text file from Shaders/BlockPathtrace.comp
+extern const char* generated_BlockPathtrace_comp;
+
 // Generated image file from Textures/InvalidTexture.png
 extern unsigned char generated_InvalidTexture_png[1024];
 // Generated image pixel width from Textures/InvalidTexture.png

@@ -12,6 +12,9 @@ void CompileTimeFiles::LoadAllFiles()
 	LoadTextFile("Chunk.frag", generated_Chunk_frag);
 	LoadTextFile("Block.vert", generated_Block_vert);
 	LoadTextFile("Block.frag", generated_Block_frag);
+	LoadTextFile("BlockPathtrace.vert", generated_BlockPathtrace_vert);
+	LoadTextFile("BlockPathtrace.frag", generated_BlockPathtrace_frag);
+	LoadTextFile("BlockPathtrace.comp", generated_BlockPathtrace_comp);
 
 	LoadImageFile("InvalidTexture.png", generated_InvalidTexture_png, generated_InvalidTexture_png_width, generated_InvalidTexture_png_height, generated_InvalidTexture_png_total_bytes);
 	LoadImageFile("StoneBlock.png", generated_StoneBlock_png, generated_StoneBlock_png_width, generated_StoneBlock_png_height, generated_StoneBlock_png_total_bytes);
