@@ -78,46 +78,6 @@ Engine::Engine() :
 	glfwSetInputMode(window->GetGlfwWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	renderThread = new gk::Thread();
 	openGLInstance = new OpenGLInstance(renderThread);
-
-	//if (!useRenderThread) {
-	//	renderThread = nullptr;
-	//	Window::SetGLFWContextOnCallingThread(window);
-	//}
-	//else {
-	//	renderThread = new gk::Thread();
-	//	renderThread->BindFunction(std::bind(Window::SetGLFWContextOnCallingThread, window)); // Bind function for setting OpenGL context on render thread.
-	//	//std::cout << std::this_thread::get_id() << std::endl;
-	//	renderThread->Execute(); // Set OpenGL context on render thread.
-	//	while (!renderThread->IsReady()); // Wait until render thread finishes execution.
-	//}
-}
-
-void Engine::InitializeGLFW()
-{
-	if (!glfwInit()) {
-		cubeLog("failed to initialize GLFW");
-		abort();
-	}
-		 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-}
-
-void Engine::InitializeOpenGL(Window* _window, glm::vec3 clearColor)
-{
-	gladLoadGL();
-	glViewport(0, 0, _window->GetWidth(), _window->GetHeight());
-	glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.f);
-	glEnable(GL_DEPTH_TEST | GL_DEBUG_OUTPUT); 
-	glDepthFunc(GL_LESS);
-	glDepthMask(GL_TRUE);
-	glDebugMessageCallback(MessageCallback, 0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glEnable(GL_CULL_FACE);
-	glFrontFace(GL_CW); // See chunk mesh index buffer object. this works and i dont know why
 }
 
 void Engine::Start()
@@ -132,16 +92,6 @@ void Engine::Start()
 	engine->openGLInstance->InitializeOpenGL(engine->renderThread, glm::ivec2(windowWidth, windowHeight), glm::vec3(0.2, 0.55, 0.8));
 
 	UserInput::SetCallbacks();
-
-	//const glm::vec3 clearColor = glm::vec3(0.2, 0.55, 0.8);
-	//if (!engine->useRenderThread) {
-	//	InitializeOpenGL(engine->window, clearColor);
-	//}
-	//else {
-	//	engine->renderThread->BindFunction(std::bind(Engine::InitializeOpenGL, engine->window, clearColor));
-	//	engine->renderThread->Execute();
-	//	while (!engine->renderThread->IsReady());
-	//}
 }
 
 void Engine::Run(gk::Event<void, float>* tickCallback)
