@@ -5,6 +5,7 @@
 #include "Window/Window.h"
 #include "Tick/TickEngine.h"
 #include "../Core/Utils/CompileTimeFiles.h"
+#include "OpenGL/OpenGLInstance.h"
 
 void GLAPIENTRY
 MessageCallback(GLenum source,
@@ -62,11 +63,6 @@ void Engine::WaitForRenderThread(int64 millisecondTimeout)
 #endif
 }
 
-bool Engine::IsExecutingOnRenderThread() const
-{
-	return std::this_thread::get_id() == renderThread->StdThreadId();
-}
-
 Engine::Engine() :
 	useRenderThread(true),
 	tick(nullptr),
@@ -80,18 +76,33 @@ Engine::Engine() :
 #endif
 	window = new Window(windowWidth, windowHeight, windowTitle);
 	glfwSetInputMode(window->GetGlfwWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	renderThread = new gk::Thread();
+	openGLInstance = new OpenGLInstance(renderThread);
 
-	if (!useRenderThread) {
-		renderThread = nullptr;
-		Window::SetGLFWContextOnCallingThread(window);
+	//if (!useRenderThread) {
+	//	renderThread = nullptr;
+	//	Window::SetGLFWContextOnCallingThread(window);
+	//}
+	//else {
+	//	renderThread = new gk::Thread();
+	//	renderThread->BindFunction(std::bind(Window::SetGLFWContextOnCallingThread, window)); // Bind function for setting OpenGL context on render thread.
+	//	//std::cout << std::this_thread::get_id() << std::endl;
+	//	renderThread->Execute(); // Set OpenGL context on render thread.
+	//	while (!renderThread->IsReady()); // Wait until render thread finishes execution.
+	//}
+}
+
+void Engine::InitializeGLFW()
+{
+	if (!glfwInit()) {
+		cubeLog("failed to initialize GLFW");
+		abort();
 	}
-	else {
-		renderThread = new gk::Thread();
-		renderThread->BindFunction(std::bind(Window::SetGLFWContextOnCallingThread, window)); // Bind function for setting OpenGL context on render thread.
-		//std::cout << std::this_thread::get_id() << std::endl;
-		renderThread->Execute(); // Set OpenGL context on render thread.
-		while (!renderThread->IsReady()); // Wait until render thread finishes execution.
-	}
+		 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 }
 
 void Engine::InitializeOpenGL(Window* _window, glm::vec3 clearColor)
@@ -117,20 +128,23 @@ void Engine::Start()
 
 	Window::InitializeGLFW();
 	engine = new Engine();
+	engine->window->SetGLFWContext(engine->renderThread);
+	engine->openGLInstance->InitializeOpenGL(engine->renderThread, glm::ivec2(windowWidth, windowHeight), glm::vec3(0.2, 0.55, 0.8));
+
 	UserInput::SetCallbacks();
 
-	const glm::vec3 clearColor = glm::vec3(0.2, 0.55, 0.8);
-	if (!engine->useRenderThread) {
-		InitializeOpenGL(engine->window, clearColor);
-	}
-	else {
-		engine->renderThread->BindFunction(std::bind(Engine::InitializeOpenGL, engine->window, clearColor));
-		engine->renderThread->Execute();
-		while (!engine->renderThread->IsReady());
-	}
+	//const glm::vec3 clearColor = glm::vec3(0.2, 0.55, 0.8);
+	//if (!engine->useRenderThread) {
+	//	InitializeOpenGL(engine->window, clearColor);
+	//}
+	//else {
+	//	engine->renderThread->BindFunction(std::bind(Engine::InitializeOpenGL, engine->window, clearColor));
+	//	engine->renderThread->Execute();
+	//	while (!engine->renderThread->IsReady());
+	//}
 }
 
-void Engine::Run(_TickCallback tickCallback)
+void Engine::Run(gk::Event<void, float>* tickCallback)
 {
 	engine->tick = new TickEngine(tickCallback);
 	engine->tick->RunEngineLoop();

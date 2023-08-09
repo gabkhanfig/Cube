@@ -2,15 +2,18 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <assert.h>
-#include "../EngineCore.h"
+#include "../Engine.h"
 #include <string>
+#include "../OpenGL/OpenGLInstance.h"
 
 bool isGlfwInitialized = false;
 
 void Window::InitializeGLFW()
 {
-	if (!glfwInit())
+	if (!glfwInit()) {
+		cubeLog("failed to initialize GLFW");
 		abort();
+	}
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -59,6 +62,25 @@ void Window::SetGLFWContextOnCallingThread(Window* window)
 {
 	//std::cout << std::this_thread::get_id() << std::endl;
 	glfwMakeContextCurrent(window->GetGlfwWindow());
+	glfwSwapInterval(0); // No FPS Limit
+}
+
+void Window::SetGLFWContext(gk::Thread* renderThread)
+{
+	if (renderThread == nullptr) {
+		SetGLFWContextOnThread(this->window);
+		return;
+	}
+
+	renderThread->BindFunction(std::bind(SetGLFWContextOnThread, this->window));
+	renderThread->Execute();
+	while (!renderThread->IsReady());
+}
+
+void Window::SetGLFWContextOnThread(GLFWwindow* window)
+{
+	assertOnRenderThread();
+	glfwMakeContextCurrent(window);
 	glfwSwapInterval(0); // No FPS Limit
 }
 

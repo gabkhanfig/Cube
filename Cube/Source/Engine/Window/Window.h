@@ -71,6 +71,12 @@ public:
 
 	static void SetGLFWContextOnCallingThread(Window* window);
 
+	void SetGLFWContext(gk::Thread* renderThread);
+
+private:
+
+	static void SetGLFWContextOnThread(GLFWwindow* window);
+
 
 
 };

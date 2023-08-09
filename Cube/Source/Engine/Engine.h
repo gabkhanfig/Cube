@@ -7,9 +7,9 @@ class UserInput;
 class Window;
 class TickEngine;
 class GameInstance;
+class OpenGLInstance;
 
 extern Engine* engine;
-
 
 struct EngineInitializationParams 
 {
@@ -32,7 +32,7 @@ public:
 	static void Start();
 
 	/**/
-	static void Run(_TickCallback tickCallback);
+	static void Run(gk::Event<void, float>* tickCallback);
 
 	forceinline UserInput* GetUserInput() const { return input; }
 
@@ -46,17 +46,19 @@ public:
 
 	forceinline gk::ThreadPool* GetThreadPool() const { return threadPool; }
 
+	OpenGLInstance* GetOpenGLInstance() const { return openGLInstance; }
+
 	float GetDeltaTime() const;
 
 	void SwapGlfwBuffers();
 
 	void WaitForRenderThread(int64 millisecondTimeout);
 
-	bool IsExecutingOnRenderThread() const;
-
 private:
 
 	Engine();
+
+	static void InitializeGLFW();
 
 	static void InitializeOpenGL(Window* _window, glm::vec3 clearColor);
 
@@ -78,6 +80,8 @@ private:
 
 	/**/
 	gk::ThreadPool* threadPool;
+
+	OpenGLInstance* openGLInstance;
 
 
 };

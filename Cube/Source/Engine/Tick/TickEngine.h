@@ -10,7 +10,8 @@ private:
 	/* The maximum allowed delta time, to ensure all physics events occur properly */
 	static constexpr float MAX_DELTA_TIME = 0.25;
 
-	_TickCallback callback;
+	//_TickCallback callback;
+	gk::Event<void, float>* callback;
 
 	double previous;
 
@@ -24,7 +25,7 @@ private:
 
 public:
 	
-	TickEngine(_TickCallback tickCallback);
+	TickEngine(gk::Event<void, float>* tickCallback);
 
 	void RunEngineLoop();
 

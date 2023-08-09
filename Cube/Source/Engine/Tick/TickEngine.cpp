@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <string>
 
-TickEngine::TickEngine(_TickCallback tickCallback)
+TickEngine::TickEngine(gk::Event<void, float>* tickCallback)
 	: callback(tickCallback), previous(0), current(0), deltaTime(0), fpsCounter(0), tickNum(0)
 {}
 
@@ -18,7 +18,7 @@ void TickEngine::RunEngineLoop()
 		deltaTime = static_cast<float>(current - previous);
 		UpdateFps();
 
-		callback(std::min(deltaTime, MAX_DELTA_TIME));
+		callback->Invoke(std::min(deltaTime, MAX_DELTA_TIME));
 
 		/* Swap front and back buffers */
 		//engine->GetWindow()->SwapBuffers();
