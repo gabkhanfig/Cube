@@ -225,6 +225,9 @@
     <ClCompile Include="Source\Graphics\OpenGL\Shader\ComputeShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\OpenGL\OpenGLInstance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.vert" />
@@ -238,6 +241,9 @@
     <None Include="Testing\GoogleTest\gtest\internal\custom\README.md" />
     <None Include="Resources\Shaders\Block.vert" />
     <None Include="Resources\Shaders\Block.frag" />
+    <None Include="Resources\Shaders\BlockPathtrace.vert" />
+    <None Include="Resources\Shaders\BlockPathtrace.frag" />
+    <None Include="Resources\Shaders\BlockPathtrace.comp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\Files.txt" />
@@ -493,6 +499,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\OpenGL\Shader\ComputeShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\OpenGL\OpenGLInstance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
