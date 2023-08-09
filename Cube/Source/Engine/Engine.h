@@ -52,6 +52,8 @@ public:
 
 	void WaitForRenderThread(int64 millisecondTimeout);
 
+	bool IsExecutingOnRenderThread() const;
+
 private:
 
 	Engine();

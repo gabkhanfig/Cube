@@ -62,6 +62,11 @@ void Engine::WaitForRenderThread(int64 millisecondTimeout)
 #endif
 }
 
+bool Engine::IsExecutingOnRenderThread() const
+{
+	return std::this_thread::get_id() == renderThread->StdThreadId();
+}
+
 Engine::Engine() :
 	useRenderThread(true),
 	tick(nullptr),
