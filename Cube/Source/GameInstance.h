@@ -2,8 +2,6 @@
 
 #include "Engine/EngineCore.h"
 
-void _CubeGameInstanceTickCallback(float deltaTime);
-
 class World;
 
 class GameInstance

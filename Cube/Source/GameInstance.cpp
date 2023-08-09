@@ -10,11 +10,6 @@
 
 #include "World/Block/BlockClass.h"
 
-void _CubeGameInstanceTickCallback(float deltaTime)
-{
-  GetGameInstance()->Tick(deltaTime);
-}
-
 GameInstance::GameInstance()
   : world(nullptr)
 {
