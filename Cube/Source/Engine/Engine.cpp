@@ -80,7 +80,7 @@ Engine::Engine() :
 	openGLInstance = new OpenGLInstance(renderThread);
 }
 
-void Engine::Start()
+void Engine::Initialize()
 {
 	IObject::_InitializePendingDeleteArray();
 

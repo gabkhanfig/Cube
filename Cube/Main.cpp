@@ -31,7 +31,7 @@ int main(int argc, char** argv)
   return RUN_ALL_TESTS();
 #else
   settings = new Settings();
-  Engine::Start();
+  Engine::Initialize();
   gameInstance = new GameInstance();
   gameInstance->Init();
 	gk::Event<void, float>* gameInstanceTickEvent = gk::Event<void, float>::Create(gameInstance, &GameInstance::Tick);

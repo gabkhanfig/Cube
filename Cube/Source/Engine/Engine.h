@@ -29,7 +29,7 @@ class Engine
 public:
 
 	/*  */
-	static void Start();
+	static void Initialize();
 
 	/**/
 	static void Run(gk::Event<void, float>* tickCallback);
