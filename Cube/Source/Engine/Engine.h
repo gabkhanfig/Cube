@@ -58,10 +58,6 @@ private:
 
 	Engine();
 
-	static void InitializeGLFW();
-
-	static void InitializeOpenGL(Window* _window, glm::vec3 clearColor);
-
 private:
 
 	/**/
