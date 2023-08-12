@@ -20,6 +20,12 @@ void AirBlockClass::ConstructBlockVTable(BlockVTable* vTable) const
 	vTable->getFaceTexture = AirBlockClass::GetFaceTexture;
 }
 
+BlockMaterial AirBlockClass::GetMaterial() const
+{
+	gk_assertm(false, "Air Block does not have a material");
+	return BlockMaterial();
+}
+
 EBlockTexture AirBlockClass::GetFaceTexture(const Block* self, const BlockFacing face)
 {
 	return EBlockTexture::none;
@@ -38,6 +44,19 @@ Block StoneBlockClass::ClassDefaultBlock() const
 void StoneBlockClass::ConstructBlockVTable(BlockVTable* vTable) const
 {
 	vTable->getFaceTexture = StoneBlockClass::GetFaceTexture;
+}
+
+BlockMaterial StoneBlockClass::GetMaterial() const
+{
+	BlockMaterial material;
+	material.model = EBlockModel::Cube;
+	material.faceTextures.bottomFaceTexture = EBlockTexture::stone;
+	material.faceTextures.northFaceTexture = EBlockTexture::stone;
+	material.faceTextures.eastFaceTexture = EBlockTexture::stone;
+	material.faceTextures.southFaceTexture = EBlockTexture::stone;
+	material.faceTextures.westFaceTexture = EBlockTexture::stone;
+	material.faceTextures.topFaceTexture = EBlockTexture::stone;
+	return material;
 }
 
 EBlockTexture StoneBlockClass::GetFaceTexture(const Block* self, const BlockFacing face)

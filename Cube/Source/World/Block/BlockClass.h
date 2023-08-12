@@ -4,6 +4,7 @@
 #include "BlockVTable.h"
 #include "Block.h"
 #include "../WorldTransform.h"
+#include "BlockPathtrace.h"
 
 class IBlockClass;
 
@@ -16,6 +17,8 @@ class IBlockClass;
 //#define BLOCK_CLASS(name)\
 //public:\
 //static GlobalString GetStaticName() {return name;}
+
+
 
 struct BlockConstructionPair
 {
@@ -33,6 +36,8 @@ public:
 	virtual Block ClassDefaultBlock() const = 0;
 
 	virtual void ConstructBlockVTable(BlockVTable* vTable) const = 0;
+
+	virtual BlockMaterial GetMaterial() const = 0;
 };
 
 
@@ -41,6 +46,7 @@ class StoneBlockClass : public IBlockClass
 	virtual GlobalString GetBlockName() const override { return "stone"; }
 	virtual Block ClassDefaultBlock() const override;
 	virtual void ConstructBlockVTable(BlockVTable* vTable) const override;
+	virtual BlockMaterial GetMaterial() const override;
 
 	static EBlockTexture GetFaceTexture(const Block* self, const BlockFacing face);
 };
@@ -50,6 +56,7 @@ class AirBlockClass : public IBlockClass
 	virtual GlobalString GetBlockName() const override { return "air"; }
 	virtual Block ClassDefaultBlock() const override;
 	virtual void ConstructBlockVTable(BlockVTable* vTable) const override;
+	virtual BlockMaterial GetMaterial() const override;
 
 	static EBlockTexture GetFaceTexture(const Block* self, const BlockFacing face);
 
