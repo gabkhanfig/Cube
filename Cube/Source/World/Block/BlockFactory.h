@@ -3,6 +3,7 @@
 #include "../../Engine/EngineCore.h"
 #include "BlockClass.h"
 #include "Block.h"
+#include "../../Graphics/Geometry/Material.h"
 
 class Chunk;
 struct BlockVTable;
@@ -29,6 +30,11 @@ public:
 		if constexpr (std::is_same_v<T, AirBlockClass>) {
 			airFactory = pair;
 		}
+		else {
+			const Material material = Material::ConvertFromBlockMaterial(blockClass->GetMaterial());
+			const uint32 index = materialsData.Add(material);
+			materialIds.insert({ blockClass->GetBlockName(), index });
+		}
 	}
 
 	static bool IsValidBlockName(const GlobalString blockName);
@@ -37,6 +43,10 @@ public:
 
 	static Block CreateAirBlock();
 
+	static const IBlockClass* GetBlockClass(const GlobalString blockName);
+
+	static uint32 GetMaterialId(const GlobalString blockName);
+
 private:
 
 	static void AssertValidateVTable(GlobalString blockName, const BlockVTable* vTable);
@@ -44,6 +54,8 @@ private:
 private:
 
 	static std::unordered_map<GlobalString, const BlockConstructionPair*> blockClasses;
+	static std::unordered_map<GlobalString, uint32> materialIds;
+	static darray<Material> materialsData;
 	static const BlockConstructionPair* airFactory;
 
 };

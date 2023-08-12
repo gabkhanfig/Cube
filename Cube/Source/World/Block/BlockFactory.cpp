@@ -6,6 +6,8 @@
 //std::unordered_map<GlobalString, BlockClass*> BlockFactory::blockClasses = MapBlockClasses();
 
 std::unordered_map<GlobalString, const BlockConstructionPair*> BlockFactory::blockClasses; 
+std::unordered_map<GlobalString, uint32> BlockFactory::materialIds;
+darray<Material> BlockFactory::materialsData;
 const BlockConstructionPair* BlockFactory::airFactory = nullptr;
 
 bool BlockFactory::IsValidBlockName(GlobalString blockName)
@@ -31,6 +33,18 @@ Block BlockFactory::CreateAirBlock()
 	gk_assertm(air.vTable == nullptr, "Air block's vtable from AirBlockClass::ClassDefaultBlock() must not be set.");
 	air.vTable = airFactory->vTable;
 	return air;
+}
+
+const IBlockClass* BlockFactory::GetBlockClass(const GlobalString blockName)
+{
+	gk_assertm(BlockFactory::IsValidBlockName(blockName), "Block \"" << blockName << "\" is not a valid block name");
+	return blockClasses.find(blockName)->second->blockClass;
+}
+
+uint32 BlockFactory::GetMaterialId(const GlobalString blockName)
+{
+	gk_assertm(BlockFactory::IsValidBlockName(blockName), "Block \"" << blockName << "\" is not a valid block name");
+	return materialIds.find(blockName)->second;
 }
 
 void BlockFactory::AssertValidateVTable(GlobalString blockName, const BlockVTable* vTable)
