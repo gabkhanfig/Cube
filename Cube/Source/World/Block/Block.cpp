@@ -548,3 +548,11 @@ void Block::ConstructMesh(ChunkMesh* mesh, const Chunk* chunk, const WorldPositi
 {
   vTable->meshFunc(this, mesh, chunk, position, vertexOffset, adjacentChunks);
 }
+
+CompressedBlockPathtraceData Block::GetPathtraceData() const
+{
+  CompressedBlockPathtraceData pathtraceData;
+  pathtraceData.materialId = BlockFactory::GetMaterialId(GetName());
+  pathtraceData.normal = PackedNormal::Pack(glm::vec3(1, 0, 0));
+  return pathtraceData;
+}

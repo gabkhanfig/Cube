@@ -8,6 +8,7 @@
 #include "../../Engine/Object.h"
 #include "../Chunk/MappedAdjacentChunks.h"
 #include "../Chunk/ChunkBlocksBitmask.h"
+#include "BlockPathtrace.h"
 
 /* Required macro for all blocks. Sets its class data and name. Also sets everything after this back to private. */
 #define BLOCK_BODY(blockClass, blockName) \
@@ -159,4 +160,6 @@ struct Block
 	bool IsBuried(const Chunk* owningChunk, const MappedAdjacentChunks& adjacentChunks, WorldPosition worldPosition, BlockPosition blockPos) const;
 
 	void ConstructMesh(ChunkMesh* mesh, const Chunk* chunk, const WorldPosition position, const glm::vec3 vertexOffset, const MappedAdjacentAndBuriedChunks& adjacentChunks) const;
+
+	CompressedBlockPathtraceData GetPathtraceData() const;
 };
