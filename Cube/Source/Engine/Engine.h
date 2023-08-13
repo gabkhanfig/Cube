@@ -46,7 +46,10 @@ public:
 
 	forceinline gk::ThreadPool* GetThreadPool() const { return threadPool; }
 
-	OpenGLInstance* GetOpenGLInstance() const { return openGLInstance; }
+	OpenGLInstance* GetOpenGLInstance() const {
+		gk_assertm(openGLInstance != nullptr, "OpenGLInstance wasn't created!")
+		return openGLInstance; 
+	}
 
 	float GetDeltaTime() const;
 
