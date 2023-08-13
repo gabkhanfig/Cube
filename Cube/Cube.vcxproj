@@ -395,6 +395,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\World\Chunk\MappedAdjacentChunks.cpp" />
     <ClCompile Include="Source\World\Raycast.cpp" />
     <ClCompile Include="Source\World\Render\ChunkRenderer.cpp" />
+    <ClCompile Include="Source\World\Render\PathtraceRenderer.cpp" />
     <ClCompile Include="Source\World\Terrain\TerrainGenerator.cpp" />
     <ClCompile Include="Source\World\World.cpp" />
     <ClCompile Include="Source\World\WorldTransform.cpp" />
@@ -492,6 +493,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\World\Chunk\MappedAdjacentChunks.h" />
     <ClInclude Include="Source\World\Raycast.h" />
     <ClInclude Include="Source\World\Render\ChunkRenderer.h" />
+    <ClInclude Include="Source\World\Render\PathtraceRenderer.h" />
     <ClInclude Include="Source\World\Terrain\TerrainGenerator.h" />
     <ClInclude Include="Source\World\World.h" />
     <ClInclude Include="Source\World\WorldTransform.h" />
