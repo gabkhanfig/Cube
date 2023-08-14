@@ -1,6 +1,9 @@
 #include <glad/glad.h>
 #include "VertexArrayObject.h"
 #include "VertexBufferObject.h"
+#include "IndexBufferObject.h"
+#include "../../../Engine/OpenGL/OpenGLInstance.h"
+#include "../../../Engine/Engine.h"
 
 uint32 VertexArrayObject::boundId = 0;
 
@@ -76,8 +79,14 @@ void VertexArrayObject::SetFormatLayout(const VertexBufferLayout& layout)
 
 void VertexArrayObject::BindVertexBufferObject(VertexBufferObject* vbo, uint32 bytesPerElement)
 {
-	Bind();
-	glBindVertexBuffer(0, vbo->GetId(), 0, bytesPerElement);
+	assertOnRenderThread();
+	glVertexArrayVertexBuffer(id, 0, vbo->GetId(), 0, bytesPerElement);
+}
+
+void VertexArrayObject::BindIndexBufferObject(IndexBufferObject* ibo)
+{
+	assertOnRenderThread();
+	glVertexArrayElementBuffer(id, ibo->GetId());
 }
 
 void VertexArrayObject::Bind()
