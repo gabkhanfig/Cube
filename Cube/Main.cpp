@@ -9,6 +9,9 @@
 #include "Testing/CubeTest.h"
 #include "Source/Graphics/OpenGL/Shader/RasterShader.h"
 #include "Source/Graphics/OpenGL/Shader/ComputeShader.h"
+#include "Source/Graphics/OpenGL/Buffers/VertexBufferObject.h"
+#include "Source/Graphics/OpenGL/Buffers/VertexArrayObject.h"
+#include "Source/Graphics/OpenGL/Buffers/IndexBufferObject.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include "Source/Core/Utils/CompileTimeFiles.h"
@@ -91,25 +94,37 @@ int main()
 	}
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	VertexArrayObject* vao = new VertexArrayObject();
 
-	GLuint VAO, VBO, EBO;
-	glCreateVertexArrays(1, &VAO);
-	glCreateBuffers(1, &VBO);
-	glCreateBuffers(1, &EBO);
+	GLuint VAO = vao->GetId();
+	GLuint VBO;
+	GLuint EBO;
+	//glCreateVertexArrays(1, &VAO);
+	//glCreateBuffers(1, &VBO);
+	//glCreateBuffers(1, &EBO);
 
-	glNamedBufferData(VBO, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glNamedBufferData(EBO, sizeof(indices), indices, GL_STATIC_DRAW);
+	//glNamedBufferData(VBO, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	//glNamedBufferData(EBO, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glEnableVertexArrayAttrib(VAO, 0);
-	glVertexArrayAttribBinding(VAO, 0, 0);
-	glVertexArrayAttribFormat(VAO, 0, 3, GL_FLOAT, GL_FALSE, 0);
+	//glEnableVertexArrayAttrib(VAO, 0);
+	//glVertexArrayAttribBinding(VAO, 0, 0);
+	//glVertexArrayAttribFormat(VAO, 0, 3, GL_FLOAT, GL_FALSE, 0);
 
-	glEnableVertexArrayAttrib(VAO, 1);
-	glVertexArrayAttribBinding(VAO, 1, 0);
-	glVertexArrayAttribFormat(VAO, 1, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat));
+	//glEnableVertexArrayAttrib(VAO, 1);
+	//glVertexArrayAttribBinding(VAO, 1, 0);
+	//glVertexArrayAttribFormat(VAO, 1, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat));
 
-	glVertexArrayVertexBuffer(VAO, 0, VBO, 0, 5 * sizeof(GLfloat));
-	glVertexArrayElementBuffer(VAO, EBO);
+	//glVertexArrayVertexBuffer(VAO, 0, VBO, 0, 5 * sizeof(GLfloat));
+	//glVertexArrayElementBuffer(VAO, EBO);
+
+	VertexBufferLayout vbl;
+	vbl.Push<float>(3);
+	vbl.Push<float>(2);
+	VertexBufferObject* vbo = VertexBufferObject::Create<float>(vertices, 20);
+	IndexBufferObject* ibo = new IndexBufferObject(indices, 6);
+	vao->SetFormatLayout(vbl);
+	vao->BindVertexBufferObject(vbo, 5 * sizeof(GLfloat));
+	vao->BindIndexBufferObject(ibo);
 
 	GLuint screenTex;
 	glCreateTextures(GL_TEXTURE_2D, 1, &screenTex);
@@ -130,7 +145,10 @@ int main()
 		screenShader->Bind();
 		glBindTextureUnit(0, screenTex);
 		screenShader->SetUniform1i("screen", 0);
-		glBindVertexArray(VAO);
+		//glBindVertexArray(VAO);
+		vao->Bind();
+		//vbo->Bind();
+		//ibo->Bind();
 		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(indices[0]), GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
