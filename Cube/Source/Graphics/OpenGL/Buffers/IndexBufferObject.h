@@ -40,6 +40,8 @@ public:
 
 	static void UnmapBuffer();
 
+	forceinline uint32 GetId() const { return id; }
+
 
 
 };
