@@ -2,7 +2,7 @@
 
 #include "../EngineCore.h"
 
-#define assertOnRenderThread() gk_assertm(engine->GetOpenGLInstance()->IsExecutingOnRenderThread(), "Cannot call OpenGL functions on any thread except for the rendering thread")
+#define assertOnRenderThread() if(engine != nullptr){ gk_assertm(engine->GetOpenGLInstance()->IsExecutingOnRenderThread(), "Cannot call OpenGL functions on any thread except for the rendering thread"); }
 
 class OpenGLInstance
 {
