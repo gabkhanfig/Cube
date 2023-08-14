@@ -32,5 +32,7 @@ public:
 	void Unbind();
 
 	bool IsBound() const;
+
+	forceinline uint32 GetId() const { return id; }
 };
 

@@ -7,6 +7,7 @@ uint32 VertexArrayObject::boundId = 0;
 VertexArrayObject::VertexArrayObject()
 {
 	glGenVertexArrays(1, &id);
+	Bind();
 }
 
 VertexArrayObject::~VertexArrayObject()
