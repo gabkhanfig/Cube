@@ -32,6 +32,9 @@ void GameInstance::Init()
 
   LoadAllBlocks();
 
+  renderThread->BindFunction(std::bind(&GameInstance::CreateAndInitializeOpenGLObjects, this));
+  renderThread->Execute();
+  while (!renderThread->IsReady());
 
   world = new World();
   world->BeginWorld();
