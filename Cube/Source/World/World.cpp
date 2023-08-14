@@ -81,17 +81,17 @@ void World::Tick(float deltaTime)
   player->Tick(deltaTime);
 
 
-  if (engine->IsUsingRenderThread()) {
-    const int timeoutMS = 5000;
-    engine->WaitForRenderThread(timeoutMS);
-  }
+  //if (engine->IsUsingRenderThread()) {
+  //  const int timeoutMS = 5000;
+  //  engine->WaitForRenderThread(timeoutMS);
+  //}
 
   //if (player->GetChunkPosition() != oldPlayerChunkPos) {
   //  DeleteDistantChunksAndLoadNearby(GetSettings()->GetRenderDistance());
   //  cubeLog("player moved across chunk border... player position: " + String::From(player->GetChunkPosition()));
   //}
 
-  RenderLoop();
+  //RenderLoop();
 }
 
 Chunk* World::GetChunk(ChunkPosition position) const

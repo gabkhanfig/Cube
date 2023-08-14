@@ -49,11 +49,12 @@ public:
 
 	RaycastHitResult RaycastHit(glm::dvec3 start, glm::dvec3 end) const;
 
+	void RenderLoop();
+
 private:
 
 	void CreateChunkRenderer();
 
-	void RenderLoop();
 
 	/* Deletes chunks that are too far away, and  */
 	void DeleteDistantChunksAndLoadNearby(int renderDistance);

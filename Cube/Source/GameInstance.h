@@ -3,6 +3,7 @@
 #include "Engine/EngineCore.h"
 
 class World;
+class PathtraceRenderer;
 
 class GameInstance
 {
@@ -20,7 +21,14 @@ public:
 
 private:
 
+	void CreateAndInitializeOpenGLObjects();
+
+	void RenderLoop();
+
+private:
+
 	World* world;
+	PathtraceRenderer* pathtraceRenderer;
 
 };
 
