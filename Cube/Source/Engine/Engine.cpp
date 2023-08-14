@@ -34,7 +34,7 @@ EngineInitializationParams::EngineInitializationParams()
 	gk_assertm(resolution.y > 0, "Window resolution height must be greater than 0. resolution height: " << resolution.y);
 }
 
-Engine* engine;
+Engine* engine = nullptr;
 
 float Engine::GetDeltaTime() const
 {
