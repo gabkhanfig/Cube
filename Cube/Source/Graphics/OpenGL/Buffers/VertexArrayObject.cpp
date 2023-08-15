@@ -10,8 +10,7 @@ uint32 VertexArrayObject::boundId = 0;
 VertexArrayObject::VertexArrayObject()
 {
 	assertOnRenderThread();
-	glGenVertexArrays(1, &id);
-	Bind();
+	glCreateVertexArrays(1, &id);
 }
 
 VertexArrayObject::~VertexArrayObject()
