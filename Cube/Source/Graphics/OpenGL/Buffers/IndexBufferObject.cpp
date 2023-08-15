@@ -9,18 +9,15 @@ IndexBufferObject::IndexBufferObject()
 	: indexCount(0)
 {
 	assertOnRenderThread();
-	glGenBuffers(1, &id);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
-	boundId = id;
+	glCreateBuffers(1, &id);
 }
 
 IndexBufferObject::IndexBufferObject(const uint32* indices, uint32 num)
 	: indexCount(num)
 {
 	assertOnRenderThread();
-	glGenBuffers(1, &id);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
-	boundId = id;
+	glCreateBuffers(1, &id);
+	Bind();
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32) * num, indices, GL_STATIC_DRAW);
 }
 
@@ -37,6 +34,7 @@ IndexBufferObject* IndexBufferObject::CreatePersistentMapped(uint32 capacity, vo
 {
 	gk_assertm(mappedBufferOut, "mappedBufferOut must be a non-null pointer to copy the mapped buffer to");
 	IndexBufferObject* ibo = new IndexBufferObject();
+	ibo->Bind();
 	GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
 	glBufferStorage(GL_ELEMENT_ARRAY_BUFFER, capacity, 0, mapFlags);
 	void* bufferRange = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, capacity, mapFlags);
