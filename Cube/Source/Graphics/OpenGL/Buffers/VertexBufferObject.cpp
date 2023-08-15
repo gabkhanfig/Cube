@@ -8,17 +8,14 @@ uint32 VertexBufferObject::boundId = 0;
 VertexBufferObject::VertexBufferObject()
 {
 	assertOnRenderThread();
-	glGenBuffers(1, &id);
-	Bind();
-	gk_assert(IsBound());
+	glCreateBuffers(1, &id);
 }
 
 VertexBufferObject::VertexBufferObject(const void* data, uint32 size)
 {
 	assertOnRenderThread();
-	glGenBuffers(1, &id);
-	glBindBuffer(GL_ARRAY_BUFFER, id);
-	boundId = id;
+	glCreateBuffers(1, &id);
+	Bind();
 	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 }
 
@@ -35,6 +32,7 @@ VertexBufferObject* VertexBufferObject::CreatePersistentMapped(uint32 capacity, 
 {
 	gk_assertm(mappedBufferOut, "mappedBufferOut must be a non-null pointer to copy the mapped buffer to");
 	VertexBufferObject* vbo = new VertexBufferObject();
+	vbo->Bind();
 	GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
 	glBufferStorage(GL_ARRAY_BUFFER, capacity, 0, mapFlags);
 	void* bufferRange = glMapBufferRange(GL_ARRAY_BUFFER, 0, capacity, mapFlags);
