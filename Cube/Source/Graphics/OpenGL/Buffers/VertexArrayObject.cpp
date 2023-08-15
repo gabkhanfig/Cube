@@ -9,12 +9,14 @@ uint32 VertexArrayObject::boundId = 0;
 
 VertexArrayObject::VertexArrayObject()
 {
+	assertOnRenderThread();
 	glGenVertexArrays(1, &id);
 	Bind();
 }
 
 VertexArrayObject::~VertexArrayObject()
 {
+	assertOnRenderThread();
 	if (IsBound()) {
 		boundId = 0;
 	}

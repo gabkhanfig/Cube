@@ -1,10 +1,13 @@
 #include "VertexBufferObject.h"
 #include <glad/glad.h>
+#include "../../../Engine/Engine.h"
+#include "../../../Engine/OpenGL/OpenGLInstance.h"
 
 uint32 VertexBufferObject::boundId = 0;
 
 VertexBufferObject::VertexBufferObject()
 {
+	assertOnRenderThread();
 	glGenBuffers(1, &id);
 	Bind();
 	gk_assert(IsBound());
@@ -12,6 +15,7 @@ VertexBufferObject::VertexBufferObject()
 
 VertexBufferObject::VertexBufferObject(const void* data, uint32 size)
 {
+	assertOnRenderThread();
 	glGenBuffers(1, &id);
 	glBindBuffer(GL_ARRAY_BUFFER, id);
 	boundId = id;
@@ -20,6 +24,7 @@ VertexBufferObject::VertexBufferObject(const void* data, uint32 size)
 
 VertexBufferObject::~VertexBufferObject()
 {
+	assertOnRenderThread();
 	if (IsBound()) {
 		boundId = 0;
 	}

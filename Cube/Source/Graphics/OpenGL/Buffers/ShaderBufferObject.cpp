@@ -1,8 +1,11 @@
 #include "ShaderBufferObject.h"
 #include <glad/glad.h>
+#include "../../../Engine/Engine.h"
+#include "../../../Engine/OpenGL/OpenGLInstance.h"
 
 ShaderBufferObject::ShaderBufferObject(const void* data, uint32 size, uint32 index)
 {
+  assertOnRenderThread();
 	glGenBuffers(1, &id);
   glBindBuffer(GL_SHADER_STORAGE_BUFFER, id);
   glBufferData(GL_SHADER_STORAGE_BUFFER, size, data, GL_STATIC_DRAW);
@@ -11,6 +14,7 @@ ShaderBufferObject::ShaderBufferObject(const void* data, uint32 size, uint32 ind
 
 ShaderBufferObject::~ShaderBufferObject()
 {
+  assertOnRenderThread();
   glDeleteBuffers(1, &id);
 }
 

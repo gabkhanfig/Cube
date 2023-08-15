@@ -1,11 +1,14 @@
 #include "IndexBufferObject.h"
 #include <glad/glad.h>
+#include "../../../Engine/Engine.h"
+#include "../../../Engine/OpenGL/OpenGLInstance.h"
 
 uint32 IndexBufferObject::boundId = 0;
 
 IndexBufferObject::IndexBufferObject()
 	: indexCount(0)
 {
+	assertOnRenderThread();
 	glGenBuffers(1, &id);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 	boundId = id;
@@ -14,6 +17,7 @@ IndexBufferObject::IndexBufferObject()
 IndexBufferObject::IndexBufferObject(const uint32* indices, uint32 num)
 	: indexCount(num)
 {
+	assertOnRenderThread();
 	glGenBuffers(1, &id);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 	boundId = id;
@@ -22,6 +26,7 @@ IndexBufferObject::IndexBufferObject(const uint32* indices, uint32 num)
 
 IndexBufferObject::~IndexBufferObject()
 {
+	assertOnRenderThread();
 	if (IsBound()) {
 		boundId = 0;
 	}
