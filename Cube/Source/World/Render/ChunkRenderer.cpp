@@ -43,11 +43,6 @@ void ChunkRenderer::Bind()
   vao->Bind();
 }
 
-void ChunkRenderer::BindBlocksVertexBufferObject(VertexBufferObject* vbo)
-{
-  vao->BindVertexBufferObject(vbo, sizeof(BlockVertex));
-}
-
 void ChunkRenderer::SwapNextBuffers()
 {
   boundDrawCallId = (boundDrawCallId + 1) % 2;
@@ -144,9 +139,10 @@ void ChunkRenderer::DrawChunk(const Chunk* drawChunk)
   if (vbo == nullptr || ibo == nullptr) return;
   if (ibo->GetIndexCount() == 0) return;
 
-  BindBlocksVertexBufferObject(vbo);
+  vao->BindVertexBufferObject(vbo, sizeof(BlockVertex));
+  vao->BindIndexBufferObject(ibo);
   SetShaderChunkOffset(GetChunkShaderPositionOffset(drawCalls[boundDrawCallId].playerPos, drawChunk));
-  Renderer::DrawVboTriangles(vbo, ibo);
+  glDrawElements(GL_TRIANGLES, ibo->GetIndexCount(), GL_UNSIGNED_INT, 0);
 }
 
 void ChunkRenderer::RemoveChunkFromFrameDraw(Chunk* chunk)

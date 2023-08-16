@@ -37,8 +37,6 @@ public:
 
 	void Bind();
 
-	void BindBlocksVertexBufferObject(VertexBufferObject* vbo);
-
 	void SwapNextBuffers();
 
 	void StoreModifyDrawCallData();
