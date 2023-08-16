@@ -53,12 +53,14 @@ void VertexArrayObject::LinkVertexBufferObjectLayout(VertexBufferObject* vbo, co
 
 void VertexArrayObject::SetFormatLayout(const VertexBufferLayout& layout)
 {
-	Bind();
+	assertOnRenderThread();
 
 	darray<VertexBufferLayout::VertexBufferElement> elements = layout.GetElements();
 	const uint32 elementCount = elements.Size();
 	uint32 offset = 0;
-
+	
+	Bind();
+	
 	for (uint32 i = 0; i < elementCount; i++) {
 		const VertexBufferLayout::VertexBufferElement& element = elements[i];
 		glEnableVertexAttribArray(i);
@@ -76,6 +78,25 @@ void VertexArrayObject::SetFormatLayout(const VertexBufferLayout& layout)
 		glVertexAttribBinding(i, 0);
 		offset += element.count * element.size;
 	}
+
+	/*
+	for (uint32 i = 0; i < elementCount; i++) {
+		const VertexBufferLayout::VertexBufferElement& element = elements[i];
+		glEnableVertexArrayAttrib(id, i);
+		glVertexArrayAttribBinding(id, i, 0);
+	
+		switch (element.type) {
+		case GL_FLOAT:
+			glVertexArrayAttribFormat(id, i, element.count, GL_FLOAT, element.normalized, offset);
+			break;
+	
+		case GL_UNSIGNED_INT:
+			glVertexArrayAttribIFormat(id, i, element.count, GL_UNSIGNED_INT, offset);
+			break;
+		}
+		
+		offset += element.count * element.size;
+	}*/
 }
 
 void VertexArrayObject::BindVertexBufferObject(VertexBufferObject* vbo, uint32 bytesPerElement)
