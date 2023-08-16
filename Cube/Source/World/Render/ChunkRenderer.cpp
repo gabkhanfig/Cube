@@ -23,7 +23,7 @@ ChunkRenderer::ChunkRenderer()
   //shader = new Shader(CompileTimeFiles::GetTextFile("Chunk.vert")->contents, CompileTimeFiles::GetTextFile("Chunk.frag")->contents);
   blockShader = new RasterShader(CompileTimeFiles::GetTextFile("Block.vert")->contents, CompileTimeFiles::GetTextFile("Block.frag")->contents);
   vao = new VertexArrayObject();
-  vao->Bind();
+  //vao->Bind();
   vao->SetFormatLayout(BlockQuad::GetQuadsVertexBufferLayout());
 }
 
@@ -115,6 +115,7 @@ void ChunkRenderer::SetRemeshedChunks(const darray<Chunk*> newRemeshedChunks)
 void ChunkRenderer::PerformBoundDrawCalls()
 {
   Renderer::Clear();
+  vao->Bind();
 
   if (frameChunkDrawCalls.Size() == 0) {
     engine->SwapGlfwBuffers();
