@@ -17,6 +17,8 @@ public:
 	/* Must be deleted from the render thread. Will assert this. */
 	~PathtraceRenderer();
 
+	void PerformTestDraw();
+
 private:
 
 	ComputeShader* pathtraceComputeShader;
@@ -24,4 +26,5 @@ private:
 	VertexBufferObject* screenVbo;
 	IndexBufferObject* screenIbo;
 	VertexArrayObject* screenVao;
+	uint32 screenTex;
 };

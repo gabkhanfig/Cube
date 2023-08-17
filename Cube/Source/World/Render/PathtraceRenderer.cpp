@@ -9,6 +9,8 @@
 #include "../../Graphics/OpenGL/Buffers/VertexArrayObject.h"
 #include "../../Graphics/OpenGL/Buffers/VertexBufferLayout.h"
 #include <glad/glad.h>
+#include "../../Engine/Window/Window.h"
+#include <GLFW/glfw3.h>
 
 PathtraceRenderer::PathtraceRenderer() //:
 	//pathtraceComputeShader(nullptr),
@@ -44,7 +46,16 @@ PathtraceRenderer::PathtraceRenderer() //:
 	screenBufferLayout.Push<float>(3); // pos
 	screenBufferLayout.Push<float>(2); // uvs
 	screenVao = new VertexArrayObject();
+	//screenVao->Bind();
 	screenVao->SetFormatLayout(screenBufferLayout);
+
+	glCreateTextures(GL_TEXTURE_2D, 1, &screenTex);
+	glTextureParameteri(screenTex, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTextureParameteri(screenTex, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTextureParameteri(screenTex, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTextureParameteri(screenTex, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTextureStorage2D(screenTex, 1, GL_RGBA32F, engine->GetWindow()->GetWidth(), engine->GetWindow()->GetHeight());
+	glBindImageTexture(0, screenTex, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
 }
 
 PathtraceRenderer::~PathtraceRenderer()
@@ -56,4 +67,28 @@ PathtraceRenderer::~PathtraceRenderer()
 	delete screenVbo;
 	delete screenIbo;
 	delete screenVao;
+	glDeleteTextures(1, &screenTex);
+}
+
+void PathtraceRenderer::PerformTestDraw()
+{
+	glBindImageTexture(0, screenTex, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+	pathtraceComputeShader->Dispatch(ceil(engine->GetWindow()->GetWidth() / 8), ceil(engine->GetWindow()->GetHeight() / 8), 1);
+
+	screenShader->Bind();
+	glBindTextureUnit(0, screenTex);
+	screenShader->SetUniform1i("screen", 0);
+	screenVao->Bind();
+	screenVao->BindVertexBufferObject(screenVbo, 20);
+	screenIbo->Bind();
+	screenVbo->Bind();
+	glDrawElements(GL_TRIANGLES, screenIbo->GetIndexCount(), GL_UNSIGNED_INT, 0);
+
+	
+	//glBindVertexArray(VAO);
+	//glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(indices[0]), GL_UNSIGNED_INT, 0);
+	gk_assertNotNull(engine);
+	gk_assertNotNull(engine->GetWindow());
+	gk_assertNotNull(engine->GetWindow()->GetGlfwWindow());
+	glfwSwapBuffers(engine->GetWindow()->GetGlfwWindow());
 }
