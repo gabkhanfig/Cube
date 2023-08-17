@@ -67,4 +67,7 @@ void GameInstance::RenderLoop()
   gk::Thread* renderThread = engine->GetRenderThread();
   while (!renderThread->IsReady());
   world->RenderLoop();
+  //renderThread->BindFunction(std::bind(&PathtraceRenderer::PerformTestDraw, pathtraceRenderer));
+  //renderThread->Execute();
+
 }
