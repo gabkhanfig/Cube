@@ -21,6 +21,15 @@ IndexBufferObject::IndexBufferObject()
 //	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32) * num, indices, GL_STATIC_DRAW);
 //}
 
+IndexBufferObject::~IndexBufferObject()
+{
+	assertOnRenderThread();
+	if (IsBound()) {
+		boundId = 0;
+	}
+	glDeleteBuffers(1, &id);
+}
+
 void IndexBufferObject::BufferData(const uint32* indices, uint32 num)
 {
 	assertOnRenderThread();
@@ -38,15 +47,6 @@ uint32* IndexBufferObject::CreatePersistentMappedStorage(uint32 elementCapacity)
 	uint32* mappedBufferRange = (uint32*)glMapNamedBufferRange(id, 0, bufferCapacity, mapFlags);
 	gk_assertNotNull(mappedBufferRange);
 	return mappedBufferRange;
-}
-
-IndexBufferObject::~IndexBufferObject()
-{
-	assertOnRenderThread();
-	if (IsBound()) {
-		boundId = 0;
-	}
-	glDeleteBuffers(1, &id);
 }
 
 //IndexBufferObject* IndexBufferObject::CreatePersistentMapped(uint32 capacity, void** mappedBufferOut)

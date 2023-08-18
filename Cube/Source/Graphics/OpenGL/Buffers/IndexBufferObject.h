@@ -12,13 +12,14 @@ public:
 	/* Creates an empty IBO. */
 	IndexBufferObject();
 
+	~IndexBufferObject();
+
 	//IndexBufferObject(const uint32* indices, uint32 num);
 
 	void BufferData(const uint32* indices, uint32 num);
 
 	uint32* CreatePersistentMappedStorage(uint32 elementCapacity);
 
-	~IndexBufferObject();
 
 	/* Due to index buffer objects always using uint32s, the capacity is not the bytes, rather the amount of ints. */
 	//static IndexBufferObject* CreatePersistentMapped(uint32 capacity, void** mappedBufferOut);
