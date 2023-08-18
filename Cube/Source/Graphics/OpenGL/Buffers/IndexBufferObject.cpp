@@ -12,13 +12,31 @@ IndexBufferObject::IndexBufferObject()
 	glCreateBuffers(1, &id);
 }
 
-IndexBufferObject::IndexBufferObject(const uint32* indices, uint32 num)
-	: indexCount(num)
+//IndexBufferObject::IndexBufferObject(const uint32* indices, uint32 num)
+//	: indexCount(num)
+//{
+//	assertOnRenderThread();
+//	glCreateBuffers(1, &id);
+//	Bind();
+//	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32) * num, indices, GL_STATIC_DRAW);
+//}
+
+void IndexBufferObject::BufferData(const uint32* indices, uint32 num)
 {
 	assertOnRenderThread();
-	glCreateBuffers(1, &id);
-	Bind();
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32) * num, indices, GL_STATIC_DRAW);
+	glNamedBufferData(id, num * sizeof(uint32), indices, GL_STATIC_DRAW);
+}
+
+uint32* IndexBufferObject::CreatePersistentMappedStorage(uint32 elementCapacity)
+{
+	assertOnRenderThread();
+	const GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+	const uint32 bufferCapacity = elementCapacity * sizeof(uint32);
+
+	glNamedBufferStorage(id, bufferCapacity, nullptr, mapFlags);
+	uint32* mappedBufferRange = (uint32*)glMapNamedBufferRange(id, 0, bufferCapacity, mapFlags);
+	gk_assertNotNull(mappedBufferRange);
+	return mappedBufferRange;
 }
 
 IndexBufferObject::~IndexBufferObject()

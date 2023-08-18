@@ -4,20 +4,18 @@
 
 class IndexBufferObject
 {
-private:
 
-	static uint32 boundId;
-
-	uint32 id;
-
-	uint32 indexCount;
 
 public:
 
 	/* Creates an empty IBO. */
 	IndexBufferObject();
 
-	IndexBufferObject(const uint32* indices, uint32 num);
+	//IndexBufferObject(const uint32* indices, uint32 num);
+
+	void BufferData(const uint32* indices, uint32 num);
+
+	uint32* CreatePersistentMappedStorage(uint32 elementCapacity);
 
 	~IndexBufferObject();
 
@@ -41,6 +39,14 @@ public:
 	static void UnmapBuffer();
 
 	forceinline uint32 GetId() const { return id; }
+
+private:
+
+	static uint32 boundId;
+
+	uint32 id;
+
+	uint32 indexCount;
 
 
 
