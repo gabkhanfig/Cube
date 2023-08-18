@@ -11,8 +11,8 @@ class Shader;
 class RasterShader;
 class VertexArrayObject;
 class Chunk;
-class VertexBufferObject;
-class IndexBufferObject;
+//class VertexBufferObject;
+//class IndexBufferObject;
 
 class ChunkRenderer
 {
@@ -21,11 +21,11 @@ class ChunkRenderer
 		glm::mat4 cameraMVP;
 	};
 
-	struct ChunkBuffers {
-		PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* vbos;
-		PersistentMappedTripleBuffer<IndexBufferObject, uint32>* ibos;
-		ChunkMesh* mesh;
-	};
+	//struct ChunkBuffers {
+	//	PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* vbos;
+	//	PersistentMappedTripleBuffer<IndexBufferObject, uint32>* ibos;
+	//	ChunkMesh* mesh;
+	//};
 
 public:
 
@@ -65,7 +65,7 @@ private:
 
 	const GlobalString chunkOffsetUniform;
 
-	HashMap<Chunk*, ChunkBuffers> buffers;
+	//HashMap<Chunk*, ChunkBuffers> buffers;
 
 	DrawCallData drawCalls[2];
 	int boundDrawCallId;

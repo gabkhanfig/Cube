@@ -1,8 +1,10 @@
 #pragma once
 
 #include "../../Engine/EngineCore.h"
+#include "../../Graphics/OpenGL/Buffers/VertexBufferObject.h"
 
-class VertexBufferObject;
+//template<typename T>
+//class VertexBufferObject;
 class IndexBufferObject;
 class VertexArrayObject;
 class RasterShader;

@@ -54,9 +54,9 @@ struct BlockQuad
     vertices[3] = BlockVertex(positions[3], normal, texCoords[3], colors[3]);
   }
 
-  static class IndexBufferObject* CreateQuadsIndexBuffer(const uint32 quadCount);
+  //static class IndexBufferObject* CreateQuadsIndexBuffer(const uint32 quadCount);
 
-  static class VertexBufferObject* CreateQuadsVertexBufferObject(const BlockQuad* quads, const uint32 quadCount);
+  //static class VertexBufferObject* CreateQuadsVertexBufferObject(const BlockQuad* quads, const uint32 quadCount);
 
   /* Get the global vertex buffer layout for quads. */
   static const VertexBufferLayout& GetQuadsVertexBufferLayout();

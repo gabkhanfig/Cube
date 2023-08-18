@@ -2,8 +2,10 @@
 
 #include "../../../Engine/EngineCore.h"
 #include "VertexBufferLayout.h"
+#include "VertexBufferObject.h"
 
-class VertexBufferObject;
+//template<typename T>
+//class VertexBufferObject;
 class IndexBufferObject;
 
 class VertexArrayObject
@@ -26,6 +28,7 @@ public:
 
 	/* Binds a vbo with the current format layout. See SetFormatLayout() */
 	void BindVertexBufferObject(VertexBufferObject* vbo, uint32 bytesPerElement);
+
 	/**/
 	void BindIndexBufferObject(IndexBufferObject* ibo);
 

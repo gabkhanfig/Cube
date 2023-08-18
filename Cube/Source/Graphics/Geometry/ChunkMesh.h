@@ -2,8 +2,8 @@
 
 #include "BlockGeometry.h"
 
-class VertexBufferObject;
-class IndexBufferObject;
+//class VertexBufferObject;
+//class IndexBufferObject;
 
 class ChunkMesh
 {

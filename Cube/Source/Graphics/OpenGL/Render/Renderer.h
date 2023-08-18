@@ -2,7 +2,7 @@
 
 #include "../../../Engine/EngineCore.h"
 
-class VertexBufferObject;
+//class VertexBufferObject;
 class IndexBufferObject;
 
 class Renderer
@@ -13,6 +13,6 @@ public:
 	static void Clear();
 
 	/* Draw vbo triangles with a specific ibo. */
-	static void DrawVboTriangles(VertexBufferObject* vbo, IndexBufferObject* ibo);
+	//static void DrawVboTriangles(VertexBufferObject* vbo, IndexBufferObject* ibo);
 
 };

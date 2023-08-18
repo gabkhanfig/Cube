@@ -1,5 +1,5 @@
 #include "ChunkRenderComponent.h"
-#include "../../Graphics/OpenGL/Buffers/VertexBufferObject.h"
+//#include "../../Graphics/OpenGL/Buffers/VertexBufferObject.h"
 #include "../../Graphics/OpenGL/Buffers/IndexBufferObject.h"
 #include "../../Graphics/OpenGL/Buffers/VertexArrayObject.h"
 #include "Chunk.h"
@@ -11,13 +11,15 @@
 #include "../World.h"
 #include "../Block/BlockTypes/Air/AirBlock.h"
 #include "../../Graphics/OpenGL/Buffers/MappedTripleIbo.h"
+//#include "../../Graphics/OpenGL/Buffers/MappedTripleVbo.h"
 
 ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
 	: chunk(chunkOwner), emptyMesh(true)
 {
 	mesh = new ChunkMesh();
 	// It's possible OpenGL won't like these being created on the primary thread. Investigate if so.
-	vbos = new PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>();
+	//vbos = new PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>();
+	vbos = new MappedTripleVbo<BlockQuad>();
 	//ibos = new PersistentMappedTripleBuffer<IndexBufferObject, uint32>();
 	ibos = new MappedTripleIbo();
 }

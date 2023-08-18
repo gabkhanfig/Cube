@@ -7,9 +7,10 @@
 #include "ChunkBlocksBitmask.h"
 #include "MappedAdjacentChunks.h"
 #include "../Block/Block.h"
+#include "../../Graphics/OpenGL/Buffers/MappedTripleVbo.h"
 
-class VertexBufferObject;
-class IndexBufferObject;
+//class VertexBufferObject;
+//class IndexBufferObject;
 class ShaderBufferObject;
 class VertexArrayObject;
 class Shader;
@@ -17,6 +18,9 @@ class Chunk;
 class ChunkRenderer;
 class World;
 class MappedTripleIbo;
+
+//template<typename T> 
+//class MappedTripleVbo;
 
 class ChunkRenderComponent
 {
@@ -41,7 +45,8 @@ public:
 
 	bool IsMeshEmpty() const { return emptyMesh; }
 
-	PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* GetVbos() const { return vbos; }
+	//PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* GetVbos() const { return vbos; }
+	MappedTripleVbo<BlockQuad>* GetVbos() const { return vbos; }
 
 	//PersistentMappedTripleBuffer<IndexBufferObject, uint32>* GetIbos() const { return ibos; }
 	MappedTripleIbo* GetIbos() const { return ibos; }
@@ -64,7 +69,8 @@ private:
 	ChunkMesh* mesh;
 
 	/* Persistent Mapped Triple Vertex Buffer Objects for rendering. */
-	PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* vbos;
+	//PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* vbos;
+	MappedTripleVbo<BlockQuad>* vbos;
 
 	/* Persistent Mapped Triple Index Buffer Objects for rendering. */
 	//PersistentMappedTripleBuffer<IndexBufferObject, uint32>* ibos;
