@@ -1,35 +1,41 @@
 #pragma once
 
 #include "../../../Engine/EngineCore.h"
+#include "../OpenGLEnums.h"
+
 
 class VertexBufferObject
 {
-private:
-
-	static uint32 boundId;
-
-	uint32 id;
-
 public:
 
 
 	/* Create a completely empty VBO. */
 	VertexBufferObject();
 
-	VertexBufferObject(const void* data, uint32 size);
+	//VertexBufferObject(const void* data, uint32 size);
 
 
 	~VertexBufferObject();
 
 	template<typename T>
-	static VertexBufferObject* Create(const T* data, uint32 num) {
-		return new VertexBufferObject(data, sizeof(T) * num);
+	void BufferData(const T* data, const uint32 elementCount) {
+		BufferDataImpl(data, elementCount * sizeof(T));
 	}
+
+	template<typename T>
+	T* CreatePersistentMappedStorage(const uint32 elementCapacity) {
+		return (T*)CreatePersistentMappedStorageImpl(elementCapacity * sizeof(T));
+	}
+
+	//template<typename T>
+	//static VertexBufferObject* Create(const T* data, uint32 num) {
+	//	return new VertexBufferObject(data, sizeof(T) * num);
+	//}
 
 	/* Create a VBO that has a persistently mapped buffer. https://www.khronos.org/opengl/wiki/Buffer_Object#Persistent_mapping
 	@param capacity: Number of bytes that are required.
 	@param mappedBufferOut: A double pointer that will copy the mapped buffer pointer into. Cannot be nullptr. */
-	static VertexBufferObject* CreatePersistentMapped(uint32 capacity, void** mappedBufferOut);
+	//static VertexBufferObject* CreatePersistentMapped(uint32 capacity, void** mappedBufferOut);
 
 	void Bind();
 
@@ -43,8 +49,27 @@ public:
 
 	/* Binds and then returns a write only pointer to the map buffer.
 	Call UnmapBuffer(); at some point */
-	void* GetMapBuffer();
+	template<typename T>
+	T* GetMapBuffer(GLMappedBufferAccess access) {
+		return (T*)GetMapBufferImpl(access);
+	}
 
-	static void UnmapBuffer();
+	void UnmapBuffer();
+
+private:
+
+	void BufferDataImpl(const void* data, uint32 totalBytes);
+
+	void* CreatePersistentMappedStorageImpl(const uint32 totalByteCapacity);
+
+	void* GetMapBufferImpl(GLMappedBufferAccess access);
+
+private:
+
+	static uint32 boundId;
+
+	uint32 id;
 	
 };
+
+
