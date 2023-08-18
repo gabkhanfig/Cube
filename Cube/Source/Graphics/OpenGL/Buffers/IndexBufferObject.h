@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../Engine/EngineCore.h"
+#include "../OpenGLEnums.h"
 
 class IndexBufferObject
 {
@@ -20,7 +21,7 @@ public:
 	~IndexBufferObject();
 
 	/* Due to index buffer objects always using uint32s, the capacity is not the bytes, rather the amount of ints. */
-	static IndexBufferObject* CreatePersistentMapped(uint32 capacity, void** mappedBufferOut);
+	//static IndexBufferObject* CreatePersistentMapped(uint32 capacity, void** mappedBufferOut);
 
 	void Bind();
 
@@ -34,9 +35,9 @@ public:
 
 	/* Binds and then returns a write only pointer to the map buffer.
 	Call UnmapBuffer(); at some point */
-	uint32* GetMapBuffer();
+	uint32* GetMapBuffer(GLMappedBufferAccess access);
 
-	static void UnmapBuffer();
+	void UnmapBuffer();
 
 	forceinline uint32 GetId() const { return id; }
 

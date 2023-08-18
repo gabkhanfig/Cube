@@ -25,6 +25,7 @@ void IndexBufferObject::BufferData(const uint32* indices, uint32 num)
 {
 	assertOnRenderThread();
 	glNamedBufferData(id, num * sizeof(uint32), indices, GL_STATIC_DRAW);
+	indexCount = num;
 }
 
 uint32* IndexBufferObject::CreatePersistentMappedStorage(uint32 elementCapacity)
@@ -48,21 +49,22 @@ IndexBufferObject::~IndexBufferObject()
 	glDeleteBuffers(1, &id);
 }
 
-IndexBufferObject* IndexBufferObject::CreatePersistentMapped(uint32 capacity, void** mappedBufferOut)
-{
-	gk_assertm(mappedBufferOut, "mappedBufferOut must be a non-null pointer to copy the mapped buffer to");
-	IndexBufferObject* ibo = new IndexBufferObject();
-	ibo->Bind();
-	GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
-	glBufferStorage(GL_ELEMENT_ARRAY_BUFFER, capacity, 0, mapFlags);
-	void* bufferRange = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, capacity, mapFlags);
-	gk_assertm(bufferRange, "glMapBufferRange returned nullptr");
-	*mappedBufferOut = bufferRange;
-	return ibo;
-}
+//IndexBufferObject* IndexBufferObject::CreatePersistentMapped(uint32 capacity, void** mappedBufferOut)
+//{
+//	gk_assertm(mappedBufferOut, "mappedBufferOut must be a non-null pointer to copy the mapped buffer to");
+//	IndexBufferObject* ibo = new IndexBufferObject();
+//	ibo->Bind();
+//	GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+//	glBufferStorage(GL_ELEMENT_ARRAY_BUFFER, capacity, 0, mapFlags);
+//	void* bufferRange = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, capacity, mapFlags);
+//	gk_assertm(bufferRange, "glMapBufferRange returned nullptr");
+//	*mappedBufferOut = bufferRange;
+//	return ibo;
+//}
 
 void IndexBufferObject::Bind()
 {
+	assertOnRenderThread();
 	if (IsBound()) return;
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 	boundId = id;
@@ -70,6 +72,7 @@ void IndexBufferObject::Bind()
 
 void IndexBufferObject::Unbind()
 {
+	assertOnRenderThread();
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	boundId = 0;
 }
@@ -79,15 +82,22 @@ bool IndexBufferObject::IsBound() const
 	return id == boundId;
 }
 
-uint32* IndexBufferObject::GetMapBuffer()
+uint32* IndexBufferObject::GetMapBuffer(GLMappedBufferAccess access)
 {
-	Bind();
-	return (uint32*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
+	//Bind();
+	//return (uint32*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
+	assertOnRenderThread();
+	uint32* mappedBuffer = (uint32*)glMapNamedBuffer(id, static_cast<int>(access));
+	gk_assertNotNull(mappedBuffer);
+	return mappedBuffer;
 }
 
 void IndexBufferObject::UnmapBuffer()
 {
-	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+	//glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+	assertOnRenderThread();
+	GLboolean result = glUnmapNamedBuffer(id);
+	gk_assertm(result != GL_FALSE, "Error with unmapping ibo buffer");
 }
 
 
