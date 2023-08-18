@@ -16,6 +16,7 @@ class Shader;
 class Chunk;
 class ChunkRenderer;
 class World;
+class MappedTripleIbo;
 
 class ChunkRenderComponent
 {
@@ -42,7 +43,8 @@ public:
 
 	PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* GetVbos() const { return vbos; }
 
-	PersistentMappedTripleBuffer<IndexBufferObject, uint32>* GetIbos() const { return ibos; }
+	//PersistentMappedTripleBuffer<IndexBufferObject, uint32>* GetIbos() const { return ibos; }
+	MappedTripleIbo* GetIbos() const { return ibos; }
 
 	ChunkBlocksBitmask GetBuriedBlocksBitmask() const { return buriedBitmask; }
 
@@ -65,7 +67,8 @@ private:
 	PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>* vbos;
 
 	/* Persistent Mapped Triple Index Buffer Objects for rendering. */
-	PersistentMappedTripleBuffer<IndexBufferObject, uint32>* ibos;
+	//PersistentMappedTripleBuffer<IndexBufferObject, uint32>* ibos;
+	MappedTripleIbo* ibos;
 
 	bool emptyMesh;
 

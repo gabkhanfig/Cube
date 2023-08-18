@@ -16,6 +16,7 @@
 #include <glad/glad.h>
 #include "../../Engine/Engine.h"
 #include "../../Core//Utils/CompileTimeFiles.h"
+#include "../../Graphics/OpenGL/Buffers/MappedTripleIbo.h"
 
 ChunkRenderer::ChunkRenderer()
   : chunkOffsetUniform("u_chunkOffset"), cameraMvpUniform("u_cameraMVP"), boundDrawCallId(0), modifyDrawCallId(1)

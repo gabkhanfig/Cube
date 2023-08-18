@@ -40,7 +40,9 @@ PathtraceRenderer::PathtraceRenderer() //:
 	screenShader = new RasterShader(CompileTimeFiles::GetTextFile("BlockPathtrace.vert")->contents, CompileTimeFiles::GetTextFile("BlockPathtrace.frag")->contents);
 
 	screenVbo = VertexBufferObject::Create<float>(vertices, 20);
-	screenIbo = new IndexBufferObject(indices, 6);
+	//screenIbo = new IndexBufferObject(indices, 6);
+	screenIbo = new IndexBufferObject();
+	screenIbo->BufferData(indices, 6);
 
 	VertexBufferLayout screenBufferLayout;
 	screenBufferLayout.Push<float>(3); // pos

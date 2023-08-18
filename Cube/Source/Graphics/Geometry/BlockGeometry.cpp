@@ -23,7 +23,9 @@ IndexBufferObject* BlockQuad::CreateQuadsIndexBuffer(const uint32 quadCount)
     quadIndices[index++] = (indices[4] + (i * 4));
     quadIndices[index++] = (indices[5] + (i * 4));
   }
-  IndexBufferObject* ibo = new IndexBufferObject(quadIndices, indexCount * quadCount);
+  //IndexBufferObject* ibo = new IndexBufferObject(quadIndices, indexCount * quadCount);
+  IndexBufferObject* ibo = new IndexBufferObject();
+  ibo->BufferData(quadIndices, indexCount * quadCount);
   delete[] quadIndices;
   return ibo;
 }

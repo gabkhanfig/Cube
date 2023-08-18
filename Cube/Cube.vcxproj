@@ -360,6 +360,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\Graphics\Geometry\Material.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\DrawIndirectBufferObject.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\IndexBufferObject.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\Buffers\MappedTripleIbo.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\ShaderBufferObject.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\VertexArrayObject.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\VertexBufferLayout.cpp" />
@@ -455,6 +456,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\Graphics\Geometry\PackedTypes.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\DrawIndirectBufferObject.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\IndexBufferObject.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Buffers\MappedTripleIbo.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleBuffer.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\ShaderBufferObject.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\VertexArrayObject.h" />

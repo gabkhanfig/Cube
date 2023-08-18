@@ -10,6 +10,7 @@
 #include "../../Graphics/Geometry/BlockGeometry.h"
 #include "../World.h"
 #include "../Block/BlockTypes/Air/AirBlock.h"
+#include "../../Graphics/OpenGL/Buffers/MappedTripleIbo.h"
 
 ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
 	: chunk(chunkOwner), emptyMesh(true)
@@ -17,7 +18,8 @@ ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
 	mesh = new ChunkMesh();
 	// It's possible OpenGL won't like these being created on the primary thread. Investigate if so.
 	vbos = new PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>();
-	ibos = new PersistentMappedTripleBuffer<IndexBufferObject, uint32>();
+	//ibos = new PersistentMappedTripleBuffer<IndexBufferObject, uint32>();
+	ibos = new MappedTripleIbo();
 }
 
 ChunkRenderComponent::~ChunkRenderComponent()
