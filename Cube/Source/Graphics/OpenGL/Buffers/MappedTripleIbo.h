@@ -27,7 +27,7 @@ public:
 	Mapped& GetModifyMapped() { return mappedBuffers[modifyId]; }
 	uint32 GetCapacity() const { return capacity; }
 
-	IndexBufferObject* GetBoundBuffer() const { return mappedBuffers[boundId].buffer; }
+	IndexBufferObject* GetBoundBuffer() { return mappedBuffers[boundId].buffer; }
 
 private:
 
