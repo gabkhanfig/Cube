@@ -113,6 +113,7 @@ void VertexArrayObject::BindIndexBufferObject(IndexBufferObject* ibo)
 
 void VertexArrayObject::Bind()
 {
+	assertOnRenderThread();
 	if (IsBound()) return;
 	glBindVertexArray(id);
 	boundId = id;
@@ -120,6 +121,7 @@ void VertexArrayObject::Bind()
 
 void VertexArrayObject::Unbind()
 {
+	assertOnRenderThread();
 	glBindVertexArray(0);
 	boundId = 0;
 }
