@@ -2,20 +2,12 @@
 
 #include "../../../Engine/EngineCore.h"
 #include "VertexBufferLayout.h"
-#include "VertexBufferObject.h"
 
-//template<typename T>
-//class VertexBufferObject;
+class VertexBufferObject;
 class IndexBufferObject;
 
 class VertexArrayObject
 {
-private:
-
-	static uint32 boundId;
-	
-	uint32 id;
-
 public:
 
 	VertexArrayObject();
@@ -40,5 +32,11 @@ public:
 	bool IsBound() const;
 
 	forceinline uint32 GetId() const { return id; }
+
+private:
+
+	static uint32 boundId;
+
+	uint32 id;
 };
 

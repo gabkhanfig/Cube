@@ -20,24 +20,6 @@ VertexBufferObject::~VertexBufferObject()
 	glDeleteBuffers(1, &id);
 }
 
-//void VertexBufferObject::BufferData(const T* data, uint32 elementCount)
-//{
-//	assertOnRenderThread();
-//	glNamedBufferData(id, elementCount * sizeof(T), data, GL_STATIC_DRAW);
-//}
-
-//T* VertexBufferObject::CreatePersistentMappedStorage(uint32 elementCapacity)
-//{
-//	assertOnRenderThread();
-//	const GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
-//	const uint32 bufferCapacity = elementCapacity * sizeof(T);
-//
-//	glNamedBufferStorage(id, bufferCapacity, nullptr, mapFlags);
-//	T* mappedBufferRange = (T*)glMapNamedBufferRange(id, 0, bufferCapacity, mapFlags);
-//	gk_assertNotNull(mappedBufferRange);
-//	return mappedBufferRange;
-//}
-
 void VertexBufferObject::Bind()
 {
 	assertOnRenderThread();

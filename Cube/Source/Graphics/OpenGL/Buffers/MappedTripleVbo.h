@@ -5,9 +5,6 @@
 #include "../../../Engine/OpenGL/OpenGLInstance.h"
 #include "../../../Engine/Engine.h"
 
-//template<typename T>
-//class VertexBufferObject;
-
 template<typename T>
 class MappedTripleVbo
 {

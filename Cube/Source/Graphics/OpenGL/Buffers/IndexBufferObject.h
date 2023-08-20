@@ -5,8 +5,6 @@
 
 class IndexBufferObject
 {
-
-
 public:
 
 	/* Creates an empty IBO. */
@@ -14,15 +12,9 @@ public:
 
 	~IndexBufferObject();
 
-	//IndexBufferObject(const uint32* indices, uint32 num);
-
 	void BufferData(const uint32* indices, uint32 num);
 
 	uint32* CreatePersistentMappedStorage(uint32 elementCapacity);
-
-
-	/* Due to index buffer objects always using uint32s, the capacity is not the bytes, rather the amount of ints. */
-	//static IndexBufferObject* CreatePersistentMapped(uint32 capacity, void** mappedBufferOut);
 
 	void Bind();
 
@@ -49,8 +41,6 @@ private:
 	uint32 id;
 
 	uint32 indexCount;
-
-
 
 };
 
