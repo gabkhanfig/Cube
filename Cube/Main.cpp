@@ -27,21 +27,21 @@ Settings* GetSettings() {
   return settings;
 }
 
-int main(int argc, char** argv)
-{
-#if RUN_TESTS
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-#else
-  settings = new Settings();
-  Engine::Initialize();
-  gameInstance = new GameInstance();
-  gameInstance->Init();
-	gk::Event<void, float>* gameInstanceTickEvent = gk::Event<void, float>::Create(gameInstance, &GameInstance::Tick);
-  Engine::Run(gameInstanceTickEvent);
-  return 0;
-#endif
-}
+//int main(int argc, char** argv)
+//{
+//#if RUN_TESTS
+//  ::testing::InitGoogleTest(&argc, argv);
+//  return RUN_ALL_TESTS();
+//#else
+//  settings = new Settings();
+//  Engine::Initialize();
+//  gameInstance = new GameInstance();
+//  gameInstance->Init();
+//	gk::Event<void, float>* gameInstanceTickEvent = gk::Event<void, float>::Create(gameInstance, &GameInstance::Tick);
+//  Engine::Run(gameInstanceTickEvent);
+//  return 0;
+//#endif
+//}
 
 const unsigned int SCREEN_WIDTH = 1920;
 const unsigned int SCREEN_HEIGHT = 1080;
@@ -67,7 +67,7 @@ GLuint indices[] =
 	0, 3, 2
 };
 
-/*
+
 int main()
 {
 	CompileTimeFiles::LoadAllFiles();
@@ -94,34 +94,16 @@ int main()
 	}
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	VertexBufferObject* vbo = new VertexBufferObject();
+	vbo->BufferData(vertices, 20);
+	IndexBufferObject* ibo = new IndexBufferObject();
+	ibo->BufferData(indices, 6);
+
 	VertexArrayObject* vao = new VertexArrayObject();
-
-	GLuint VAO = vao->GetId();
-	GLuint VBO;
-	GLuint EBO;
-	//glCreateVertexArrays(1, &VAO);
-	//glCreateBuffers(1, &VBO);
-	//glCreateBuffers(1, &EBO);
-
-	//glNamedBufferData(VBO, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	//glNamedBufferData(EBO, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	//glEnableVertexArrayAttrib(VAO, 0);
-	//glVertexArrayAttribBinding(VAO, 0, 0);
-	//glVertexArrayAttribFormat(VAO, 0, 3, GL_FLOAT, GL_FALSE, 0);
-
-	//glEnableVertexArrayAttrib(VAO, 1);
-	//glVertexArrayAttribBinding(VAO, 1, 0);
-	//glVertexArrayAttribFormat(VAO, 1, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat));
-
-	//glVertexArrayVertexBuffer(VAO, 0, VBO, 0, 5 * sizeof(GLfloat));
-	//glVertexArrayElementBuffer(VAO, EBO);
-
 	VertexBufferLayout vbl;
 	vbl.Push<float>(3);
 	vbl.Push<float>(2);
-	VertexBufferObject* vbo = VertexBufferObject::Create<float>(vertices, 20);
-	IndexBufferObject* ibo = new IndexBufferObject(indices, 6);
+
 	vao->SetFormatLayout(vbl);
 	vao->BindVertexBufferObject(vbo, 5 * sizeof(GLfloat));
 	vao->BindIndexBufferObject(ibo);
@@ -158,4 +140,4 @@ int main()
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
-}*/
+}
