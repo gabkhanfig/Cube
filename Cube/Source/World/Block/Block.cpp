@@ -556,3 +556,24 @@ CompressedBlockPathtraceData Block::GetPathtraceData() const
   pathtraceData.normal = PackedNormal::Pack(glm::vec3(1, 0, 0));
   return pathtraceData;
 }
+
+BlockDataComponentRef::BlockDataComponentRef()
+  : chunkComponentIndex(0)
+{
+}
+
+BlockDataComponentRef::BlockDataComponentRef(const uint16 index)
+  : chunkComponentIndex(index | 0b1000000000000000)
+{}
+
+bool BlockDataComponentRef::IsValid() const
+{
+  return chunkComponentIndex & 0b1000000000000000; // Last bit is set
+}
+
+BlockDataComponent* BlockDataComponentRef::Get(Chunk* chunk)
+{
+  gk_assertm(IsValid(), "Cannot get the block data component of a block that does not have one");
+  const uint16 index = chunkComponentIndex & 0b0111111111111111; // All bits except for the last one. Works with chunk sizes up to 32^3
+  return nullptr;
+}

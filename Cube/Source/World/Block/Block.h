@@ -133,6 +133,25 @@ DEVELOPER NOTE: sizeof(Block) will always be a multiple of 8 due to v-table poin
 //
 //};
 
+class BlockDataComponent;
+
+struct BlockDataComponentRef {
+
+	/* Will have an invalid index. */
+	BlockDataComponentRef();
+	/* Will assume index is valid. */
+	BlockDataComponentRef(const uint16 index);
+
+	bool IsValid() const;
+	
+	/* Will assert if is not valid. See BlockDataComponentRef::IsValid */
+	BlockDataComponent* Get(Chunk* chunk);
+
+private:
+	uint16 chunkComponentIndex;
+};
+
+
 struct BlockVTable;
 
 struct Block
