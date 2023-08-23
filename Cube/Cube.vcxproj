@@ -384,6 +384,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\Player\PlayerInputComponent.cpp" />
     <ClCompile Include="Source\Settings\Settings.cpp" />
     <ClCompile Include="Source\World\Block\BlockClass.cpp" />
+    <ClCompile Include="Source\World\Block\BlockDataComponent.cpp" />
     <ClCompile Include="Source\World\Block\BlockPathtrace.cpp" />
     <ClCompile Include="Source\World\Block\BlockTypes\Air\AirBlock.cpp" />
     <ClCompile Include="Source\World\Block\BlockTypes\Stone\StoneBlock.cpp" />
@@ -484,6 +485,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\Player\PlayerInputComponent.h" />
     <ClInclude Include="Source\Settings\Settings.h" />
     <ClInclude Include="Source\World\Block\BlockClass.h" />
+    <ClInclude Include="Source\World\Block\BlockDataComponent.h" />
     <ClInclude Include="Source\World\Block\BlockPathtrace.h" />
     <ClInclude Include="Source\World\Block\BlockTypes\Air\AirBlock.h" />
     <ClInclude Include="Source\World\Block\BlockTypes\Stone\StoneBlock.h" />
