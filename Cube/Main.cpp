@@ -27,21 +27,21 @@ Settings* GetSettings() {
   return settings;
 }
 
-//int main(int argc, char** argv)
-//{
-//#if RUN_TESTS
-//  ::testing::InitGoogleTest(&argc, argv);
-//  return RUN_ALL_TESTS();
-//#else
-//  settings = new Settings();
-//  Engine::Initialize();
-//  gameInstance = new GameInstance();
-//  gameInstance->Init();
-//	gk::Event<void, float>* gameInstanceTickEvent = gk::Event<void, float>::Create(gameInstance, &GameInstance::Tick);
-//  Engine::Run(gameInstanceTickEvent);
-//  return 0;
-//#endif
-//}
+int main(int argc, char** argv)
+{
+#if RUN_TESTS
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+#else
+  settings = new Settings();
+  Engine::Initialize();
+  gameInstance = new GameInstance();
+  gameInstance->Init();
+	gk::Event<void, float>* gameInstanceTickEvent = gk::Event<void, float>::Create(gameInstance, &GameInstance::Tick);
+  Engine::Run(gameInstanceTickEvent);
+  return 0;
+#endif
+}
 
 const unsigned int SCREEN_WIDTH = 1920;
 const unsigned int SCREEN_HEIGHT = 1080;
@@ -67,7 +67,7 @@ GLuint indices[] =
 	0, 3, 2
 };
 
-
+/*
 int main()
 {
 	CompileTimeFiles::LoadAllFiles();
@@ -122,6 +122,7 @@ int main()
 
 	while (!glfwWindowShouldClose(window))
 	{
+		glBindImageTexture(0, screenTex, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
 		computeShader->Dispatch(ceil(SCREEN_WIDTH / 8), ceil(SCREEN_HEIGHT / 8), 1);
 
 		screenShader->Bind();
@@ -140,4 +141,4 @@ int main()
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
-}
+}*/

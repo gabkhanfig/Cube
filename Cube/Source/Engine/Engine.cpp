@@ -89,7 +89,8 @@ void Engine::Initialize()
 	Window::InitializeGLFW();
 	engine = new Engine();
 	engine->window->SetGLFWContext(engine->renderThread);
-	engine->openGLInstance->InitializeOpenGL(engine->renderThread, glm::ivec2(windowWidth, windowHeight), glm::vec3(0.2, 0.55, 0.8));
+	const glm::vec3 openglClearColor = glm::vec3(0.2, 0.55, 0.8);
+	engine->openGLInstance->InitializeOpenGL(engine->renderThread, glm::ivec2(windowWidth, windowHeight), openglClearColor);
 
 	UserInput::SetCallbacks();
 }

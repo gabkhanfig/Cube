@@ -11,6 +11,7 @@
 #include <glad/glad.h>
 #include "../../Engine/Window/Window.h"
 #include <GLFW/glfw3.h>
+#include "../../Graphics/OpenGL/Render/Renderer.h"
 
 PathtraceRenderer::PathtraceRenderer() //:
 	//pathtraceComputeShader(nullptr),
@@ -41,17 +42,16 @@ PathtraceRenderer::PathtraceRenderer() //:
 
 	screenVbo = new VertexBufferObject();
 	screenVbo->BufferData(vertices, 20);
-	//screenVbo = VertexBufferObject::Create<float>(vertices, 20);
-	//screenIbo = new IndexBufferObject(indices, 6);
 	screenIbo = new IndexBufferObject();
 	screenIbo->BufferData(indices, 6);
 
+	screenVao = new VertexArrayObject();
 	VertexBufferLayout screenBufferLayout;
 	screenBufferLayout.Push<float>(3); // pos
 	screenBufferLayout.Push<float>(2); // uvs
-	screenVao = new VertexArrayObject();
-	//screenVao->Bind();
 	screenVao->SetFormatLayout(screenBufferLayout);
+	screenVao->BindVertexBufferObject(screenVbo, 5 * sizeof(GLfloat));
+	screenVao->BindIndexBufferObject(screenIbo);
 
 	glCreateTextures(GL_TEXTURE_2D, 1, &screenTex);
 	glTextureParameteri(screenTex, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -76,17 +76,23 @@ PathtraceRenderer::~PathtraceRenderer()
 
 void PathtraceRenderer::PerformTestDraw()
 {
+	//Renderer::Clear();
+	glFrontFace(GL_CCW);
+
 	glBindImageTexture(0, screenTex, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+	glBindTextureUnit(0, screenTex);
 	pathtraceComputeShader->Dispatch(ceil(engine->GetWindow()->GetWidth() / 8), ceil(engine->GetWindow()->GetHeight() / 8), 1);
 
 	screenShader->Bind();
 	glBindTextureUnit(0, screenTex);
 	screenShader->SetUniform1i("screen", 0);
 	screenVao->Bind();
-	screenVao->BindVertexBufferObject(screenVbo, 20);
-	screenIbo->Bind();
-	screenVbo->Bind();
-	glDrawElements(GL_TRIANGLES, screenIbo->GetIndexCount(), GL_UNSIGNED_INT, 0);
+	//screenVao->BindVertexBufferObject(screenVbo, 20);
+	//screenVao->BindIndexBufferObject(screenIbo);
+	//screenIbo->Bind();
+	//screenVbo->Bind();
+	//glDrawElements(GL_TRIANGLES, screenIbo->GetIndexCount(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	
 	//glBindVertexArray(VAO);
