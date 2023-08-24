@@ -64,8 +64,7 @@ const glm::vec3 BlockQuad::NormalFromQuadPoints(const glm::vec3 points[4])
   
   const glm::vec3 ABcrossCD = glm::abs(glm::cross(AB, CD));
   const glm::vec3 BCcrossDA = glm::abs(glm::cross(BC, DA));
-  //std::cout << "Cross of AB and CD = x: " << ABcrossCD.x << " y: " << ABcrossCD.y << " z: " << ABcrossCD.z << std::endl;
-  //std::cout << "Cross of BC and DA = x: " << BCcrossDA.x << " y: " << BCcrossDA.y << " z: " << BCcrossDA.z << std::endl;
+
   gk_assertm(ABcrossCD.x < threshold && ABcrossCD.y < threshold && ABcrossCD.z < threshold, "Block quad points must all lie on the same plane");
   gk_assertm(BCcrossDA.x < threshold && BCcrossDA.y < threshold && BCcrossDA.z < threshold, "Block quad points must all lie on the same plane");
 
