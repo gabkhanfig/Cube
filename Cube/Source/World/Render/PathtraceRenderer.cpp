@@ -92,13 +92,7 @@ void PathtraceRenderer::PerformTestDraw()
 	//screenIbo->Bind();
 	//screenVbo->Bind();
 	//glDrawElements(GL_TRIANGLES, screenIbo->GetIndexCount(), GL_UNSIGNED_INT, 0);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, screenIbo->GetIndexCount(), GL_UNSIGNED_INT, 0);
 
-	
-	//glBindVertexArray(VAO);
-	//glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(indices[0]), GL_UNSIGNED_INT, 0);
-	gk_assertNotNull(engine);
-	gk_assertNotNull(engine->GetWindow());
-	gk_assertNotNull(engine->GetWindow()->GetGlfwWindow());
-	glfwSwapBuffers(engine->GetWindow()->GetGlfwWindow());
+	engine->SwapGlfwBuffers();
 }
