@@ -53,9 +53,14 @@ void ChunkMesh::CopyIndicesToBuffer(uint32* buffer, uint32 indexOffset) const
 {
   gk_assertm(buffer, "IBO quad indices buffer cannot be null");
   // I have no idea why, but indices in this order just works for linear coordinates for quads. Do not change. 2, 3, 0, 1, 2, 0
-  constexpr uint32 indices[6] = {
-    2, 3, 0, 1, 2, 0
+  constexpr uint32 indices[] =
+  {
+    0, 2, 1,
+    0, 3, 2
   };
+  //constexpr uint32 indices[6] = {
+  //  2, 3, 0, 1, 2, 0
+  //};
   const uint32 quadCount = quads.Size();
   uint32 index = 0; 
   for (uint32 i = 0; i < quadCount; i++) {

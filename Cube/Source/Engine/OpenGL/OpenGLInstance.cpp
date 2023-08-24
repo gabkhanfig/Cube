@@ -45,5 +45,5 @@ void OpenGLInstance::LoadAndInitializeOpenGL(const glm::ivec2 viewportSize, cons
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_CULL_FACE);
-	glFrontFace(GL_CW); // See chunk mesh index buffer object. this works and i dont know why
+	glFrontFace(GL_CCW);
 }

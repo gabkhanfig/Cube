@@ -73,9 +73,9 @@ void FullCubeMeshFunc(const Block* self, ChunkMesh* mesh, const Chunk* chunk, co
 
   const glm::vec3 bottomPos[4] = {
    glm::vec3(0, 0, 0),
-   glm::vec3(0, 0, 1),
+   glm::vec3(1, 0, 0),
    glm::vec3(1, 0, 1),
-   glm::vec3(1, 0, 0)
+   glm::vec3(0, 0, 1)
   };
   const PackedColor bottomCols[4] = {
     c000, c001, c101, c100
@@ -83,18 +83,18 @@ void FullCubeMeshFunc(const Block* self, ChunkMesh* mesh, const Chunk* chunk, co
 
   const glm::vec3 northPos[4] = {
     glm::vec3(0, 0, 0),
-    glm::vec3(1, 0, 0),
+    glm::vec3(0, 1, 0),
     glm::vec3(1, 1, 0),
-    glm::vec3(0, 1, 0)
+    glm::vec3(1, 0, 0)
   };
   const PackedColor northCols[4] = {
     c000, c100, c110, c010
   };
 
   const glm::vec3 eastPos[4] = {
-    glm::vec3(0, 0, 1),
-    glm::vec3(0, 0, 0),
     glm::vec3(0, 1, 0),
+    glm::vec3(0, 0, 0),
+    glm::vec3(0, 0, 1),
     glm::vec3(0, 1, 1)
   };
   const PackedColor eastCols[4] = {
@@ -102,9 +102,9 @@ void FullCubeMeshFunc(const Block* self, ChunkMesh* mesh, const Chunk* chunk, co
   };
 
   const glm::vec3 southPos[4] = {
-    glm::vec3(1, 0, 1),
-    glm::vec3(0, 0, 1),
     glm::vec3(0, 1, 1),
+    glm::vec3(0, 0, 1),
+    glm::vec3(1, 0, 1),
     glm::vec3(1, 1, 1)
   };
   const PackedColor southCols[4] = {
@@ -112,9 +112,9 @@ void FullCubeMeshFunc(const Block* self, ChunkMesh* mesh, const Chunk* chunk, co
   };
 
   const glm::vec3 westPos[4] = {
-    glm::vec3(1, 0, 0),
-    glm::vec3(1, 0, 1),
     glm::vec3(1, 1, 1),
+    glm::vec3(1, 0, 1),
+    glm::vec3(1, 0, 0),
     glm::vec3(1, 1, 0)
   };
   const PackedColor westCols[4] = {
@@ -122,9 +122,9 @@ void FullCubeMeshFunc(const Block* self, ChunkMesh* mesh, const Chunk* chunk, co
   };
 
   const glm::vec3 topPos[4] = {
-   glm::vec3(0, 1, 0),
-   glm::vec3(1, 1, 0),
    glm::vec3(1, 1, 1),
+   glm::vec3(1, 1, 0),
+   glm::vec3(0, 1, 0),
    glm::vec3(0, 1, 1)
   };
   const PackedColor topCols[4] = {
