@@ -24,9 +24,11 @@ struct ChunkBlocksBitmask {
 		int _index;
 	};
 
+	static constexpr uint64 ARRAY_SIZE = CHUNK_SIZE / 64;
+
 	//__m256i _bitmask[128];
 
-	uint64 _bitmask[512];
+	uint64 _bitmask[ARRAY_SIZE];
 
 	ChunkBlocksBitmask();
 

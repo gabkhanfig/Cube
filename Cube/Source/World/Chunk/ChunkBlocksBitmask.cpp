@@ -49,7 +49,7 @@ bool ChunkBlocksBitmask::AreAllBlocksSet() const
 	//	if (_mm256_cmpeq_epi64_mask(_bitmask[0], setBitmask) != 15) return false;
 	//}
 	//return true;
-	for (int i = 0; i < 512; i++) {
+	for (int i = 0; i < ARRAY_SIZE; i++) {
 		if (_bitmask[i] != (~0ULL)) return false;
 	}
 	return true;
@@ -77,7 +77,7 @@ bool ChunkBlocksBitmask::operator==(const ChunkBlocksBitmask& other) const
 	//return true;
 	//return _mm256_cmpeq_epi64_mask(_bitmask[0], other._bitmask[0]) == 15
 	//	&& _mm256_cmpeq_epi64_mask(_bitmask[1], other._bitmask[1]) == 15;
-	for (int i = 0; i < 512; i++) {
+	for (int i = 0; i < ARRAY_SIZE; i++) {
 		if (_bitmask[i] != other._bitmask[i]) return false;
 	}
 	return true;
