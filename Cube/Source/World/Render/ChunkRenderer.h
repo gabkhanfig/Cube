@@ -53,7 +53,7 @@ private:
 
 	void DrawChunk(const Chunk* drawChunk);
 
-	glm::vec3 GetChunkShaderPositionOffset(const glm::dvec3 playerPos, const Chunk* chunk);
+	static glm::vec3 GetChunkShaderPositionOffset(const glm::dvec3 playerPos, const Chunk* chunk);
 
 private:
 
