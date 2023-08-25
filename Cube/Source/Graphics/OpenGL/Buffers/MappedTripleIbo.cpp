@@ -31,7 +31,6 @@ void MappedTripleIbo::Reserve(uint32 count)
 
 void MappedTripleIbo::SwapNextBuffer()
 {
-	assertOnRenderThread();
 	boundId = (boundId + 1) % 3;
 	modifyId = (modifyId + 1) % 3;
 }

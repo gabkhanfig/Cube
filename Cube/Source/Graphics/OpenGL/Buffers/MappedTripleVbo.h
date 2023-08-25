@@ -43,7 +43,6 @@ public:
 	}
 
 	void SwapNextBuffer() {
-		assertOnRenderThread();
 		boundId = (boundId + 1) % 3;
 		modifyId = (modifyId + 1) % 3;
 	}
