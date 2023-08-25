@@ -14,22 +14,23 @@
 //#include "../../Graphics/OpenGL/Buffers/MappedTripleVbo.h"
 
 ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
-	: chunk(chunkOwner), emptyMesh(true)
+	: chunk(chunkOwner), emptyMesh(true), vbos(nullptr), ibos(nullptr)
 {
 	mesh = new ChunkMesh();
 	// It's possible OpenGL won't like these being created on the primary thread. Investigate if so.
-	//vbos = new PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>();
-	vbos = new MappedTripleVbo<BlockQuad>();
+	//vbos = new PersistentMappedTripleBuffer<VertexBufferObject, BlockQuad>();5
+	//vbos = new MappedTripleVbo<BlockQuad>();
 	//ibos = new PersistentMappedTripleBuffer<IndexBufferObject, uint32>();
-	ibos = new MappedTripleIbo();
+	//ibos = new MappedTripleIbo();
 }
 
 ChunkRenderComponent::~ChunkRenderComponent()
 {
 	delete mesh;
 	// Potentially will need to delete buffers using render thread
-	delete vbos;
-	delete ibos;
+	gk_assertm(false, "currently not deallocating mapped buffers");
+	//delete vbos;
+	//delete ibos;
 }
 
 void ChunkRenderComponent::RecreateMesh()
@@ -134,6 +135,24 @@ void ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest()
 	//	cubeLog("Empty chunk mesh for chunk " + String::From(chunk->GetPosition()));
 	//}
 	chunk->SetShouldBeRemeshed(false);
+}
+
+bool ChunkRenderComponent::AreGLBuffersInitialized() const
+{
+	return vbos != nullptr && ibos != nullptr;
+}
+
+void ChunkRenderComponent::CreateGLBuffers()
+{
+	if (vbos != nullptr) {
+		delete vbos;
+	}
+	if (ibos != nullptr) {
+		delete ibos;
+	}
+
+	vbos = new MappedTripleVbo<BlockQuad>(); 
+	ibos = new MappedTripleIbo();
 }
 
 

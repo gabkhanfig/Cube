@@ -58,6 +58,9 @@ public:
 
 	void RecreateMeshUsingBuriedBitmaskAndAdjacentTest();
 
+	bool AreGLBuffersInitialized() const;
+	void CreateGLBuffers();
+
 private:
 
 private:

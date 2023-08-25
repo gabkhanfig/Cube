@@ -78,6 +78,10 @@ void ChunkRenderer::DrawAllChunksAndPrepareNext(const darray<Chunk*>& chunksToDr
     ChunkMesh* mesh = renderComponent->GetMesh();
     if (mesh->GetQuadCount() == 0) continue;
 
+    if (!renderComponent->AreGLBuffersInitialized()) {
+      renderComponent->CreateGLBuffers();
+    }
+
     auto cvbos = renderComponent->GetVbos();
     auto cibos = renderComponent->GetIbos();
 
@@ -139,8 +143,8 @@ void ChunkRenderer::DrawChunk(const Chunk* drawChunk)
 {
   VertexBufferObject* vbo = drawChunk->GetRenderComponent()->GetVbos()->GetBoundBuffer();
   IndexBufferObject* ibo = drawChunk->GetRenderComponent()->GetIbos()->GetBoundBuffer();
-  if (vbo == nullptr || ibo == nullptr) return;
-  if (ibo->GetIndexCount() == 0) return;
+  //if (vbo == nullptr || ibo == nullptr) return;
+  //if (ibo->GetIndexCount() == 0) return;
 
   vao->BindVertexBufferObject(vbo, sizeof(BlockVertex));
   vao->BindIndexBufferObject(ibo);
