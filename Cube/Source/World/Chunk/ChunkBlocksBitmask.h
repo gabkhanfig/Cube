@@ -24,7 +24,9 @@ struct ChunkBlocksBitmask {
 		int _index;
 	};
 
-	__m256i _bitmask[2];
+	//__m256i _bitmask[128];
+
+	uint64 _bitmask[512];
 
 	ChunkBlocksBitmask();
 

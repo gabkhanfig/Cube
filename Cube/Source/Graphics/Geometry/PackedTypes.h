@@ -14,7 +14,7 @@ Can represent sub-block-pixels of 16 (16x16 textures / models).
 NOTE: only works if chunk length is 8. */
 struct PackedBlockOffsetPosition
 {
-	static_assert(CHUNK_LENGTH == 8);
+	//static_assert(CHUNK_LENGTH == 8);
 
 	uint32 packedData;
 	static constexpr float SCALAR = 16.f;

@@ -8,7 +8,7 @@
 struct BlockVertex
 {
   /* Relative chunk position of the block vertex. */
-  PackedBlockOffsetPosition position;
+  glm::vec3 position;
 
   /* Normalized (-1 -> 1) normal-vector of this vertex. */
   PackedNormal normal;
@@ -22,12 +22,12 @@ struct BlockVertex
   BlockVertex() = default;
 
   /* Requires an index buffer of { 0, 1, 2, 3, 0, 2 } for the color interpolation to work correctly. */
-  BlockVertex(PackedBlockOffsetPosition _position, PackedNormal _normal, glm::vec2 _texCoord, PackedColor _color)
+  BlockVertex(glm::vec3 _position, PackedNormal _normal, glm::vec2 _texCoord, PackedColor _color)
     : position(_position), normal(_normal), texCoord(_texCoord), color(_color)
   {}
 };
 static_assert(sizeof(BlockVertex) ==
-  sizeof(PackedBlockOffsetPosition) + sizeof(PackedNormal) + sizeof(glm::vec2) + sizeof(PackedColor)
+  sizeof(glm::vec3) + sizeof(PackedNormal) + sizeof(glm::vec2) + sizeof(PackedColor)
   , "Block Vertex data is not tightly packed");
 
 /* Block quad vertex position ordering goes top right, top left, bottom left, bottom right. Bottom left is relative (0, 0) */
@@ -38,15 +38,15 @@ struct BlockQuad
   BlockQuad() = default;
 
   /* Quad of 4 vertices. Calculates the normal given the 4 positions. */
-  BlockQuad(const PackedBlockOffsetPosition positions[4], const glm::vec2 texCoords[4], const PackedColor colors[4])
+  BlockQuad(const glm::vec3 positions[4], const glm::vec2 texCoords[4], const PackedColor colors[4])
   {
-    const glm::vec3 vec3Positions[4] = {
-      positions[0].Unpack(),
-      positions[1].Unpack(),
-      positions[2].Unpack(),
-      positions[3].Unpack()
-    };
-    const PackedNormal normal = PackedNormal::Pack(NormalFromQuadPoints(vec3Positions));
+    //const glm::vec3 vec3Positions[4] = {
+    //  positions[0].Unpack(),
+    //  positions[1].Unpack(),
+    //  positions[2].Unpack(),
+    //  positions[3].Unpack()
+    //};
+    const PackedNormal normal = PackedNormal::Pack(NormalFromQuadPoints(positions));
 
     vertices[0] = BlockVertex(positions[0], normal, texCoords[0], colors[0]);
     vertices[1] = BlockVertex(positions[1], normal, texCoords[1], colors[1]);

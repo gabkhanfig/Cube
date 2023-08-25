@@ -2,7 +2,8 @@
 
 // https://sight.pages.ircad.fr/sight-doc/CodingStyle/src/07-glsl-style.html
 
-layout (location = 0) in uint v_in_packedOffsetPosition; // PackedBlockOffsetPosition struct
+//layout (location = 0) in uint v_in_packedOffsetPosition; // PackedBlockOffsetPosition struct
+layout (location = 0) in vec3 v_in_offsetPosition; // glm::vec3
 layout (location = 1) in uint v_in_packedNormal; // PackedNormal struct
 layout (location = 2) in vec2 v_in_texCoord; // glm::vec2
 layout (location = 3) in uint v_in_packedColor; // PackedColor struct
@@ -80,8 +81,9 @@ vec3 UnpackOffsetPosition(uint offsetPosition) {
 
 void main()
 {
-	const vec3 vertexPosition = UnpackOffsetPosition(v_in_packedOffsetPosition);
-	gl_Position = u_cameraMVP * vec4(vertexPosition + u_chunkOffset, 1.0);
+	//const vec3 vertexPosition = UnpackOffsetPosition(v_in_packedOffsetPosition);
+	//gl_Position = u_cameraMVP * vec4(vertexPosition + u_chunkOffset, 1.0);
+	gl_Position = u_cameraMVP * vec4(v_in_offsetPosition + u_chunkOffset, 1.0);
 
 	v_out_texCoord = v_in_texCoord;
 	v_out_color = UnpackColor(v_in_packedColor);

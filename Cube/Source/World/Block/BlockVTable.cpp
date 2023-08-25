@@ -26,6 +26,14 @@ static void FillPackedPositionBuffer(PackedBlockOffsetPosition* buffer, const gl
   buffer[3] = PackedBlockOffsetPosition::Pack(positions[3] + vertexOffset);
 }
 
+static void FillPositionBuffer(glm::vec3* buffer, const glm::vec3 positions[4], const glm::vec3 vertexOffset) {
+  buffer[0] = positions[0] + vertexOffset;
+  buffer[1] = positions[1] + vertexOffset;
+  buffer[2] = positions[2] + vertexOffset;
+  buffer[3] = positions[3] + vertexOffset;
+}
+
+
 static bool CanDrawFace(const MappedAdjacentAndBuriedChunks& adjacentChunks, WorldPosition position, BlockFacing face) {
   const WorldPosition adjacentPosition = position.Adjacent(face);
   const Chunk* chunkWithBlock = adjacentChunks.GetChunk(adjacentPosition.ToChunkPosition());
@@ -133,6 +141,7 @@ void FullCubeMeshFunc(const Block* self, ChunkMesh* mesh, const Chunk* chunk, co
 
 
   PackedBlockOffsetPosition packedPositionBuffer[4];
+  glm::vec3 positionBuffer[4];
 
   //const BlockPosition blockPos = position.ToBlockPosition();
   //if (!blockPos.IsOnChunkEdge()) {
@@ -170,33 +179,39 @@ void FullCubeMeshFunc(const Block* self, ChunkMesh* mesh, const Chunk* chunk, co
   //}
 
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_Down)) {
-    FillPackedPositionBuffer(packedPositionBuffer, bottomPos, vertexOffset);
-    const BlockQuad bottom = BlockQuad(packedPositionBuffer, texCoords, bottomCols);
+    //FillPackedPositionBuffer(packedPositionBuffer, bottomPos, vertexOffset);
+    FillPositionBuffer(positionBuffer, bottomPos, vertexOffset);
+    const BlockQuad bottom = BlockQuad(positionBuffer, texCoords, bottomCols);
     mesh->AddQuad(bottom);
   }
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_North)) {
-    FillPackedPositionBuffer(packedPositionBuffer, northPos, vertexOffset);
-    const BlockQuad north = BlockQuad(packedPositionBuffer, texCoords, northCols);
+    //FillPackedPositionBuffer(packedPositionBuffer, northPos, vertexOffset);
+    FillPositionBuffer(positionBuffer, northPos, vertexOffset);
+    const BlockQuad north = BlockQuad(positionBuffer, texCoords, northCols);
     mesh->AddQuad(north);
   }
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_East)) {
-    FillPackedPositionBuffer(packedPositionBuffer, eastPos, vertexOffset);
-    const BlockQuad east = BlockQuad(packedPositionBuffer, texCoords, eastCols);
+    //FillPackedPositionBuffer(packedPositionBuffer, eastPos, vertexOffset);
+    FillPositionBuffer(positionBuffer, eastPos, vertexOffset);
+    const BlockQuad east = BlockQuad(positionBuffer, texCoords, eastCols);
     mesh->AddQuad(east);
   }
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_South)) {
-    FillPackedPositionBuffer(packedPositionBuffer, southPos, vertexOffset);
-    const BlockQuad south = BlockQuad(packedPositionBuffer, texCoords, southCols);
+    //FillPackedPositionBuffer(packedPositionBuffer, southPos, vertexOffset);
+    FillPositionBuffer(positionBuffer, southPos, vertexOffset);
+    const BlockQuad south = BlockQuad(positionBuffer, texCoords, southCols);
     mesh->AddQuad(south);
   }
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_West)) {
-    FillPackedPositionBuffer(packedPositionBuffer, westPos, vertexOffset);
-    const BlockQuad west = BlockQuad(packedPositionBuffer, texCoords, westCols);
+    //FillPackedPositionBuffer(packedPositionBuffer, westPos, vertexOffset);
+    FillPositionBuffer(positionBuffer, westPos, vertexOffset);
+    const BlockQuad west = BlockQuad(positionBuffer, texCoords, westCols);
     mesh->AddQuad(west);
   }
   if (CanDrawFace(adjacentChunks, position, BlockFacing::Dir_Up)) {
-    FillPackedPositionBuffer(packedPositionBuffer, topPos, vertexOffset);
-    const BlockQuad top = BlockQuad(packedPositionBuffer, texCoords, topCols);
+    //FillPackedPositionBuffer(packedPositionBuffer, topPos, vertexOffset);
+    FillPositionBuffer(positionBuffer, topPos, vertexOffset);
+    const BlockQuad top = BlockQuad(positionBuffer, texCoords, topCols);
     mesh->AddQuad(top);
   }
 }
