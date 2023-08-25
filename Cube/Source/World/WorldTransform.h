@@ -144,9 +144,9 @@ struct BlockPosition
 	}
 
 	forceinline bool IsOnChunkEdge() const {
-		const bool xEdge = X() == 0 || X() == 7;
-		const bool yEdge = Y() == 0 || Y() == 7;
-		const bool zEdge = Z() == 0 || Z() == 7;
+		const bool xEdge = X() == 0 || X() == (CHUNK_LENGTH - 1);
+		const bool yEdge = Y() == 0 || Y() == (CHUNK_LENGTH - 1);
+		const bool zEdge = Z() == 0 || Z() == (CHUNK_LENGTH - 1);
 		return xEdge || yEdge || zEdge;
 	}
 };
