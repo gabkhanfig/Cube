@@ -8,6 +8,7 @@
 #include "MappedAdjacentChunks.h"
 #include "../Block/Block.h"
 #include "../../Graphics/OpenGL/Buffers/MappedTripleVbo.h"
+#include "ChunkDrawCall.h"
 
 //class VertexBufferObject;
 //class IndexBufferObject;
@@ -37,6 +38,14 @@ public:
 
 	/* See RecreateMesh() */
 	static void MultithreadRecreateMeshes(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool);
+
+	static void MultithreadMemcpyDataAndCreateDrawCalls(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool, darray<ChunkDrawCall>* drawCallsOut);
+
+	/* Logic must be thread safe. */
+	void MemcpyMeshDataAndSwapBuffer();
+
+	void FillChunkDrawCallData(ChunkDrawCall* drawCallOut) const;
+
 
 
 	Chunk* GetChunk() const { return chunk; }

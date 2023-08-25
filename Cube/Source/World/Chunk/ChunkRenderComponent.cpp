@@ -13,6 +13,8 @@
 #include "../../Graphics/OpenGL/Buffers/MappedTripleIbo.h"
 //#include "../../Graphics/OpenGL/Buffers/MappedTripleVbo.h"
 
+#include "../../Player/Player.h"
+
 ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
 	: chunk(chunkOwner), emptyMesh(true), vbos(nullptr), ibos(nullptr)
 {
@@ -88,6 +90,55 @@ void ChunkRenderComponent::MultithreadRecreateMeshes(const darray<Chunk*>& chunk
 	threadPool->ExecuteQueue();
 	
 #endif
+}
+
+void ChunkRenderComponent::MultithreadMemcpyDataAndCreateDrawCalls(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool, darray<ChunkDrawCall>* drawCallsOut)
+{
+	for (Chunk* chunk : chunks) {
+		auto func = std::bind(&ChunkRenderComponent::MemcpyMeshDataAndSwapBuffer, chunk->GetRenderComponent());
+		threadPool->AddFunctionToQueue(func);
+	}
+	threadPool->ExecuteQueue();
+
+	for (uint32 i = 0; i < chunks.Size(); i++) {
+		drawCallsOut->Add(ChunkDrawCall());
+	}
+
+	uint32 chunkIndex = 0;
+	for (const Chunk* chunk : chunks) {
+		ChunkDrawCall* drawCall = &drawCallsOut->At(chunkIndex);
+		auto func = std::bind(&ChunkRenderComponent::FillChunkDrawCallData, chunk->GetRenderComponent(), drawCall);
+		threadPool->AddFunctionToQueue(func);
+		chunkIndex++;
+	}
+	threadPool->ExecuteQueue();
+}
+
+void ChunkRenderComponent::MemcpyMeshDataAndSwapBuffer()
+{
+	gk_assertNotNull(vbos);
+	gk_assertNotNull(ibos);
+	gk_assertm(vbos->GetCapacity() >= mesh->GetQuadCount(), "vbos does not have enough capacity for mesh");
+	gk_assertm(ibos->GetCapacity() >= mesh->GetIndexCount(), "ibos does not have enough capacity for mesh indices");
+
+	auto& mappedVbo = vbos->GetModifyMapped();
+	memcpy(mappedVbo.data, mesh->GetQuadsData(), mesh->GetQuadCount() * sizeof(BlockQuad));
+	auto& mappedIbo = ibos->GetModifyMapped();
+	memcpy(mappedIbo.data, mesh->GetIndices().Data(), mesh->GetIndexCount() * sizeof(uint32));
+	mappedIbo.buffer->SetIndexCount(mesh->GetIndexCount());
+
+	vbos->SwapNextBuffer();
+	ibos->SwapNextBuffer();
+}
+
+void ChunkRenderComponent::FillChunkDrawCallData(ChunkDrawCall* drawCallOut) const
+{
+	gk_assertNotNull(drawCallOut);
+	drawCallOut->chunk = chunk;
+	drawCallOut->vbo = vbos->GetBoundBuffer();
+	drawCallOut->ibo = ibos->GetBoundBuffer();
+	drawCallOut->indicesToDraw = mesh->GetIndexCount();
+	drawCallOut->chunkPositionOffset = ChunkRenderer::GetChunkShaderPositionOffset(GetWorld()->GetPlayer()->GetLocation(), chunk);
 }
 
 void ChunkRenderComponent::CalculateBuriedBitmask()
