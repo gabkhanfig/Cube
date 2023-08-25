@@ -43,17 +43,19 @@ public:
 
 	void DrawAllChunksAndPrepareNext(const darray<Chunk*>& chunksToDrawNextFrame);
 
-	void SetRemeshedChunks(const darray<Chunk*> newRemeshedChunks);
+	void SetRemeshedChunks(const darray<Chunk*>& newRemeshedChunks);
 
 	void RemoveChunkFromFrameDraw(Chunk* chunk);
+
+	void CreateGLBuffersForChunks(const darray<Chunk*>& chunks);
+
+	static glm::vec3 GetChunkShaderPositionOffset(const glm::dvec3 playerPos, const Chunk* chunk);
 
 private:
 
 	void PerformBoundDrawCalls();
 
 	void DrawChunk(const Chunk* drawChunk);
-
-	static glm::vec3 GetChunkShaderPositionOffset(const glm::dvec3 playerPos, const Chunk* chunk);
 
 private:
 

@@ -113,7 +113,7 @@ void ChunkRenderer::DrawAllChunksAndPrepareNext(const darray<Chunk*>& chunksToDr
   SwapNextBuffers();
 }
 
-void ChunkRenderer::SetRemeshedChunks(const darray<Chunk*> newRemeshedChunks)
+void ChunkRenderer::SetRemeshedChunks(const darray<Chunk*>& newRemeshedChunks)
 {
   remeshedChunks = newRemeshedChunks;
 }
@@ -155,6 +155,30 @@ void ChunkRenderer::DrawChunk(const Chunk* drawChunk)
 void ChunkRenderer::RemoveChunkFromFrameDraw(Chunk* chunk)
 {
   frameChunkDrawCalls.RemoveFirst(chunk);
+}
+
+void ChunkRenderer::CreateGLBuffersForChunks(const darray<Chunk*>& chunks)
+{
+  for (Chunk* chunk : chunks) {
+    ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
+
+    ChunkMesh* mesh = renderComponent->GetMesh();
+    gk_assertm(mesh->GetQuadCount() > 0, "Cannot allocate GL buffers for chunk with a mesh with 0 quads");
+
+    if (!renderComponent->AreGLBuffersInitialized()) {
+      renderComponent->CreateGLBuffers();
+    }
+
+    auto cvbos = renderComponent->GetVbos();
+    auto cibos = renderComponent->GetIbos();
+
+    if (cvbos->GetCapacity() < mesh->GetQuadCount()) {
+      cvbos->Reserve(static_cast<int>(mesh->GetQuadCount() * 1.5));
+    }
+    if (cibos->GetCapacity() < mesh->GetIndexCount()) {
+      cibos->Reserve(static_cast<int>(mesh->GetIndexCount() * 1.5));
+    }
+  }
 }
 
 glm::vec3 ChunkRenderer::GetChunkShaderPositionOffset(const glm::dvec3 playerPos, const Chunk* chunk)
