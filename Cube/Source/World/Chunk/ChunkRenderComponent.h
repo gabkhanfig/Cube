@@ -39,7 +39,9 @@ public:
 	/* See RecreateMesh() */
 	static void MultithreadRecreateMeshes(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool);
 
-	static void MultithreadMemcpyDataAndCreateDrawCalls(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool, darray<ChunkDrawCall>* drawCallsOut);
+	static void MultithreadMemcpyMeshDataToBuffers(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool);
+
+	static void MultithreadCreateDrawCalls(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool, darray<ChunkDrawCall>* drawCallsOut);
 
 	/* Logic must be thread safe. */
 	void MemcpyMeshDataAndSwapBuffer();

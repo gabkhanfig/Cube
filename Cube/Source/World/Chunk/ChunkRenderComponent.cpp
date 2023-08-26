@@ -92,20 +92,26 @@ void ChunkRenderComponent::MultithreadRecreateMeshes(const darray<Chunk*>& chunk
 #endif
 }
 
-void ChunkRenderComponent::MultithreadMemcpyDataAndCreateDrawCalls(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool, darray<ChunkDrawCall>* drawCallsOut)
+void ChunkRenderComponent::MultithreadMemcpyMeshDataToBuffers(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool)
 {
 	for (Chunk* chunk : chunks) {
 		auto func = std::bind(&ChunkRenderComponent::MemcpyMeshDataAndSwapBuffer, chunk->GetRenderComponent());
 		threadPool->AddFunctionToQueue(func);
 	}
 	threadPool->ExecuteQueue();
+}
 
+void ChunkRenderComponent::MultithreadCreateDrawCalls(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool, darray<ChunkDrawCall>* drawCallsOut)
+{
+	gk_assert(drawCallsOut->Size() == 0);
+	drawCallsOut->Reserve(chunks.Size());
 	for (uint32 i = 0; i < chunks.Size(); i++) {
 		drawCallsOut->Add(ChunkDrawCall());
 	}
 
 	uint32 chunkIndex = 0;
 	for (const Chunk* chunk : chunks) {
+		gk_assert(!chunk->GetRenderComponent()->IsMeshEmpty());
 		ChunkDrawCall* drawCall = &drawCallsOut->At(chunkIndex);
 		auto func = std::bind(&ChunkRenderComponent::FillChunkDrawCallData, chunk->GetRenderComponent(), drawCall);
 		threadPool->AddFunctionToQueue(func);
@@ -135,8 +141,6 @@ void ChunkRenderComponent::FillChunkDrawCallData(ChunkDrawCall* drawCallOut) con
 {
 	gk_assertNotNull(drawCallOut);
 	drawCallOut->chunk = chunk;
-	drawCallOut->vbo = vbos->GetBoundBuffer();
-	drawCallOut->ibo = ibos->GetBoundBuffer();
 	drawCallOut->indicesToDraw = mesh->GetIndexCount();
 	drawCallOut->chunkPositionOffset = ChunkRenderer::GetChunkShaderPositionOffset(GetWorld()->GetPlayer()->GetLocation(), chunk);
 }

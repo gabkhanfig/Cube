@@ -59,7 +59,7 @@ void ChunkRenderer::StoreModifyDrawCallData()
   modifyDrawData.cameraMVP = Camera::GetActiveCamera()->GetMvpMatrix();
 }
 
-void ChunkRenderer::DrawAllChunksAndPrepareNext(const darray<Chunk*>& chunksToDrawNextFrame)
+void ChunkRenderer::DrawAllChunksAndPrepareNext(darray<ChunkDrawCall> chunksToDrawNextFrame)
 {
   // 8. Draw the chunks
   const DrawCallData& boundDrawData = drawCalls[boundDrawCallId];
@@ -70,7 +70,8 @@ void ChunkRenderer::DrawAllChunksAndPrepareNext(const darray<Chunk*>& chunksToDr
   darray<BlockQuad> quads;
   darray<uint32> indices;
   uint32 baseVertex = 0;
-
+  
+  
   // 9. Copy the remeshed chunks to their OpenGL buffers.
   for (Chunk* chunk : remeshedChunks) {
     ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
@@ -104,10 +105,11 @@ void ChunkRenderer::DrawAllChunksAndPrepareNext(const darray<Chunk*>& chunksToDr
   remeshedChunks.Empty();
 
   // 10. Prepare the draw calls for the next frame.
-  frameChunkDrawCalls.Empty();
-  for (Chunk* chunk : chunksToDrawNextFrame) {
-    frameChunkDrawCalls.Add(chunk);
-  }
+  //frameChunkDrawCalls.Empty();
+  //for (const ChunkDrawCall& chunk : chunksToDrawNextFrame) {
+  //  frameChunkDrawCalls.Add(chunk);
+  //}
+  frameChunkDrawCalls = std::move(chunksToDrawNextFrame);
 
   // 11. Swap buffers
   SwapNextBuffers();
@@ -133,7 +135,16 @@ void ChunkRenderer::PerformBoundDrawCalls()
   SetShaderCameraMVP(boundDrawData.cameraMVP);
 
   for (uint32 i = 0; i < frameChunkDrawCalls.Size(); i++) {
-    DrawChunk(frameChunkDrawCalls[i]);
+    //DrawChunk(frameChunkDrawCalls[i]);
+    VertexBufferObject* vbo = frameChunkDrawCalls[i].chunk->GetRenderComponent()->GetVbos()->GetBoundBuffer();
+    IndexBufferObject* ibo = frameChunkDrawCalls[i].chunk->GetRenderComponent()->GetIbos()->GetBoundBuffer();
+    //if (vbo == nullptr || ibo == nullptr) return;
+    //if (ibo->GetIndexCount() == 0) return;
+
+    vao->BindVertexBufferObject(vbo, sizeof(BlockVertex));
+    vao->BindIndexBufferObject(ibo);
+    SetShaderChunkOffset(frameChunkDrawCalls[i].chunkPositionOffset);
+    glDrawElements(GL_TRIANGLES, ibo->GetIndexCount(), GL_UNSIGNED_INT, 0);
   }
 
   engine->SwapGlfwBuffers();
@@ -154,11 +165,13 @@ void ChunkRenderer::DrawChunk(const Chunk* drawChunk)
 
 void ChunkRenderer::RemoveChunkFromFrameDraw(Chunk* chunk)
 {
-  frameChunkDrawCalls.RemoveFirst(chunk);
+  gk_assertm(false, "not implemented");
+  ///frameChunkDrawCalls.RemoveFirst(chunk);
 }
 
 void ChunkRenderer::CreateGLBuffersForChunks(const darray<Chunk*>& chunks)
 {
+  assertOnRenderThread();
   for (Chunk* chunk : chunks) {
     ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
 

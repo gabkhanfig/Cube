@@ -239,6 +239,7 @@ void World::RenderLoop()
 
   // 1. Get all of the chunks, including LOD chunks that should be drawn.
   darray<Chunk*> chunksToAttemptDraw;
+  chunksToAttemptDraw.Reserve(chunks.size());
   for (auto& chunkPair : chunks) {
     // Check if chunk can be drawn
     chunksToAttemptDraw.Add(chunkPair.second);
@@ -257,30 +258,35 @@ void World::RenderLoop()
     remeshedChunks.Add(chunk);
   }
   // 5. Remesh each chunk, passing in the mapped ChunkRenderMeshData structure to each chunk render component.
+  darray<Chunk*> remeshedChunksWithMesh;
   if (remeshedChunks.Size() > 0) {
     ChunkRenderComponent::MultithreadRecreateMeshes(remeshedChunks, engine->GetThreadPool());
-    chunkRenderer->SetRemeshedChunks(remeshedChunks);
+    for (Chunk* chunk : remeshedChunks) {
+      remeshedChunksWithMesh.Add(chunk);
+    }
+    chunkRenderer->SetRemeshedChunks(remeshedChunksWithMesh);
   }
 
   // 6. Filter out any empty chunks
   darray<Chunk*> chunksToDraw;
+  chunksToDraw.Reserve(chunksToAttemptDraw.Size() / 2);
   for (Chunk* chunk : chunksToAttemptDraw) {
     if (!chunk->GetRenderComponent()->IsMeshEmpty()) chunksToDraw.Add(chunk);
   }
   
   // 7. Store player position data, camera mvp matrix, and any other data that may change while drawing is occurring within the ChunkRenderer.
   chunkRenderer->StoreModifyDrawCallData();
+
+  darray<ChunkDrawCall> chunkDrawCalls;
+  ChunkRenderComponent::MultithreadCreateDrawCalls(chunksToDraw, engine->GetThreadPool(), &chunkDrawCalls);
+
   // 8. Execute whole world draw task on the render thread.
-  if (!usingRenderThread) {
-    chunkRenderer->DrawAllChunksAndPrepareNext(chunksToDraw);
-  }
-  else {
-    auto func = std::bind(&ChunkRenderer::DrawAllChunksAndPrepareNext, chunkRenderer, chunksToDraw);
-    renderThread->BindFunction(func);
-    renderThread->Execute();
-    //while (!renderThread->IsReady());
-  }
-  
+  auto func = std::bind(&ChunkRenderer::DrawAllChunksAndPrepareNext, chunkRenderer, chunkDrawCalls);
+  renderThread->BindFunction(func);
+  renderThread->Execute();
+
+
+
 }
 
 void World::DeleteDistantChunksAndLoadNearby(int renderDistance)

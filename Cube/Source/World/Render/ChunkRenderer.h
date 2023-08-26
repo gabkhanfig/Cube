@@ -5,6 +5,7 @@
 #include "../../Graphics/OpenGL/Buffers/PersistentMappedTripleBuffer.h"
 #include "../WorldTransform.h"
 #include "../Chunk/ChunkDataTypes.h"
+#include "../Chunk/ChunkDrawCall.h"
 
 class Player;
 class Shader;
@@ -41,7 +42,7 @@ public:
 
 	void StoreModifyDrawCallData();
 
-	void DrawAllChunksAndPrepareNext(const darray<Chunk*>& chunksToDrawNextFrame);
+	void DrawAllChunksAndPrepareNext(darray<ChunkDrawCall> chunksToDrawNextFrame);
 
 	void SetRemeshedChunks(const darray<Chunk*>& newRemeshedChunks);
 
@@ -75,5 +76,7 @@ private:
 
 	darray<Chunk*> remeshedChunks;
 
-	darray<Chunk*> frameChunkDrawCalls;
+	darray<ChunkDrawCall> frameChunkDrawCalls;
+
+	darray<ChunkDrawCall> drawCallsToExecute;
 };

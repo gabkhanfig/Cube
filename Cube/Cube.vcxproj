@@ -395,6 +395,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\World\Chunk\ChunkBlocksBitmask.cpp" />
     <ClCompile Include="Source\World\Chunk\Chunk.cpp" />
     <ClCompile Include="Source\World\Chunk\ChunkDataTypes.cpp" />
+    <ClCompile Include="Source\World\Chunk\ChunkDrawCall.cpp" />
     <ClCompile Include="Source\World\Chunk\ChunkRenderComponent.cpp" />
     <ClCompile Include="Source\World\Chunk\MappedAdjacentChunks.cpp" />
     <ClCompile Include="Source\World\Raycast.cpp" />
@@ -495,6 +496,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\World\Block\BlockVTable.h" />
     <ClInclude Include="Source\World\Chunk\ChunkBlocksBitmask.h" />
     <ClInclude Include="Source\World\Chunk\Chunk.h" />
+    <ClInclude Include="Source\World\Chunk\ChunkDrawCall.h" />
     <ClInclude Include="Source\World\Chunk\ChunkRenderComponent.h" />
     <ClInclude Include="Source\World\Chunk\ChunkData.h" />
     <ClInclude Include="Source\World\Chunk\ChunkDataTypes.h" />
