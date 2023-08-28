@@ -27,6 +27,27 @@ ChunkRenderer::ChunkRenderer()
   vao = new VertexArrayObject();
   //vao->Bind();
   vao->SetFormatLayout(BlockQuad::GetQuadsVertexBufferLayout());
+  blocksIbo = new IndexBufferObject();
+
+  constexpr uint32 indices[] = { 
+    0, 2, 1,
+    0, 3, 2
+  };
+  constexpr uint32 maxIndices = CHUNK_SIZE * 6 * 6;
+  uint32* buffer = new uint32[maxIndices];
+  uint32 index = 0;
+  for (uint32 i = 0; i < (maxIndices / 6); i++) {
+    buffer[index++] = (indices[0] + (i * 4));
+    buffer[index++] = (indices[1] + (i * 4));
+    buffer[index++] = (indices[2] + (i * 4));
+    buffer[index++] = (indices[3] + (i * 4));
+    buffer[index++] = (indices[4] + (i * 4));
+    buffer[index++] = (indices[5] + (i * 4));
+  }
+  blocksIbo->BufferData(buffer, maxIndices);
+  delete[] buffer;
+
+  vao->BindIndexBufferObject(blocksIbo);
 }
 
 void ChunkRenderer::SetShaderChunkOffset(glm::vec3 chunkOffset)
@@ -142,9 +163,9 @@ void ChunkRenderer::PerformBoundDrawCalls()
     //if (ibo->GetIndexCount() == 0) return;
 
     vao->BindVertexBufferObject(vbo, sizeof(BlockVertex));
-    vao->BindIndexBufferObject(ibo);
+    //vao->BindIndexBufferObject(ibo);
     SetShaderChunkOffset(frameChunkDrawCalls[i].chunkPositionOffset);
-    glDrawElements(GL_TRIANGLES, ibo->GetIndexCount(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, frameChunkDrawCalls[i].indicesToDraw, GL_UNSIGNED_INT, 0);
   }
 
   engine->SwapGlfwBuffers();

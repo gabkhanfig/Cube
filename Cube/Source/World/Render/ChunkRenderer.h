@@ -12,8 +12,8 @@ class Shader;
 class RasterShader;
 class VertexArrayObject;
 class Chunk;
-//class VertexBufferObject;
-//class IndexBufferObject;
+class VertexBufferObject;
+class IndexBufferObject;
 
 class ChunkRenderer
 {
@@ -63,6 +63,8 @@ private:
 	RasterShader* blockShader;
 
 	VertexArrayObject* vao;
+
+	IndexBufferObject* blocksIbo;
 
 	const GlobalString cameraMvpUniform;
 
