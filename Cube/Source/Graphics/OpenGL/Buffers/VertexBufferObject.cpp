@@ -56,10 +56,10 @@ void VertexBufferObject::BufferDataImpl(const void* data, uint32 totalBytes)
 void* VertexBufferObject::CreatePersistentMappedStorageImpl(const uint32 totalByteCapacity)
 {
 	assertOnRenderThread();
-	const GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
 
-	glNamedBufferStorage(id, totalByteCapacity, nullptr, mapFlags);
-	void* mappedBufferRange = glMapNamedBufferRange(id, 0, totalByteCapacity, mapFlags);
+	const GLBufferStorageBitmask mapFlags = GLBufferStorageBitmask::MapWrite | GLBufferStorageBitmask::MapPersistent | GLBufferStorageBitmask::MapCoherent;
+	SetBufferStorageImpl(totalByteCapacity, mapFlags);
+	void* mappedBufferRange = glMapNamedBufferRange(id, 0, totalByteCapacity, mapFlags.bitmask);
 	gk_assertNotNull(mappedBufferRange);
 	return mappedBufferRange;
 }
@@ -70,6 +70,12 @@ void* VertexBufferObject::GetMapBufferImpl(GLMappedBufferAccess access)
 	void* mappedBuffer = glMapNamedBuffer(id, static_cast<int>(access));
 	gk_assertNotNull(mappedBuffer);
 	return mappedBuffer;
+}
+
+void VertexBufferObject::SetBufferStorageImpl(const uint32 totalByteCapacity, const GLBufferStorageBitmask storageFlags)
+{
+	assertOnRenderThread();
+	glNamedBufferStorage(id, totalByteCapacity, nullptr, storageFlags.bitmask);
 }
 
 //VertexBufferObject::VertexBufferObject()

@@ -2,6 +2,7 @@
 
 #include "../../../Engine/EngineCore.h"
 #include "../OpenGLEnums.h"
+#include "../OpenGLStructures.h"
 
 class VertexBufferObject
 {
@@ -41,6 +42,11 @@ public:
 
 	void UnmapBuffer();
 
+	template<typename T>
+	void SetBufferStorage(const uint32 elementCapacity, const GLBufferStorageBitmask storageFlags) {
+		SetBufferStorageImpl(elementCapacity * sizeof(T), storageFlags);
+	}
+
 private:
 
 	void BufferDataImpl(const void* data, uint32 totalBytes);
@@ -48,6 +54,8 @@ private:
 	void* CreatePersistentMappedStorageImpl(const uint32 totalByteCapacity);
 
 	void* GetMapBufferImpl(GLMappedBufferAccess access);
+
+	void SetBufferStorageImpl(const uint32 totalByteCapacity, const GLBufferStorageBitmask storageFlags);
 
 private:
 
