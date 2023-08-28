@@ -368,6 +368,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\VertexBufferObject.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Camera\Camera.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\OpenGLEnums.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\OpenGLStructures.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Render\Renderer.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Shader\ComputeShader.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Shader\RasterShader.cpp" />
