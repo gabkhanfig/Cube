@@ -23,3 +23,7 @@ GLBufferStorageBitmask::GLBufferStorageBitmask(const uint32 flags)
 	}
 #endif
 }
+
+GLBufferStorageBitmask::GLBufferStorageBitmask(const GLBufferStorageBitmask& other)
+	: bitmask(other.bitmask)
+{}

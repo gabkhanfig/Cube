@@ -43,6 +43,7 @@ struct GLBufferStorageBitmask
 
   /* See GLBufferStorageBitmask::Flags */
   GLBufferStorageBitmask(const uint32 flags);
+  GLBufferStorageBitmask(const GLBufferStorageBitmask& other);
 
   const uint32 bitmask;
 };
