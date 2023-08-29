@@ -15,6 +15,10 @@ public:
 		int64 elementOffset;
 		int64 elementCapacity;
 		GLBufferMapBitmask access;
+
+		MappedRange() 
+			: data(nullptr), vbo(nullptr), elementOffset(0), elementCapacity(0), access(0)
+		{}
 	};
 
 	/* Create a completely empty VBO. */
