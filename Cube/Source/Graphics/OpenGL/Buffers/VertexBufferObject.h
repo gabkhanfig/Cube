@@ -28,7 +28,7 @@ public:
 	}
 
 	template<typename T>
-	T* CreatePersistentMappedStorage(const uint32 elementCapacity) {
+	[[nodiscard]] T* CreatePersistentMappedStorage(const uint32 elementCapacity) {
 		return (T*)CreatePersistentMappedStorageImpl(elementCapacity * sizeof(T));
 	}
 
@@ -36,16 +36,16 @@ public:
 
 	void Unbind();
 
-	bool IsBound() const;
+	[[nodiscard]] bool IsBound() const;
 
-	uint32 GetId() const { return id; }
+	[[nodiscard]] uint32 GetId() const { return id; }
 
-	static uint32 GetBoundId() { return boundId; }
+	[[nodiscard]] static uint32 GetBoundId() { return boundId; }
 
 	/* Binds and then returns a write only pointer to the map buffer.
 	Call UnmapBuffer(); at some point */
 	template<typename T>
-	T* GetMapBuffer(GLMappedBufferAccess access) {
+	[[nodiscard]] T* GetMapBuffer(GLMappedBufferAccess access) {
 		return (T*)GetMapBufferImpl(access);
 	}
 
@@ -57,7 +57,7 @@ public:
 	}
 
 	template<typename T>
-	MappedRange<T> MapRange(const int64 elementOffset, const int64 elementCapacity, const GLBufferMapBitmask access) {
+	[[nodiscard]] MappedRange<T> MapRange(const int64 elementOffset, const int64 elementCapacity, const GLBufferMapBitmask access) {
 		MappedRange<T> range;
 		range.data = (T*)MapBufferRangeImpl(elementOffset * sizeof(T), elementCapacity * sizeof(T), access);
 		range.vbo = this;
