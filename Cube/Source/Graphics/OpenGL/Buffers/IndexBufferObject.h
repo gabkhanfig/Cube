@@ -14,25 +14,25 @@ public:
 
 	void BufferData(const uint32* indices, uint32 num);
 
-	uint32* CreatePersistentMappedStorage(uint32 elementCapacity);
+	[[nodiscard]] uint32* CreatePersistentMappedStorage(uint32 elementCapacity);
 
 	void Bind();
 
 	void Unbind();
 
-	bool IsBound() const;
+	[[nodiscard]] bool IsBound() const;
 
-	uint32 GetIndexCount() const { return indexCount; }
+	[[nodiscard]] uint32 GetIndexCount() const { return indexCount; }
 
 	void SetIndexCount(uint32 newIndexCount) { indexCount = newIndexCount; }
 
 	/* Binds and then returns a write only pointer to the map buffer.
 	Call UnmapBuffer(); at some point */
-	uint32* GetMapBuffer(GLMappedBufferAccess access);
+	[[nodiscard]] uint32* GetMapBuffer(GLMappedBufferAccess access);
 
 	void UnmapBuffer();
 
-	forceinline uint32 GetId() const { return id; }
+	[[nodiscard]] forceinline uint32 GetId() const { return id; }
 
 private:
 
