@@ -45,7 +45,7 @@ struct GLBufferStorageBitmask
   GLBufferStorageBitmask(const uint32 flags);
   GLBufferStorageBitmask(const GLBufferStorageBitmask& other);
 
-  const uint32 bitmask;
+  uint32 bitmask;
 };
 
 struct GLBufferMapBitmask
@@ -73,5 +73,5 @@ struct GLBufferMapBitmask
   GLBufferMapBitmask(const uint32 flags);
   GLBufferMapBitmask(const GLBufferMapBitmask& other);
 
-  const uint32 bitmask;
+  uint32 bitmask;
 };
