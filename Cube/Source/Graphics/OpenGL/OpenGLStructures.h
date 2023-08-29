@@ -30,13 +30,13 @@ struct GLBufferStorageBitmask
     // GL_DYNAMIC_STORAGE_BIT
     DynamicStorage = 0x0100,
     // GL_MAP_READ_BIT
-    MapRead = 0x0001,
+    Read = 0x0001,
     // GL_MAP_WRITE_BIT
-    MapWrite = 0x0002,
+    Write = 0x0002,
     // GL_MAP_PERSISTENT_BIT
-    MapPersistent = 0x0040,
+    Persistent = 0x0040,
     // GL_MAP_COHERENT_BIT
-    MapCoherent = 0x0080,
+    Coherent = 0x0080,
     // GL_CLIENT_STORAGE_BIT
     ClientStorage = 0x0200
   };
@@ -44,6 +44,34 @@ struct GLBufferStorageBitmask
   /* See GLBufferStorageBitmask::Flags */
   GLBufferStorageBitmask(const uint32 flags);
   GLBufferStorageBitmask(const GLBufferStorageBitmask& other);
+
+  const uint32 bitmask;
+};
+
+struct GLBufferMapBitmask
+{
+  enum Flags : uint32 {
+    // GL_MAP_READ_BIT
+    Read = 0x0001,
+    // GL_MAP_WRITE_BIT
+    Write = 0x0002,
+    // GL_MAP_PERSISTENT_BIT
+    Persistent = 0x0040,
+    // GL_MAP_COHERENT_BIT
+    Coherent = 0x0080,
+    // GL_MAP_INVALIDATE_RANGE_BIT
+    InvalidateRange = 0x0004,
+    // GL_MAP_INVALIDATE_BUFFER_BIT
+    InvalidateBuffer = 0x0008,
+    // GL_MAP_FLUSH_EXPLICIT_BIT
+    FlushExplicit = 0x0010,
+    // GL_MAP_UNSYNCHRONIZED_BIT 
+    Unsynchronized = 0x0020
+  };
+
+  /* See GLBufferMapBitmask::Flags */
+  GLBufferMapBitmask(const uint32 flags);
+  GLBufferMapBitmask(const GLBufferMapBitmask& other);
 
   const uint32 bitmask;
 };
