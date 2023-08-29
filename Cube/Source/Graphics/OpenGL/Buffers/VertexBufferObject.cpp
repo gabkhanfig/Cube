@@ -57,7 +57,7 @@ void* VertexBufferObject::CreatePersistentMappedStorageImpl(const uint32 totalBy
 {
 	assertOnRenderThread();
 
-	const GLBufferStorageBitmask mapFlags = GLBufferStorageBitmask::MapWrite | GLBufferStorageBitmask::MapPersistent | GLBufferStorageBitmask::MapCoherent;
+	const GLBufferStorageBitmask mapFlags = GLBufferStorageBitmask::Write | GLBufferStorageBitmask::Persistent | GLBufferStorageBitmask::Coherent;
 	SetBufferStorageImpl(totalByteCapacity, mapFlags);
 	void* mappedBufferRange = glMapNamedBufferRange(id, 0, totalByteCapacity, mapFlags.bitmask);
 	gk_assertNotNull(mappedBufferRange);
