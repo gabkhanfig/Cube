@@ -12,6 +12,7 @@ GLBufferStorageBitmask::GLBufferStorageBitmask(const uint32 flags)
 	: bitmask(flags)
 {
 #if CUBE_DEVELOPMENT
+	if (flags == 0) return;
 	/* Perform validation according to OpenGL spec
 	https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBufferStorage.xhtml */
 	if (flags & GL_MAP_PERSISTENT_BIT) {
@@ -41,6 +42,7 @@ GLBufferMapBitmask::GLBufferMapBitmask(const uint32 flags)
 	: bitmask(flags)
 {
 #if CUBE_DEVELOPMENT
+	if (flags == 0) return;
 	/* Perform validation according to OpenGL spec
 	https://registry.khronos.org/OpenGL-Refpages/gl4/html/glMapBufferRange.xhtml */
 	const bool isRead = flags & GL_MAP_READ_BIT;
