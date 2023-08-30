@@ -11,13 +11,17 @@ public:
 	template<typename T>
 	struct MappedRange {
 		T* data;
-		VertexBufferObject* vbo;
+		//VertexBufferObject* vbo;
 		int64 elementOffset;
 		int64 elementCapacity;
 		GLBufferMapBitmask access;
 
 		MappedRange() 
-			: data(nullptr), vbo(nullptr), elementOffset(0), elementCapacity(0), access(0)
+			: data(nullptr), 
+			//vbo(nullptr), 
+			elementOffset(0), 
+			elementCapacity(0), 
+			access(0)
 		{}
 	};
 
@@ -64,7 +68,7 @@ public:
 	[[nodiscard]] MappedRange<T> MapRange(const int64 elementOffset, const int64 elementCapacity, const GLBufferMapBitmask access) {
 		MappedRange<T> range;
 		range.data = (T*)MapBufferRangeImpl(elementOffset * sizeof(T), elementCapacity * sizeof(T), access);
-		range.vbo = this;
+		//range.vbo = this;
 		range.elementOffset = elementOffset;
 		range.elementCapacity = elementCapacity;
 		range.access = access;
