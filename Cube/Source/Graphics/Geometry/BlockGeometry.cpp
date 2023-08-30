@@ -71,5 +71,5 @@ const glm::vec3 BlockQuad::NormalFromQuadPoints(const glm::vec3 points[4])
 #endif
 
   // TODO: remove the inversion. Use counter clockwise vectors in the future
-  return glm::normalize(glm::cross(AB, BC));
+  return glm::normalize(-1.f * glm::cross(AB, BC));
 }

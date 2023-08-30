@@ -27,21 +27,21 @@ Settings* GetSettings() {
   return settings;
 }
 
-//int main(int argc, char** argv)
-//{
-//#if RUN_TESTS
-//  ::testing::InitGoogleTest(&argc, argv);
-//  return RUN_ALL_TESTS();
-//#else
-//  settings = new Settings();
-//  Engine::Initialize();
-//  gameInstance = new GameInstance();
-//  gameInstance->Init();
-//	gk::Event<void, float>* gameInstanceTickEvent = gk::Event<void, float>::Create(gameInstance, &GameInstance::Tick);
-//  Engine::Run(gameInstanceTickEvent);
-//  return 0;
-//#endif
-//}
+int main(int argc, char** argv)
+{
+#if RUN_TESTS
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+#else
+  settings = new Settings();
+  Engine::Initialize();
+  gameInstance = new GameInstance();
+  gameInstance->Init();
+	gk::Event<void, float>* gameInstanceTickEvent = gk::Event<void, float>::Create(gameInstance, &GameInstance::Tick);
+  Engine::Run(gameInstanceTickEvent);
+  return 0;
+#endif
+}
 
 const unsigned int SCREEN_WIDTH = 1920;
 const unsigned int SCREEN_HEIGHT = 1080;
@@ -67,7 +67,7 @@ GLuint indices[] =
 	0, 3, 2
 };
 
-
+/*
 int main()
 {
 	CompileTimeFiles::LoadAllFiles();
@@ -95,10 +95,7 @@ int main()
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	VertexBufferObject* vbo = new VertexBufferObject();
-	vbo->SetBufferStorage<float>(40, GLBufferStorageBitmask::Write | GLBufferStorageBitmask::Coherent | GLBufferStorageBitmask::Persistent);
-	VertexBufferObject::MappedRange<float> range = vbo->MapRange<float>(0, 24, GLBufferMapBitmask::Write | GLBufferMapBitmask::Coherent | GLBufferMapBitmask::Persistent);
-	memcpy(range.data, vertices, 20 * sizeof(float));
-	//vbo->BufferData(vertices, 20);
+	vbo->BufferData(vertices, 20);
 	IndexBufferObject* ibo = new IndexBufferObject();
 	ibo->BufferData(indices, 6);
 
@@ -144,4 +141,4 @@ int main()
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
-}
+}*/

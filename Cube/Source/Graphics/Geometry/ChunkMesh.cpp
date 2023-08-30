@@ -53,8 +53,7 @@ void ChunkMesh::CopyIndicesToBuffer(uint32* buffer, uint32 indexOffset) const
 {
   gk_assertm(buffer, "IBO quad indices buffer cannot be null");
   // I have no idea why, but indices in this order just works for linear coordinates for quads. Do not change. 2, 3, 0, 1, 2, 0
-  constexpr uint32 indices[] =
-  {
+  constexpr uint32 indices[] = {
     0, 2, 1,
     0, 3, 2
   };
@@ -90,8 +89,9 @@ const BlockQuad* ChunkMesh::GetQuadsData() const
 
 darray<uint32> ChunkMesh::GetIndices() const
 {
-  constexpr uint32 indices[6] = {
-    2, 3, 0, 1, 2, 0
+  constexpr uint32 indices[] = {
+    0, 2, 1,
+    0, 3, 2
   };
   const uint32 quadCount = quads.Size();
 
@@ -112,8 +112,9 @@ uint32* ChunkMesh::CreateQuadIndices(const uint32 quadCount)
   constexpr uint32 indexCount = 6;
 
   // I have no idea why, but indices in this order just works for linear coordinates for quads. Do not change. 2, 3, 0, 1, 2, 0
-  constexpr uint32 indices[indexCount] = {
-    2, 3, 0, 1, 2, 0
+  constexpr uint32 indices[] = {
+    0, 2, 1,
+    0, 3, 2
   };
 
   gk_assertm((quadCount * indexCount) < (0x7FFFFFFF / sizeof(uint32)), "BlockQuad indices amount cannot exceed max signed 32-bit int / 4");

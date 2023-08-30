@@ -163,7 +163,7 @@ void ChunkRenderer::PerformBoundDrawCalls()
     //if (ibo->GetIndexCount() == 0) return;
 
     vao->BindVertexBufferObject(vbo, sizeof(BlockVertex));
-    //vao->BindIndexBufferObject(ibo);
+    vao->BindIndexBufferObject(ibo);
     SetShaderChunkOffset(frameChunkDrawCalls[i].chunkPositionOffset);
     glDrawElements(GL_TRIANGLES, frameChunkDrawCalls[i].indicesToDraw, GL_UNSIGNED_INT, 0);
   }
