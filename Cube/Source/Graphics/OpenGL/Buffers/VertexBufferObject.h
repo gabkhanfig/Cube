@@ -60,7 +60,7 @@ public:
 	void UnmapBuffer();
 
 	template<typename T>
-	void SetBufferStorage(const uint32 elementCapacity, const GLBufferStorageBitmask storageFlags) {
+	void SetBufferStorage(const uint64 elementCapacity, const GLBufferStorageBitmask storageFlags) {
 		SetBufferStorageImpl(elementCapacity * sizeof(T), storageFlags);
 	}
 
@@ -83,7 +83,7 @@ private:
 
 	void* GetMapBufferImpl(GLMappedBufferAccess access);
 
-	void SetBufferStorageImpl(const uint32 totalByteCapacity, const GLBufferStorageBitmask storageFlags);
+	void SetBufferStorageImpl(const uint64 totalByteCapacity, const GLBufferStorageBitmask storageFlags);
 
 	void* MapBufferRangeImpl(const int64 byteOffset, const int64 totalByteCapacity, const GLBufferMapBitmask access);
 

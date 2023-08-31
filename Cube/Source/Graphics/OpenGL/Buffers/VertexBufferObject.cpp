@@ -72,7 +72,7 @@ void* VertexBufferObject::GetMapBufferImpl(GLMappedBufferAccess access)
 	return mappedBuffer;
 }
 
-void VertexBufferObject::SetBufferStorageImpl(const uint32 totalByteCapacity, const GLBufferStorageBitmask storageFlags)
+void VertexBufferObject::SetBufferStorageImpl(const uint64 totalByteCapacity, const GLBufferStorageBitmask storageFlags)
 {
 	assertOnRenderThread();
 	glNamedBufferStorage(id, totalByteCapacity, nullptr, storageFlags.bitmask);
