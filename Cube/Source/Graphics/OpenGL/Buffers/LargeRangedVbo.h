@@ -5,6 +5,26 @@
 #include "../../../Engine/Engine.h"
 
 template<typename T>
+class LargeRangedVbo;
+
+template<typename T>
+struct VboMappedRangeRef {
+
+	VboMappedRangeRef(VertexBufferObject::MappedRange<T>* mappedRange, LargeRangedVbo<T>* owningBuffer)
+		: _mappedRange(mappedRange), _owningBuffer(owningBuffer) {}
+
+	~VboMappedRangeRef() { FreeRange(); }
+
+	void FreeRange();
+
+
+
+private:
+	VertexBufferObject::MappedRange<T>* _mappedRange;
+	LargeRangedVbo<T>* _owningBuffer;
+};
+
+template<typename T>
 class LargeRangedVbo
 {
 public:
@@ -14,6 +34,8 @@ public:
 	~LargeRangedVbo();
 
 	void Reserve(uint64 elementCapacity);
+
+	void FreeRange(VertexBufferObject::MappedRange<T>* range);
 
 
 private:
@@ -28,6 +50,17 @@ private:
 	darray<CachedSubrange> cachedSubranges;
 	darray<VertexBufferObject::MappedRange<T>*> mappedRanges;
 };
+
+template<typename T>
+inline void VboMappedRangeRef<T>::FreeRange()
+{
+	if (_owningBuffer) {
+		gk_assertNotNull(_mappedRange);
+		_owningBuffer->FreeRange(_mappedRange);
+		_owningBuffer = nullptr;
+	}
+	_mappedRange = nullptr;
+}
 
 template<typename T>
 inline LargeRangedVbo<T>::LargeRangedVbo()
@@ -108,3 +141,17 @@ inline void LargeRangedVbo<T>::Reserve(uint64 elementCapacity)
 	}
 	vbo = newVbo;
 }
+
+template<typename T>
+inline void LargeRangedVbo<T>::FreeRange(VertexBufferObject::MappedRange<T>* range)
+{
+	darray<T>::OptionalIndex optionalIndex = mappedRanges.Find(range);
+	gk_assertm(optionalIndex.IsValidIndex(), "Range must exist within the large vbos mapped ranges");
+
+	const uint32 index = optionalIndex.Get();
+	cachedSubranges.RemoveAt(index);
+	mappedRanges.RemoveAt(index);
+
+	delete range;
+}
+
