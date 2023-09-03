@@ -17,7 +17,16 @@ struct VboMappedRangeRef {
 
 	void FreeRange();
 
+	void WriteToRange(const T* data, const uint64 count) {
+		gk_assertm(count * sizeof(T) <= _mappedRange->elementCapacity, "Cannot copy more data than the range's capacity");
+		gk_assertm(_mappedRange->access & GLBufferMapBitmask::Write, "Range must have write access");
+		memcpy(_mappedRange->data, data, count * sizeof(T));
+	}
 
+	const T* GetRangeData() const {
+		gk_assertm(_mappedRange->access & GLBufferMapBitmask::Read, "Range must have read access for const T*");
+		return _mappedRange->data;
+	}
 
 private:
 	VertexBufferObject::MappedRange<T>* _mappedRange;
