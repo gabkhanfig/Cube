@@ -18,10 +18,12 @@
 #include "../../Core//Utils/CompileTimeFiles.h"
 #include "../../Graphics/OpenGL/Buffers/MappedTripleIbo.h"
 #include "../../Graphics/OpenGL/Buffers/MappedTripleVbo.h"
+#include "../../Settings/Settings.h"
 
 ChunkRenderer::ChunkRenderer()
   : chunkOffsetUniform("u_chunkOffset"), cameraMvpUniform("u_cameraMVP"), boundDrawCallId(0), modifyDrawCallId(1)
 {
+  assertOnRenderThread();
   //shader = new Shader(CompileTimeFiles::GetTextFile("Chunk.vert")->contents, CompileTimeFiles::GetTextFile("Chunk.frag")->contents);
   blockShader = new RasterShader(CompileTimeFiles::GetTextFile("Block.vert")->contents, CompileTimeFiles::GetTextFile("Block.frag")->contents);
   vao = new VertexArrayObject();
@@ -48,6 +50,14 @@ ChunkRenderer::ChunkRenderer()
   delete[] buffer;
 
   vao->BindIndexBufferObject(blocksIbo);
+
+  hugeVbo = new LargeRangedVbo<BlockQuad>();
+  const uint64 hugeVboReserveCapacity = std::pow(uint64(GetSettings()->GetRenderDistance()), 3ULL) * CHUNK_SIZE / 2;
+#ifdef CUBE_DEVELOPMENT
+  const double _reserveInGB = double(hugeVboReserveCapacity * sizeof(BlockQuad)) / 1000000000.0;
+  cubeLog("Allocating " + String::FromFloat(_reserveInGB, 3) + "GB for large VBO");
+#endif
+  hugeVbo->Reserve(hugeVboReserveCapacity); 
 }
 
 void ChunkRenderer::SetShaderChunkOffset(glm::vec3 chunkOffset)

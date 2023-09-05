@@ -6,6 +6,7 @@
 #include "../WorldTransform.h"
 #include "../Chunk/ChunkDataTypes.h"
 #include "../Chunk/ChunkDrawCall.h"
+#include "../../Graphics/OpenGL/Buffers/LargeRangedVbo.h"
 
 class Player;
 class Shader;
@@ -81,4 +82,6 @@ private:
 	darray<ChunkDrawCall> frameChunkDrawCalls;
 
 	darray<ChunkDrawCall> drawCallsToExecute;
+
+	LargeRangedVbo<BlockQuad>* hugeVbo;
 };
