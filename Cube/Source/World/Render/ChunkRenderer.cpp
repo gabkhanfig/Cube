@@ -231,3 +231,9 @@ glm::vec3 ChunkRenderer::GetChunkShaderPositionOffset(const glm::dvec3 playerPos
   const glm::dvec3 chunkLocation = glm::dvec3(_cPos.x * CHUNK_LENGTH, _cPos.y * CHUNK_LENGTH, _cPos.z * CHUNK_LENGTH);
   return glm::vec3(double(chunkLocation.x - playerPos.x), double(chunkLocation.y - playerPos.y), double(chunkLocation.z - playerPos.z));
 }
+
+VboMappedRangeRef<BlockQuad>* ChunkRenderer::CreateMappedVboRange(const uint64 elementCapacity)
+{
+  assertOnRenderThread();
+  return hugeVbo->NewMappedRange(elementCapacity);
+}

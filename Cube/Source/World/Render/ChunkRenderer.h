@@ -53,6 +53,8 @@ public:
 
 	static glm::vec3 GetChunkShaderPositionOffset(const glm::dvec3 playerPos, const Chunk* chunk);
 
+	VboMappedRangeRef<BlockQuad>* CreateMappedVboRange(const uint64 elementCapacity);
+
 private:
 
 	void PerformBoundDrawCalls();
