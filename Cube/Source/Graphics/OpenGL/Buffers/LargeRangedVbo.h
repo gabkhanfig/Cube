@@ -125,7 +125,7 @@ inline void LargeRangedVbo<T>::Reserve(uint64 elementCapacity)
 		CachedSubrange& cachedSubrange = cachedSubranges[i];
 		VertexBufferObject::MappedRange<T>* mappedRange = mappedRanges[i];
 
-		VertexBufferObject::MappedRange<T> newRange = newVbo->MapRange(currentOffset, cachedSubrange.elementCapacity, mapRangeBitmask);
+		VertexBufferObject::MappedRange<T> newRange = newVbo->MapRange<T>(currentOffset, cachedSubrange.elementCapacity, mapRangeBitmask);
 
 		cachedSubrange.elementOffset = currentOffset;
 
@@ -140,7 +140,7 @@ inline void LargeRangedVbo<T>::Reserve(uint64 elementCapacity)
 		gk_assert(cachedSubrange.elementOffset == cachedSubranges[i].elementOffset);
 		gk_assert(cachedSubrange.elementCapacity == cachedSubranges[i].elementCapacity);
 		gk_assert(mappedRange->data == mappedRanges[i]->data);
-		gk_assert(mappedRange->access == mappedRanges[i]->access);
+		gk_assert(mappedRange->access.bitmask == mappedRanges[i]->access.bitmask);
 		gk_assert(mappedRange->elementOffset == mappedRanges[i]->elementOffset);
 		gk_assert(mappedRange->elementCapacity == mappedRanges[i]->elementCapacity);
 
@@ -157,7 +157,7 @@ inline void LargeRangedVbo<T>::Reserve(uint64 elementCapacity)
 template<typename T>
 inline void LargeRangedVbo<T>::FreeRange(VertexBufferObject::MappedRange<T>* range)
 {
-	darray<T>::OptionalIndex optionalIndex = mappedRanges.Find(range);
+	const auto optionalIndex = mappedRanges.Find(range);
 	gk_assertm(optionalIndex.IsValidIndex(), "Range must exist within the large vbos mapped ranges");
 
 	const uint32 index = optionalIndex.Get();
