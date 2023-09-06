@@ -11,24 +11,27 @@ template<typename T>
 struct VboMappedRangeRef {
 
 	VboMappedRangeRef(VertexBufferObject::MappedRange<T>* mappedRange, LargeRangedVbo<T>* owningBuffer)
-		: _mappedRange(mappedRange), _owningBuffer(owningBuffer) {}
+		: _mappedRange(mappedRange), _owningBuffer(owningBuffer) 
+	{}
 
 	~VboMappedRangeRef() { FreeRange(); }
 
 	void FreeRange();
 
 	void WriteToRange(const T* data, const uint64 count) {
-		gk_assertm(count * sizeof(T) <= _mappedRange->elementCapacity, "Cannot copy more data than the range's capacity");
+		gk_assertm(count <= _mappedRange->elementCapacity, "Cannot copy more data than the range's capacity");
 		gk_assertm(_mappedRange->access.bitmask & GLBufferMapBitmask::Write, "Range must have write access");
 		memcpy(_mappedRange->data, data, count * sizeof(T));
 	}
-
+	
 	const T* GetRangeData() const {
 		gk_assertm(_mappedRange->access & GLBufferMapBitmask::Read, "Range must have read access for const T*");
 		return _mappedRange->data;
 	}
 
 	forceinline uint64 GetCapacity() const { return _mappedRange->elementCapacity; }
+
+	forceinline GLBufferMapBitmask GetRangeAccess() const { return _mappedRange->access; }
 
 private:
 	VertexBufferObject::MappedRange<T>* _mappedRange;
@@ -95,6 +98,7 @@ inline LargeRangedVbo<T>::~LargeRangedVbo()
 template<typename T>
 inline void LargeRangedVbo<T>::Reserve(uint64 elementCapacity)
 {
+	std::cout << "calling large ranged vbo reserve\n";
 	assertOnRenderThread();
 	gk_assertm(cachedSubranges.Size() == mappedRanges.Size(), "Cached subranges and mapped ranges must have a 1-1 correlation");
 	gk_assertm(elementCapacity != 0, "Cannot reserve element capacity of 0");
@@ -127,16 +131,17 @@ inline void LargeRangedVbo<T>::Reserve(uint64 elementCapacity)
 		CachedSubrange& cachedSubrange = cachedSubranges[i];
 		VertexBufferObject::MappedRange<T>* mappedRange = mappedRanges[i];
 
-		VertexBufferObject::MappedRange<T> newRange = newVbo->MapRange<T>(currentOffset, cachedSubrange.elementCapacity, mapRangeBitmask);
+		VertexBufferObject::MappedRange<T>* newRange = newVbo->MapRange<T>(currentOffset, cachedSubrange.elementCapacity, mapRangeBitmask);
 
 		cachedSubrange.elementOffset = currentOffset;
 
 		gk_assertm(mappedRange->access.bitmask & GLBufferMapBitmask::Read, "Must be able to read from the buffer to memcpy for a new allocation");
-		memcpy(newRange.data, mappedRange->data, sizeof(T) * cachedSubrange.elementCapacity);
+		memcpy(newRange->data, mappedRange->data, sizeof(T) * cachedSubrange.elementCapacity);
 
-		mappedRange->data = newRange.data;
-		mappedRange->access = newRange.access;
+		mappedRange->data = newRange->data;
+		mappedRange->access = newRange->access;
 		mappedRange->elementOffset = currentOffset;
+		delete newRange;
 
 		// Some sanity checks
 		gk_assert(cachedSubrange.elementOffset == cachedSubranges[i].elementOffset);
@@ -177,7 +182,25 @@ inline VboMappedRangeRef<T>* LargeRangedVbo<T>::NewMappedRange(const uint64 elem
 	gk_assertm(elementCapacity != 0, "Cannot reserve element capacity of 0");
 
 	const GLBufferMapBitmask mapRangeBitmask =
-		GLBufferMapBitmask::Read | GLBufferMapBitmask::Write | GLBufferMapBitmask::Persistent | GLBufferMapBitmask::Coherent | GLBufferMapBitmask::InvalidateRange;
+		GLBufferMapBitmask::Read | GLBufferMapBitmask::Write | GLBufferMapBitmask::Persistent | GLBufferMapBitmask::Coherent; //| GLBufferMapBitmask::InvalidateRange;
+
+	if (cachedSubranges.Size() == 0) { // If no elements current, just instantly allocate.
+		if (bufferTotalElementCapacity < elementCapacity) {
+			const uint64 newCapacity = (bufferTotalElementCapacity + elementCapacity) * 2;
+			Reserve(newCapacity);
+		}
+
+		VertexBufferObject::MappedRange<T>* newRangeData = vbo->MapRange<T>(0, elementCapacity, mapRangeBitmask); // maybe elementrangeend + 1
+
+		CachedSubrange cachedSubrange;
+		cachedSubrange.elementOffset = newRangeData->elementOffset;
+		cachedSubrange.elementCapacity = newRangeData->elementCapacity;
+		cachedSubranges.Add(cachedSubrange);
+		mappedRanges.Add(newRangeData);
+
+		VboMappedRangeRef<T>* rangeRef = new VboMappedRangeRef<T>(newRangeData, this);
+		return rangeRef;
+	}
 
 	for (uint32 i = 0; i < cachedSubranges.Size(); i++) {
 		const bool isLastElement = i == (cachedSubranges.Size() - 1);
@@ -186,25 +209,27 @@ inline VboMappedRangeRef<T>* LargeRangedVbo<T>::NewMappedRange(const uint64 elem
 		if (isLastElement) {
 			const uint64 capacityLeftover = bufferTotalElementCapacity - elementRangeEnd;
 			if (capacityLeftover > elementCapacity) { // Can create the range
-				VertexBufferObject::MappedRange<T> newRangeData = vbo->MapRange<T>(elementRangeEnd, elementCapacity, mapRangeBitmask); // maybe elementrangeend + 1
-				VertexBufferObject::MappedRange<T>* newRange = new VertexBufferObject::MappedRange<T>();
-				newRange->data = newRangeData.data;
-				newRange->elementOffset = newRangeData.elementOffset;
-				newRange->elementCapacity = newRangeData.elementCapacity;
-				newRange->access = newRangeData.access;
+				VertexBufferObject::MappedRange<T>* newRangeData = vbo->MapRange<T>(elementRangeEnd, elementCapacity, mapRangeBitmask); // maybe elementrangeend + 1
+
+				std::cout << "enough capacity between\n";
+
+				gk_assert(newRangeData->access.bitmask != 0);
 
 				CachedSubrange cachedSubrange;
-				cachedSubrange.elementOffset = newRangeData.elementOffset;
-				cachedSubrange.elementCapacity = newRangeData.elementCapacity;
+				cachedSubrange.elementOffset = newRangeData->elementOffset;
+				cachedSubrange.elementCapacity = newRangeData->elementCapacity;
 				cachedSubranges.Add(cachedSubrange);
-				mappedRanges.Add(newRange);
+				mappedRanges.Add(newRangeData);
 
-				VboMappedRangeRef<T>* rangeRef = new VboMappedRangeRef<T>(newRange, this);
+				VboMappedRangeRef<T>* rangeRef = new VboMappedRangeRef<T>(newRangeData, this);
+				gk_assert(rangeRef->GetRangeAccess().bitmask & GLBufferMapBitmask::Write);
 				return rangeRef;
 			}
 			else { // Cannot create the range, so need to reallocate, and then append to end of both arrays.
 				const uint64 newCapacity = (bufferTotalElementCapacity + elementCapacity) * 2;
 				Reserve(newCapacity);
+
+				std::cout << "not enough space, so reserved more\n";
 				
 				const uint32 lastIndex = cachedSubranges.Size() - 1;
 				const uint64 lastElementRangeEnd = cachedSubranges[lastIndex].elementOffset + cachedSubranges[lastIndex].elementCapacity;
@@ -212,20 +237,18 @@ inline VboMappedRangeRef<T>* LargeRangedVbo<T>::NewMappedRange(const uint64 elem
 				gk_assertm((bufferTotalElementCapacity - lastElementRangeEnd) > elementCapacity, 
 					"Reallocating new capacity for large ranged vbo should've created a large enough capacity to make the new required range");
 
-				VertexBufferObject::MappedRange<T> newRangeData = vbo->MapRange<T>(lastElementRangeEnd, elementCapacity, mapRangeBitmask); // maybe elementrangeend + 1
-				VertexBufferObject::MappedRange<T>* newRange = new VertexBufferObject::MappedRange<T>();
-				newRange->data = newRangeData.data;
-				newRange->elementOffset = newRangeData.elementOffset;
-				newRange->elementCapacity = newRangeData.elementCapacity;
-				newRange->access = newRangeData.access;
+				VertexBufferObject::MappedRange<T>* newRangeData = vbo->MapRange<T>(lastElementRangeEnd, elementCapacity, mapRangeBitmask); // maybe elementrangeend + 1
 
 				CachedSubrange cachedSubrange;
-				cachedSubrange.elementOffset = newRangeData.elementOffset;
-				cachedSubrange.elementCapacity = newRangeData.elementCapacity;
+				cachedSubrange.elementOffset = newRangeData->elementOffset;
+				cachedSubrange.elementCapacity = newRangeData->elementCapacity;
 				cachedSubranges.Add(cachedSubrange);
-				mappedRanges.Add(newRange);
+				mappedRanges.Add(newRangeData);
 
-				VboMappedRangeRef<T>* rangeRef = new VboMappedRangeRef<T>(newRange, this);
+				gk_assert(newRangeData->access.bitmask != 0);
+
+				VboMappedRangeRef<T>* rangeRef = new VboMappedRangeRef<T>(newRangeData, this);
+				gk_assert(rangeRef->GetRangeAccess().bitmask & GLBufferMapBitmask::Write);
 				return rangeRef;
 			}
 		}
@@ -235,20 +258,20 @@ inline VboMappedRangeRef<T>* LargeRangedVbo<T>::NewMappedRange(const uint64 elem
 				continue;
 			}
 
-			VertexBufferObject::MappedRange<T> newRangeData = vbo->MapRange<T>(elementRangeEnd, elementCapacity, mapRangeBitmask); // maybe elementrangeend + 1
-			VertexBufferObject::MappedRange<T>* newRange = new VertexBufferObject::MappedRange<T>();
-			newRange->data = newRangeData.data;
-			newRange->elementOffset = newRangeData.elementOffset;
-			newRange->elementCapacity = newRangeData.elementCapacity;
-			newRange->access = newRangeData.access;
+			std::cout << "adding to end of the ranged vbo\n";
+
+			VertexBufferObject::MappedRange<T>* newRangeData = vbo->MapRange<T>(elementRangeEnd, elementCapacity, mapRangeBitmask); // maybe elementrangeend + 1
+
+			gk_assert(newRangeData->access.bitmask != 0);
 
 			CachedSubrange cachedSubrange;
-			cachedSubrange.elementOffset = newRangeData.elementOffset;
-			cachedSubrange.elementCapacity = newRangeData.elementCapacity;
+			cachedSubrange.elementOffset = newRangeData->elementOffset;
+			cachedSubrange.elementCapacity = newRangeData->elementCapacity;
 			cachedSubranges.Add(cachedSubrange);
-			mappedRanges.Add(newRange);
+			mappedRanges.Add(newRangeData);
 
-			VboMappedRangeRef<T>* rangeRef = new VboMappedRangeRef<T>(newRange, this);
+			VboMappedRangeRef<T>* rangeRef = new VboMappedRangeRef<T>(newRangeData, this);
+			gk_assert(rangeRef->GetRangeAccess().bitmask & GLBufferMapBitmask::Write);
 			return rangeRef;
 		}
 	}
