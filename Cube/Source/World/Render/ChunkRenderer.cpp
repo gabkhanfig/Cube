@@ -104,36 +104,7 @@ void ChunkRenderer::DrawAllChunksAndPrepareNext(darray<ChunkDrawCall> chunksToDr
   
   
   // 9. Copy the remeshed chunks to their OpenGL buffers.
-  for (Chunk* chunk : remeshedChunks) {
-    ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
-
-    ChunkMesh* mesh = renderComponent->GetMesh();
-    if (mesh->GetQuadCount() == 0) continue;
-
-    if (!renderComponent->AreGLBuffersInitialized()) {
-      renderComponent->CreateGLBuffers();
-    }
-
-    auto cvbos = renderComponent->GetVbos();
-    auto cibos = renderComponent->GetIbos();
-
-    if (cvbos->GetCapacity() < mesh->GetQuadCount()) {
-      cvbos->Reserve(static_cast<int>(mesh->GetQuadCount() * 1.5));
-    }
-    if (cibos->GetCapacity() < mesh->GetIndexCount()) {
-      cibos->Reserve(static_cast<int>(mesh->GetIndexCount() * 1.5));
-    }
-
-    auto& mappedVbo = cvbos->GetModifyMapped();
-    memcpy(mappedVbo.data, mesh->GetQuadsData(), mesh->GetQuadCount() * sizeof(BlockQuad));
-    auto& mappedIbo = cibos->GetModifyMapped();
-    memcpy(mappedIbo.data, mesh->GetIndices().Data(), mesh->GetIndexCount() * sizeof(uint32));
-    mappedIbo.buffer->SetIndexCount(mesh->GetIndexCount());
-
-    cvbos->SwapNextBuffer();
-    cibos->SwapNextBuffer();
-  }
-  remeshedChunks.Empty();
+  CopyRemeshedChunksDataToBuffers();
 
   // 10. Prepare the draw calls for the next frame.
   //frameChunkDrawCalls.Empty();
@@ -192,6 +163,40 @@ void ChunkRenderer::DrawChunk(const Chunk* drawChunk)
   vao->BindIndexBufferObject(ibo);
   SetShaderChunkOffset(GetChunkShaderPositionOffset(drawCalls[boundDrawCallId].playerPos, drawChunk));
   glDrawElements(GL_TRIANGLES, ibo->GetIndexCount(), GL_UNSIGNED_INT, 0);
+}
+
+void ChunkRenderer::CopyRemeshedChunksDataToBuffers()
+{
+  for (Chunk* chunk : remeshedChunks) {
+    ChunkRenderComponent* renderComponent = chunk->GetRenderComponent();
+
+    ChunkMesh* mesh = renderComponent->GetMesh();
+    if (mesh->GetQuadCount() == 0) continue;
+
+    if (!renderComponent->AreGLBuffersInitialized()) {
+      renderComponent->CreateGLBuffers();
+    }
+
+    auto cvbos = renderComponent->GetVbos();
+    auto cibos = renderComponent->GetIbos();
+
+    if (cvbos->GetCapacity() < mesh->GetQuadCount()) {
+      cvbos->Reserve(static_cast<int>(mesh->GetQuadCount() * 1.5));
+    }
+    if (cibos->GetCapacity() < mesh->GetIndexCount()) {
+      cibos->Reserve(static_cast<int>(mesh->GetIndexCount() * 1.5));
+    }
+
+    auto& mappedVbo = cvbos->GetModifyMapped();
+    memcpy(mappedVbo.data, mesh->GetQuadsData(), mesh->GetQuadCount() * sizeof(BlockQuad));
+    auto& mappedIbo = cibos->GetModifyMapped();
+    memcpy(mappedIbo.data, mesh->GetIndices().Data(), mesh->GetIndexCount() * sizeof(uint32));
+    mappedIbo.buffer->SetIndexCount(mesh->GetIndexCount());
+
+    cvbos->SwapNextBuffer();
+    cibos->SwapNextBuffer();
+  }
+  remeshedChunks.Empty();
 }
 
 void ChunkRenderer::RemoveChunkFromFrameDraw(Chunk* chunk)

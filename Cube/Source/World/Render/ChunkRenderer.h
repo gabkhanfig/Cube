@@ -61,6 +61,8 @@ private:
 
 	void DrawChunk(const Chunk* drawChunk);
 
+	void CopyRemeshedChunksDataToBuffers();
+
 private:
 
 	RasterShader* blockShader;
