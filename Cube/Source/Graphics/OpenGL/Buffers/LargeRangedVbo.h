@@ -28,6 +28,8 @@ struct VboMappedRangeRef {
 		return _mappedRange->data;
 	}
 
+	forceinline uint64 GetCapacity() const { return _mappedRange->elementCapacity; }
+
 private:
 	VertexBufferObject::MappedRange<T>* _mappedRange;
 	LargeRangedVbo<T>* _owningBuffer;
