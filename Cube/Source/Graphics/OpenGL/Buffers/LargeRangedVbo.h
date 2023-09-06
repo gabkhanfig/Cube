@@ -184,7 +184,7 @@ inline VboMappedRangeRef<T>* LargeRangedVbo<T>::NewMappedRange(const uint64 elem
 		if (isLastElement) {
 			const uint64 capacityLeftover = bufferTotalElementCapacity - elementRangeEnd;
 			if (capacityLeftover > elementCapacity) { // Can create the range
-				VertexBufferObject::MappedRange<T> newRangeData = vbo->MapRange(elementRangeEnd, elementCapacity, mapRangeBitmask); // maybe elementrangeend + 1
+				VertexBufferObject::MappedRange<T> newRangeData = vbo->MapRange<T>(elementRangeEnd, elementCapacity, mapRangeBitmask); // maybe elementrangeend + 1
 				VertexBufferObject::MappedRange<T>* newRange = new VertexBufferObject::MappedRange<T>();
 				newRange->data = newRangeData.data;
 				newRange->elementOffset = newRangeData.elementOffset;
@@ -197,7 +197,8 @@ inline VboMappedRangeRef<T>* LargeRangedVbo<T>::NewMappedRange(const uint64 elem
 				cachedSubranges.Add(cachedSubrange);
 				mappedRanges.Add(newRange);
 
-				return newRange;
+				VboMappedRangeRef<T>* rangeRef = new VboMappedRangeRef<T>(newRange, this);
+				return rangeRef;
 			}
 			else { // Cannot create the range, so need to reallocate, and then append to end of both arrays.
 				const uint64 newCapacity = (bufferTotalElementCapacity + elementCapacity) * 2;
@@ -209,7 +210,7 @@ inline VboMappedRangeRef<T>* LargeRangedVbo<T>::NewMappedRange(const uint64 elem
 				gk_assertm((bufferTotalElementCapacity - lastElementRangeEnd) > elementCapacity, 
 					"Reallocating new capacity for large ranged vbo should've created a large enough capacity to make the new required range");
 
-				VertexBufferObject::MappedRange<T> newRangeData = vbo->MapRange(lastElementRangeEnd, elementCapacity, mapRangeBitmask); // maybe elementrangeend + 1
+				VertexBufferObject::MappedRange<T> newRangeData = vbo->MapRange<T>(lastElementRangeEnd, elementCapacity, mapRangeBitmask); // maybe elementrangeend + 1
 				VertexBufferObject::MappedRange<T>* newRange = new VertexBufferObject::MappedRange<T>();
 				newRange->data = newRangeData.data;
 				newRange->elementOffset = newRangeData.elementOffset;
@@ -222,7 +223,8 @@ inline VboMappedRangeRef<T>* LargeRangedVbo<T>::NewMappedRange(const uint64 elem
 				cachedSubranges.Add(cachedSubrange);
 				mappedRanges.Add(newRange);
 
-				return newRange;
+				VboMappedRangeRef<T>* rangeRef = new VboMappedRangeRef<T>(newRange, this);
+				return rangeRef;
 			}
 		}
 		else {
@@ -231,7 +233,7 @@ inline VboMappedRangeRef<T>* LargeRangedVbo<T>::NewMappedRange(const uint64 elem
 				continue;
 			}
 
-			VertexBufferObject::MappedRange<T> newRangeData = vbo->MapRange(elementRangeEnd, elementCapacity, mapRangeBitmask); // maybe elementrangeend + 1
+			VertexBufferObject::MappedRange<T> newRangeData = vbo->MapRange<T>(elementRangeEnd, elementCapacity, mapRangeBitmask); // maybe elementrangeend + 1
 			VertexBufferObject::MappedRange<T>* newRange = new VertexBufferObject::MappedRange<T>();
 			newRange->data = newRangeData.data;
 			newRange->elementOffset = newRangeData.elementOffset;
@@ -244,7 +246,8 @@ inline VboMappedRangeRef<T>* LargeRangedVbo<T>::NewMappedRange(const uint64 elem
 			cachedSubranges.Add(cachedSubrange);
 			mappedRanges.Add(newRange);
 
-			return newRange;
+			VboMappedRangeRef<T>* rangeRef = new VboMappedRangeRef<T>(newRange, this);
+			return rangeRef;
 		}
 	}
 }
