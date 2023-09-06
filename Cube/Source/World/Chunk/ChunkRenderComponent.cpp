@@ -16,7 +16,7 @@
 #include "../../Player/Player.h"
 
 ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
-	: chunk(chunkOwner), emptyMesh(true), vbos(nullptr), ibos(nullptr)
+	: chunk(chunkOwner), emptyMesh(true), vbos(nullptr), ibos(nullptr), vboRange(nullptr)
 {
 	mesh = new ChunkMesh();
 	// It's possible OpenGL won't like these being created on the primary thread. Investigate if so.
@@ -208,6 +208,28 @@ void ChunkRenderComponent::CreateGLBuffers()
 
 	vbos = new MappedTripleVbo<BlockQuad>(); 
 	ibos = new MappedTripleIbo();
+}
+
+bool ChunkRenderComponent::HasEnoughVboRangeCapacityForMesh() const
+{
+	if (vboRange == nullptr) return false;
+	if (vboRange->GetCapacity() < static_cast<uint64>(mesh->GetQuadCount())) return false;
+	return true;
+}
+
+void ChunkRenderComponent::ReallocateVboRangeForMesh(ChunkRenderer* chunkRenderer)
+{
+	const uint64 quadCount = mesh->GetQuadCount();
+
+	if (vboRange == nullptr) { // Has not allocated yet, so chunk is likely fresh. Only allocate exactly as much as necessary.
+		vboRange = chunkRenderer->CreateMappedVboRange(quadCount);
+		return;
+	}
+	delete vboRange;
+
+	constexpr double OVER_CAPACITY_INCREASE_FACTOR = 1.25;
+	const uint64 overCapacity = static_cast<uint64>(static_cast<double>(quadCount) * OVER_CAPACITY_INCREASE_FACTOR);
+	vboRange = chunkRenderer->CreateMappedVboRange(overCapacity);
 }
 
 

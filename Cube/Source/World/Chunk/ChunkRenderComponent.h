@@ -9,6 +9,7 @@
 #include "../Block/Block.h"
 #include "../../Graphics/OpenGL/Buffers/MappedTripleVbo.h"
 #include "ChunkDrawCall.h"
+#include "../../Graphics/OpenGL/Buffers/LargeRangedVbo.h"
 
 //class VertexBufferObject;
 //class IndexBufferObject;
@@ -26,8 +27,6 @@ class MappedTripleIbo;
 class ChunkRenderComponent
 {
 public:
-
-	
 
 	ChunkRenderComponent(Chunk* chunkOwner);
 
@@ -47,8 +46,6 @@ public:
 	void MemcpyMeshDataAndSwapBuffer();
 
 	void FillChunkDrawCallData(ChunkDrawCall* drawCallOut) const;
-
-
 
 	Chunk* GetChunk() const { return chunk; }
 
@@ -72,6 +69,9 @@ public:
 	bool AreGLBuffersInitialized() const;
 	void CreateGLBuffers();
 
+	bool HasEnoughVboRangeCapacityForMesh() const;
+	void ReallocateVboRangeForMesh(ChunkRenderer* chunkRenderer);
+
 private:
 
 private:
@@ -89,6 +89,8 @@ private:
 	/* Persistent Mapped Triple Index Buffer Objects for rendering. */
 	//PersistentMappedTripleBuffer<IndexBufferObject, uint32>* ibos;
 	MappedTripleIbo* ibos;
+
+	VboMappedRangeRef<BlockQuad>* vboRange;
 
 	bool emptyMesh;
 
