@@ -72,6 +72,7 @@ struct GLBufferMapBitmask
   /* See GLBufferMapBitmask::Flags */
   GLBufferMapBitmask(const uint32 flags);
   GLBufferMapBitmask(const GLBufferMapBitmask& other);
+  void operator =(const GLBufferMapBitmask& other);
 
   uint32 bitmask;
 };

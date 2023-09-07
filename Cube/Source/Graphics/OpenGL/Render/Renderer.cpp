@@ -7,6 +7,7 @@
 void Renderer::Clear()
 {
 	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST | GL_DEBUG_OUTPUT);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

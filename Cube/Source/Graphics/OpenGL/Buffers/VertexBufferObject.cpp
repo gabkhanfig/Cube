@@ -82,7 +82,7 @@ void* VertexBufferObject::MapBufferRangeImpl(const int64 byteOffset, const int64
 {
 	assertOnRenderThread();
 	gk_assertm(totalByteCapacity != 0, "Cannot map vbo range with a capacity of 0");
-	void* mappedRange = glMapNamedBufferRange(id, byteOffset, totalByteCapacity, access.bitmask);
+	void* mappedRange = glMapNamedBufferRange(id, byteOffset, (const GLsizeiptr)totalByteCapacity, access.bitmask);
 	gk_assertNotNull(mappedRange);
 	return mappedRange;
 }

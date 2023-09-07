@@ -64,3 +64,8 @@ GLBufferMapBitmask::GLBufferMapBitmask(const uint32 flags)
 GLBufferMapBitmask::GLBufferMapBitmask(const GLBufferMapBitmask& other)
 	: bitmask(other.bitmask)
 {}
+
+void GLBufferMapBitmask::operator=(const GLBufferMapBitmask & other)
+{
+	bitmask = other.bitmask;
+}

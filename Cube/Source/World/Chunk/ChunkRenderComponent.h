@@ -72,6 +72,8 @@ public:
 	bool HasEnoughVboRangeCapacityForMesh() const;
 	void ReallocateVboRangeForMesh(ChunkRenderer* chunkRenderer);
 
+	VboMappedRangeRef<BlockQuad>* GetVboRange() { return vboRange; }
+
 private:
 
 private:

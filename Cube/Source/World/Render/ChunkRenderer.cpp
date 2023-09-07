@@ -52,7 +52,8 @@ ChunkRenderer::ChunkRenderer()
   vao->BindIndexBufferObject(blocksIbo);
 
   hugeVbo = new LargeRangedVbo<BlockQuad>();
-  const uint64 hugeVboReserveCapacity = std::pow(uint64(GetSettings()->GetRenderDistance()), 3ULL) * CHUNK_SIZE / 2;
+  //const uint64 hugeVboReserveCapacity = std::pow(uint64(GetSettings()->GetRenderDistance()), 3ULL) * CHUNK_SIZE / 2;
+  const uint64 hugeVboReserveCapacity = std::pow(uint64(GetSettings()->GetRenderDistance()), 3ULL) * CHUNK_SIZE * 4;
 #ifdef CUBE_DEVELOPMENT
   const double _reserveInGB = double(hugeVboReserveCapacity * sizeof(BlockQuad)) / 1000000000.0;
   cubeLog("Allocating " + String::FromFloat(_reserveInGB, 3) + "GB for large VBO");
@@ -136,17 +137,34 @@ void ChunkRenderer::PerformBoundDrawCalls()
   blockShader->Bind();
   SetShaderCameraMVP(boundDrawData.cameraMVP);
 
+  vao->BindIndexBufferObject(blocksIbo);
+  vao->BindVertexBufferObject(hugeVbo->GetVbo(), sizeof(BlockVertex));
+
   for (uint32 i = 0; i < frameChunkDrawCalls.Size(); i++) {
+    SetShaderChunkOffset(frameChunkDrawCalls[i].chunkPositionOffset);
+#if false
     //DrawChunk(frameChunkDrawCalls[i]);
     VertexBufferObject* vbo = frameChunkDrawCalls[i].chunk->GetRenderComponent()->GetVbos()->GetBoundBuffer();
-    IndexBufferObject* ibo = frameChunkDrawCalls[i].chunk->GetRenderComponent()->GetIbos()->GetBoundBuffer();
+    //IndexBufferObject* ibo = frameChunkDrawCalls[i].chunk->GetRenderComponent()->GetIbos()->GetBoundBuffer();
     //if (vbo == nullptr || ibo == nullptr) return;
     //if (ibo->GetIndexCount() == 0) return;
 
     vao->BindVertexBufferObject(vbo, sizeof(BlockVertex));
-    vao->BindIndexBufferObject(ibo);
-    SetShaderChunkOffset(frameChunkDrawCalls[i].chunkPositionOffset);
+    //vao->BindIndexBufferObject(ibo);
     glDrawElements(GL_TRIANGLES, frameChunkDrawCalls[i].indicesToDraw, GL_UNSIGNED_INT, 0);
+#else
+    VboMappedRangeRef<BlockQuad>* chunkVboRange = frameChunkDrawCalls[i].chunk->GetRenderComponent()->GetVboRange();
+    glDrawElementsBaseVertex(
+      GL_TRIANGLES,
+      frameChunkDrawCalls[i].indicesToDraw,
+      GL_UNSIGNED_INT,
+      nullptr,
+      (GLint)chunkVboRange->GetOffset() * 4
+    );
+
+#endif
+
+    
   }
 
   engine->SwapGlfwBuffers();
@@ -176,6 +194,9 @@ void ChunkRenderer::CopyRemeshedChunksDataToBuffers()
     if (!renderComponent->AreGLBuffersInitialized()) {
       renderComponent->CreateGLBuffers();
     }
+    if (!renderComponent->HasEnoughVboRangeCapacityForMesh()) {
+      renderComponent->ReallocateVboRangeForMesh(this);
+    }
 
     auto cvbos = renderComponent->GetVbos();
     auto cibos = renderComponent->GetIbos();
@@ -192,6 +213,10 @@ void ChunkRenderer::CopyRemeshedChunksDataToBuffers()
     auto& mappedIbo = cibos->GetModifyMapped();
     memcpy(mappedIbo.data, mesh->GetIndices().Data(), mesh->GetIndexCount() * sizeof(uint32));
     mappedIbo.buffer->SetIndexCount(mesh->GetIndexCount());
+
+    VboMappedRangeRef<BlockQuad>* vboRange = renderComponent->GetVboRange();
+    gk_assertNotNull(vboRange);
+    vboRange->WriteToRange(renderComponent->GetMesh()->GetQuadsData(), renderComponent->GetMesh()->GetQuadCount());
 
     cvbos->SwapNextBuffer();
     cibos->SwapNextBuffer();
@@ -240,5 +265,6 @@ glm::vec3 ChunkRenderer::GetChunkShaderPositionOffset(const glm::dvec3 playerPos
 VboMappedRangeRef<BlockQuad>* ChunkRenderer::CreateMappedVboRange(const uint64 elementCapacity)
 {
   assertOnRenderThread();
-  return hugeVbo->NewMappedRange(elementCapacity);
+  VboMappedRangeRef<BlockQuad>* newRange = hugeVbo->NewMappedRange(elementCapacity);
+  return newRange;
 }

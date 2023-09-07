@@ -65,13 +65,13 @@ public:
 	}
 
 	template<typename T>
-	[[nodiscard]] MappedRange<T> MapRange(const int64 elementOffset, const int64 elementCapacity, const GLBufferMapBitmask access) {
-		MappedRange<T> range;
-		range.data = (T*)MapBufferRangeImpl(elementOffset * sizeof(T), elementCapacity * sizeof(T), access);
+	[[nodiscard]] MappedRange<T>* MapRange(const int64 elementOffset, const int64 elementCapacity, const GLBufferMapBitmask access) {
+		MappedRange<T>* range = new MappedRange<T>();
+		range->data = (T*)MapBufferRangeImpl(elementOffset * sizeof(T), elementCapacity * sizeof(T), access);
 		//range.vbo = this;
-		range.elementOffset = elementOffset;
-		range.elementCapacity = elementCapacity;
-		range.access = access;
+		range->elementOffset = elementOffset;
+		range->elementCapacity = elementCapacity;
+		range->access = access;
 		return range;
 	}
 
