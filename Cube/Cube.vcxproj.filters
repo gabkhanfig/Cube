@@ -255,6 +255,9 @@
     <ClCompile Include="Source\Graphics\OpenGL\OpenGLStructures.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\OpenGL\Buffers\MappedTripleDibo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\Basic.vert" />
@@ -558,6 +561,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\LargeRangedVbo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\OpenGL\Buffers\MappedTripleDibo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -51,6 +51,8 @@ public:
 
 	void RenderLoop();
 
+	uint32 GetChunkCount() const { return chunks.size(); }
+
 private:
 
 	void CreateChunkRenderer();

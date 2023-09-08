@@ -7,6 +7,7 @@
 #include "../Chunk/ChunkDataTypes.h"
 #include "../Chunk/ChunkDrawCall.h"
 #include "../../Graphics/OpenGL/Buffers/LargeRangedVbo.h"
+#include "../../Graphics/OpenGL/Buffers/MappedTripleVbo.h"
 
 class Player;
 class Shader;
@@ -15,6 +16,7 @@ class VertexArrayObject;
 class Chunk;
 class VertexBufferObject;
 class IndexBufferObject;
+class MappedTripleDibo;
 
 class ChunkRenderer
 {
@@ -67,12 +69,15 @@ private:
 
 	void MultidrawAllFrameChunks();
 
+	void GeneratedMultidrawIndirectCommands();
+
 private:
 
 	RasterShader* blockShader;
 	RasterShader* blockMultidrawShader;
 
 	VertexArrayObject* vao;
+	VertexArrayObject* multidrawVao;
 
 	IndexBufferObject* blocksIbo;
 
@@ -93,4 +98,7 @@ private:
 	darray<ChunkDrawCall> drawCallsToExecute;
 
 	LargeRangedVbo<BlockQuad>* hugeVbo;
+
+	MappedTripleVbo<glm::vec3>* multidrawChunkOffsets;
+	MappedTripleDibo* dibos;
 };

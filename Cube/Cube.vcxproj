@@ -360,6 +360,7 @@ GenerateFiles.bat</Command>
     <ClCompile Include="Source\Graphics\Geometry\Material.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\DrawIndirectBufferObject.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\IndexBufferObject.cpp" />
+    <ClCompile Include="Source\Graphics\OpenGL\Buffers\MappedTripleDibo.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\MappedTripleIbo.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\MappedTripleVbo.cpp" />
     <ClCompile Include="Source\Graphics\OpenGL\Buffers\ShaderBufferObject.cpp" />
@@ -464,6 +465,7 @@ GenerateFiles.bat</Command>
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\DrawIndirectBufferObject.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\IndexBufferObject.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\LargeRangedVbo.h" />
+    <ClInclude Include="Source\Graphics\OpenGL\Buffers\MappedTripleDibo.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\MappedTripleIbo.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\MappedTripleVbo.h" />
     <ClInclude Include="Source\Graphics\OpenGL\Buffers\PersistentMappedTripleBuffer.h" />
