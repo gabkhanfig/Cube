@@ -74,11 +74,6 @@ ChunkRenderer::ChunkRenderer()
   cubeLog("Allocating " + String::FromFloat(_reserveInGB, 3) + "GB for large VBO");
 #endif
   hugeVbo->Reserve(hugeVboReserveCapacity);
-
-  dibos = new MappedTripleDibo();
-  dibos->Reserve(std::pow(uint64(GetSettings()->GetRenderDistance()), 3ULL));
-  multidrawChunkOffsets = new MappedTripleVbo<glm::vec3>();
-  multidrawChunkOffsets->Reserve(std::pow(uint64(GetSettings()->GetRenderDistance()), 3ULL));
 }
 
 void ChunkRenderer::SetShaderChunkOffset(glm::vec3 chunkOffset)
@@ -136,7 +131,7 @@ void ChunkRenderer::DrawAllChunksAndPrepareNext(darray<ChunkDrawCall> chunksToDr
   //}
   frameChunkDrawCalls = std::move(chunksToDrawNextFrame);
 
-  GeneratedMultidrawIndirectCommands();
+  //GeneratedMultidrawIndirectCommands();
 
   // 11. Swap buffers
   SwapNextBuffers();
@@ -266,67 +261,41 @@ void ChunkRenderer::DrawAllFrameChunksMultipleDrawCalls()
 
 void ChunkRenderer::MultidrawAllFrameChunks()
 {
-  //cubeLog("starting multidraw");
   const DrawCallData& boundDrawData = drawCalls[boundDrawCallId];
   blockMultidrawShader->Bind();
   blockMultidrawShader->SetUniformMat4f(cameraMvpUniform, boundDrawData.cameraMVP);
-  //cubeLog("bound multidraw shader");
 
   const uint32 chunksToDraw = frameChunkDrawCalls.Size();
 
-  //darray<glm::vec3> chunkOffsets;
-  //darray<DrawElementsIndirectCommand> commands;
-  //chunkOffsets.Reserve(chunksToDraw);
-  //commands.Reserve(chunksToDraw);
+  darray<glm::vec3> chunkOffsets;
+  darray<DrawElementsIndirectCommand> commands;
+  chunkOffsets.Reserve(chunksToDraw);
+  commands.Reserve(chunksToDraw);
 
-  //for (uint32 i = 0; i < chunksToDraw; i++) {
-  //  const VboMappedRangeRef<BlockQuad>* chunkVboRange = frameChunkDrawCalls[i].chunk->GetRenderComponent()->GetVboRange();
-  //  DrawElementsIndirectCommand command;
-  //  command.count = frameChunkDrawCalls[i].indicesToDraw;
-  //  command.instanceCount = 1;
-  //  command.firstIndex = 0;
-  //  command.baseVertex = chunkVboRange->GetOffset() * 4;
-  //  command.baseInstance = i;
-  //  chunkOffsets.Add(frameChunkDrawCalls[i].chunkPositionOffset);
-  //  commands.Add(command);
-  //}
+  for (uint32 i = 0; i < chunksToDraw; i++) {
+    const VboMappedRangeRef<BlockQuad>* chunkVboRange = frameChunkDrawCalls[i].chunk->GetRenderComponent()->GetVboRange();
+    DrawElementsIndirectCommand command;
+    command.count = frameChunkDrawCalls[i].indicesToDraw;
+    command.instanceCount = 1;
+    command.firstIndex = 0;
+    command.baseVertex = chunkVboRange->GetOffset() * 4;
+    command.baseInstance = i;
+    chunkOffsets.Add(frameChunkDrawCalls[i].chunkPositionOffset);
+    commands.Add(command);
+  }
 
-  //cubeLog("generated commands");
-  //VertexBufferObject* chunkShaderOffsetVbo = new VertexBufferObject();
-  //chunkShaderOffsetVbo->BufferData(chunkOffsets.Data(), chunksToDraw);
-  //chunkShaderOffsetVbo->Bind();
-  //cubeLog("bufferred chunk offset");
-
-  VertexBufferObject* chunkShaderOffsetVbo = multidrawChunkOffsets->GetBoundBuffer();
-  chunkShaderOffsetVbo->Bind();
+  VertexBufferObject chunkShaderOffsetVbo = VertexBufferObject();
+  chunkShaderOffsetVbo.BufferData(chunkOffsets.Data(), chunksToDraw);
 
   multidrawVao->Bind();
-  //vao->BindVertexBufferObject()
-  //glEnableVertexAttribArray(4);
-  //glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (const void*)0);
-  //glVertexAttribDivisor(4, 1);
-
-  //glVertexAttribBinding(4, 4);
-
-  //cubeLog("set vao instance attribs");
 
   multidrawVao->BindIndexBufferObject(blocksIbo);
   multidrawVao->BindVertexBufferObject(hugeVbo->GetVbo(), sizeof(BlockVertex));
-  glVertexArrayVertexBuffer(multidrawVao->GetId(), 4, chunkShaderOffsetVbo->GetId(), 0, sizeof(glm::vec3));
+  glVertexArrayVertexBuffer(multidrawVao->GetId(), 4, chunkShaderOffsetVbo.GetId(), 0, sizeof(glm::vec3));
 
-  //DrawIndirectBufferObject* dibo = new DrawIndirectBufferObject();
-  //dibo->BufferData(commands.Data(), chunksToDraw);
-  //dibo->Bind();
-
-  //uint32 drawIndirectBuffer;
-  //glCreateBuffers(1, &drawIndirectBuffer);
-  //glBindBuffer(GL_DRAW_INDIRECT_BUFFER, drawIndirectBuffer);
-  //glBufferData(GL_DRAW_INDIRECT_BUFFER, sizeof(DrawElementsIndirectCommand) * chunksToDraw, commands.Data(), GL_STATIC_DRAW);
-
-  DrawIndirectBufferObject* dibo = dibos->GetBoundBuffer();
-  dibo->Bind();
-
-  //cubeLog("bufferred draw indirect commands");
+  DrawIndirectBufferObject dibo = DrawIndirectBufferObject();
+  dibo.BufferData(commands.Data(), chunksToDraw);
+  dibo.Bind();
 
   glMultiDrawElementsIndirect(
     GL_TRIANGLES,
@@ -335,11 +304,10 @@ void ChunkRenderer::MultidrawAllFrameChunks()
     chunksToDraw,
     0
   );
-  //cubeLog("executed multidraw");
 
   engine->SwapGlfwBuffers();
 }
-
+/*
 void ChunkRenderer::GeneratedMultidrawIndirectCommands()
 {
   const uint32 chunkCount = frameChunkDrawCalls.Size();
@@ -353,8 +321,17 @@ void ChunkRenderer::GeneratedMultidrawIndirectCommands()
   //DrawElementsIndirectCommand* commands = new DrawElementsIndirectCommand[chunkCount];
   //glm::vec3* chunkOffsets = new glm::vec3[chunkCount];
 
-  DrawElementsIndirectCommand* bufferCommands = dibos->GetModifyMapped().data;
-  glm::vec3* bufferChunkOffsets = multidrawChunkOffsets->GetModifyMapped().data;
+  //DrawElementsIndirectCommand* bufferCommands = dibos->GetModifyMapped().data;
+  //glm::vec3* bufferChunkOffsets = multidrawChunkOffsets->GetModifyMapped().data;
+
+  //DrawElementsIndirectCommand* bufferCommands = multidrawCommandsBuffer->GetMapBuffer(GLMappedBufferAccess::WriteOnly);
+  //glm::vec3* bufferChunkOffsets = multidrawChunkOffsetsBuffer->GetMapBuffer<glm::vec3>(GLMappedBufferAccess::WriteOnly);
+
+  frameMultidrawChunkOffsets.Empty();
+  frameMultidrawCommands.Empty();
+
+  frameMultidrawChunkOffsets.Reserve(chunkCount);
+  frameMultidrawCommands.Reserve(chunkCount);
 
   for (uint32 i = 0; i < chunkCount; i++) {
     glm::vec3 chunkOffset = frameChunkDrawCalls[i].chunkPositionOffset;
@@ -368,13 +345,20 @@ void ChunkRenderer::GeneratedMultidrawIndirectCommands()
     command.baseVertex = chunkVboRange->GetOffset() * 4;
     command.baseInstance = i;
 
-    bufferCommands[i] = command;
-    bufferChunkOffsets[i] = chunkOffset;
+    //bufferCommands[i] = command;
+    //bufferChunkOffsets[i] = chunkOffset;
+
+    frameMultidrawCommands.Add(command);
+    frameMultidrawChunkOffsets.Add(chunkOffset);
+
   }
 
-  dibos->SwapNextBuffer();
-  multidrawChunkOffsets->SwapNextBuffer();
-}
+  //multidrawCommandsBuffer->UnmapBuffer();
+  //multidrawChunkOffsetsBuffer->UnmapBuffer();
+
+  //dibos->SwapNextBuffer();
+  //multidrawChunkOffsets->SwapNextBuffer();
+}*/
 
 void ChunkRenderer::RemoveChunkFromFrameDraw(Chunk* chunk)
 {

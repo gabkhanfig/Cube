@@ -17,6 +17,7 @@ class Chunk;
 class VertexBufferObject;
 class IndexBufferObject;
 class MappedTripleDibo;
+class DrawIndirectBufferObject;
 
 class ChunkRenderer
 {
@@ -98,7 +99,4 @@ private:
 	darray<ChunkDrawCall> drawCallsToExecute;
 
 	LargeRangedVbo<BlockQuad>* hugeVbo;
-
-	MappedTripleVbo<glm::vec3>* multidrawChunkOffsets;
-	MappedTripleDibo* dibos;
 };
