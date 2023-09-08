@@ -9,7 +9,7 @@
 // Interpolated texture coordinates.
 in vec2 v_out_texCoord;
 // Interpolated color coordinates.
-in vec4 v_out_color;
+in vec3 v_out_color;
 // Color scale value depending on quad normal
 in float v_out_normalColorScale;
 
@@ -65,16 +65,17 @@ vec3 GetRelativeSubvoxelPosition(const vec3 _fragCoord, const vec3 _vertCoord)
 	return floor(_fragCoord * SUBVOXEL_COUNT) / SUBVOXEL_COUNT;
 }
 
-vec3 unpackColor(uint packedColor) {
-	return vec3(
-		float(packedColor & 255) / 255.f,
-		float(packedColor >> 8 & 255) / 255.f,
-		float(packedColor >> 16 & 255) / 255.f
+vec4 UnpackColor(uint packedColor) {
+	return vec4(
+		float(packedColor & 255U) / 255.f,
+		float(packedColor >> 8 & 255U) / 255.f,
+		float(packedColor >> 16 & 255U) / 255.f,
+		float(packedColor >> 24 & 255U) / 255.f
 	);
 }
 
 void main()
 {
 	const vec4 texColor = texture(u_Texture, v_out_texCoord);
-	FragColor = texColor * v_out_color * v_out_normalColorScale;
+	FragColor = texColor * vec4(v_out_color, 1) * v_out_normalColorScale;
 }

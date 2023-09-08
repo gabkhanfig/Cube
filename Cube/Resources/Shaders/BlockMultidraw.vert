@@ -22,7 +22,7 @@ uniform vec3 u_chunkOffset;
 // Interpolated texture coordinates.
 out vec2 v_out_texCoord;
 // Interpolated color coordinates.
-out vec4 v_out_color;
+out vec3 v_out_color;
 // Color scale value depending on quad normal
 out float v_out_normalColorScale;
 
@@ -45,12 +45,11 @@ float ScaleColorByNormal(vec3 normal)
 	return max(max(X_SCALE(normal.x), Y_SCALE(normal.y)), Z_SCALE(normal.x));
 }
 
-vec4 UnpackColor(uint packedColor) {
-	return vec4(
+vec3 UnpackColor(uint packedColor) {
+	return vec3(
 		float(packedColor & 255U) / 255.f,
 		float(packedColor >> 8 & 255U) / 255.f,
-		float(packedColor >> 16 & 255U) / 255.f,
-		float(packedColor >> 24 & 255U) / 255.f
+		float(packedColor >> 16 & 255U) / 255.f
 	);
 }
 
