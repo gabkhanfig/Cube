@@ -7,11 +7,13 @@ class DrawIndirectBufferObject
 {
 public:
 
-	static DrawIndirectBufferObject* Create(DrawElementsIndirectCommand* commands, uint32 numOfCommands);
-
-	static DrawIndirectBufferObject* CreatePersistentMapped(uint32 commandCapacity, DrawElementsIndirectCommand** mappedBufferOut);
-
+	DrawIndirectBufferObject(); 
+	
 	~DrawIndirectBufferObject();
+
+	void BufferData(DrawElementsIndirectCommand* commands, uint32 commandsNum);
+
+	[[nodiscard]] DrawElementsIndirectCommand* CreatePersistentMappedStorage(uint32 elementCapacity);
 
 	void Bind();
 
@@ -22,10 +24,6 @@ public:
 	uint32 GetId() const { return id; }
 
 	static uint32 GetBoundId() { return boundId; }
-
-private:
-
-	DrawIndirectBufferObject();
 
 private:
 

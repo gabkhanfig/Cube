@@ -1,33 +1,41 @@
 #include "DrawIndirectBufferObject.h"
 #include <glad/glad.h>
+#include "../../../Engine/Engine.h"
+#include "../../../Engine/OpenGL/OpenGLInstance.h"
 
 uint32 DrawIndirectBufferObject::boundId = 0;
 
-DrawIndirectBufferObject* DrawIndirectBufferObject::Create(DrawElementsIndirectCommand* commands, uint32 numOfCommands)
+DrawIndirectBufferObject::DrawIndirectBufferObject()
 {
-	DrawIndirectBufferObject* dbo = new DrawIndirectBufferObject();
-	glBufferData(GL_DRAW_INDIRECT_BUFFER, sizeof(DrawElementsIndirectCommand) * numOfCommands, commands, GL_STATIC_DRAW);
-	return dbo;
-}
-
-DrawIndirectBufferObject* DrawIndirectBufferObject::CreatePersistentMapped(uint32 commandCapacity, DrawElementsIndirectCommand** mappedBufferOut)
-{
-	gk_assertm(mappedBufferOut, "mappedBufferOut must be a non-null pointer to copy the mapped buffer to"); 
-	DrawIndirectBufferObject* dbo = new DrawIndirectBufferObject();
-	GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
-	glBufferStorage(GL_DRAW_INDIRECT_BUFFER, sizeof(DrawElementsIndirectCommand) * commandCapacity, 0, mapFlags);
-	DrawElementsIndirectCommand* bufferRange = (DrawElementsIndirectCommand*)glMapBufferRange(GL_DRAW_INDIRECT_BUFFER, 0, sizeof(DrawElementsIndirectCommand) * commandCapacity, mapFlags);
-	gk_assertm(bufferRange, "glMapBufferRange returned nullptr");
-	*mappedBufferOut = bufferRange;
-	return dbo;
+	assertOnRenderThread();
+	glCreateBuffers(1, &id);
 }
 
 DrawIndirectBufferObject::~DrawIndirectBufferObject()
 {
+	assertOnRenderThread();
 	if (IsBound()) {
 		boundId = 0;
 	}
 	glDeleteBuffers(1, &id);
+}
+
+void DrawIndirectBufferObject::BufferData(DrawElementsIndirectCommand* commands, uint32 commandsNum)
+{
+	assertOnRenderThread();
+	glNamedBufferData(id, commandsNum * sizeof(DrawElementsIndirectCommand), commands, GL_STATIC_DRAW);
+}
+
+DrawElementsIndirectCommand* DrawIndirectBufferObject::CreatePersistentMappedStorage(uint32 elementCapacity)
+{
+	assertOnRenderThread();
+	const GLBufferStorageBitmask mapFlags = GLBufferStorageBitmask::Write | GLBufferStorageBitmask::Persistent | GLBufferStorageBitmask::Coherent;
+	const uint32 bufferCapacity = elementCapacity * sizeof(DrawElementsIndirectCommand);
+
+	glNamedBufferStorage(id, bufferCapacity, nullptr, mapFlags.bitmask);
+	DrawElementsIndirectCommand* mappedBufferRange = (DrawElementsIndirectCommand*)glMapNamedBufferRange(id, 0, bufferCapacity, mapFlags.bitmask);
+	gk_assertNotNull(mappedBufferRange);
+	return mappedBufferRange;
 }
 
 void DrawIndirectBufferObject::Bind()
@@ -46,10 +54,4 @@ void DrawIndirectBufferObject::Unbind()
 bool DrawIndirectBufferObject::IsBound() const
 {
 	return id == boundId;
-}
-
-DrawIndirectBufferObject::DrawIndirectBufferObject()
-{
-	glGenBuffers(1, &id);
-	Bind();
 }
