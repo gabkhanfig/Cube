@@ -35,7 +35,7 @@ struct MappedAdjacentAndBuriedChunks
 
 private:
 
-	ChunkBlocksBitmask _buriedBitmasks[27];
+	ChunkBlocksBitmask* _buriedBitmasks[27];
 
 	const Chunk* _chunks[27];
 	// Bottom left

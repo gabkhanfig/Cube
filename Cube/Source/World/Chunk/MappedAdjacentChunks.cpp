@@ -61,7 +61,7 @@ const MappedAdjacentAndBuriedChunks MappedAdjacentAndBuriedChunks::Create(const 
 				Chunk* chunk = world->GetChunk(ChunkPosition(startPos.x + x, startPos.y + y, startPos.z + z));
 				if (chunk == nullptr) {
 					adjacent._chunks[index] = nullptr; 
-					adjacent._buriedBitmasks[index] = ChunkBlocksBitmask();
+					adjacent._buriedBitmasks[index] = nullptr;
 					index++;
 					continue;
 				}
@@ -94,6 +94,6 @@ const bool MappedAdjacentAndBuriedChunks::IsBlockBuried(const WorldPosition posi
 {
 	const ChunkPosition chunkPos = position.ToChunkPosition();
 	const int chunkIndex = GetMappedAdjacentOffsetIndex(chunkPos, _startPos);
-	return _buriedBitmasks[chunkIndex].GetFlag(position.ToBlockPosition());
+	return _buriedBitmasks[chunkIndex]->GetFlag(position.ToBlockPosition());
 
 }

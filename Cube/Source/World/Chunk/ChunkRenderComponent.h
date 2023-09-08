@@ -59,7 +59,7 @@ public:
 	//PersistentMappedTripleBuffer<IndexBufferObject, uint32>* GetIbos() const { return ibos; }
 	MappedTripleIbo* GetIbos() const { return ibos; }
 
-	ChunkBlocksBitmask GetBuriedBlocksBitmask() const { return buriedBitmask; }
+	ChunkBlocksBitmask* GetBuriedBlocksBitmask() const { return buriedBitmask; }
 
 	// Test for bitmasking
 	void CalculateBuriedBitmask();
@@ -97,6 +97,6 @@ private:
 	bool emptyMesh;
 
 	// Test for bitmasking
-	ChunkBlocksBitmask buriedBitmask;
+	ChunkBlocksBitmask* buriedBitmask;
 
 };

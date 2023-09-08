@@ -24,6 +24,7 @@ ChunkRenderComponent::ChunkRenderComponent(Chunk* chunkOwner)
 	//vbos = new MappedTripleVbo<BlockQuad>();
 	//ibos = new PersistentMappedTripleBuffer<IndexBufferObject, uint32>();
 	//ibos = new MappedTripleIbo();
+	buriedBitmask = new ChunkBlocksBitmask();
 }
 
 ChunkRenderComponent::~ChunkRenderComponent()
@@ -147,7 +148,7 @@ void ChunkRenderComponent::FillChunkDrawCallData(ChunkDrawCall* drawCallOut) con
 
 void ChunkRenderComponent::CalculateBuriedBitmask()
 {
-	buriedBitmask.Reset();
+	buriedBitmask->Reset();
 	const ChunkPosition chunkPos = chunk->GetPosition();
 	const MappedAdjacentChunks adjacentChunks = MappedAdjacentChunks::Create(GetWorld(), chunkPos);
 
@@ -156,7 +157,7 @@ void ChunkRenderComponent::CalculateBuriedBitmask()
 		const WorldPosition worldPos = WorldPosition(chunkPos, blockPos);
 		const Block* block = chunk->GetBlock(blockPos);
 		const bool isBlockBuried = block->IsBuried(chunk, adjacentChunks, worldPos, blockPos);
-		buriedBitmask.SetFlag(blockPos, isBlockBuried);
+		buriedBitmask->SetFlag(blockPos, isBlockBuried);
 	}
 }
 
@@ -164,7 +165,7 @@ void ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest()
 {
 	mesh->Empty();
 
-	if (buriedBitmask.AreAllBlocksSet()) { // All blocks are buried
+	if (buriedBitmask->AreAllBlocksSet()) { // All blocks are buried
 		emptyMesh = true;
 		chunk->SetShouldBeRemeshed(false);
 		return;
@@ -178,7 +179,7 @@ void ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest()
 		const BlockPosition blockPos = i;
 		const Block* block = chunk->GetBlock(blockPos);
 
-		if (block->GetName() == airName || buriedBitmask.GetFlag(blockPos)) continue;
+		if (block->GetName() == airName || buriedBitmask->GetFlag(blockPos)) continue;
 
 		const WorldPosition worldPos = WorldPosition(chunkPos, blockPos);
 		const glm::vec3 vertexOffset{ blockPos.X(), blockPos.Y(), blockPos.Z() };
