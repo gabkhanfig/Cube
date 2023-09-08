@@ -26,6 +26,8 @@ ChunkRenderer::ChunkRenderer()
   assertOnRenderThread();
   //shader = new Shader(CompileTimeFiles::GetTextFile("Chunk.vert")->contents, CompileTimeFiles::GetTextFile("Chunk.frag")->contents);
   blockShader = new RasterShader(CompileTimeFiles::GetTextFile("Block.vert")->contents, CompileTimeFiles::GetTextFile("Block.frag")->contents);
+  blockMultidrawShader = new RasterShader(CompileTimeFiles::GetTextFile("BlockMultidraw.vert")->contents, CompileTimeFiles::GetTextFile("BlockMultidraw.frag")->contents);
+
   vao = new VertexArrayObject();
   //vao->Bind();
   vao->SetFormatLayout(BlockQuad::GetQuadsVertexBufferLayout());
@@ -132,42 +134,11 @@ void ChunkRenderer::PerformBoundDrawCalls()
     engine->SwapGlfwBuffers();
     return;
   }
-
-  const DrawCallData& boundDrawData = drawCalls[boundDrawCallId];
-  blockShader->Bind();
-  SetShaderCameraMVP(boundDrawData.cameraMVP);
-
-  vao->BindIndexBufferObject(blocksIbo);
-  vao->BindVertexBufferObject(hugeVbo->GetVbo(), sizeof(BlockVertex));
-
-  for (uint32 i = 0; i < frameChunkDrawCalls.Size(); i++) {
-    SetShaderChunkOffset(frameChunkDrawCalls[i].chunkPositionOffset);
 #if false
-    //DrawChunk(frameChunkDrawCalls[i]);
-    VertexBufferObject* vbo = frameChunkDrawCalls[i].chunk->GetRenderComponent()->GetVbos()->GetBoundBuffer();
-    //IndexBufferObject* ibo = frameChunkDrawCalls[i].chunk->GetRenderComponent()->GetIbos()->GetBoundBuffer();
-    //if (vbo == nullptr || ibo == nullptr) return;
-    //if (ibo->GetIndexCount() == 0) return;
-
-    vao->BindVertexBufferObject(vbo, sizeof(BlockVertex));
-    //vao->BindIndexBufferObject(ibo);
-    glDrawElements(GL_TRIANGLES, frameChunkDrawCalls[i].indicesToDraw, GL_UNSIGNED_INT, 0);
+  DrawAllFrameChunksMultipleDrawCalls();
 #else
-    VboMappedRangeRef<BlockQuad>* chunkVboRange = frameChunkDrawCalls[i].chunk->GetRenderComponent()->GetVboRange();
-    glDrawElementsBaseVertex(
-      GL_TRIANGLES,
-      frameChunkDrawCalls[i].indicesToDraw,
-      GL_UNSIGNED_INT,
-      nullptr,
-      (GLint)chunkVboRange->GetOffset() * 4
-    );
-
+  MultidrawAllFrameChunks();
 #endif
-
-    
-  }
-
-  engine->SwapGlfwBuffers();
 }
 
 void ChunkRenderer::DrawChunk(const Chunk* drawChunk)
@@ -222,6 +193,116 @@ void ChunkRenderer::CopyRemeshedChunksDataToBuffers()
     cibos->SwapNextBuffer();
   }
   remeshedChunks.Empty();
+}
+
+void ChunkRenderer::DrawAllFrameChunksMultipleDrawCalls()
+{
+  const DrawCallData& boundDrawData = drawCalls[boundDrawCallId];
+  blockShader->Bind();
+  SetShaderCameraMVP(boundDrawData.cameraMVP);
+
+  vao->BindIndexBufferObject(blocksIbo);
+  vao->BindVertexBufferObject(hugeVbo->GetVbo(), sizeof(BlockVertex));
+
+  for (uint32 i = 0; i < frameChunkDrawCalls.Size(); i++) {
+    SetShaderChunkOffset(frameChunkDrawCalls[i].chunkPositionOffset);
+#if false // should draw using individual buffers
+    //DrawChunk(frameChunkDrawCalls[i]);
+    VertexBufferObject* vbo = frameChunkDrawCalls[i].chunk->GetRenderComponent()->GetVbos()->GetBoundBuffer();
+    //IndexBufferObject* ibo = frameChunkDrawCalls[i].chunk->GetRenderComponent()->GetIbos()->GetBoundBuffer();
+    //if (vbo == nullptr || ibo == nullptr) return;
+    //if (ibo->GetIndexCount() == 0) return;
+
+    vao->BindVertexBufferObject(vbo, sizeof(BlockVertex));
+    //vao->BindIndexBufferObject(ibo);
+    glDrawElements(GL_TRIANGLES, frameChunkDrawCalls[i].indicesToDraw, GL_UNSIGNED_INT, 0);
+#else // should draw from huge buffer
+    VboMappedRangeRef<BlockQuad>* chunkVboRange = frameChunkDrawCalls[i].chunk->GetRenderComponent()->GetVboRange();
+    //glDrawElementsBaseVertex(
+    //  GL_TRIANGLES,
+    //  frameChunkDrawCalls[i].indicesToDraw,
+    //  GL_UNSIGNED_INT,
+    //  nullptr,
+    //  (GLint)chunkVboRange->GetOffset() * 4 // 4 vertices per quad (1 quad = 1 element)
+    //);
+
+    glDrawElementsInstancedBaseVertexBaseInstance(
+      GL_TRIANGLES,
+      frameChunkDrawCalls[i].indicesToDraw,
+      GL_UNSIGNED_INT,
+      nullptr,
+      1,
+      (GLint)chunkVboRange->GetOffset() * 4,
+      0 // i
+    );
+
+#endif
+  }
+
+  engine->SwapGlfwBuffers();
+}
+
+void ChunkRenderer::MultidrawAllFrameChunks()
+{
+  //cubeLog("starting multidraw");
+  const DrawCallData& boundDrawData = drawCalls[boundDrawCallId];
+  blockMultidrawShader->Bind();
+  blockMultidrawShader->SetUniformMat4f(cameraMvpUniform, boundDrawData.cameraMVP);
+  //cubeLog("bound multidraw shader");
+
+  const uint32 chunksToDraw = frameChunkDrawCalls.Size();
+
+  darray<glm::vec3> chunkOffsets;
+  darray<DrawElementsIndirectCommand> commands;
+  chunkOffsets.Reserve(chunksToDraw);
+  commands.Reserve(chunksToDraw);
+
+  for (uint32 i = 0; i < chunksToDraw; i++) {
+    const VboMappedRangeRef<BlockQuad>* chunkVboRange = frameChunkDrawCalls[i].chunk->GetRenderComponent()->GetVboRange();
+
+    DrawElementsIndirectCommand command;
+    command.count = frameChunkDrawCalls[i].indicesToDraw;
+    command.instanceCount = 1;
+    command.firstIndex = 0;
+    command.baseVertex = chunkVboRange->GetOffset() * 4;
+    command.baseInstance = i;
+
+    chunkOffsets.Add(frameChunkDrawCalls[i].chunkPositionOffset);
+    commands.Add(command);
+  }
+  //cubeLog("generated commands");
+  VertexBufferObject* chunkShaderOffsetVbo = new VertexBufferObject();
+  chunkShaderOffsetVbo->BufferData(chunkOffsets.Data(), chunksToDraw);
+  chunkShaderOffsetVbo->Bind();
+  //cubeLog("bufferred chunk offset");
+
+  vao->Bind();
+  glEnableVertexAttribArray(4);
+  glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (const void*)0);
+  glVertexAttribDivisor(4, 1);
+
+  //cubeLog("set vao instance attribs");
+
+  vao->BindIndexBufferObject(blocksIbo);
+  vao->BindVertexBufferObject(hugeVbo->GetVbo(), sizeof(BlockVertex));
+
+  uint32 drawIndirectBuffer;
+  glCreateBuffers(1, &drawIndirectBuffer);
+  glBindBuffer(GL_DRAW_INDIRECT_BUFFER, drawIndirectBuffer);
+  glBufferData(GL_DRAW_INDIRECT_BUFFER, sizeof(DrawElementsIndirectCommand) * chunksToDraw, commands.Data(), GL_STATIC_DRAW);
+
+  //cubeLog("bufferred draw indirect commands");
+
+  glMultiDrawElementsIndirect(
+    GL_TRIANGLES,
+    GL_UNSIGNED_INT,
+    (const void*)0,
+    chunksToDraw,
+    0
+  );
+  //cubeLog("executed multidraw");
+
+  engine->SwapGlfwBuffers();
 }
 
 void ChunkRenderer::RemoveChunkFromFrameDraw(Chunk* chunk)

@@ -16,11 +16,11 @@ struct DrawElementsIndirectCommand
   uint32  count;
   /* Number of instance of this to draw (eg, 1 for 1 chunk) */
   uint32  instanceCount;
-  /*  */
+  /* Which index to start drawing from. */
   uint32  firstIndex;
   /* Starting from within vbo */
   int  baseVertex;
-  /* gl_InstanceID */
+  /* gl_InstanceID. The instance to offset into the per-instance attributes. Example, per chunk offset. */
   uint32  baseInstance;
 };
 

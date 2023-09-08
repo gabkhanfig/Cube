@@ -12,6 +12,12 @@ extern const char* generated_Block_vert;
 // Generated text file from Shaders/Block.frag
 extern const char* generated_Block_frag;
 
+// Generated text file from Shaders/BlockMultidraw.vert
+extern const char* generated_BlockMultidraw_vert;
+
+// Generated text file from Shaders/BlockMultidraw.frag
+extern const char* generated_BlockMultidraw_frag;
+
 // Generated text file from Shaders/BlockPathtrace.vert
 extern const char* generated_BlockPathtrace_vert;
 

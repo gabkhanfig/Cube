@@ -12,6 +12,8 @@ void CompileTimeFiles::LoadAllFiles()
 	LoadTextFile("Chunk.frag", generated_Chunk_frag);
 	LoadTextFile("Block.vert", generated_Block_vert);
 	LoadTextFile("Block.frag", generated_Block_frag);
+	LoadTextFile("BlockMultidraw.vert", generated_BlockMultidraw_vert);
+	LoadTextFile("BlockMultidraw.frag", generated_BlockMultidraw_frag);
 	LoadTextFile("BlockPathtrace.vert", generated_BlockPathtrace_vert);
 	LoadTextFile("BlockPathtrace.frag", generated_BlockPathtrace_frag);
 	LoadTextFile("BlockPathtrace.comp", generated_BlockPathtrace_comp);

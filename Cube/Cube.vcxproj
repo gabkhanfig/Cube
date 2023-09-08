@@ -431,6 +431,8 @@ GenerateFiles.bat</Command>
     <None Include="Resources\Shaders\Basic.vert" />
     <None Include="Resources\Shaders\Block.frag" />
     <None Include="Resources\Shaders\Block.vert" />
+    <None Include="Resources\Shaders\BlockMultidraw.frag" />
+    <None Include="Resources\Shaders\BlockMultidraw.vert" />
     <None Include="Resources\Shaders\BlockPathtrace.comp" />
     <None Include="Resources\Shaders\BlockPathtrace.frag" />
     <None Include="Resources\Shaders\BlockPathtrace.vert" />

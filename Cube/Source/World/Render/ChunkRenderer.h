@@ -63,9 +63,14 @@ private:
 
 	void CopyRemeshedChunksDataToBuffers();
 
+	void DrawAllFrameChunksMultipleDrawCalls();
+
+	void MultidrawAllFrameChunks();
+
 private:
 
 	RasterShader* blockShader;
+	RasterShader* blockMultidrawShader;
 
 	VertexArrayObject* vao;
 
