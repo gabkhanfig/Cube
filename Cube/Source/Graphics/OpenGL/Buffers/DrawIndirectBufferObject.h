@@ -2,6 +2,7 @@
 
 #include "../../../Engine/EngineCore.h"
 #include "../OpenGLStructures.h"
+#include "../OpenGLEnums.h"
 
 class DrawIndirectBufferObject
 {
@@ -24,6 +25,12 @@ public:
 	uint32 GetId() const { return id; }
 
 	static uint32 GetBoundId() { return boundId; }
+
+	[[nodiscard]] DrawElementsIndirectCommand* GetMapBuffer(GLMappedBufferAccess access);
+
+	void UnmapBuffer();
+
+	void SetBufferStorage(const uint64 elementCapacity, const GLBufferStorageBitmask storageFlags);
 
 private:
 

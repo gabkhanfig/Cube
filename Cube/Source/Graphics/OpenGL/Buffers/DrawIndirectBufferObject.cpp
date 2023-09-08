@@ -40,6 +40,7 @@ DrawElementsIndirectCommand* DrawIndirectBufferObject::CreatePersistentMappedSto
 
 void DrawIndirectBufferObject::Bind()
 {
+	assertOnRenderThread();
 	if (IsBound()) return;
 	glBindBuffer(GL_DRAW_INDIRECT_BUFFER, id);
 	boundId = id;
@@ -47,6 +48,7 @@ void DrawIndirectBufferObject::Bind()
 
 void DrawIndirectBufferObject::Unbind()
 {
+	assertOnRenderThread();
 	glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
 	boundId = 0;
 }
@@ -54,4 +56,25 @@ void DrawIndirectBufferObject::Unbind()
 bool DrawIndirectBufferObject::IsBound() const
 {
 	return id == boundId;
+}
+
+DrawElementsIndirectCommand* DrawIndirectBufferObject::GetMapBuffer(GLMappedBufferAccess access)
+{
+	assertOnRenderThread();
+	DrawElementsIndirectCommand* mappedBuffer = (DrawElementsIndirectCommand*)glMapNamedBuffer(id, static_cast<int>(access));
+	gk_assertNotNull(mappedBuffer);
+	return mappedBuffer;
+}
+
+void DrawIndirectBufferObject::UnmapBuffer()
+{
+	assertOnRenderThread();
+	GLboolean result = glUnmapNamedBuffer(id);
+	gk_assertm(result != GL_FALSE, "Error with unmapping vbo buffer");
+}
+
+void DrawIndirectBufferObject::SetBufferStorage(const uint64 elementCapacity, const GLBufferStorageBitmask storageFlags)
+{
+	assertOnRenderThread();
+	glNamedBufferStorage(id, elementCapacity * sizeof(DrawElementsIndirectCommand), nullptr, storageFlags.bitmask);
 }
