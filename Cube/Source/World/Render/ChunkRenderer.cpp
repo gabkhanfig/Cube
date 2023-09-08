@@ -74,6 +74,9 @@ ChunkRenderer::ChunkRenderer()
   cubeLog("Allocating " + String::FromFloat(_reserveInGB, 3) + "GB for large VBO");
 #endif
   hugeVbo->Reserve(hugeVboReserveCapacity);
+
+  multidrawChunkOffsets = new VertexBufferObject();
+  multidrawCommands = new DrawIndirectBufferObject();
 }
 
 void ChunkRenderer::SetShaderChunkOffset(glm::vec3 chunkOffset)
@@ -284,18 +287,16 @@ void ChunkRenderer::MultidrawAllFrameChunks()
     commands.Add(command);
   }
 
-  VertexBufferObject chunkShaderOffsetVbo = VertexBufferObject();
-  chunkShaderOffsetVbo.BufferData(chunkOffsets.Data(), chunksToDraw);
+  multidrawChunkOffsets->BufferData(chunkOffsets.Data(), chunksToDraw);
 
   multidrawVao->Bind();
 
   multidrawVao->BindIndexBufferObject(blocksIbo);
   multidrawVao->BindVertexBufferObject(hugeVbo->GetVbo(), sizeof(BlockVertex));
-  glVertexArrayVertexBuffer(multidrawVao->GetId(), 4, chunkShaderOffsetVbo.GetId(), 0, sizeof(glm::vec3));
+  glVertexArrayVertexBuffer(multidrawVao->GetId(), 4, multidrawChunkOffsets->GetId(), 0, sizeof(glm::vec3));
 
-  DrawIndirectBufferObject dibo = DrawIndirectBufferObject();
-  dibo.BufferData(commands.Data(), chunksToDraw);
-  dibo.Bind();
+  multidrawCommands->BufferData(commands.Data(), chunksToDraw);
+  multidrawCommands->Bind();
 
   glMultiDrawElementsIndirect(
     GL_TRIANGLES,

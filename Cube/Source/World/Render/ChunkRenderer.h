@@ -99,4 +99,7 @@ private:
 	darray<ChunkDrawCall> drawCallsToExecute;
 
 	LargeRangedVbo<BlockQuad>* hugeVbo;
+
+	VertexBufferObject* multidrawChunkOffsets;
+	DrawIndirectBufferObject* multidrawCommands;
 };
