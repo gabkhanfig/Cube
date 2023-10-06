@@ -11,6 +11,7 @@
 #include "../World.h"
 #include "../Block/BlockTypes/Air/AirBlock.h"
 #include "../../Graphics/OpenGL/Buffers/MappedTripleIbo.h"
+#include "../Block/BlockTypeInfo.h"
 //#include "../../Graphics/OpenGL/Buffers/MappedTripleVbo.h"
 
 #include "../../Player/Player.h"
@@ -45,7 +46,7 @@ void ChunkRenderComponent::RecreateMesh()
 		const BlockPosition blockPos = i;
 		const Block* block = chunk->GetBlock(blockPos);
 
-		if (block->GetName() == airName) continue;
+		if (block->getName() == airName) continue;
 
 		const WorldPosition worldPos = WorldPosition(chunk->GetPosition(), blockPos);
 		const glm::vec3 vertexOffset{ blockPos.X(), blockPos.Y(), blockPos.Z() };
@@ -156,7 +157,7 @@ void ChunkRenderComponent::CalculateBuriedBitmask()
 		const BlockPosition blockPos = i;
 		const WorldPosition worldPos = WorldPosition(chunkPos, blockPos);
 		const Block* block = chunk->GetBlock(blockPos);
-		const bool isBlockBuried = block->IsBuried(chunk, adjacentChunks, worldPos, blockPos);
+		const bool isBlockBuried = block->isBuried(block->getTypeInfo(), chunk, adjacentChunks, worldPos, blockPos);
 		buriedBitmask->SetFlag(blockPos, isBlockBuried);
 	}
 }
@@ -179,11 +180,13 @@ void ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest()
 		const BlockPosition blockPos = i;
 		const Block* block = chunk->GetBlock(blockPos);
 
-		if (block->GetName() == airName || buriedBitmask->GetFlag(blockPos)) continue;
+		const BlockTypeInfo* typeInfo = block->getTypeInfo();
+
+		if (typeInfo->blockName == airName || buriedBitmask->GetFlag(blockPos)) continue;
 
 		const WorldPosition worldPos = WorldPosition(chunkPos, blockPos);
 		const glm::vec3 vertexOffset{ blockPos.X(), blockPos.Y(), blockPos.Z() };
-		block->ConstructMesh(mesh, chunk, worldPos, vertexOffset, adjacentChunks);
+		block->constructMesh(&typeInfo->vTable, mesh, chunk, worldPos, vertexOffset, adjacentChunks);
 		//block->AddBlockMeshToChunkMeshBitmaskTest(mesh, chunk, worldPos, vertexOffset, adjacentChunks);
 	}
 	emptyMesh = mesh->GetQuadCount() == 0;
