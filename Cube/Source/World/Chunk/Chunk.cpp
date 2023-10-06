@@ -31,14 +31,14 @@ void Chunk::Tick(float deltaTime)
 
 void Chunk::SetBlockAt(BlockPosition position, const Block& block)
 {
-	blocks[position.index].Destroy();
+	//blocks[position.index].Destroy();
 	blocks[position.index] = block;
 	SetShouldBeRemeshed(true);
 }
 
 void Chunk::DestroyBlockAt(BlockPosition position)
 {
-	blocks[position.index].Destroy();
+	//blocks[position.index].Destroy();
 	blocks[position.index] = BlockFactory::CreateAirBlock();
 	SetShouldBeRemeshed(true);
 }
@@ -46,7 +46,7 @@ void Chunk::DestroyBlockAt(BlockPosition position)
 void Chunk::FillChunkWithBlock(GlobalString blockName)
 {
 	for (int i = 0; i < CHUNK_SIZE; i++) {
-		blocks[i].Destroy();
+		//blocks[i].Destroy();
 		blocks[i] = BlockFactory::CreateBlock(blockName);
 	}
 }
