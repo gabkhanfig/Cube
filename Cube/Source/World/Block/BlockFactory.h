@@ -3,6 +3,7 @@
 #include "../../Engine/EngineCore.h"
 #include "BlockClass.h"
 #include "Block.h"
+#include "BlockTypeInfo.h"
 #include "../../Graphics/Geometry/Material.h"
 
 class Chunk;
@@ -13,49 +14,51 @@ struct BlockFactory
 public:
 
 	template<typename T> 
-		requires (std::is_base_of<IBlockClass, T>::value)
+		requires (std::is_base_of<IBlockClass, T>::value && BlockClassImplementsVtable<T>)
 	static void AddBlock() {
 		const IBlockClass* blockClass = new T();
-		const BlockVTable* vTable = blockClass->NewBlockVTable();
 
-#if CUBE_DEVELOPMENT
-		AssertValidateVTable(blockClass->GetBlockName(), vTable);
-#endif
+		BlockTypeInfo typeInfo;
+		typeInfo.blockName = blockClass->getBlockName();
+		typeInfo.isFullSolid = blockClass->isFullSolid();
+		typeInfo.usesDataComponent = false;
+		typeInfo.usesFacing = false;
 
-		BlockConstructionPair* pair = new BlockConstructionPair();
-		pair->blockClass = blockClass;
-		pair->vTable = vTable;
-		blockClasses.insert({ blockClass->GetBlockName(), pair });
+		typeInfo.vTable.mesh = T::constructMesh;
+		typeInfo.vTable.faceTexture = T::getFaceTexture;
+
+		const uint32 blockId = allBlockTypeInfos.Size();
 
 		if constexpr (std::is_same_v<T, AirBlockClass>) {
-			airFactory = pair;
+			gk_assertm(blockId == 0, "Air Block Type Info must be first in the array");
 		}
-		else {
-			const Material material = Material::ConvertFromBlockMaterial(blockClass->GetMaterial());
-			const uint32 index = materialsData.Add(material);
-			materialIds.insert({ blockClass->GetBlockName(), index });
-		}
+
+		allBlockTypeInfos.Add(typeInfo);
+		blockIds.insert({ typeInfo.blockName, blockId });
+		delete blockClass;
 	}
 
 	static bool IsValidBlockName(const GlobalString blockName);
 
 	static Block CreateBlock(const GlobalString blockName);
+	static Block createBlock(const uint32 id);
 
 	static Block CreateAirBlock();
 
-	static const IBlockClass* GetBlockClass(const GlobalString blockName);
-
-	static uint32 GetMaterialId(const GlobalString blockName);
-
-private:
-
-	static void AssertValidateVTable(GlobalString blockName, const BlockVTable* vTable);
+	static const BlockTypeInfo* getBlockTypeInfo(const GlobalString blockName);
+	
+	static const BlockTypeInfo* getBlockTypeInfo(const uint32 id);
 
 private:
 
-	static std::unordered_map<GlobalString, const BlockConstructionPair*> blockClasses;
-	static std::unordered_map<GlobalString, uint32> materialIds;
-	static darray<Material> materialsData;
-	static const BlockConstructionPair* airFactory;
+	//static std::unordered_map<GlobalString, const BlockConstructionPair*> blockClasses;
+	//static std::unordered_map<GlobalString, uint32> materialIds;
+	//static darray<Material> materialsData;
+	//static const BlockConstructionPair* airFactory;
+
+	static darray<BlockTypeInfo> allBlockTypeInfos;
+	static std::unordered_map<GlobalString, uint32> blockIds;
+
+
 
 };
