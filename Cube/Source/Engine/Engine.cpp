@@ -95,9 +95,9 @@ void Engine::Initialize()
 	UserInput::SetCallbacks();
 }
 
-void Engine::Run(gk::Event<void, float>* tickCallback)
+void Engine::Run(gk::Event<void, float>&& tickCallback)
 {
-	engine->tick = new TickEngine(tickCallback);
+	engine->tick = new TickEngine(std::move(tickCallback));
 	engine->tick->RunEngineLoop();
 	Window::TerminateGLFW();
 }

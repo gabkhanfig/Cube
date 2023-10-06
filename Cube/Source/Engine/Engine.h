@@ -32,8 +32,8 @@ public:
 	static void Initialize();
 
 	/**/
-	static void Run(gk::Event<void, float>* tickCallback);
-
+	static void Run(gk::Event<void, float>&& tickCallback);
+	
 	forceinline UserInput* GetUserInput() const { return input; }
 
 	forceinline Window* GetWindow() const { return window; }

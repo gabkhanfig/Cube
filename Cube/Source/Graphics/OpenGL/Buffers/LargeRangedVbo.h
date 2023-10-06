@@ -181,9 +181,9 @@ template<typename T>
 inline void LargeRangedVbo<T>::FreeRange(VertexBufferObject::MappedRange<T>* range)
 {
 	const auto optionalIndex = mappedRanges.Find(range);
-	gk_assertm(optionalIndex.IsValidIndex(), "Range must exist within the large vbos mapped ranges");
+	gk_assertm(!optionalIndex.none(), "Range must exist within the large vbos mapped ranges");
 
-	const uint32 index = optionalIndex.Get();
+	const uint32 index = optionalIndex.some();
 	cachedSubranges.RemoveAt(index);
 	mappedRanges.RemoveAt(index);
 

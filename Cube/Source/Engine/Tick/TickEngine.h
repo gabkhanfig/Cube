@@ -11,7 +11,7 @@ private:
 	static constexpr float MAX_DELTA_TIME = 0.25;
 
 	//_TickCallback callback;
-	gk::Event<void, float>* callback;
+	gk::Event<void, float> callback;
 
 	double previous;
 
@@ -25,7 +25,7 @@ private:
 
 public:
 	
-	TickEngine(gk::Event<void, float>* tickCallback);
+	TickEngine(gk::Event<void, float>&& tickCallback);
 
 	void RunEngineLoop();
 

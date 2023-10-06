@@ -5,16 +5,16 @@
 namespace gk 
 {
 	template<typename KeyType>
-	constexpr uint64 hash(KeyType key) = delete;
+	constexpr size_t hash(KeyType key) = delete;
 
 	template<>
-	constexpr uint64 hash<size_t>(size_t key) {
+	constexpr size_t hash<size_t>(size_t key) {
 		return key;
 	}
 
 	template<>
-	constexpr uint64 hash<int>(int key) {
-		return uint64(key);
+	constexpr size_t hash<int>(int key) {
+		return size_t(key);
 	}
 
 }
