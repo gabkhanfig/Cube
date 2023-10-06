@@ -16,49 +16,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Source/Core/Utils/CompileTimeFiles.h"
 
-struct ChunkBlockLight {
-	uint16 light;
-
-
-};
-
-struct BlockTypeInfo {
-	GlobalString blockName;
-	bool usesDataComponent;
-	bool usesFacing;
-	bool isFullSolid;
-};
-
-struct ChunkBlock {
-	uint64 data;
-
-	static constexpr uint64 DATA_COMPONENT_INDEX_BITS = 0b0111111111111111ULL << 49;						// Occupies first 15 bits
-	static constexpr uint64 LIGHT_BITS = 0b0111111111111111ULL << 34;														// Occupies next 15 bits 
-	static constexpr uint64 FACING_BITS = 0b111ULL << 31;																				// Occupies next 3 bits 
-	static constexpr uint64 BLOCK_ID = ~(DATA_COMPONENT_INDEX_BITS | LIGHT_BITS | FACING_BITS);	// Remaining 31 bits (2.14 billion possible block ids)
-
-	uint64 getBlockId() const { return data & BLOCK_ID; }
-	void setBlockId(const uint64 id) { data = (data & ~BLOCK_ID) | (id & BLOCK_ID); }
-
-//private:
-
-	uint64 bitmaskFacing() const { return (data & FACING_BITS) >> 31; }
-	void setBitmaskFacing(const uint64 bitmask) { data = (data & ~FACING_BITS) | ((bitmask << 31) & FACING_BITS); }
-
-	uint64 bitmaskLight() const { return (data & LIGHT_BITS) >> 34; }
-	void setBitmaskLight(const uint64 bitmask) { data = (data & ~LIGHT_BITS) | ((bitmask << 34) & LIGHT_BITS); }
-
-	uint64 bitmaskDataComponent() const { return (data & DATA_COMPONENT_INDEX_BITS) >> 49; }
-	void setBitmaskDataComponentIndex(const uint64 bitmask) { data = (data & ~DATA_COMPONENT_INDEX_BITS) | ((bitmask << 49) & DATA_COMPONENT_INDEX_BITS); }
-
-
-
-
-
-};
-
-
-
 GameInstance* gameInstance;
 Settings* settings;
 
@@ -83,17 +40,6 @@ int main(int argc, char** argv)
 	gk::Event<void, float> gameInstanceTickEvent = gk::Event<void, float>(gameInstance, &GameInstance::Tick);
   Engine::Run(std::move(gameInstanceTickEvent));
   return 0;
-
-	//ChunkBlock a;
-	//a.setBlockId(50);
-	//a.setBitmaskFacing(2);
-	//a.setBitmaskLight(15);
-	//a.setBitmaskDataComponentIndex(1234);
-
-	//std::cout << a.getBlockId() << std::endl;
-	//std::cout << a.bitmaskFacing() << std::endl;
-	//std::cout << a.bitmaskLight() << std::endl;
-	//std::cout << a.bitmaskDataComponent() << std::endl;
 #endif
 }
 
