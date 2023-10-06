@@ -186,7 +186,7 @@ RaycastHitResult World::RaycastHit(glm::dvec3 start, glm::dvec3 end) const
   while (!COMPONENT_PASSED(x) && !COMPONENT_PASSED(y) && !COMPONENT_PASSED(z)) {
     const WorldPosition wp{ pos };
     const Block* block = GetBlock(wp);
-    if (block != nullptr && block->GetName() != airName) {
+    if (block != nullptr && block->getName() != airName) {
       result.success = RaycastHitResult::HitSuccess::Block;
       result.hitChunk = GetChunk(wp.ToChunkPosition());
       result.hitBpos = wp.ToBlockPosition();
