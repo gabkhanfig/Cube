@@ -3,7 +3,7 @@
 #include "../Chunk/Chunk.h"
 #include "../Chunk/ChunkRenderComponent.h"
 #include "../WorldTransform.h"
-#include "BlockVTable.h"
+#include "BlockTypeInfo.h"
 #include "BlockFactory.h"
 
 //void Block::Destroy()
@@ -440,122 +440,122 @@
 //  }
 //}
 
-Block::Block()
-{
-  vTable = nullptr;
-  _emptyFutureBlockDataComponent = nullptr;
-  facing = 0;
-  isPendingDelete = false;
-  isFullSolid = true;
-}
+//Block::Block()
+//{
+//  vTable = nullptr;
+//  _emptyFutureBlockDataComponent = nullptr;
+//  facing = 0;
+//  isPendingDelete = false;
+//  isFullSolid = true;
+//}
+//
+//Block::~Block()
+//{
+//  // DO NOT destroy the block data component here.
+//}
+//
+//Block::Block(const Block& other)
+//{
+//  vTable = other.vTable;
+//  gk_assertNotNull(other.vTable);
+//  _emptyFutureBlockDataComponent = other._emptyFutureBlockDataComponent;
+//  facing = other.facing;
+//  isPendingDelete = other.isPendingDelete;
+//  isFullSolid = other.isFullSolid;
+//}
+//
+//Block& Block::operator=(const Block& other)
+//{
+//  vTable = other.vTable;
+//  gk_assertNotNull(other.vTable);
+//  _emptyFutureBlockDataComponent = other._emptyFutureBlockDataComponent;
+//  facing = other.facing;
+//  isPendingDelete = other.isPendingDelete;
+//  isFullSolid = other.isFullSolid;
+//  return *this;
+//}
+//
+//void Block::Destroy()
+//{
+//  isPendingDelete = true;
+//}
+//
+//GlobalString Block::GetName() const
+//{
+//  return vTable->blockName;
+//}
+//
+//bool Block::IsBuried(const Chunk* owningChunk, const MappedAdjacentChunks& adjacentChunks, WorldPosition worldPosition, BlockPosition blockPos) const
+//{
+//  if (!isFullSolid) return false; // If the block itself is not solid transparent, its not buried
+//
+//  if (!blockPos.IsOnChunkEdge()) { // If not on edge, just check within chunk.
+//    const BlockPosition blockAdjacentUp = BlockPosition(blockPos.X(), blockPos.Y() + 1, blockPos.Z());
+//    const BlockPosition blockAdjacentDown = BlockPosition(blockPos.X(), blockPos.Y() - 1, blockPos.Z());
+//    const BlockPosition blockAdjacentNorth = BlockPosition(blockPos.X(), blockPos.Y(), blockPos.Z() - 1);
+//    const BlockPosition blockAdjacentEast = BlockPosition(blockPos.X() - 1, blockPos.Y(), blockPos.Z());
+//    const BlockPosition blockAdjacentSouth = BlockPosition(blockPos.X(), blockPos.Y(), blockPos.Z() + 1);
+//    const BlockPosition blockAdjacentWest = BlockPosition(blockPos.X() + 1, blockPos.Y(), blockPos.Z());
+//
+//    if (!owningChunk->GetBlock(blockAdjacentUp)->isFullSolid
+//      || !owningChunk->GetBlock(blockAdjacentDown)->isFullSolid
+//      || !owningChunk->GetBlock(blockAdjacentNorth)->isFullSolid
+//      || !owningChunk->GetBlock(blockAdjacentEast)->isFullSolid
+//      || !owningChunk->GetBlock(blockAdjacentSouth)->isFullSolid
+//      || !owningChunk->GetBlock(blockAdjacentWest)->isFullSolid
+//      ) return false;
+//    return true;
+//  }
+//
+//  const WorldPosition adjacentUp = WorldPosition(worldPosition.x, worldPosition.y + 1, worldPosition.z);
+//  const WorldPosition adjacentDown = WorldPosition(worldPosition.x, worldPosition.y - 1, worldPosition.z);
+//  const WorldPosition adjacentNorth = WorldPosition(worldPosition.x, worldPosition.y, worldPosition.z - 1);
+//  const WorldPosition adjacentEast = WorldPosition(worldPosition.x - 1, worldPosition.y, worldPosition.z);
+//  const WorldPosition adjacentSouth = WorldPosition(worldPosition.x, worldPosition.y, worldPosition.z + 1);
+//  const WorldPosition adjacentWest = WorldPosition(worldPosition.x + 1, worldPosition.y, worldPosition.z);
+//
+//  const Chunk* upChunk = adjacentChunks.GetChunk(adjacentUp.ToChunkPosition());
+//  if (upChunk == nullptr) return false;
+//  const Chunk* downChunk = adjacentChunks.GetChunk(adjacentDown.ToChunkPosition());
+//  if (downChunk == nullptr) return false;
+//  const Chunk* northChunk = adjacentChunks.GetChunk(adjacentNorth.ToChunkPosition());
+//  if (northChunk == nullptr) return false;
+//  const Chunk* eastChunk = adjacentChunks.GetChunk(adjacentEast.ToChunkPosition());
+//  if (eastChunk == nullptr) return false;
+//  const Chunk* southChunk = adjacentChunks.GetChunk(adjacentSouth.ToChunkPosition());
+//  if (southChunk == nullptr) return false;
+//  const Chunk* westChunk = adjacentChunks.GetChunk(adjacentWest.ToChunkPosition());
+//  if (westChunk == nullptr) return false;
+//
+//  const Block* upBlock = upChunk->GetBlock(adjacentUp.ToBlockPosition());
+//  const Block* downBlock = downChunk->GetBlock(adjacentDown.ToBlockPosition());
+//  const Block* northBlock = northChunk->GetBlock(adjacentNorth.ToBlockPosition());
+//  const Block* eastBlock = eastChunk->GetBlock(adjacentEast.ToBlockPosition());
+//  const Block* southBlock = southChunk->GetBlock(adjacentSouth.ToBlockPosition());
+//  const Block* westBlock = westChunk->GetBlock(adjacentWest.ToBlockPosition());
+//
+//  if(!upBlock->isFullSolid // If any adjacent blocks are transparent, its not buried
+//    || !downBlock->isFullSolid
+//    || !northBlock->isFullSolid
+//    || !eastBlock->isFullSolid
+//    || !southBlock->isFullSolid
+//    || !westBlock->isFullSolid) return false;
+//
+//  return true;
+//}
+//
+//void Block::ConstructMesh(ChunkMesh* mesh, const Chunk* chunk, const WorldPosition position, const glm::vec3 vertexOffset, const MappedAdjacentAndBuriedChunks& adjacentChunks) const
+//{
+//  vTable->meshFunc(this, mesh, chunk, position, vertexOffset, adjacentChunks);
+//}
 
-Block::~Block()
-{
-  // DO NOT destroy the block data component here.
-}
-
-Block::Block(const Block& other)
-{
-  vTable = other.vTable;
-  gk_assertNotNull(other.vTable);
-  _emptyFutureBlockDataComponent = other._emptyFutureBlockDataComponent;
-  facing = other.facing;
-  isPendingDelete = other.isPendingDelete;
-  isFullSolid = other.isFullSolid;
-}
-
-Block& Block::operator=(const Block& other)
-{
-  vTable = other.vTable;
-  gk_assertNotNull(other.vTable);
-  _emptyFutureBlockDataComponent = other._emptyFutureBlockDataComponent;
-  facing = other.facing;
-  isPendingDelete = other.isPendingDelete;
-  isFullSolid = other.isFullSolid;
-  return *this;
-}
-
-void Block::Destroy()
-{
-  isPendingDelete = true;
-}
-
-GlobalString Block::GetName() const
-{
-  return vTable->blockName;
-}
-
-bool Block::IsBuried(const Chunk* owningChunk, const MappedAdjacentChunks& adjacentChunks, WorldPosition worldPosition, BlockPosition blockPos) const
-{
-  if (!isFullSolid) return false; // If the block itself is not solid transparent, its not buried
-
-  if (!blockPos.IsOnChunkEdge()) { // If not on edge, just check within chunk.
-    const BlockPosition blockAdjacentUp = BlockPosition(blockPos.X(), blockPos.Y() + 1, blockPos.Z());
-    const BlockPosition blockAdjacentDown = BlockPosition(blockPos.X(), blockPos.Y() - 1, blockPos.Z());
-    const BlockPosition blockAdjacentNorth = BlockPosition(blockPos.X(), blockPos.Y(), blockPos.Z() - 1);
-    const BlockPosition blockAdjacentEast = BlockPosition(blockPos.X() - 1, blockPos.Y(), blockPos.Z());
-    const BlockPosition blockAdjacentSouth = BlockPosition(blockPos.X(), blockPos.Y(), blockPos.Z() + 1);
-    const BlockPosition blockAdjacentWest = BlockPosition(blockPos.X() + 1, blockPos.Y(), blockPos.Z());
-
-    if (!owningChunk->GetBlock(blockAdjacentUp)->isFullSolid
-      || !owningChunk->GetBlock(blockAdjacentDown)->isFullSolid
-      || !owningChunk->GetBlock(blockAdjacentNorth)->isFullSolid
-      || !owningChunk->GetBlock(blockAdjacentEast)->isFullSolid
-      || !owningChunk->GetBlock(blockAdjacentSouth)->isFullSolid
-      || !owningChunk->GetBlock(blockAdjacentWest)->isFullSolid
-      ) return false;
-    return true;
-  }
-
-  const WorldPosition adjacentUp = WorldPosition(worldPosition.x, worldPosition.y + 1, worldPosition.z);
-  const WorldPosition adjacentDown = WorldPosition(worldPosition.x, worldPosition.y - 1, worldPosition.z);
-  const WorldPosition adjacentNorth = WorldPosition(worldPosition.x, worldPosition.y, worldPosition.z - 1);
-  const WorldPosition adjacentEast = WorldPosition(worldPosition.x - 1, worldPosition.y, worldPosition.z);
-  const WorldPosition adjacentSouth = WorldPosition(worldPosition.x, worldPosition.y, worldPosition.z + 1);
-  const WorldPosition adjacentWest = WorldPosition(worldPosition.x + 1, worldPosition.y, worldPosition.z);
-
-  const Chunk* upChunk = adjacentChunks.GetChunk(adjacentUp.ToChunkPosition());
-  if (upChunk == nullptr) return false;
-  const Chunk* downChunk = adjacentChunks.GetChunk(adjacentDown.ToChunkPosition());
-  if (downChunk == nullptr) return false;
-  const Chunk* northChunk = adjacentChunks.GetChunk(adjacentNorth.ToChunkPosition());
-  if (northChunk == nullptr) return false;
-  const Chunk* eastChunk = adjacentChunks.GetChunk(adjacentEast.ToChunkPosition());
-  if (eastChunk == nullptr) return false;
-  const Chunk* southChunk = adjacentChunks.GetChunk(adjacentSouth.ToChunkPosition());
-  if (southChunk == nullptr) return false;
-  const Chunk* westChunk = adjacentChunks.GetChunk(adjacentWest.ToChunkPosition());
-  if (westChunk == nullptr) return false;
-
-  const Block* upBlock = upChunk->GetBlock(adjacentUp.ToBlockPosition());
-  const Block* downBlock = downChunk->GetBlock(adjacentDown.ToBlockPosition());
-  const Block* northBlock = northChunk->GetBlock(adjacentNorth.ToBlockPosition());
-  const Block* eastBlock = eastChunk->GetBlock(adjacentEast.ToBlockPosition());
-  const Block* southBlock = southChunk->GetBlock(adjacentSouth.ToBlockPosition());
-  const Block* westBlock = westChunk->GetBlock(adjacentWest.ToBlockPosition());
-
-  if(!upBlock->isFullSolid // If any adjacent blocks are transparent, its not buried
-    || !downBlock->isFullSolid
-    || !northBlock->isFullSolid
-    || !eastBlock->isFullSolid
-    || !southBlock->isFullSolid
-    || !westBlock->isFullSolid) return false;
-
-  return true;
-}
-
-void Block::ConstructMesh(ChunkMesh* mesh, const Chunk* chunk, const WorldPosition position, const glm::vec3 vertexOffset, const MappedAdjacentAndBuriedChunks& adjacentChunks) const
-{
-  vTable->meshFunc(this, mesh, chunk, position, vertexOffset, adjacentChunks);
-}
-
-CompressedBlockPathtraceData Block::GetPathtraceData() const
-{
-  CompressedBlockPathtraceData pathtraceData;
-  pathtraceData.materialId = BlockFactory::GetMaterialId(GetName());
-  pathtraceData.normal = PackedNormal::Pack(glm::vec3(1, 0, 0));
-  return pathtraceData;
-}
+//CompressedBlockPathtraceData Block::GetPathtraceData() const
+//{
+//  CompressedBlockPathtraceData pathtraceData;
+//  pathtraceData.materialId = BlockFactory::GetMaterialId(GetName());
+//  pathtraceData.normal = PackedNormal::Pack(glm::vec3(1, 0, 0));
+//  return pathtraceData;
+//}
 
 BlockDataComponentRef::BlockDataComponentRef()
   : chunkComponentIndex(0)
@@ -576,4 +576,84 @@ BlockDataComponent* BlockDataComponentRef::Get(Chunk* chunk)
   gk_assertm(IsValid(), "Cannot get the block data component of a block that does not have one");
   const uint16 index = chunkComponentIndex & 0b0111111111111111; // All bits except for the last one. Works with chunk sizes up to 32^3
   return nullptr;
+}
+
+const BlockTypeInfo* Block::getTypeInfo() const
+{
+  const uint32 id = getBlockId();
+  return BlockFactory::getBlockTypeInfo(id);
+}
+
+const BlockVTable* Block::getVTable() const
+{
+  return &getTypeInfo()->vTable;
+}
+
+GlobalString Block::getName() const
+{
+  return getTypeInfo()->blockName;
+}
+
+bool Block::isBuried(const BlockTypeInfo* typeInfo, const Chunk* owningChunk, const MappedAdjacentChunks& adjacentChunks, const WorldPosition& worldPosition, BlockPosition blockPos) const
+{
+    if (!typeInfo->isFullSolid) return false; // If the block itself is not solid transparent, its not buried
+  
+    if (!blockPos.IsOnChunkEdge()) { // If not on edge, just check within chunk.
+      const BlockPosition blockAdjacentUp = BlockPosition(blockPos.X(), blockPos.Y() + 1, blockPos.Z());
+      const BlockPosition blockAdjacentDown = BlockPosition(blockPos.X(), blockPos.Y() - 1, blockPos.Z());
+      const BlockPosition blockAdjacentNorth = BlockPosition(blockPos.X(), blockPos.Y(), blockPos.Z() - 1);
+      const BlockPosition blockAdjacentEast = BlockPosition(blockPos.X() - 1, blockPos.Y(), blockPos.Z());
+      const BlockPosition blockAdjacentSouth = BlockPosition(blockPos.X(), blockPos.Y(), blockPos.Z() + 1);
+      const BlockPosition blockAdjacentWest = BlockPosition(blockPos.X() + 1, blockPos.Y(), blockPos.Z());
+  
+      if (!owningChunk->GetBlock(blockAdjacentUp)->getTypeInfo()->isFullSolid
+        || !owningChunk->GetBlock(blockAdjacentDown)->getTypeInfo()->isFullSolid
+        || !owningChunk->GetBlock(blockAdjacentNorth)->getTypeInfo()->isFullSolid
+        || !owningChunk->GetBlock(blockAdjacentEast)->getTypeInfo()->isFullSolid
+        || !owningChunk->GetBlock(blockAdjacentSouth)->getTypeInfo()->isFullSolid
+        || !owningChunk->GetBlock(blockAdjacentWest)->getTypeInfo()->isFullSolid
+        ) return false;
+      return true;
+    }
+  
+    const WorldPosition adjacentUp = WorldPosition(worldPosition.x, worldPosition.y + 1, worldPosition.z);
+    const WorldPosition adjacentDown = WorldPosition(worldPosition.x, worldPosition.y - 1, worldPosition.z);
+    const WorldPosition adjacentNorth = WorldPosition(worldPosition.x, worldPosition.y, worldPosition.z - 1);
+    const WorldPosition adjacentEast = WorldPosition(worldPosition.x - 1, worldPosition.y, worldPosition.z);
+    const WorldPosition adjacentSouth = WorldPosition(worldPosition.x, worldPosition.y, worldPosition.z + 1);
+    const WorldPosition adjacentWest = WorldPosition(worldPosition.x + 1, worldPosition.y, worldPosition.z);
+  
+    const Chunk* upChunk = adjacentChunks.GetChunk(adjacentUp.ToChunkPosition());
+    if (upChunk == nullptr) return false;
+    const Chunk* downChunk = adjacentChunks.GetChunk(adjacentDown.ToChunkPosition());
+    if (downChunk == nullptr) return false;
+    const Chunk* northChunk = adjacentChunks.GetChunk(adjacentNorth.ToChunkPosition());
+    if (northChunk == nullptr) return false;
+    const Chunk* eastChunk = adjacentChunks.GetChunk(adjacentEast.ToChunkPosition());
+    if (eastChunk == nullptr) return false;
+    const Chunk* southChunk = adjacentChunks.GetChunk(adjacentSouth.ToChunkPosition());
+    if (southChunk == nullptr) return false;
+    const Chunk* westChunk = adjacentChunks.GetChunk(adjacentWest.ToChunkPosition());
+    if (westChunk == nullptr) return false;
+  
+    const Block* upBlock = upChunk->GetBlock(adjacentUp.ToBlockPosition());
+    const Block* downBlock = downChunk->GetBlock(adjacentDown.ToBlockPosition());
+    const Block* northBlock = northChunk->GetBlock(adjacentNorth.ToBlockPosition());
+    const Block* eastBlock = eastChunk->GetBlock(adjacentEast.ToBlockPosition());
+    const Block* southBlock = southChunk->GetBlock(adjacentSouth.ToBlockPosition());
+    const Block* westBlock = westChunk->GetBlock(adjacentWest.ToBlockPosition());
+  
+    if(!upBlock->getTypeInfo()->isFullSolid // If any adjacent blocks are transparent, its not buried
+      || !downBlock->getTypeInfo()->isFullSolid
+      || !northBlock->getTypeInfo()->isFullSolid
+      || !eastBlock->getTypeInfo()->isFullSolid
+      || !southBlock->getTypeInfo()->isFullSolid
+      || !westBlock->getTypeInfo()->isFullSolid) return false;
+  
+    return true;
+}
+
+void Block::constructMesh(const BlockVTable* vTable, ChunkMesh* mesh, const Chunk* chunk, const WorldPosition& position, const glm::vec3& vertexOffset, const MappedAdjacentAndBuriedChunks& adjacentChunks) const
+{
+  vTable->mesh.invoke(this, vTable, mesh, chunk, position, vertexOffset, adjacentChunks);
 }

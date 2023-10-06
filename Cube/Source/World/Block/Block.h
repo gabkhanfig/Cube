@@ -153,32 +153,67 @@ private:
 
 
 struct BlockVTable;
+struct BlockTypeInfo;
+
+//struct Block
+//{
+//	const BlockVTable* vTable;
+//	void* _emptyFutureBlockDataComponent;
+//	BlockLight light;
+//	uint8 facing : 6;
+//	uint8 isPendingDelete : 1;
+//	uint8 isFullSolid : 1;
+//	// 4 more bytes for 24 byte size
+//
+//	Block();
+//	/* Will not free any memory. Use BlockTest::Destroy() instead. */
+//	~Block();
+//
+//	Block(const Block& other);
+//	Block& operator =(const Block& other);
+//
+//	/**/
+//	void Destroy();
+//
+//	GlobalString GetName() const;
+//
+//	bool IsBuried(const Chunk* owningChunk, const MappedAdjacentChunks& adjacentChunks, WorldPosition worldPosition, BlockPosition blockPos) const;
+//
+//	void ConstructMesh(ChunkMesh* mesh, const Chunk* chunk, const WorldPosition position, const glm::vec3 vertexOffset, const MappedAdjacentAndBuriedChunks& adjacentChunks) const;
+//
+//	CompressedBlockPathtraceData GetPathtraceData() const;
+//};
 
 struct Block
 {
-	const BlockVTable* vTable;
-	void* _emptyFutureBlockDataComponent;
-	BlockLight light;
-	uint8 facing : 6;
-	uint8 isPendingDelete : 1;
-	uint8 isFullSolid : 1;
-	// 4 more bytes for 24 byte size
+	uint64 data;
 
-	Block();
-	/* Will not free any memory. Use BlockTest::Destroy() instead. */
-	~Block();
+#pragma region Bitmask_Tomfoolery
 
-	Block(const Block& other);
-	Block& operator =(const Block& other);
+	static constexpr uint64 DATA_COMPONENT_INDEX_BITS = 0b0111111111111111ULL << 49;						// Occupies first 15 bits
+	static constexpr uint64 LIGHT_BITS = 0b0111111111111111ULL << 34;														// Occupies next 15 bits 
+	static constexpr uint64 FACING_BITS = 0b111ULL << 31;																				// Occupies next 3 bits 
+	static constexpr uint64 BLOCK_ID = ~(DATA_COMPONENT_INDEX_BITS | LIGHT_BITS | FACING_BITS);	// Remaining 31 bits (2.14 billion possible block ids)
 
-	/**/
-	void Destroy();
+	forceinline uint64 getBlockId() const { return data & BLOCK_ID; }
+	forceinline void setBlockId(const uint64 id) { data = (data & ~BLOCK_ID) | (id & BLOCK_ID); }
 
-	GlobalString GetName() const;
+	forceinline uint64 getBitmaskFacing() const { return (data & FACING_BITS) >> 31; }
+	forceinline void setBitmaskFacing(const uint64 bitmask) { data = (data & ~FACING_BITS) | ((bitmask << 31) & FACING_BITS); }
 
-	bool IsBuried(const Chunk* owningChunk, const MappedAdjacentChunks& adjacentChunks, WorldPosition worldPosition, BlockPosition blockPos) const;
+	forceinline uint64 getBitmaskLight() const { return (data & LIGHT_BITS) >> 34; }
+	forceinline void setBitmaskLight(const uint64 bitmask) { data = (data & ~LIGHT_BITS) | ((bitmask << 34) & LIGHT_BITS); }
 
-	void ConstructMesh(ChunkMesh* mesh, const Chunk* chunk, const WorldPosition position, const glm::vec3 vertexOffset, const MappedAdjacentAndBuriedChunks& adjacentChunks) const;
+	forceinline uint64 getBitmaskDataComponent() const { return (data & DATA_COMPONENT_INDEX_BITS) >> 49; }
+	forceinline void setBitmaskDataComponentIndex(const uint64 bitmask) { data = (data & ~DATA_COMPONENT_INDEX_BITS) | ((bitmask << 49) & DATA_COMPONENT_INDEX_BITS); }
 
-	CompressedBlockPathtraceData GetPathtraceData() const;
+#pragma endregion
+
+	const BlockTypeInfo* getTypeInfo() const;
+	const BlockVTable* getVTable() const;
+
+	GlobalString getName() const;
+	bool isBuried(const BlockTypeInfo* typeInfo, const Chunk* owningChunk, const MappedAdjacentChunks& adjacentChunks, const WorldPosition& worldPosition, BlockPosition blockPos) const;
+	void constructMesh(const BlockVTable* vTable, ChunkMesh* mesh, const Chunk* chunk, const WorldPosition& position, const glm::vec3& vertexOffset, const MappedAdjacentAndBuriedChunks& adjacentChunks) const;
+
 };
