@@ -26,8 +26,8 @@ ChunkRenderer::ChunkRenderer()
 {
   assertOnRenderThread();
   //shader = new Shader(CompileTimeFiles::GetTextFile("Chunk.vert")->contents, CompileTimeFiles::GetTextFile("Chunk.frag")->contents);
-  blockShader = new RasterShader(CompileTimeFiles::GetTextFile("Block.vert")->contents, CompileTimeFiles::GetTextFile("Block.frag")->contents);
-  blockMultidrawShader = new RasterShader(CompileTimeFiles::GetTextFile("BlockMultidraw.vert")->contents, CompileTimeFiles::GetTextFile("BlockMultidraw.frag")->contents);
+  blockShader = new RasterShader(CompileTimeFiles::GetTextFile("Block.vert"_str)->contents, CompileTimeFiles::GetTextFile("Block.frag"_str)->contents);
+  blockMultidrawShader = new RasterShader(CompileTimeFiles::GetTextFile("BlockMultidraw.vert"_str)->contents, CompileTimeFiles::GetTextFile("BlockMultidraw.frag"_str)->contents);
 
   vao = new VertexArrayObject();
   //vao->Bind();
@@ -71,7 +71,7 @@ ChunkRenderer::ChunkRenderer()
   //const uint64 hugeVboReserveCapacity = std::pow(uint64(GetSettings()->GetRenderDistance()), 3ULL) * CHUNK_SIZE * 4;
 #ifdef CUBE_DEVELOPMENT
   const double _reserveInGB = double(hugeVboReserveCapacity * sizeof(BlockQuad)) / 1000000000.0;
-  cubeLog("Allocating " + String::FromFloat(_reserveInGB, 3) + "GB for large VBO");
+  cubeLog("Allocating " + String::fromFloat(_reserveInGB, 3) + "GB for large VBO");
 #endif
   hugeVbo->Reserve(hugeVboReserveCapacity);
 

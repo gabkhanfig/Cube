@@ -8,18 +8,18 @@ HashMap<GlobalString, const CompileTimeFiles::Image*> CompileTimeFiles::imageFil
 
 void CompileTimeFiles::LoadAllFiles()
 {
-	LoadTextFile("Chunk.vert", generated_Chunk_vert);
-	LoadTextFile("Chunk.frag", generated_Chunk_frag);
-	LoadTextFile("Block.vert", generated_Block_vert);
-	LoadTextFile("Block.frag", generated_Block_frag);
-	LoadTextFile("BlockMultidraw.vert", generated_BlockMultidraw_vert);
-	LoadTextFile("BlockMultidraw.frag", generated_BlockMultidraw_frag);
-	LoadTextFile("BlockPathtrace.vert", generated_BlockPathtrace_vert);
-	LoadTextFile("BlockPathtrace.frag", generated_BlockPathtrace_frag);
-	LoadTextFile("BlockPathtrace.comp", generated_BlockPathtrace_comp);
+	LoadTextFile("Chunk.vert"_str, generated_Chunk_vert);
+	LoadTextFile("Chunk.frag"_str, generated_Chunk_frag);
+	LoadTextFile("Block.vert"_str, generated_Block_vert);
+	LoadTextFile("Block.frag"_str, generated_Block_frag);
+	LoadTextFile("BlockMultidraw.vert"_str, generated_BlockMultidraw_vert);
+	LoadTextFile("BlockMultidraw.frag"_str, generated_BlockMultidraw_frag);
+	LoadTextFile("BlockPathtrace.vert"_str, generated_BlockPathtrace_vert);
+	LoadTextFile("BlockPathtrace.frag"_str, generated_BlockPathtrace_frag);
+	LoadTextFile("BlockPathtrace.comp"_str, generated_BlockPathtrace_comp);
 
-	LoadImageFile("InvalidTexture.png", generated_InvalidTexture_png, generated_InvalidTexture_png_width, generated_InvalidTexture_png_height, generated_InvalidTexture_png_total_bytes);
-	LoadImageFile("StoneBlock.png", generated_StoneBlock_png, generated_StoneBlock_png_width, generated_StoneBlock_png_height, generated_StoneBlock_png_total_bytes);
+	LoadImageFile("InvalidTexture.png"_str, generated_InvalidTexture_png, generated_InvalidTexture_png_width, generated_InvalidTexture_png_height, generated_InvalidTexture_png_total_bytes);
+	LoadImageFile("StoneBlock.png"_str, generated_StoneBlock_png, generated_StoneBlock_png_width, generated_StoneBlock_png_height, generated_StoneBlock_png_total_bytes);
 }
 
 const CompileTimeFiles::Text* CompileTimeFiles::GetTextFile(GlobalString fileName)

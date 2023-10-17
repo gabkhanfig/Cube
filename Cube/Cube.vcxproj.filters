@@ -213,9 +213,6 @@
     <ClCompile Include="Testing\UnitTests\Geometry\PackedTypes\PackedBlockOffsetPositionTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\World\Block\BlockVTable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\World\Block\BlockClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -522,9 +519,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Utils\Benchmark.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\World\Block\BlockVTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\World\Block\BlockClass.h">

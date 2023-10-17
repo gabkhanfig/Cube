@@ -33,13 +33,13 @@ using HashSet = std::unordered_set<T>;
 #define forceinline __forceinline
 
 template<>
-[[nodiscard]] inline static gk::String gk::String::From<glm::vec3>(const glm::vec3& value) {
-	return gk::String("x: ") + gk::String::FromFloat(value.x) + gk::String(", y: ") + gk::String::FromFloat(value.y) + gk::String(", z: ") + gk::String::FromFloat(value.z);
+[[nodiscard]] inline static gk::String gk::String::from<glm::vec3>(const glm::vec3& value) {
+	return gk::String("x: ") + gk::String::fromFloat(value.x) + gk::String(", y: ") + gk::String::fromFloat(value.y) + gk::String(", z: ") + gk::String::fromFloat(value.z);
 }
 
 template<>
-[[nodiscard]] inline static gk::String gk::String::From<glm::dvec3>(const glm::dvec3& value) {
-	return gk::String("x: " ) + gk::String::FromFloat(value.x) + gk::String(", y: ") + gk::String::FromFloat(value.y) + gk::String(", z: ") + gk::String::FromFloat(value.z);
+[[nodiscard]] inline static gk::String gk::String::from<glm::dvec3>(const glm::dvec3& value) {
+	return gk::String("x: " ) + gk::String::fromFloat(value.x) + gk::String(", y: ") + gk::String::fromFloat(value.y) + gk::String(", z: ") + gk::String::fromFloat(value.z);
 }
 
 inline bool IsNearlyEqual(double a, double b, double errorTolerance = (1.e-8)) {

@@ -38,7 +38,7 @@ const Chunk* MappedAdjacentChunks::GetChunk(const ChunkPosition position) const
 	return _chunks[index];
 	//if (chunk == nullptr) return nullptr;
 	//gk_assertm(chunk->GetPosition() == position,
-		//"Chunk position does not match the position of the function argument\nchunk position: " << String::From(chunk->GetPosition()) << "\narg position: " << String::From(position));
+		//"Chunk position does not match the position of the function argument\nchunk position: " << String::from(chunk->GetPosition()) << "\narg position: " << String::from(position));
 }
 
 const Block* MappedAdjacentChunks::GetBlock(const WorldPosition position) const
@@ -81,7 +81,7 @@ const Chunk* MappedAdjacentAndBuriedChunks::GetChunk(const ChunkPosition positio
 	const Chunk* chunk = _chunks[index];
 	if (chunk == nullptr) return nullptr;
 	gk_assertm(chunk->GetPosition() == position,
-		"Chunk position does not match the position of the function argument\nchunk position: " << String::From(chunk->GetPosition()) << "\narg position: " << String::From(position));
+		"Chunk position does not match the position of the function argument\nchunk position: " << String::from(chunk->GetPosition()) << "\narg position: " << String::from(position));
 	return chunk;
 }
 

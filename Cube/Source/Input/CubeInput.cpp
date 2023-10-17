@@ -20,7 +20,7 @@ glm::dvec2 CubeInput::previousCursorPos = glm::dvec2(0, 0);
 void CubeInput::ButtonInputCallback(GlobalString button, EInputAction action, InputMods mods)
 {
 	if (button == "Esc") {
-		cubeLog("Escape key was pressed. Closing Cube.");
+		cubeLog("Escape key was pressed. Closing Cube."_str);
 		engine->GetWindow()->Close();
 	}
 

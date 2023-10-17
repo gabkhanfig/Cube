@@ -15,16 +15,16 @@ static InputMapPair CreateDefaultInputs()
 inputs.inputIds.insert({str, id}); \
 inputs.inputStrings.insert({id, str})
 
-	input("Space", GLFW_KEY_SPACE);
-	input("W", GLFW_KEY_W);
-	input("A", GLFW_KEY_A);
-	input("S", GLFW_KEY_S);
-	input("D", GLFW_KEY_D);
-	input("Esc", GLFW_KEY_ESCAPE);
-	input("Ctrl", GLFW_KEY_LEFT_CONTROL);
-	input("LMB", GLFW_MOUSE_BUTTON_LEFT);
-	input("RMB", GLFW_MOUSE_BUTTON_RIGHT);
-	input("MMB", GLFW_MOUSE_BUTTON_MIDDLE);
+	input("Space"_str, GLFW_KEY_SPACE);
+	input("W"_str, GLFW_KEY_W);
+	input("A"_str, GLFW_KEY_A);
+	input("S"_str, GLFW_KEY_S);
+	input("D"_str, GLFW_KEY_D);
+	input("Esc"_str, GLFW_KEY_ESCAPE);
+	input("Ctrl"_str, GLFW_KEY_LEFT_CONTROL);
+	input("LMB"_str, GLFW_MOUSE_BUTTON_LEFT);
+	input("RMB"_str, GLFW_MOUSE_BUTTON_RIGHT);
+	input("MMB"_str, GLFW_MOUSE_BUTTON_MIDDLE);
 	return inputs;
 }
 

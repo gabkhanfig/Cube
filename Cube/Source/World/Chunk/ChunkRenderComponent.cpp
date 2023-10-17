@@ -40,7 +40,7 @@ ChunkRenderComponent::~ChunkRenderComponent()
 void ChunkRenderComponent::RecreateMesh()
 {
 	mesh->Empty();
-	const GlobalString airName = "air";
+	const GlobalString airName = "air"_str;
 
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		const BlockPosition blockPos = i;
@@ -54,14 +54,14 @@ void ChunkRenderComponent::RecreateMesh()
 	}
 	emptyMesh = mesh->GetQuadCount() == 0;
 	//if (emptyMesh) {
-	//	cubeLog("Empty chunk mesh for chunk " + String::From(chunk->GetPosition()));
+	//	cubeLog("Empty chunk mesh for chunk " + String::from(chunk->GetPosition()));
 	//}
 	chunk->SetShouldBeRemeshed(false);
 }
 
 void ChunkRenderComponent::MultithreadRecreateMeshes(const darray<Chunk*>& chunks, gk::ThreadPool* threadPool)
 {
-	cubeLog("Remeshing " + String::FromUint(chunks.Size()) + " chunks\n" + String::From(chunks.Size() * CHUNK_SIZE) + " blocks");
+	cubeLog("Remeshing " + String::fromUint(chunks.Size()) + " chunks\n" + String::from(chunks.Size() * CHUNK_SIZE) + " blocks");
 	gk_assertNotNull(threadPool);
 	gk_assert(threadPool->AllThreadsReady());
 #if false
@@ -174,7 +174,7 @@ void ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest()
 
 	const ChunkPosition chunkPos = chunk->GetPosition();
 	const MappedAdjacentAndBuriedChunks adjacentChunks = MappedAdjacentAndBuriedChunks::Create(GetWorld(), chunkPos);
-	const GlobalString airName = "air";
+	const GlobalString airName = "air"_str;
 
 	for (int i = 0; i < CHUNK_SIZE; i++) {
 		const BlockPosition blockPos = i;
@@ -191,7 +191,7 @@ void ChunkRenderComponent::RecreateMeshUsingBuriedBitmaskAndAdjacentTest()
 	}
 	emptyMesh = mesh->GetQuadCount() == 0;
 	//if (emptyMesh) {
-	//	cubeLog("Empty chunk mesh for chunk " + String::From(chunk->GetPosition()));
+	//	cubeLog("Empty chunk mesh for chunk " + String::from(chunk->GetPosition()));
 	//}
 	chunk->SetShouldBeRemeshed(false);
 }

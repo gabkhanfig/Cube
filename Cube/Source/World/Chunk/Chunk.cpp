@@ -80,7 +80,7 @@ void Chunk::MultithreadGenerateTerrain(const darray<Chunk*>& chunks, gk::ThreadP
 
 void Chunk::DestroyAllBlocks()
 {
-	cubeLog("todo... Chunk::DestroyAllBlocks()");
+	cubeLog("todo... Chunk::DestroyAllBlocks()"_str);
 	//for (int i = 0; i < CHUNK_SIZE; i++) {
 	//	Block* block = blocks[i];
 	//	if (IsValid(block)) {

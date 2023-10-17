@@ -3,5 +3,5 @@
 Settings::Settings()
 {
 	renderDistance = 5;
-	threadPoolSize = gk::ThreadPool::SystemThreadCount() - 1;
+	threadPoolSize = gk::systemThreadCount() - 1;
 }

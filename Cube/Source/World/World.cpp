@@ -88,7 +88,7 @@ void World::Tick(float deltaTime)
 
   //if (player->GetChunkPosition() != oldPlayerChunkPos) {
   //  DeleteDistantChunksAndLoadNearby(GetSettings()->GetRenderDistance());
-  //  cubeLog("player moved across chunk border... player position: " + String::From(player->GetChunkPosition()));
+  //  cubeLog("player moved across chunk border... player position: " + String::from(player->GetChunkPosition()));
   //}
 
   //RenderLoop();
@@ -167,7 +167,7 @@ static glm::dvec3 RaycastTMax(glm::dvec3 start, glm::dvec3 step, glm::dvec3 tDel
 
 RaycastHitResult World::RaycastHit(glm::dvec3 start, glm::dvec3 end) const
 {
-  const GlobalString airName = "air";
+  const GlobalString airName = "air"_str;
 
   const glm::dvec3 rayDirection = end - start;
   const glm::dvec3 step = glm::sign(rayDirection);

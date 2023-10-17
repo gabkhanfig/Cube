@@ -37,8 +37,8 @@ PathtraceRenderer::PathtraceRenderer() //:
 		0, 3, 2
 	};
 
-	pathtraceComputeShader = new ComputeShader(CompileTimeFiles::GetTextFile("BlockPathtrace.comp")->contents);
-	screenShader = new RasterShader(CompileTimeFiles::GetTextFile("BlockPathtrace.vert")->contents, CompileTimeFiles::GetTextFile("BlockPathtrace.frag")->contents);
+	pathtraceComputeShader = new ComputeShader(CompileTimeFiles::GetTextFile("BlockPathtrace.comp"_str)->contents);
+	screenShader = new RasterShader(CompileTimeFiles::GetTextFile("BlockPathtrace.vert"_str)->contents, CompileTimeFiles::GetTextFile("BlockPathtrace.frag"_str)->contents);
 
 	screenVbo = new VertexBufferObject();
 	screenVbo->BufferData(vertices, 20);
@@ -85,7 +85,7 @@ void PathtraceRenderer::PerformTestDraw()
 
 	screenShader->Bind();
 	glBindTextureUnit(0, screenTex);
-	screenShader->SetUniform1i("screen", 0);
+	screenShader->SetUniform1i("screen"_str, 0);
 	screenVao->Bind();
 	//screenVao->BindVertexBufferObject(screenVbo, 20);
 	//screenVao->BindIndexBufferObject(screenIbo);

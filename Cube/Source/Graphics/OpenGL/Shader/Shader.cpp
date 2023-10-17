@@ -59,9 +59,9 @@ uint32 Shader::GetUniformLocation(GlobalString uniformName)
 		return found->second;
 	}
 
-	const uint32 location = glGetUniformLocation(shaderProgram, uniformName.ToString().CStr());
+	const uint32 location = glGetUniformLocation(shaderProgram, uniformName.toString().cstr());
 	if (location == -1) {
-		std::cout << "Invalid uniform name: " << uniformName.ToString() << '\n';
+		std::cout << "Invalid uniform name: " << uniformName.toString() << '\n';
 	}
 	uniforms.insert({ uniformName, location });
 	return location;

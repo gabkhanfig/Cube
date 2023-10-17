@@ -15,8 +15,8 @@ static void GetTexturePairs(darray<const CompileTimeFiles::Image*>& pngData, dar
 pngData.Add(png); \
 ids.Add(id) 
 
-	pair(CompileTimeFiles::GetImageFile("InvalidTexture.png"), EBlockTexture::none);
-	pair(CompileTimeFiles::GetImageFile("StoneBlock.png"), EBlockTexture::stone);
+	pair(CompileTimeFiles::GetImageFile("InvalidTexture.png"_str), EBlockTexture::none);
+	pair(CompileTimeFiles::GetImageFile("StoneBlock.png"_str), EBlockTexture::stone);
 }
 
 /* Simple container for block texture atlas data. */

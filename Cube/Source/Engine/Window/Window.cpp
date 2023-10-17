@@ -11,7 +11,7 @@ bool isGlfwInitialized = false;
 void Window::InitializeGLFW()
 {
 	if (!glfwInit()) {
-		cubeLog("failed to initialize GLFW");
+		cubeLog("failed to initialize GLFW"_str);
 		abort();
 	}
 
@@ -39,7 +39,7 @@ Window::Window(int inWidth, int inHeight, String inTitle, GLFWmonitor* inMonitor
 {
 	gk_assertm(isGlfwInitialized, "GLFW must be initialized before creating a window. Call Window::Initialize().");
 
-	window = glfwCreateWindow(width, height, title.CStr(), monitor, nullptr);
+	window = glfwCreateWindow(width, height, title.cstr(), monitor, nullptr);
 	if (!window) {
 		glfwTerminate();
 	}

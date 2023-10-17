@@ -24,7 +24,7 @@ public:
 class StoneBlockClass : public IBlockClass
 {
 public:
-	virtual GlobalString getBlockName() const override { return "stone"; }
+	virtual GlobalString getBlockName() const override { return "stone"_str; }
 	virtual bool isFullSolid() const override { return true; }
 
 	static void constructMesh(const Block* self,
@@ -41,7 +41,7 @@ public:
 class AirBlockClass : public IBlockClass
 {
 public:
-	virtual GlobalString getBlockName() const override { return "air"; }
+	virtual GlobalString getBlockName() const override { return "air"_str; }
 	virtual bool isFullSolid() const override { return false; }
 
 	static void constructMesh(const Block* self,

@@ -8,14 +8,14 @@ void InputButton::Press(InputMods mods)
 {
 	isHeld = true;
 	holdTime = 0;
-	cubeLog("pressed button");
+	cubeLog("pressed button"_str);
 	if (pressFunc) pressFunc(mods);
 }
 
 void InputButton::Release(InputMods mods)
 {
 	isHeld = false;
-	cubeLog("released button");
+	cubeLog("released button"_str);
 	if (releaseFunc) releaseFunc(mods);
 }
 

@@ -26,7 +26,7 @@ constexpr int windowHeight = 540;
 
 EngineInitializationParams::EngineInitializationParams()
 	: gameInstance(nullptr),
-	threadPoolNum(gk::ThreadPool::SystemThreadCount() - 2),
+	threadPoolNum(gk::systemThreadCount() - 2),
 	resolution(windowWidth, windowHeight)
 {
 	gk_assertm(threadPoolNum >= 2, "Thread pool must have at least 2 threads. threadPoolNum: " << threadPoolNum);
@@ -54,7 +54,7 @@ void Engine::WaitForRenderThread(int64 millisecondTimeout)
 		std::chrono::steady_clock::time_point now = std::chrono::high_resolution_clock::now();
 		auto duration = now - startWait;
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(duration).count() > millisecondTimeout) {
-			cubeLog("Timed out waiting for render thread. Waited " + String::FromInt(millisecondTimeout) + "ms");
+			cubeLog("Timed out waiting for render thread. Waited " + String::fromInt(millisecondTimeout) + "ms");
 			DebugBreak();
 		}
 	}
@@ -66,13 +66,13 @@ void Engine::WaitForRenderThread(int64 millisecondTimeout)
 Engine::Engine() :
 	useRenderThread(true),
 	tick(nullptr),
-	threadPool(new gk::ThreadPool(gk::ThreadPool::SystemThreadCount() - 2))
+	threadPool(new gk::ThreadPool(gk::systemThreadCount() - 2))
 {
 	input = new UserInput();
 #ifdef CUBE_DEVELOPMENT
-	const char* windowTitle = "Cube [Development Build]";
+	const gk::Str windowTitle = "Cube [Development Build]"_str;
 #else
-	const char* windowTitle = "Cube";
+	const gk::Str windowTitle = "Cube"_str;
 #endif
 	window = new Window(windowWidth, windowHeight, windowTitle);
 	glfwSetInputMode(window->GetGlfwWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);

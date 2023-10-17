@@ -68,7 +68,7 @@ struct PackedNormal
 
 	/* Will assert when normal is non-normalized (length of 1). See glm::normalize. */
 	static PackedNormal Pack(const glm::vec3 normal) {
-		gk_assertm(IsNearlyEqual(glm::length(normal), 1.f), "Cannot pack a normal vector who's length is not nearly equal to 1\nNormal: " << String::From(normal) << "\nLength: " << glm::length(normal));
+		gk_assertm(IsNearlyEqual(glm::length(normal), 1.f), "Cannot pack a normal vector who's length is not nearly equal to 1\nNormal: " << String::from(normal) << "\nLength: " << glm::length(normal));
 		const uint32 x = static_cast<uint32>(normal.x * SCALAR + SCALAR);
 		const uint32 y = static_cast<uint32>(normal.y * SCALAR + SCALAR);
 		const uint32 z = static_cast<uint32>(normal.z * SCALAR + SCALAR);

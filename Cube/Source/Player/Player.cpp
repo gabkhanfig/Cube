@@ -35,30 +35,30 @@ void Player::Tick(float deltaTime)
 
 void Player::SetupInputBinds()
 {
-	inputComponent->BindPressCallback("LMB", &Player::InputAttack);
-	inputComponent->BindPressCallback("RMB", &Player::InputUse);
+	inputComponent->BindPressCallback("LMB"_str, &Player::InputAttack);
+	inputComponent->BindPressCallback("RMB"_str, &Player::InputUse);
 
-	inputComponent->BindPressCallback("W", &Player::InputPressForward);
-	inputComponent->BindReleaseCallback("W", &Player::InputReleaseForward);
-	inputComponent->BindPressCallback("S", &Player::InputPressBackward);
-	inputComponent->BindReleaseCallback("S", &Player::InputReleaseBackward);
-	inputComponent->BindPressCallback("D", &Player::InputPressRight);
-	inputComponent->BindReleaseCallback("D", &Player::InputReleaseRight);
-	inputComponent->BindPressCallback("A", &Player::InputPressLeft);
-	inputComponent->BindReleaseCallback("A", &Player::InputReleaseLeft);
-	inputComponent->BindPressCallback("Space", &Player::InputPressUp);
-	inputComponent->BindReleaseCallback("Space", &Player::InputReleaseUp);
-	inputComponent->BindPressCallback("Ctrl", &Player::InputPressDown);
-	inputComponent->BindReleaseCallback("Ctrl", &Player::InputReleaseDown);
+	inputComponent->BindPressCallback("W"_str, &Player::InputPressForward);
+	inputComponent->BindReleaseCallback("W"_str, &Player::InputReleaseForward);
+	inputComponent->BindPressCallback("S"_str, &Player::InputPressBackward);
+	inputComponent->BindReleaseCallback("S"_str, &Player::InputReleaseBackward);
+	inputComponent->BindPressCallback("D"_str, &Player::InputPressRight);
+	inputComponent->BindReleaseCallback("D"_str, &Player::InputReleaseRight);
+	inputComponent->BindPressCallback("A"_str, &Player::InputPressLeft);
+	inputComponent->BindReleaseCallback("A"_str, &Player::InputReleaseLeft);
+	inputComponent->BindPressCallback("Space"_str, &Player::InputPressUp);
+	inputComponent->BindReleaseCallback("Space"_str, &Player::InputReleaseUp);
+	inputComponent->BindPressCallback("Ctrl"_str, &Player::InputPressDown);
+	inputComponent->BindReleaseCallback("Ctrl"_str, &Player::InputReleaseDown);
 }
 
 void Player::InputUse(InputMods mods)
 {
 	if (highlightedObject.success != RaycastHitResult::HitSuccess::Block) {
-		cubeLog("InputUse not looking at a block");
+		cubeLog("InputUse not looking at a block"_str);
 		return;
 	}
-	Block b = BlockFactory::CreateBlock("stone");
+	Block b = BlockFactory::CreateBlock("stone"_str);
 	WorldPosition pos = { glm::dvec3(highlightedObject.position.x, highlightedObject.position.y + 1.0, highlightedObject.position.z) };
 	GetWorld()->SetBlockAt(pos, b);
 }
@@ -66,7 +66,7 @@ void Player::InputUse(InputMods mods)
 void Player::InputAttack(InputMods mods)
 {
 	if (highlightedObject.success != RaycastHitResult::HitSuccess::Block) {
-		cubeLog("InputAttack not looking at a block");
+		cubeLog("InputAttack not looking at a block"_str);
 		return;
 	}
 	WorldPosition pos = { glm::dvec3(highlightedObject.position.x, highlightedObject.position.y, highlightedObject.position.z) };
